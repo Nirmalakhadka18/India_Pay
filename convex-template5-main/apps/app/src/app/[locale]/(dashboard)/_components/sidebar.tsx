@@ -5,6 +5,7 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { api } from "@v1/backend/convex/_generated/api";
 import type { Id } from "@v1/backend/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
+import {
   Banknote,
   CalendarClock,
   FileText,
@@ -15,22 +16,25 @@ import { useQuery } from "convex/react";
   ShieldCheck,
   Users,
   X,
+  UserCircle,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Logo } from "@v1/ui/logo";
 import { ThemeSwitcher } from "./theme-switcher";
 
-const NAV = [
+const ALL_NAV = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/employees", label: "Employees", icon: Users },
-  { href: "/payroll", label: "Payroll", icon: Banknote },
-  { href: "/attendance", label: "Attendance", icon: CalendarClock },
-  { href: "/compliance", label: "Compliance", icon: ShieldCheck },
-  { href: "/reports", label: "Reports", icon: FileText },
-  { href: "/settings", label: "Settings", icon: Settings },
+  { href: "/my-portal", label: "My Portal", icon: UserCircle },
+  { href: "/employees", label: "Employees", icon: Users, hrOnly: true },
+  { href: "/salaries", label: "Salaries", icon: Banknote, hrOnly: true },
+  { href: "/payroll", label: "Payroll", icon: Banknote, hrOnly: true },
+  { href: "/attendance", label: "Attendance", icon: CalendarClock, hrOnly: true },
+  { href: "/compliance", label: "Compliance", icon: ShieldCheck, hrOnly: true },
+  { href: "/reports", label: "Reports", icon: FileText, hrOnly: true },
+  { href: "/settings", label: "Settings", icon: Settings, hrOnly: true },
 ];
 
 export function Sidebar() {
@@ -39,6 +43,14 @@ export function Sidebar() {
   const user = useQuery(api.users.getUser);
   const { workspaces, current, select } = useWorkspace();
   const [open, setOpen] = useState(false);
+
+  const currentRole = workspaces.find((w) => w._id === current)?.role ?? "employee";
+  const NAV = useMemo(() => {
+    return ALL_NAV.filter((item) => {
+      if (item.hrOnly && currentRole === "employee") return false;
+      return true;
+    });
+  }, [currentRole]);
 
   const Body = (
     <div className="flex h-full w-60 flex-col border-r border-border bg-card">
@@ -72,7 +84,6 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              prefetch={false}
               onClick={() => setOpen(false)}
               className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm ${
                 active
@@ -90,13 +101,19 @@ export function Sidebar() {
       <div className="border-t border-border p-3">
         <div className="mb-2 flex items-center gap-2">
           {user?.avatarUrl ? (
-            // biome-ignore lint/a11y/useAltText: decorative avatar
-            <img src={user.avatarUrl} alt="" className="h-8 w-8 rounded-full object-cover" />
+
+            <img
+              src={user.avatarUrl}
+              alt=""
+              className="h-8 w-8 rounded-full object-cover"
+            />
           ) : (
             <span className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-lime-400 via-cyan-300 to-blue-500" />
           )}
           <div className="min-w-0">
-            <p className="truncate text-sm font-medium text-primary/80">{user?.name || "—"}</p>
+            <p className="truncate text-sm font-medium text-primary/80">
+              {user?.name || "—"}
+            </p>
             <p className="truncate text-xs text-primary/50">{user?.email}</p>
           </div>
         </div>
@@ -117,13 +134,19 @@ export function Sidebar() {
   return (
     <>
       <div className="flex h-14 items-center gap-3 border-b border-border bg-card px-4 md:hidden">
-        <button type="button" aria-label="Open menu" onClick={() => setOpen(true)}>
+        <button
+          type="button"
+          aria-label="Open menu"
+          onClick={() => setOpen(true)}
+        >
           <Menu className="h-5 w-5" />
         </button>
         <Logo width={22} height={22} />
       </div>
 
-      <aside className="sticky top-0 hidden h-screen shrink-0 md:block">{Body}</aside>
+      <aside className="sticky top-0 hidden h-screen shrink-0 md:block">
+        {Body}
+      </aside>
 
       {open && (
         <div className="fixed inset-0 z-50 md:hidden">

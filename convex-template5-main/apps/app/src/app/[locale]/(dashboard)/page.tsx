@@ -3,7 +3,13 @@
 import { useWorkspace } from "@/lib/useWorkspace";
 import { api } from "@v1/backend/convex/_generated/api";
 import { useQuery } from "convex/react";
-import { Activity, Banknote, ClipboardCheck, Users, Wallet } from "lucide-react";
+import {
+  Activity,
+  Banknote,
+  ClipboardCheck,
+  Users,
+  Wallet,
+} from "lucide-react";
 
 function Stat({
   icon: Icon,
@@ -45,7 +51,11 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <Stat icon={Users} label="Active Employees" value={stats?.members ?? "—"} />
+          <Stat
+            icon={Users}
+            label="Active Employees"
+            value={stats?.members ?? "—"}
+          />
           <Stat
             icon={Banknote}
             label="Gross Payroll"
@@ -69,7 +79,9 @@ export default function Home() {
         <div className="rounded-lg border border-border bg-card">
           <div className="flex items-center gap-2 border-b border-border px-4 py-3">
             <Activity className="h-4 w-4 text-primary/50" />
-            <h2 className="text-sm font-medium text-primary">Recent activity</h2>
+            <h2 className="text-sm font-medium text-primary">
+              Recent activity
+            </h2>
           </div>
           <div className="divide-y divide-border/50">
             {audit === undefined ? (

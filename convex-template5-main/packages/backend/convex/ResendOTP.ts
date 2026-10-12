@@ -18,15 +18,29 @@ export const ResendOTP = Email({
     { identifier: email, token }: { identifier: string; token: string },
     ctx?: { runAction: (ref: unknown, args: unknown) => Promise<unknown> },
   ) {
-    console.warn(`[auth] OTP for ${email}: ${token}`); // dev fallback (docker logs)
-    try {
+    if (process.env.RESEND_API_KEY) {
+      const res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "onboarding@resend.dev",
+          to: email,
+          subject: "Your sign-in code",
+          text: `Your sign-in code is ${token}`,
+        }),
+      });
+      if (!res.ok) {
+        throw new Error(`Resend API error: ${await res.text()}`);
+      }
+    } else {
       await ctx?.runAction(internal.email.sendEmail, {
         to: email,
         subject: "Your sign-in code",
         text: `Your sign-in code is ${token}`,
       });
-    } catch (e) {
-      console.warn(`[email] OTP send failed: ${(e as Error).message}`);
     }
   },
 });

@@ -4,6 +4,9 @@ import { withSentryConfig } from "@sentry/nextjs";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["@v1/ui", "@v1/backend", "@v1/analytics", "@v1/logger"],
+  experimental: {
+    instrumentationHook: true,
+  },
 };
 
 export default withSentryConfig(nextConfig, {

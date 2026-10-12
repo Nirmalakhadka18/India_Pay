@@ -10,11 +10,11 @@ export const getUser = query({
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) {
-      return;
+      return null;
     }
     const user = await ctx.db.get(userId);
     if (!user) {
-      return;
+      return null;
     }
     const subscription = await polar.getCurrentSubscription(ctx, {
       userId: user._id,

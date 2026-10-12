@@ -1,12 +1,29 @@
 const { chromium } = require("playwright");
-const BASE = process.env.E2E_BASE_URL || "https://blue-transmission-clinic-photo.trycloudflare.com";
-const errs = [], results = [];
-const step = async (n, f) => { try { const d = await f(); results.push(true); console.log("PASS  " + n + (d ? " — " + d : "")); } catch (e) { results.push(false); console.log("FAIL  " + n + " — " + e.message.split("\n")[0]); } };
+const BASE =
+  process.env.E2E_BASE_URL ||
+  "https://blue-transmission-clinic-photo.trycloudflare.com";
+const errs = [],
+  results = [];
+const step = async (n, f) => {
+  try {
+    const d = await f();
+    results.push(true);
+    console.log("PASS  " + n + (d ? " — " + d : ""));
+  } catch (e) {
+    results.push(false);
+    console.log("FAIL  " + n + " — " + e.message.split("\n")[0]);
+  }
+};
 (async () => {
-  const b = await chromium.launch({ headless: !!process.env.CI, slowMo: process.env.CI ? 0 : 100 });
+  const b = await chromium.launch({
+    headless: !!process.env.CI,
+    slowMo: process.env.CI ? 0 : 100,
+  });
   const ctx1 = await b.newContext({ viewport: { width: 1366, height: 850 } });
   const page = await ctx1.newPage();
-  page.on("console", (m) => { if (m.type() === "error") errs.push(m.text()); });
+  page.on("console", (m) => {
+    if (m.type() === "error") errs.push(m.text());
+  });
 
   const login = async (p) => {
     await p.goto(BASE + "/", { waitUntil: "domcontentloaded" });
@@ -44,6 +61,11 @@ const step = async (n, f) => { try { const d = await f(); results.push(true); co
   });
 
   await b.close();
-  console.log(`\n===== SESSIONS: ${results.filter(Boolean).length}/${results.length} | console errors: ${errs.length} =====`);
+  console.log(
+    `\n===== SESSIONS: ${results.filter(Boolean).length}/${results.length} | console errors: ${errs.length} =====`,
+  );
   errs.forEach((e) => console.log("  - " + e));
-})().catch((e) => { console.error("FATAL", e); process.exit(1); });
+})().catch((e) => {
+  console.error("FATAL", e);
+  process.exit(1);
+});

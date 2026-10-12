@@ -17,13 +17,18 @@ export const sendEmail = internalAction({
     const transport = nodemailer.createTransport({
       host,
       port: Number(process.env.SMTP_PORT ?? "1025"),
-      secure: false,
+      secure: Number(process.env.SMTP_PORT ?? "1025") === 465,
       ...(process.env.SMTP_USER
-        ? { auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS ?? "" } }
+        ? {
+            auth: {
+              user: process.env.SMTP_USER,
+              pass: process.env.SMTP_PASS ?? "",
+            },
+          }
         : {}),
     });
     await transport.sendMail({
-      from: process.env.SMTP_FROM ?? "auth@myos.local",
+      from: process.env.SMTP_FROM || process.env.RESEND_SENDER_EMAIL_AUTH || "auth@myos.local",
       to,
       subject,
       text,

@@ -1,0 +1,7 @@
+# Root gitignore
+bun-cache-test/
+temp-bun-test/
+temp-bun-test2/
+convex-template5-main/debug_output.txt
+convex-template5-main/temp_log.txt
+*.log

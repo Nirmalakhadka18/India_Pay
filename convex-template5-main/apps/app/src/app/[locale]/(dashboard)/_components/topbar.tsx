@@ -7,11 +7,13 @@ import { NotificationsBell } from "./notifications-bell";
 const APP_VERSION = "0.1.0";
 const TITLES: Record<string, string> = {
   "/": "Dashboard",
-  "/jobs": "Jobs",
-  "/platform": "Platform",
-  "/files": "Files",
+  "/employees": "Employees",
+  "/salaries": "Salaries",
+  "/payroll": "Payroll",
+  "/attendance": "Attendance",
+  "/compliance": "Compliance",
+  "/reports": "Reports",
   "/settings": "Settings",
-  "/settings/billing": "Billing",
 };
 
 export function Topbar() {

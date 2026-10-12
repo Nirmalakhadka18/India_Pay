@@ -1,11 +1,7 @@
 {
   "name": "v1",
   "private": true,
-  "workspaces": [
-    "packages/*",
-    "apps/*",
-    "tooling/*"
-  ],
+  "workspaces": ["packages/*", "apps/*", "tooling/*"],
   "scripts": {
     "build": "turbo build",
     "clean": "git clean -xdf node_modules",
@@ -18,9 +14,9 @@
     "start:app": "turbo start --filter=@v1/app",
     "test": "turbo test --parallel",
     "format": "biome format --write .",
-    "lint": "turbo lint && bun lint:repo",
-    "lint:repo": "bunx sherif@latest",
-    "lint:repo:fix": "bunx sherif@latest --fix",
+    "lint": "turbo lint && npm run lint:repo",
+    "lint:repo": "npx sherif@latest",
+    "lint:repo:fix": "npx sherif@latest --fix",
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {

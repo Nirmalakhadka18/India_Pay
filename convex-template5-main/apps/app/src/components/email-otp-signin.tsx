@@ -21,9 +21,10 @@ export function EmailOtpSignin() {
           e.preventDefault();
           setError(null);
           const fd = new FormData(e.currentTarget);
+          const emailVal = (fd.get("email") as string)?.trim() ?? "";
           setPending(true);
-          void signIn("resend-otp", fd)
-            .then(() => setStep({ email: fd.get("email") as string }))
+          void signIn("resend-otp", { email: emailVal })
+            .then(() => setStep({ email: emailVal }))
             .catch(() => setError("Could not send code. Try again."))
             .finally(() => setPending(false));
         }}
@@ -35,7 +36,12 @@ export function EmailOtpSignin() {
           placeholder="you@example.com"
           className={inputCls}
         />
-        <Button type="submit" variant="outline" className="font-mono" disabled={pending}>
+        <Button
+          type="submit"
+          variant="outline"
+          className="font-mono"
+          disabled={pending}
+        >
           {pending ? "Sending…" : "Send code"}
         </Button>
         {error && <p className="text-xs text-red-500">{error}</p>}
@@ -50,9 +56,17 @@ export function EmailOtpSignin() {
         e.preventDefault();
         setError(null);
         const fd = new FormData(e.currentTarget);
+        const codeVal = (fd.get("code") as string)?.trim() ?? "";
+        fd.set("code", codeVal);
+        if (!fd.has("flow")) {
+          fd.set("flow", "signIn");
+        }
         setPending(true);
-        void signIn("resend-otp", fd)
-          .catch(() => setError("Invalid or expired code."))
+        void signIn("resend-otp", { email: step.email, code: codeVal })
+          .catch((err) => {
+            console.error("OTP verification error:", err);
+            setError((err as Error)?.message || "Invalid or expired code.");
+          })
           .finally(() => setPending(false));
       }}
     >

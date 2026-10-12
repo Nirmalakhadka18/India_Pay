@@ -12,12 +12,19 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useFormStatus } from "react-dom";
 
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" size="sm" className="w-full">
+      {pending ? <Loader2 className="animate-spin" /> : "Continue"}
+    </Button>
+  );
+}
+
 export default function OnboardingUsername() {
   const user = useQuery(api.users.getUser);
   const updateUsername = useMutation(api.users.updateUsername);
   const router = useRouter();
-
-  const { pending } = useFormStatus();
 
   const form = useForm({
     validatorAdapter: zodValidator(),
@@ -40,8 +47,20 @@ export default function OnboardingUsername() {
     }
   }, [user]);
 
-  if (!user) {
-    return null;
+  if (user === undefined) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Loading user...
+      </div>
+    );
+  }
+
+  if (user === null) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        User not found.
+      </div>
+    );
   }
 
   return (
@@ -98,9 +117,7 @@ export default function OnboardingUsername() {
           )}
         </div>
 
-        <Button type="submit" size="sm" className="w-full">
-          {pending ? <Loader2 className="animate-spin" /> : "Continue"}
-        </Button>
+        <SubmitButton />
       </form>
 
       <p className="px-6 text-center text-sm font-normal leading-normal text-primary/60">

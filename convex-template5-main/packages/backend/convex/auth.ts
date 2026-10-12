@@ -27,5 +27,5 @@ const PasswordWithFlows = Password({
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [PasswordWithFlows, ResendOTP, Google],
   // Brute-force protection: per-email token bucket (default is 10/hr) on password + OTP.
-  signIn: { maxFailedAttempsPerHour: 5 },
+  signIn: { maxFailedAttempsPerHour: 10 },
 });

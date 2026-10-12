@@ -12,17 +12,17 @@ function genCode() {
   crypto.getRandomValues(b);
   return Array.from(b, (x) => (x % 10).toString()).join("");
 }
-async function send(ctx: Ctx | undefined, label: string, email: string, token: string) {
-  console.warn(`[auth] ${label} code for ${email}: ${token}`); // dev fallback
-  try {
-    await ctx?.runAction(internal.email.sendEmail, {
-      to: email,
-      subject: `Your ${label} code`,
-      text: `Your ${label} code is ${token}`,
-    });
-  } catch (e) {
-    console.warn(`[email] ${label} send failed: ${(e as Error).message}`);
-  }
+async function send(
+  ctx: Ctx | undefined,
+  label: string,
+  email: string,
+  token: string,
+) {
+  await ctx?.runAction(internal.email.sendEmail, {
+    to: email,
+    subject: `Your ${label} code`,
+    text: `Your ${label} code is ${token}`,
+  });
 }
 
 export const ResendOTPVerify = Email({

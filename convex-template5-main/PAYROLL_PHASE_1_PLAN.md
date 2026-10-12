@@ -44,5 +44,6 @@ Establish the foundational structure of the IndiaPay application by setting up p
   2. Login works without any auth regression.
   3. Organization (Workspace) creation works properly.
   4. The dashboard displays the new Indian Payroll navigation sidebar.
+  
   5. The dashboard widgets show the new metrics layout.
   6. Existing tenant isolation and authorization are fully maintained.
