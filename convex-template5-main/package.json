@@ -17,7 +17,8 @@
     "lint": "turbo lint && npm run lint:repo",
     "lint:repo": "npx sherif@latest",
     "lint:repo:fix": "npx sherif@latest --fix",
-    "typecheck": "turbo typecheck"
+    "typecheck": "turbo typecheck",
+    "dev:provision": "tsx scripts/provisionDevAccounts.ts"
   },
   "devDependencies": {
     "@auth/core": "0.37.0",

@@ -18,11 +18,34 @@ async function send(
   email: string,
   token: string,
 ) {
-  await ctx?.runAction(internal.email.sendEmail, {
-    to: email,
-    subject: `Your ${label} code`,
-    text: `Your ${label} code is ${token}`,
-  });
+  const apiKey = process.env.RESEND_API_KEY;
+  if (apiKey) {
+    const from =
+      process.env.RESEND_SENDER_EMAIL_AUTH || "onboarding@resend.dev";
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from,
+        to: email,
+        subject: `Your ${label} code`,
+        text: `Your ${label} code is ${token}`,
+      }),
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Resend API error: ${errorText}`);
+    }
+  } else {
+    await ctx?.runAction(internal.email.sendEmail, {
+      to: email,
+      subject: `Your ${label} code`,
+      text: `Your ${label} code is ${token}`,
+    });
+  }
 }
 
 export const ResendOTPVerify = Email({

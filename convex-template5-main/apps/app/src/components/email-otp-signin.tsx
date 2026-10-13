@@ -25,7 +25,21 @@ export function EmailOtpSignin() {
           setPending(true);
           void signIn("resend-otp", { email: emailVal })
             .then(() => setStep({ email: emailVal }))
-            .catch(() => setError("Could not send code. Try again."))
+            .catch((err) => {
+              console.error("Failed to send OTP code:", err);
+              const msg = (err as Error)?.message;
+              if (
+                !msg ||
+                msg.includes("reading 'redirect'") ||
+                msg.includes("Cannot read properties of null")
+              ) {
+                setError(
+                  "Could not send code. Please verify your email address or check provider settings.",
+                );
+              } else {
+                setError(msg);
+              }
+            })
             .finally(() => setPending(false));
         }}
       >
@@ -65,7 +79,16 @@ export function EmailOtpSignin() {
         void signIn("resend-otp", { email: step.email, code: codeVal })
           .catch((err) => {
             console.error("OTP verification error:", err);
-            setError((err as Error)?.message || "Invalid or expired code.");
+            const msg = (err as Error)?.message;
+            if (
+              !msg ||
+              msg.includes("reading 'redirect'") ||
+              msg.includes("Cannot read properties of null")
+            ) {
+              setError("Invalid or expired code. Please try again.");
+            } else {
+              setError(msg);
+            }
           })
           .finally(() => setPending(false));
       }}

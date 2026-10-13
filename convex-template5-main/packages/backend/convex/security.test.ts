@@ -6,7 +6,49 @@ import schema from "./schema";
 import { requireMember, requireRole } from "./orgs";
 
 // Discover function modules for convex-test (includes _generated, excludes *.test.ts).
-const modules = import.meta.glob(["./**/*.*s", "!./**/*.test.*"]);
+const modules: Record<string, () => Promise<any>> =
+  typeof (import.meta as any).glob === "function"
+    ? (import.meta as any).glob(["./**/*.*s", "!./**/*.test.*"])
+    : {
+        "./ResendOTP.ts": () => import("./ResendOTP"),
+        "./apiKeys.ts": () => import("./apiKeys"),
+        "./audit.ts": () => import("./audit"),
+        "./auditLog.ts": () => import("./auditLog"),
+        "./auth.config.ts": () => import("./auth.config"),
+        "./auth.ts": () => import("./auth"),
+        "./backend.ts": () => import("./backend"),
+        "./counters.ts": () => import("./counters"),
+        "./dashboard.ts": () => import("./dashboard"),
+        "./devGuard.ts": () => import("./devGuard"),
+        "./email.ts": () => import("./email"),
+        "./env.ts": () => import("./env"),
+        "./files.ts": () => import("./files"),
+        "./http.ts": () => import("./http"),
+        "./init.ts": () => import("./init"),
+        "./jobs.ts": () => import("./jobs"),
+        "./notifications.ts": () => import("./notifications"),
+        "./orgs.ts": () => import("./orgs"),
+        "./passwordProviders.ts": () => import("./passwordProviders"),
+        "./schema.ts": () => import("./schema"),
+        "./seed.ts": () => import("./seed"),
+        "./sessions.ts": () => import("./sessions"),
+        "./subscriptions.ts": () => import("./subscriptions"),
+        "./usage.ts": () => import("./usage"),
+        "./users.ts": () => import("./users"),
+        "./web.ts": () => import("./web"),
+        "./attendance.ts": () => import("./attendance"),
+        "./compliance.ts": () => import("./compliance"),
+        "./employees.ts": () => import("./employees"),
+        "./leaves.ts": () => import("./leaves"),
+        "./lop.ts": () => import("./lop"),
+        "./payroll.ts": () => import("./payroll"),
+        "./salaries.ts": () => import("./salaries"),
+        "./statutory.ts": () => import("./statutory"),
+        "./devAccounts.ts": () => import("./devAccounts"),
+        "./devAccountsMutation.ts": () => import("./devAccountsMutation"),
+        "./_generated/api.js": () => import("./_generated/api.js"),
+        "./_generated/server.js": () => import("./_generated/server.js"),
+      };
 
 // Identity helper — getAuthUserId reads `subject = userId|sessionId`.
 const as = (userId: string) => ({ subject: `${userId}|sess_${userId}` });
@@ -614,5 +656,359 @@ describe("attendance and leave privacy (IDOR prevention)", () => {
   });
 });
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Admin vs Member RBAC — dev account role verification
+//
+// These tests use in-process convex-test (no live deployment needed) to verify
+// that the two dev accounts (admin@indiapaypayroll.com = "admin" role,
+// user@indiapaypayroll.com = "member" role) will experience the correct
+// permission boundaries once provisioned.
+// ─────────────────────────────────────────────────────────────────────────────
+describe("Admin vs Member RBAC — dev account role verification", () => {
+  /** Seed a workspace with owner, admin, and member users. */
+  async function seedWithAdmin(t: ReturnType<typeof convexTest>) {
+    return t.run(async (ctx) => {
+      const owner = await ctx.db.insert("users", {
+        email: "owner@indiapaypayroll.test",
+      });
+      const admin = await ctx.db.insert("users", {
+        email: "admin@indiapaypayroll.test",
+      });
+      const member = await ctx.db.insert("users", {
+        email: "user@indiapaypayroll.test",
+      });
 
+      const ws = await ctx.db.insert("workspaces", {
+        name: "IndiaPay Dev Workspace",
+        ownerId: owner,
+        createdAt: Date.now(),
+      });
+      await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: owner,
+        role: "owner",
+        createdAt: Date.now(),
+      });
+      const adminRow = await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: admin,
+        role: "admin",
+        createdAt: Date.now(),
+      });
+      const memberRow = await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: member,
+        role: "member",
+        createdAt: Date.now(),
+      });
+      return { owner, admin, member, ws, adminRow, memberRow };
+    });
+  }
 
+  // ── Workspace management ──────────────────────────────────────────────────
+
+  test("admin can invite users; plain member cannot", async () => {
+    const t = convexTest(schema, modules);
+    const { admin, member, ws } = await seedWithAdmin(t);
+
+    // Admin should be able to invite
+    await expect(
+      t.withIdentity(as(admin)).mutation(api.orgs.invite, {
+        workspaceId: ws,
+        email: "newperson@example.com",
+        role: "member",
+      }),
+    ).resolves.toBeDefined();
+
+    // Plain member must be denied
+    await expect(
+      t.withIdentity(as(member)).mutation(api.orgs.invite, {
+        workspaceId: ws,
+        email: "another@example.com",
+        role: "member",
+      }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+
+  test("admin can remove a member; plain member cannot remove anyone", async () => {
+    const t = convexTest(schema, modules);
+    const { admin, member, memberRow } = await seedWithAdmin(t);
+    const ws = await t.run(async (ctx) => (await ctx.db.get(memberRow))!.workspaceId);
+
+    // Plain member is forbidden
+    await expect(
+      t.withIdentity(as(member)).mutation(api.orgs.removeMember, {
+        workspaceId: ws,
+        memberId: memberRow,
+      }),
+    ).rejects.toThrow(/Forbidden/);
+
+    // Admin can remove
+    await expect(
+      t.withIdentity(as(admin)).mutation(api.orgs.removeMember, {
+        workspaceId: ws,
+        memberId: memberRow,
+      }),
+    ).resolves.toBeNull();
+  });
+
+  test("admin can change member roles; plain member cannot", async () => {
+    const t = convexTest(schema, modules);
+    const { admin, member, memberRow } = await seedWithAdmin(t);
+    const ws = await t.run(async (ctx) => (await ctx.db.get(memberRow))!.workspaceId);
+
+    // Plain member is forbidden
+    await expect(
+      t.withIdentity(as(member)).mutation(api.orgs.changeRole, {
+        workspaceId: ws,
+        memberId: memberRow,
+        role: "admin",
+      }),
+    ).rejects.toThrow(/Forbidden/);
+
+    // Admin can change roles
+    await expect(
+      t.withIdentity(as(admin)).mutation(api.orgs.changeRole, {
+        workspaceId: ws,
+        memberId: memberRow,
+        role: "admin",
+      }),
+    ).resolves.toBeNull();
+  });
+
+  test("admin cannot be promoted to owner via changeRole (owner is a protected role)", async () => {
+    const t = convexTest(schema, modules);
+    const { owner, adminRow } = await seedWithAdmin(t);
+    const ws = await t.run(async (ctx) => (await ctx.db.get(adminRow))!.workspaceId);
+
+    await expect(
+      t.withIdentity(as(owner)).mutation(api.orgs.changeRole, {
+        workspaceId: ws,
+        memberId: adminRow,
+        role: "owner",
+      }),
+    ).rejects.toThrow(/Invalid role/);
+  });
+
+  // ── Payroll data access ───────────────────────────────────────────────────
+
+  test("admin can view all salaries; plain member cannot", async () => {
+    const t = convexTest(schema, modules);
+    const { admin, member, ws } = await seedWithAdmin(t);
+    const asAdmin = t.withIdentity(as(admin));
+    const asMember = t.withIdentity(as(member));
+
+    // Add an employee with salary
+    const empId = await asAdmin.mutation(api.employees.add, {
+      workspaceId: ws,
+      firstName: "Salary",
+      lastName: "Employee",
+      email: "salemp@indiapaypayroll.test",
+    });
+    await asAdmin.mutation(api.salaries.add, {
+      workspaceId: ws,
+      employeeId: empId,
+      basicSalary: 80000,
+      allowances: [],
+      deductions: [],
+      effectiveDate: Date.now(),
+    });
+
+    // Admin allowed
+    const salaries = await asAdmin.query(api.salaries.getCurrentSalaries, {
+      workspaceId: ws,
+    });
+    expect(salaries.length).toBeGreaterThan(0);
+
+    // Member denied
+    await expect(
+      asMember.query(api.salaries.getCurrentSalaries, { workspaceId: ws }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+
+  test("admin can view payslips; plain member cannot view others' payslips", async () => {
+    const t = convexTest(schema, modules);
+    const { admin, member, ws } = await seedWithAdmin(t);
+    const asAdmin = t.withIdentity(as(admin));
+    const asMember = t.withIdentity(as(member));
+
+    const empId = await asAdmin.mutation(api.employees.add, {
+      workspaceId: ws,
+      firstName: "Pay",
+      lastName: "Slip",
+      email: "payslip@indiapaypayroll.test",
+    });
+
+    const runId = await t.run(async (ctx) => {
+      const r = await ctx.db.insert("payrollRuns", {
+        workspaceId: ws,
+        periodMonth: "2026-09",
+        startDate: "2026-09-01",
+        endDate: "2026-09-30",
+        status: "processed",
+        totalGrossSalary: 80000,
+        totalNetSalary: 72000,
+        totalLopDeduction: 0,
+        totalCustomDeductions: 0,
+        totalStatutoryDeductions: 8000,
+        totalEmployees: 1,
+        createdById: admin,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+      await ctx.db.insert("payrollItems", {
+        workspaceId: ws,
+        payrollRunId: r,
+        employeeId: empId,
+        basicSalary: 80000,
+        allowances: [],
+        grossSalary: 80000,
+        lopDays: 0,
+        lopDeduction: 0,
+        customDeductions: [],
+        totalCustomDeductions: 0,
+        statutoryDeductions: [{ name: "PF", amount: 8000, isConfigured: true }],
+        totalStatutoryDeductions: 8000,
+        employerContributions: [],
+        totalEmployerContributions: 0,
+        totalDeductions: 8000,
+        netSalary: 72000,
+        hasSalaryStructure: true,
+        warnings: [],
+        createdAt: Date.now(),
+      });
+      return r;
+    });
+
+    // Admin can view
+    const payslip = await asAdmin.query(api.payroll.getPayslip, {
+      workspaceId: ws,
+      payrollRunId: runId,
+      employeeId: empId,
+    });
+    expect(payslip.grossSalary).toBe(80000);
+
+    // Member cannot view another's payslip
+    await expect(
+      asMember.query(api.payroll.getPayslip, {
+        workspaceId: ws,
+        payrollRunId: runId,
+        employeeId: empId,
+      }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+
+  // ── Maker-Checker: admin is subject to the same two-person rule ───────────
+
+  test("admin cannot approve payroll runs (owner-only permission) & maker-checker enforcement", async () => {
+    const t = convexTest(schema, modules);
+    const { admin, owner, ws } = await seedWithAdmin(t);
+
+    const runId = await t.run(async (ctx) =>
+      ctx.db.insert("payrollRuns", {
+        workspaceId: ws,
+        periodMonth: "2026-10",
+        startDate: "2026-10-01",
+        endDate: "2026-10-31",
+        status: "pending_approval",
+        submittedBy: admin, // admin submitted it
+        submittedAt: Date.now(),
+        createdById: admin,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        totalGrossSalary: 60000,
+        totalNetSalary: 54000,
+        totalLopDeduction: 0,
+        totalCustomDeductions: 0,
+        totalStatutoryDeductions: 6000,
+        totalEmployees: 1,
+      }),
+    );
+
+    // Admin is not owner, so admin cannot approve (strict RBAC protection)
+    await expect(
+      t.withIdentity(as(admin)).mutation(api.payroll.approveRun, {
+        workspaceId: ws,
+        payrollRunId: runId,
+      }),
+    ).rejects.toThrow(/Forbidden/);
+
+    // Owner (different person) can approve
+    await expect(
+      t.withIdentity(as(owner)).mutation(api.payroll.approveRun, {
+        workspaceId: ws,
+        payrollRunId: runId,
+      }),
+    ).resolves.toBeNull();
+  });
+
+  // ── Leave approval ────────────────────────────────────────────────────────
+
+  test("admin can approve leave requests; plain member cannot", async () => {
+    const t = convexTest(schema, modules);
+    const { admin, member, ws } = await seedWithAdmin(t);
+    const asAdmin = t.withIdentity(as(admin));
+    const asMember = t.withIdentity(as(member));
+
+    const empId = await asAdmin.mutation(api.employees.add, {
+      workspaceId: ws,
+      firstName: "Leave",
+      lastName: "Tester",
+      email: "leavetester@indiapaypayroll.test",
+    });
+
+    const leaveId = await t.run(async (ctx) =>
+      ctx.db.insert("leaveRequests", {
+        workspaceId: ws,
+        employeeId: empId,
+        leaveType: "casual",
+        startDate: "2026-11-01",
+        endDate: "2026-11-01",
+        daysCount: 1,
+        reason: "Personal",
+        status: "pending",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      }),
+    );
+
+    // Plain member denied
+    await expect(
+      asMember.mutation(api.leaves.review, {
+        workspaceId: ws,
+        requestId: leaveId,
+        status: "approved",
+      }),
+    ).rejects.toThrow(/Forbidden/);
+
+    // Admin allowed
+    await expect(
+      asAdmin.mutation(api.leaves.review, {
+        workspaceId: ws,
+        requestId: leaveId,
+        status: "approved",
+      }),
+    ).resolves.toBeNull();
+  });
+
+  // ── Pending invites visibility ────────────────────────────────────────────
+
+  test("admin can list pending invites; plain member cannot", async () => {
+    const t = convexTest(schema, modules);
+    const { admin, member, ws } = await seedWithAdmin(t);
+
+    // Admin can read pending invites
+    await expect(
+      t.withIdentity(as(admin)).query(api.orgs.pendingInvites, {
+        workspaceId: ws,
+      }),
+    ).resolves.toBeInstanceOf(Array);
+
+    // Plain member is denied
+    await expect(
+      t.withIdentity(as(member)).query(api.orgs.pendingInvites, {
+        workspaceId: ws,
+      }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+});

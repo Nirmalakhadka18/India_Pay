@@ -66,11 +66,18 @@ export function AuthForm() {
       await fn();
     } catch (err) {
       const data = (err as { data?: unknown })?.data;
-      setError(
-        typeof data === "string"
-          ? data
-          : (err as Error)?.message || "Something went wrong.",
-      );
+      const msg = (err as Error)?.message;
+      if (typeof data === "string") {
+        setError(data);
+      } else if (
+        msg &&
+        !msg.includes("reading 'redirect'") &&
+        !msg.includes("Cannot read properties of null")
+      ) {
+        setError(msg);
+      } else {
+        setError("Authentication request failed. Please check your credentials or try again.");
+      }
     } finally {
       setPending(false);
     }

@@ -16,9 +16,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { Button } from "@v1/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@v1/ui/dialog";
-
 import { format } from "date-fns";
+import { PayslipModal } from "@/components/payslip-modal";
 
 export default function MyPortal() {
   const { current } = useWorkspace();
@@ -424,126 +423,12 @@ export default function MyPortal() {
           </div>
         )}
 
-        <Dialog open={!!selectedPayslipRunId} onOpenChange={(open) => !open && setSelectedPayslipRunId(null)}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <div className="flex items-center justify-between">
-                <DialogTitle>Payslip Preview</DialogTitle>
-                <Button variant="outline" size="sm" onClick={handlePrint} className="print:hidden">
-                  <Printer className="mr-2 h-4 w-4" /> Print
-                </Button>
-              </div>
-            </DialogHeader>
-            {!payslipData ? (
-              <div className="py-12 text-center text-muted-foreground">
-                <Loader2 className="mx-auto h-6 w-6 animate-spin" />
-              </div>
-            ) : (
-              <div className="p-6 bg-white text-black print:p-0 print:bg-transparent rounded-lg border my-4 payslip-print-area">
-                <div className="text-center mb-6 border-b pb-4">
-                  <h1 className="text-2xl font-bold uppercase tracking-wider">{payslipData.workspaceName}</h1>
-                  <h2 className="text-lg font-medium text-gray-700 uppercase mt-1 tracking-wide">Payslip</h2>
-                  <p className="text-sm text-gray-500 mt-1">Period: {payslipData.periodMonth}</p>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-6 mb-6 text-sm">
-                  <div>
-                    <p className="text-gray-500">Employee Name:</p>
-                    <p className="font-semibold">{payslipData.employeeName}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500">Department:</p>
-                    <p className="font-semibold">{payslipData.department}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500">Designation:</p>
-                    <p className="font-semibold">{payslipData.designation}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500">LOP Days:</p>
-                    <p className="font-semibold">{payslipData.lopDays}</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-8 text-sm">
-                  <div>
-                    <h3 className="font-bold border-b pb-2 mb-3 bg-gray-50 px-2 py-1">Earnings</h3>
-                    <div className="flex justify-between py-1 px-2">
-                      <span>Basic Salary</span>
-                      <span>₹{payslipData.basicSalary.toLocaleString("en-IN")}</span>
-                    </div>
-                    {payslipData.allowances.map((a: { name: string; amount: number }) => (
-                      <div key={a.name} className="flex justify-between py-1 px-2">
-                        <span>{a.name}</span>
-                        <span>₹{a.amount.toLocaleString("en-IN")}</span>
-                      </div>
-                    ))}
-                    <div className="flex justify-between py-2 px-2 mt-2 border-t font-semibold">
-                      <span>Gross Earnings</span>
-                      <span>₹{payslipData.grossSalary.toLocaleString("en-IN")}</span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="font-bold border-b pb-2 mb-3 bg-gray-50 px-2 py-1">Deductions</h3>
-                    {payslipData.lopDeduction > 0 && (
-                      <div className="flex justify-between py-1 px-2">
-                        <span>Loss of Pay</span>
-                        <span>₹{payslipData.lopDeduction.toLocaleString("en-IN")}</span>
-                      </div>
-                    )}
-                    {payslipData.customDeductions.map((d: { name: string; amount: number }) => (
-                      <div key={d.name} className="flex justify-between py-1 px-2">
-                        <span>{d.name}</span>
-                        <span>₹{d.amount.toLocaleString("en-IN")}</span>
-                      </div>
-                    ))}
-                    {payslipData.statutoryDeductions.map((d: { name: string; amount: number }) => d.amount > 0 && (
-                      <div key={d.name} className="flex justify-between py-1 px-2">
-                        <span>{d.name}</span>
-                        <span>₹{d.amount.toLocaleString("en-IN")}</span>
-                      </div>
-                    ))}
-                    <div className="flex justify-between py-2 px-2 mt-2 border-t font-semibold">
-                      <span>Total Deductions</span>
-                      <span>₹{payslipData.totalDeductions.toLocaleString("en-IN")}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-8 border-t-2 border-gray-800 pt-4 text-right">
-                  <p className="text-lg">Net Salary Payable: <span className="font-bold text-xl ml-4">₹{payslipData.netSalary.toLocaleString("en-IN")}</span></p>
-                </div>
-
-                {(payslipData.totalEmployerContributions || 0) > 0 && (
-                  <div className="mt-8 pt-4 border-t border-dashed">
-                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Informational: Employer Contributions</h3>
-                    <p className="text-xs text-gray-400 mb-4">
-                      These amounts were contributed directly by the employer to your statutory accounts. They are not deducted from your gross salary.
-                    </p>
-                    <div className="grid grid-cols-2 gap-8 text-sm opacity-80">
-                      <div>
-                        {payslipData.employerContributions?.map((c: { name: string; amount: number }) => c.amount > 0 && (
-                          <div key={c.name} className="flex justify-between py-1 px-2">
-                            <span>{c.name}</span>
-                            <span>₹{c.amount.toLocaleString("en-IN")}</span>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="flex items-end">
-                        <div className="flex justify-between py-2 px-2 border-t w-full font-semibold">
-                          <span>Total Employer Contributions</span>
-                          <span>₹{(payslipData.totalEmployerContributions || 0).toLocaleString("en-IN")}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-            
-          </DialogContent>
-        </Dialog>
+        <PayslipModal
+          open={Boolean(selectedPayslipRunId)}
+          onOpenChange={(open) => !open && setSelectedPayslipRunId(null)}
+          payslip={payslipData}
+          isLoading={selectedPayslipRunId !== null && !payslipData}
+        />
       </div>
     </div>
   );

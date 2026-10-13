@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { computeEmployeePayrollItem, type CalculationContext } from "./payroll";
+import { computeEmployeePayrollItem, type CalculationContext } from "./statutory";
 
 const baseEmp = {
   _id: "emp_123" as any,

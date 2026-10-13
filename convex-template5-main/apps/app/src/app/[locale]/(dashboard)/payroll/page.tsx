@@ -25,9 +25,11 @@ import {
   Plus,
   Receipt,
   Users,
+  FileText,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { PayslipModal } from "@/components/payslip-modal";
 
 export default function PayrollPage() {
   const { current } = useWorkspace();
@@ -37,11 +39,18 @@ export default function PayrollPage() {
   const currentMonthStr = new Date().toISOString().slice(0, 7);
   const [periodMonth, setPeriodMonth] = useState(currentMonthStr);
   const [selectedRunId, setSelectedRunId] = useState<Id<"payrollRuns"> | null>(null);
+  const [payslipEmployeeId, setPayslipEmployeeId] = useState<Id<"employees"> | null>(null);
 
   // Queries
   const preview = useQuery(
     api.payroll.calculatePreview,
     workspaceId && periodMonth ? { workspaceId, periodMonth } : "skip"
+  );
+  const payslipData = useQuery(
+    api.payroll.getPayslip,
+    workspaceId && selectedRunId && payslipEmployeeId
+      ? { workspaceId, payrollRunId: selectedRunId, employeeId: payslipEmployeeId }
+      : "skip"
   );
   const runsList = useQuery(
     api.payroll.listRuns,
@@ -532,6 +541,7 @@ export default function PayrollPage() {
                         <th className="px-3 py-2">Gross (₹)</th>
                         <th className="px-3 py-2">LOP (₹)</th>
                         <th className="px-3 py-2 text-right">Net (₹)</th>
+                        <th className="px-3 py-2 text-right">Payslip</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
@@ -544,6 +554,20 @@ export default function PayrollPage() {
                           <td className="px-3 py-2 text-right font-medium text-emerald-600 dark:text-emerald-400">
                             ₹{item.netSalary.toLocaleString("en-IN")}
                           </td>
+                          <td className="px-3 py-2 text-right">
+                            {runDetails.run.status === "processed" ? (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="h-6 text-[11px] gap-1 px-2"
+                                onClick={() => setPayslipEmployeeId(item.employeeId)}
+                              >
+                                <FileText className="h-3 w-3" /> PDF
+                              </Button>
+                            ) : (
+                              <span className="text-primary/40 text-[10px]">Pending</span>
+                            )}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -553,6 +577,14 @@ export default function PayrollPage() {
             </DialogContent>
           </Dialog>
         )}
+
+        {/* Payslip PDF Modal */}
+        <PayslipModal
+          open={Boolean(payslipEmployeeId)}
+          onOpenChange={(open) => !open && setPayslipEmployeeId(null)}
+          payslip={payslipData}
+          isLoading={payslipEmployeeId !== null && !payslipData}
+        />
       </div>
     </div>
   );

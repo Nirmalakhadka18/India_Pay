@@ -1,11 +1,28 @@
 {
-  "extends": "@v1/typescript/nextjs.json",
+  "extends": "../../tooling/typescript/nextjs.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@v1/ui/*": ["../../packages/ui/src/*"],
+      "@v1/ui": ["../../packages/ui/src"],
+      "@v1/backend/*": ["../../packages/backend/*"],
+      "@v1/backend": ["../../packages/backend"],
+      "@v1/analytics/*": ["../../packages/analytics/src/*"],
+      "@v1/analytics": ["../../packages/analytics/src"]
     },
-    "strict": true
+    "jsx": "preserve",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "strict": true,
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",

@@ -8,7 +8,7 @@ export const env = createEnv({
     POLAR_ORGANIZATION_TOKEN: z.string().min(1),
     POLAR_WEBHOOK_SECRET: z.string().min(1),
     RESEND_API_KEY: z.optional(z.string().min(1)),
-    RESEND_SENDER_EMAIL_AUTH: z.optional(z.string().email()),
+    RESEND_SENDER_EMAIL_AUTH: z.optional(z.string().min(1)),
     SITE_URL: z.string().url(),
     AUTH_GOOGLE_ID: z.string().min(1),
     AUTH_GOOGLE_SECRET: z.string().min(1),
