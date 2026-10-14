@@ -10,7 +10,23 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 export function ThemeSwitcher({ triggerClass }: { triggerClass?: string }) {
+  const [mounted, setMounted] = useState(false);
   const { theme: currentTheme, setTheme, themes } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div
+        className={cn(
+          "h-6 w-20 rounded border border-primary/20 bg-secondary",
+          triggerClass,
+        )}
+      />
+    );
+  }
   return (
     <Select
       value={currentTheme}
@@ -53,7 +69,14 @@ export function ThemeSwitcher({ triggerClass }: { triggerClass?: string }) {
 }
 
 export function ThemeSwitcherHome() {
+  const [mounted, setMounted] = useState(false);
   const { setTheme, themes } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
   return (
     <div className="flex gap-3">
       {themes.map((theme) => (

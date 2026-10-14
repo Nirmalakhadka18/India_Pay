@@ -1,30 +1,39 @@
 "use client";
 
+import { RoleGuard } from "@/components/role-guard";
 import { useWorkspace } from "@/lib/useWorkspace";
 import { api } from "@v1/backend/convex/_generated/api";
-import type { Id, Doc } from "@v1/backend/convex/_generated/dataModel";
+import type { Doc, Id } from "@v1/backend/convex/_generated/dataModel";
 import { Button } from "@v1/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "@v1/ui/dialog";
-import { Input } from "@v1/ui/input";
-import { useMutation, useQuery } from "convex/react";
-import { Loader2, Plus, Search, MoreVertical, Ban, Edit } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@v1/ui/dropdown-menu";
+import { Input } from "@v1/ui/input";
+import { useMutation, useQuery } from "convex/react";
+import { Ban, Edit, Loader2, MoreVertical, Plus, Search } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function EmployeesPage() {
+  return (
+    <RoleGuard allowedRoles={["owner", "admin"]}>
+      <EmployeesContent />
+    </RoleGuard>
+  );
+}
+
+function EmployeesContent() {
   const { current } = useWorkspace();
   const workspaceId = current;
   const employees = useQuery(
@@ -38,7 +47,8 @@ export default function EmployeesPage() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editingEmployee, setEditingEmployee] = useState<Doc<"employees"> | null>(null);
+  const [editingEmployee, setEditingEmployee] =
+    useState<Doc<"employees"> | null>(null);
   const [search, setSearch] = useState("");
 
   // Form State
@@ -376,9 +386,7 @@ export default function EmployeesPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            onClick={() => handleEditOpen(emp)}
-                          >
+                          <DropdownMenuItem onClick={() => handleEditOpen(emp)}>
                             <Edit className="mr-2 h-4 w-4" />
                             Edit
                           </DropdownMenuItem>

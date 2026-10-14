@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
 import {
-  generatePayslipPdfString,
-  generatePayslipPdfBlob,
-  formatIndianCurrency,
   type PayslipData,
+  formatIndianCurrency,
+  generatePayslipPdfBlob,
+  generatePayslipPdfString,
 } from "./payslip-pdf";
 
 const mockSamplePayslip: PayslipData = {
@@ -27,9 +27,7 @@ const mockSamplePayslip: PayslipData = {
   grossSalary: 115000,
   lopDays: 1,
   lopDeduction: 3833,
-  customDeductions: [
-    { name: "Gym Membership", amount: 1000 },
-  ],
+  customDeductions: [{ name: "Gym Membership", amount: 1000 }],
   totalCustomDeductions: 1000,
   statutoryDeductions: [
     { name: "PF (Provident Fund - 12%)", amount: 1800, isConfigured: true },

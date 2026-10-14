@@ -4,6 +4,7 @@ import { useWorkspace } from "@/lib/useWorkspace";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { api } from "@v1/backend/convex/_generated/api";
 import type { Id } from "@v1/backend/convex/_generated/dataModel";
+import { Logo } from "@v1/ui/logo";
 import { useQuery } from "convex/react";
 import {
   Banknote,
@@ -14,15 +15,14 @@ import {
   Menu,
   Settings,
   ShieldCheck,
+  UserCircle,
   Users,
   X,
-  UserCircle,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useMemo } from "react";
-import { Logo } from "@v1/ui/logo";
+import { useMemo, useState } from "react";
 import { ThemeSwitcher } from "./theme-switcher";
 
 const ALL_NAV = [
@@ -31,7 +31,12 @@ const ALL_NAV = [
   { href: "/employees", label: "Employees", icon: Users, hrOnly: true },
   { href: "/salaries", label: "Salaries", icon: Banknote, hrOnly: true },
   { href: "/payroll", label: "Payroll", icon: Banknote, hrOnly: true },
-  { href: "/attendance", label: "Attendance", icon: CalendarClock, hrOnly: true },
+  {
+    href: "/attendance",
+    label: "Attendance",
+    icon: CalendarClock,
+    hrOnly: true,
+  },
   { href: "/compliance", label: "Compliance", icon: ShieldCheck, hrOnly: true },
   { href: "/reports", label: "Reports", icon: FileText, hrOnly: true },
   { href: "/settings", label: "Settings", icon: Settings, hrOnly: true },
@@ -41,16 +46,45 @@ export function Sidebar() {
   const pathname = usePathname();
   const { signOut } = useAuthActions();
   const user = useQuery(api.users.getUser);
-  const { workspaces, current, select } = useWorkspace();
+  const { workspaces, current, select, isLoading: wsLoading } = useWorkspace();
   const [open, setOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [logoutError, setLogoutError] = useState<string | null>(null);
 
-  const currentRole = workspaces.find((w) => w._id === current)?.role ?? "employee";
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    setLogoutError(null);
+    try {
+      await signOut();
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem("ws");
+      }
+      window.location.replace("/login");
+    } catch (err) {
+      console.error("Sign out error:", err);
+      setLogoutError("Logout failed. Please retry.");
+      setIsLoggingOut(false);
+    }
+  };
+
+  const handleForceLogout = () => {
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("ws");
+      window.localStorage.removeItem("__convexAuthJWT");
+      window.localStorage.removeItem("__convexAuthRefreshToken");
+      window.location.replace("/login");
+    }
+  };
+
+  const currentRole = workspaces.find((w) => w._id === current)?.role;
+  const isHR = currentRole === "owner" || currentRole === "admin";
   const NAV = useMemo(() => {
     return ALL_NAV.filter((item) => {
-      if (item.hrOnly && currentRole === "employee") return false;
+      if (item.hrOnly && !isHR) return false;
       return true;
     });
-  }, [currentRole]);
+  }, [isHR]);
 
   const Body = (
     <div className="flex h-full w-60 flex-col border-r border-border bg-card">
@@ -66,8 +100,13 @@ export function Sidebar() {
           value={current ?? ""}
           onChange={(e) => select(e.target.value as Id<"workspaces">)}
           className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+          disabled={workspaces.length === 0}
         >
-          {workspaces.length === 0 && <option>…</option>}
+          {workspaces.length === 0 && (
+            <option value="">
+              {wsLoading ? "Loading workspaces…" : "No workspace available"}
+            </option>
+          )}
           {workspaces.map((w) => (
             <option key={w._id} value={w._id}>
               {w.name} ({w.role})
@@ -101,7 +140,6 @@ export function Sidebar() {
       <div className="border-t border-border p-3">
         <div className="mb-2 flex items-center gap-2">
           {user?.avatarUrl ? (
-
             <img
               src={user.avatarUrl}
               alt=""
@@ -117,15 +155,33 @@ export function Sidebar() {
             <p className="truncate text-xs text-primary/50">{user?.email}</p>
           </div>
         </div>
-        <div className="flex items-center justify-between">
-          <ThemeSwitcher />
-          <button
-            type="button"
-            onClick={() => signOut()}
-            className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-primary/60 hover:bg-primary/5 hover:text-primary"
-          >
-            <LogOut className="h-4 w-4" /> Log out
-          </button>
+        <div className="flex flex-col gap-2">
+          {logoutError && (
+            <div className="flex items-center justify-between gap-1 rounded bg-destructive/10 px-2 py-1 text-[11px] text-destructive">
+              <span>{logoutError}</span>
+              <button
+                type="button"
+                onClick={handleForceLogout}
+                className="underline font-medium hover:text-destructive/80"
+              >
+                Force
+              </button>
+            </div>
+          )}
+          <div className="flex items-center justify-between">
+            <ThemeSwitcher />
+            <button
+              type="button"
+              disabled={isLoggingOut}
+              onClick={handleLogout}
+              className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-primary/60 hover:bg-primary/5 hover:text-primary disabled:opacity-50"
+            >
+              <LogOut
+                className={`h-4 w-4 ${isLoggingOut ? "animate-spin" : ""}`}
+              />
+              {isLoggingOut ? "Logging out…" : "Log out"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

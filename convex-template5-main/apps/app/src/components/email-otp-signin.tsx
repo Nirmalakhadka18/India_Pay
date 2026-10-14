@@ -77,6 +77,9 @@ export function EmailOtpSignin() {
         }
         setPending(true);
         void signIn("resend-otp", { email: step.email, code: codeVal })
+          .then(() => {
+            window.location.href = "/";
+          })
           .catch((err) => {
             console.error("OTP verification error:", err);
             const msg = (err as Error)?.message;

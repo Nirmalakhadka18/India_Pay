@@ -54,25 +54,47 @@ export default function Home() {
           <Stat
             icon={Users}
             label="Active Employees"
-            value={stats?.members ?? "—"}
+            value={stats ? stats.activeEmployeesCount ?? stats.members : "—"}
           />
           <Stat
             icon={Banknote}
             label="Gross Payroll"
-            value="—"
-            sub="Demo placeholder"
+            value={
+              stats?.latestGrossPayroll != null
+                ? `₹${stats.latestGrossPayroll.toLocaleString("en-IN")}`
+                : "—"
+            }
+            sub={
+              stats?.latestPeriod
+                ? `Period: ${stats.latestPeriod}${stats.latestPayrollStatus === "approved" ? " (Approved)" : " (Processed)"}`
+                : "No qualifying payroll"
+            }
           />
           <Stat
             icon={Wallet}
             label="Net Payroll"
-            value="—"
-            sub="Demo placeholder"
+            value={
+              stats?.latestNetPayroll != null
+                ? `₹${stats.latestNetPayroll.toLocaleString("en-IN")}`
+                : "—"
+            }
+            sub={
+              stats?.latestPeriod
+                ? `Period: ${stats.latestPeriod}${stats.latestPayrollStatus === "approved" ? " (Approved)" : " (Processed)"}`
+                : "No qualifying payroll"
+            }
           />
           <Stat
             icon={ClipboardCheck}
             label="Pending Approvals"
-            value="0"
-            sub="Demo placeholder"
+            value={stats ? stats.pendingApprovalsCount : "—"}
+            sub={
+              stats
+                ? stats.pendingApprovalsCount > 0
+                  ? `${stats.pendingApprovalsCount} awaiting action`
+                  : "All caught up"
+                : undefined
+            }
           />
         </div>
 

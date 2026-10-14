@@ -1,19 +1,30 @@
 "use client";
 
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@v1/backend/convex/_generated/api";
-import { useState, useEffect } from "react";
-import { toast } from "sonner";
+import { RoleGuard } from "@/components/role-guard";
 import { useWorkspace } from "@/lib/useWorkspace";
+import { api } from "@v1/backend/convex/_generated/api";
+import { useMutation, useQuery } from "convex/react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function CompliancePage() {
+  return (
+    <RoleGuard allowedRoles={["owner", "admin"]}>
+      <ComplianceContent />
+    </RoleGuard>
+  );
+}
+
+function ComplianceContent() {
   const { current: workspaceId } = useWorkspace();
-  
+
   const compliance = useQuery(
     api.compliance.getWorkspaceCompliance,
-    workspaceId ? { workspaceId } : "skip"
+    workspaceId ? { workspaceId } : "skip",
   );
-  const updateCompliance = useMutation(api.compliance.updateWorkspaceCompliance);
+  const updateCompliance = useMutation(
+    api.compliance.updateWorkspaceCompliance,
+  );
 
   const [epfEnabled, setEpfEnabled] = useState(false);
   const [epfWageCeiling, setEpfWageCeiling] = useState(15000);
@@ -79,8 +90,12 @@ export default function CompliancePage() {
     <div className="flex flex-col gap-6 p-6 h-full bg-secondary/20 overflow-auto dark:bg-black">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-semibold text-primary">Statutory Compliance</h1>
-          <p className="text-sm text-primary/60">Configure EPF, ESI, Professional Tax, and TDS parameters</p>
+          <h1 className="text-2xl font-semibold text-primary">
+            Statutory Compliance
+          </h1>
+          <p className="text-sm text-primary/60">
+            Configure EPF, ESI, Professional Tax, and TDS parameters
+          </p>
         </div>
         <button
           type="button"
@@ -97,9 +112,12 @@ export default function CompliancePage() {
         <div>
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-medium">Employees' Provident Fund (EPF & EPS)</h3>
+              <h3 className="text-lg font-medium">
+                Employees' Provident Fund (EPF & EPS)
+              </h3>
               <p className="text-sm text-zinc-500">
-                Statutory deductions under Employees' Provident Funds and Miscellaneous Provisions Act, 1952.
+                Statutory deductions under Employees' Provident Funds and
+                Miscellaneous Provisions Act, 1952.
               </p>
             </div>
             <label className="flex items-center space-x-3 cursor-pointer">
@@ -109,7 +127,9 @@ export default function CompliancePage() {
                 onChange={(e) => setEpfEnabled(e.target.checked)}
                 className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="font-medium text-sm">Enable EPF for workspace</span>
+              <span className="font-medium text-sm">
+                Enable EPF for workspace
+              </span>
             </label>
           </div>
 
@@ -139,16 +159,23 @@ export default function CompliancePage() {
                     <input
                       type="checkbox"
                       checked={epfRestrictToCeiling}
-                      onChange={(e) => setEpfRestrictToCeiling(e.target.checked)}
+                      onChange={(e) =>
+                        setEpfRestrictToCeiling(e.target.checked)
+                      }
                       className="h-4 w-4 rounded border-gray-300 text-blue-600"
                     />
-                    <span>Cap eligible wage at ceiling (uncheck for voluntary PF on full basic)</span>
+                    <span>
+                      Cap eligible wage at ceiling (uncheck for voluntary PF on
+                      full basic)
+                    </span>
                   </label>
                 </div>
               </div>
 
               <div className="pt-2 border-t border-zinc-200 dark:border-zinc-700">
-                <span className="font-medium block mb-2">Employer Contribution Component Breakdown:</span>
+                <span className="font-medium block mb-2">
+                  Employer Contribution Component Breakdown:
+                </span>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-zinc-600 dark:text-zinc-400">
                   <label className="flex items-center space-x-2">
                     <input
@@ -179,7 +206,8 @@ export default function CompliancePage() {
                   </label>
                 </div>
                 <p className="text-xs text-zinc-500 mt-2">
-                  * Employee pays 12% of eligible wage. Employer pays 3.67% to EPF + 8.33% to EPS + EDLI & Admin fees.
+                  * Employee pays 12% of eligible wage. Employer pays 3.67% to
+                  EPF + 8.33% to EPS + EDLI & Admin fees.
                 </p>
               </div>
             </div>
@@ -192,9 +220,12 @@ export default function CompliancePage() {
         <div>
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-medium">Employees' State Insurance (ESI)</h3>
+              <h3 className="text-lg font-medium">
+                Employees' State Insurance (ESI)
+              </h3>
               <p className="text-sm text-zinc-500">
-                Statutory health insurance under the Employees' State Insurance Act, 1948.
+                Statutory health insurance under the Employees' State Insurance
+                Act, 1948.
               </p>
             </div>
             <label className="flex items-center space-x-3 cursor-pointer">
@@ -204,14 +235,18 @@ export default function CompliancePage() {
                 onChange={(e) => setEsiEnabled(e.target.checked)}
                 className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="font-medium text-sm">Enable ESI for workspace</span>
+              <span className="font-medium text-sm">
+                Enable ESI for workspace
+              </span>
             </label>
           </div>
 
           {esiEnabled && (
             <div className="mt-4 p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-md border border-zinc-200 dark:border-zinc-700 text-sm">
               <div className="max-w-xs">
-                <label className="block font-medium mb-1">ESI Wage Ceiling (₹ / month)</label>
+                <label className="block font-medium mb-1">
+                  ESI Wage Ceiling (₹ / month)
+                </label>
                 <input
                   type="number"
                   min="0"
@@ -221,7 +256,8 @@ export default function CompliancePage() {
                 />
               </div>
               <p className="text-xs text-zinc-500 mt-2">
-                Statutory ceiling: ₹21,000/month gross. Employee pays 0.75%, Employer pays 3.25%.
+                Statutory ceiling: ₹21,000/month gross. Employee pays 0.75%,
+                Employer pays 3.25%.
               </p>
             </div>
           )}
@@ -234,7 +270,9 @@ export default function CompliancePage() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-medium">Professional Tax (PT)</h3>
-              <p className="text-sm text-zinc-500">State-level professional tax deduction schedule.</p>
+              <p className="text-sm text-zinc-500">
+                State-level professional tax deduction schedule.
+              </p>
             </div>
             <label className="flex items-center space-x-3 cursor-pointer">
               <input
@@ -243,7 +281,9 @@ export default function CompliancePage() {
                 onChange={(e) => setPtEnabled(e.target.checked)}
                 className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="font-medium text-sm">Enable Professional Tax</span>
+              <span className="font-medium text-sm">
+                Enable Professional Tax
+              </span>
             </label>
           </div>
 
@@ -256,11 +296,16 @@ export default function CompliancePage() {
                 className="w-full max-w-xs p-2 border border-zinc-300 rounded-md dark:bg-zinc-800 dark:border-zinc-700"
               >
                 <option value="Karnataka">Karnataka</option>
-                <option value="Maharashtra" disabled>Maharashtra (Coming Soon)</option>
-                <option value="Telangana" disabled>Telangana (Coming Soon)</option>
+                <option value="Maharashtra" disabled>
+                  Maharashtra (Coming Soon)
+                </option>
+                <option value="Telangana" disabled>
+                  Telangana (Coming Soon)
+                </option>
               </select>
               <p className="text-xs text-zinc-500 mt-2">
-                Karnataka slabs: ₹0 up to ₹24,999. ₹200 for ₹25,000+ (₹300 in February).
+                Karnataka slabs: ₹0 up to ₹24,999. ₹200 for ₹25,000+ (₹300 in
+                February).
               </p>
             </div>
           )}
@@ -272,17 +317,22 @@ export default function CompliancePage() {
         <div>
           <h3 className="text-lg font-medium">Tax Deducted at Source (TDS)</h3>
           <div className="mt-2 p-4 bg-amber-50 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-800 text-sm text-amber-900 dark:text-amber-200">
-            <span className="font-semibold block mb-1">Manual Monthly Override Mode Only:</span>
+            <span className="font-semibold block mb-1">
+              Manual Monthly Override Mode Only:
+            </span>
             <p className="mb-2">
-              IndiaPay does not have an automated income tax regime engine (Section 115BAC / Chapter VI-A slabs). 
-              TDS deductions must be entered as a manual monthly amount per employee or via payroll line adjustments.
+              IndiaPay does not have an automated income tax regime engine
+              (Section 115BAC / Chapter VI-A slabs). TDS deductions must be
+              entered as a manual monthly amount per employee or via payroll
+              line adjustments.
             </p>
             <p className="text-xs text-amber-800 dark:text-amber-300">
-              Note: Employee tax regime selection ("Old" vs "New") is stored as an informational tag and does not automatically calculate progressive tax brackets.
+              Note: Employee tax regime selection ("Old" vs "New") is stored as
+              an informational tag and does not automatically calculate
+              progressive tax brackets.
             </p>
           </div>
         </div>
-
       </div>
     </div>
   );

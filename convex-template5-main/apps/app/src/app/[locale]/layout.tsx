@@ -9,7 +9,7 @@ import { ThemeProvider } from "next-themes";
 import { ConvexClientProvider } from "../convex-client-provider";
 
 export function generateStaticParams() {
-  return [{ locale: 'en' }, { locale: 'es' }, { locale: 'fr' }];
+  return [{ locale: "en" }, { locale: "es" }, { locale: "fr" }];
 }
 
 export const metadata: Metadata = {

@@ -50,13 +50,17 @@ const LayoutContainer = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+import { RoleGuard } from "@/components/role-guard";
+
 export default function Layout({
   children,
   params,
 }: { children: React.ReactNode; params: { locale: string } }) {
   return (
-    <I18nProviderClient locale={params.locale}>
-      <LayoutContainer>{children}</LayoutContainer>
-    </I18nProviderClient>
+    <RoleGuard allowedRoles={["owner", "admin"]}>
+      <I18nProviderClient locale={params.locale}>
+        <LayoutContainer>{children}</LayoutContainer>
+      </I18nProviderClient>
+    </RoleGuard>
   );
 }

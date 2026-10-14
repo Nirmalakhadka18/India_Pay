@@ -119,12 +119,10 @@ describe("member management (RBAC + integrity)", () => {
         ).find((m) => m.role === "owner")?._id,
     );
     await expect(
-      t
-        .withIdentity(as(owner))
-        .mutation(api.orgs.removeMember, {
-          workspaceId: ws,
-          memberId: ownerMemberRow!,
-        }),
+      t.withIdentity(as(owner)).mutation(api.orgs.removeMember, {
+        workspaceId: ws,
+        memberId: ownerMemberRow!,
+      }),
     ).rejects.toThrow(/owner/i);
   });
 
@@ -132,12 +130,10 @@ describe("member management (RBAC + integrity)", () => {
     const t = convexTest(schema, modules);
     const { ws, member, memberRow } = await seedWorkspace(t);
     await expect(
-      t
-        .withIdentity(as(member))
-        .mutation(api.orgs.removeMember, {
-          workspaceId: ws,
-          memberId: memberRow,
-        }),
+      t.withIdentity(as(member)).mutation(api.orgs.removeMember, {
+        workspaceId: ws,
+        memberId: memberRow,
+      }),
     ).rejects.toThrow(/Forbidden/);
   });
 
@@ -312,6 +308,102 @@ describe("maintained counters (dashboard.stats stays O(1) + correct)", () => {
     s = await u.query(api.dashboard.stats, { workspaceId: ws });
     expect(s?.openJobs).toBe(0); // left the open set
     expect(s?.jobs).toBe(1); // total unchanged
+  });
+
+  test("dashboard.stats correctly aggregates approved and processed payroll runs and ignores draft/pending/rejected", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, owner, member } = await seedWorkspace(t);
+    const u = t.withIdentity(as(owner));
+
+    // 1. Initially, no payroll runs exist -> empty state (null totals)
+    let s = await u.query(api.dashboard.stats, { workspaceId: ws });
+    expect(s?.latestGrossPayroll).toBeNull();
+    expect(s?.latestNetPayroll).toBeNull();
+    expect(s?.latestPeriod).toBeNull();
+    expect(s?.pendingApprovalsCount).toBe(0);
+
+    // 2. Insert a draft / calculated payroll run -> should NOT qualify for Gross/Net cards
+    const draftRunId = await t.run(async (ctx) => {
+      return await ctx.db.insert("payrollRuns", {
+        workspaceId: ws,
+        periodMonth: "2026-09",
+        startDate: "2026-09-01",
+        endDate: "2026-09-30",
+        status: "calculated",
+        totalEmployees: 3,
+        totalGrossSalary: 75000,
+        totalLopDeduction: 0,
+        totalCustomDeductions: 0,
+        totalStatutoryDeductions: 5000,
+        totalNetSalary: 70000,
+        createdById: member,
+        createdAt: 1000,
+        updatedAt: 1000,
+      });
+    });
+
+    s = await u.query(api.dashboard.stats, { workspaceId: ws });
+    expect(s?.latestGrossPayroll).toBeNull();
+    expect(s?.latestNetPayroll).toBeNull();
+    expect(s?.pendingApprovalsCount).toBe(0);
+
+    // 3. Move to pending_approval -> should increment pendingApprovalsCount, but NOT Gross/Net
+    await t.run(async (ctx) => {
+      await ctx.db.patch(draftRunId, {
+        status: "pending_approval",
+        submittedBy: member,
+        submittedAt: 1100,
+      });
+    });
+
+    s = await u.query(api.dashboard.stats, { workspaceId: ws });
+    expect(s?.latestGrossPayroll).toBeNull();
+    expect(s?.latestNetPayroll).toBeNull();
+    expect(s?.pendingApprovalsCount).toBe(1);
+
+    // 4. Mark as approved -> should now qualify as approved payroll
+    await t.run(async (ctx) => {
+      await ctx.db.patch(draftRunId, {
+        status: "approved",
+        approvedBy: owner,
+        approvedAt: 1200,
+      });
+    });
+
+    s = await u.query(api.dashboard.stats, { workspaceId: ws });
+    expect(s?.latestGrossPayroll).toBe(75000);
+    expect(s?.latestNetPayroll).toBe(70000);
+    expect(s?.latestPeriod).toBe("2026-09");
+    expect(s?.latestPayrollStatus).toBe("approved");
+    expect(s?.pendingApprovalsCount).toBe(0);
+
+    // 5. Add a newer processed run for 2026-10 -> should take precedence as latest qualifying run
+    await t.run(async (ctx) => {
+      await ctx.db.insert("payrollRuns", {
+        workspaceId: ws,
+        periodMonth: "2026-10",
+        startDate: "2026-10-01",
+        endDate: "2026-10-31",
+        status: "processed",
+        totalEmployees: 4,
+        totalGrossSalary: 100000,
+        totalLopDeduction: 0,
+        totalCustomDeductions: 0,
+        totalStatutoryDeductions: 8000,
+        totalNetSalary: 92000,
+        createdById: member,
+        finalizedBy: owner,
+        finalizedAt: 2000,
+        createdAt: 1900,
+        updatedAt: 2000,
+      });
+    });
+
+    s = await u.query(api.dashboard.stats, { workspaceId: ws });
+    expect(s?.latestGrossPayroll).toBe(100000);
+    expect(s?.latestNetPayroll).toBe(92000);
+    expect(s?.latestPeriod).toBe("2026-10");
+    expect(s?.latestPayrollStatus).toBe("processed");
   });
 });
 
@@ -624,7 +716,7 @@ describe("attendance and leave privacy (IDOR prevention)", () => {
       asMember.query(api.attendance.list, {
         workspaceId: ws,
         employeeId: empB,
-      })
+      }),
     ).rejects.toThrow(/Forbidden/);
 
     // 2. Plain member querying leaves with empB id should be rejected
@@ -632,7 +724,7 @@ describe("attendance and leave privacy (IDOR prevention)", () => {
       asMember.query(api.leaves.list, {
         workspaceId: ws,
         employeeId: empB,
-      })
+      }),
     ).rejects.toThrow(/Forbidden/);
 
     // 3. Plain member attempting to submit leave for empB should be rejected
@@ -645,7 +737,7 @@ describe("attendance and leave privacy (IDOR prevention)", () => {
         endDate: "2026-08-15",
         daysCount: 1,
         reason: "Sick day",
-      })
+      }),
     ).rejects.toThrow(/Forbidden/);
 
     // 4. Plain member querying leaves without employeeId should only receive their own records
@@ -733,7 +825,9 @@ describe("Admin vs Member RBAC — dev account role verification", () => {
   test("admin can remove a member; plain member cannot remove anyone", async () => {
     const t = convexTest(schema, modules);
     const { admin, member, memberRow } = await seedWithAdmin(t);
-    const ws = await t.run(async (ctx) => (await ctx.db.get(memberRow))!.workspaceId);
+    const ws = await t.run(
+      async (ctx) => (await ctx.db.get(memberRow))!.workspaceId,
+    );
 
     // Plain member is forbidden
     await expect(
@@ -755,7 +849,9 @@ describe("Admin vs Member RBAC — dev account role verification", () => {
   test("admin can change member roles; plain member cannot", async () => {
     const t = convexTest(schema, modules);
     const { admin, member, memberRow } = await seedWithAdmin(t);
-    const ws = await t.run(async (ctx) => (await ctx.db.get(memberRow))!.workspaceId);
+    const ws = await t.run(
+      async (ctx) => (await ctx.db.get(memberRow))!.workspaceId,
+    );
 
     // Plain member is forbidden
     await expect(
@@ -779,7 +875,9 @@ describe("Admin vs Member RBAC — dev account role verification", () => {
   test("admin cannot be promoted to owner via changeRole (owner is a protected role)", async () => {
     const t = convexTest(schema, modules);
     const { owner, adminRow } = await seedWithAdmin(t);
-    const ws = await t.run(async (ctx) => (await ctx.db.get(adminRow))!.workspaceId);
+    const ws = await t.run(
+      async (ctx) => (await ctx.db.get(adminRow))!.workspaceId,
+    );
 
     await expect(
       t.withIdentity(as(owner)).mutation(api.orgs.changeRole, {
@@ -942,6 +1040,89 @@ describe("Admin vs Member RBAC — dev account role verification", () => {
     ).resolves.toBeNull();
   });
 
+  test("admin cannot reject payroll runs (owner-only permission)", async () => {
+    const t = convexTest(schema, modules);
+    const { admin, ws } = await seedWithAdmin(t);
+
+    const runId = await t.run(async (ctx) =>
+      ctx.db.insert("payrollRuns", {
+        workspaceId: ws,
+        periodMonth: "2026-10",
+        startDate: "2026-10-01",
+        endDate: "2026-10-31",
+        status: "pending_approval",
+        submittedBy: admin,
+        submittedAt: Date.now(),
+        createdById: admin,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        totalGrossSalary: 60000,
+        totalNetSalary: 54000,
+        totalLopDeduction: 0,
+        totalCustomDeductions: 0,
+        totalStatutoryDeductions: 6000,
+        totalEmployees: 1,
+      }),
+    );
+
+    // Admin cannot reject (strict RBAC protection: owner only)
+    await expect(
+      t.withIdentity(as(admin)).mutation(api.payroll.rejectRun, {
+        workspaceId: ws,
+        payrollRunId: runId,
+        reason: "Test rejection",
+      }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+
+  test("plain member cannot calculate preview, list runs, or view run details (RBAC data privacy)", async () => {
+    const t = convexTest(schema, modules);
+    const { member, ws } = await seedWithAdmin(t);
+    const asMember = t.withIdentity(as(member));
+
+    const runId = await t.run(async (ctx) =>
+      ctx.db.insert("payrollRuns", {
+        workspaceId: ws,
+        periodMonth: "2026-10",
+        startDate: "2026-10-01",
+        endDate: "2026-10-31",
+        status: "calculated",
+        createdById: member,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        totalGrossSalary: 60000,
+        totalNetSalary: 54000,
+        totalLopDeduction: 0,
+        totalCustomDeductions: 0,
+        totalStatutoryDeductions: 6000,
+        totalEmployees: 1,
+      }),
+    );
+
+    // Plain member cannot calculate preview
+    await expect(
+      asMember.query(api.payroll.calculatePreview, {
+        workspaceId: ws,
+        periodMonth: "2026-10",
+      }),
+    ).rejects.toThrow(/Forbidden/);
+
+    // Plain member cannot list runs
+    await expect(
+      asMember.query(api.payroll.listRuns, {
+        workspaceId: ws,
+      }),
+    ).rejects.toThrow(/Forbidden/);
+
+    // Plain member cannot view full run details
+    await expect(
+      asMember.query(api.payroll.getRunDetails, {
+        workspaceId: ws,
+        payrollRunId: runId,
+      }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+
   // ── Leave approval ────────────────────────────────────────────────────────
 
   test("admin can approve leave requests; plain member cannot", async () => {
@@ -1012,3 +1193,322 @@ describe("Admin vs Member RBAC — dev account role verification", () => {
     ).rejects.toThrow(/Forbidden/);
   });
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Owner Account Provisioning, RBAC, and Maker-Checker Enforcement
+// ─────────────────────────────────────────────────────────────────────────────
+describe("Owner Account Provisioning, RBAC & Maker-Checker Suite", () => {
+  const DEV_OWNER_EMAIL = "owner@indiapaypayroll.com";
+  const DEV_ADMIN_EMAIL = "admin@indiapaypayroll.com";
+  const DEV_USER_EMAIL = "user@indiapaypayroll.com";
+
+  test("devAccountsMutation requires DEV_SEED=1 guard", async () => {
+    const t = convexTest(schema, modules);
+    const origSeed = process.env.DEV_SEED;
+    try {
+      delete process.env.DEV_SEED;
+      await expect(
+        t.mutation(internal.devAccountsMutation.provisionDevAccountsMutation, {
+          ownerHash: "mock_hash_owner",
+        }),
+      ).rejects.toThrow(/Dev\/seed functions are disabled/);
+    } finally {
+      process.env.DEV_SEED = origSeed;
+    }
+  });
+
+  test("provisionDevAccountsMutation correctly provisions Owner account with role=owner", async () => {
+    const t = convexTest(schema, modules);
+    process.env.DEV_SEED = "1";
+
+    const result = await t.mutation(
+      internal.devAccountsMutation.provisionDevAccountsMutation,
+      {
+        ownerHash: "scrypt_mock_owner_hash",
+        adminHash: "scrypt_mock_admin_hash",
+        userHash: "scrypt_mock_user_hash",
+      },
+    );
+
+    expect(result.ownerCreated).toBe(true);
+    expect(result.adminCreated).toBe(true);
+    expect(result.userCreated).toBe(true);
+
+    const wsId = result.workspaceId as any;
+
+    await t.run(async (ctx) => {
+      // 1. Verify Owner user & authAccount
+      const ownerUser = await ctx.db
+        .query("users")
+        .withIndex("email", (q) => q.eq("email", DEV_OWNER_EMAIL))
+        .unique();
+      expect(ownerUser).toBeDefined();
+      expect(ownerUser?.emailVerificationTime).toBeDefined();
+
+      const ownerAuth = await ctx.db
+        .query("authAccounts")
+        .withIndex("providerAndAccountId", (q) =>
+          q.eq("provider", "password").eq("providerAccountId", DEV_OWNER_EMAIL),
+        )
+        .unique();
+      expect(ownerAuth).toBeDefined();
+      expect(ownerAuth?.userId).toEqual(ownerUser?._id);
+      expect(ownerAuth?.secret).toBe("scrypt_mock_owner_hash");
+      expect(ownerAuth?.emailVerified).toBe(DEV_OWNER_EMAIL);
+
+      // 2. Verify Members table roles: Owner=owner, Admin=admin, User=member
+      const ownerMember = await ctx.db
+        .query("members")
+        .withIndex("by_user_workspace", (q) =>
+          q.eq("userId", ownerUser!._id).eq("workspaceId", wsId),
+        )
+        .unique();
+      expect(ownerMember?.role).toBe("owner");
+
+      const adminUser = await ctx.db
+        .query("users")
+        .withIndex("email", (q) => q.eq("email", DEV_ADMIN_EMAIL))
+        .unique();
+      const adminMember = await ctx.db
+        .query("members")
+        .withIndex("by_user_workspace", (q) =>
+          q.eq("userId", adminUser!._id).eq("workspaceId", wsId),
+        )
+        .unique();
+      expect(adminMember?.role).toBe("admin");
+
+      const userUser = await ctx.db
+        .query("users")
+        .withIndex("email", (q) => q.eq("email", DEV_USER_EMAIL))
+        .unique();
+      const userMember = await ctx.db
+        .query("members")
+        .withIndex("by_user_workspace", (q) =>
+          q.eq("userId", userUser!._id).eq("workspaceId", wsId),
+        )
+        .unique();
+      expect(userMember?.role).toBe("member");
+
+      // 3. Verify Owner employee record
+      const ownerEmp = await ctx.db
+        .query("employees")
+        .withIndex("by_email", (q) => q.eq("email", DEV_OWNER_EMAIL))
+        .filter((q) => q.eq(q.field("workspaceId"), wsId))
+        .first();
+      expect(ownerEmp).toBeDefined();
+      expect(ownerEmp?.userId).toEqual(ownerUser?._id);
+      expect(ownerEmp?.status).toBe("active");
+    });
+  });
+
+  test("Owner provisioning is idempotent and updates credentials without altering roles", async () => {
+    const t = convexTest(schema, modules);
+    process.env.DEV_SEED = "1";
+
+    // Initial provision
+    const res1 = await t.mutation(
+      internal.devAccountsMutation.provisionDevAccountsMutation,
+      {
+        ownerHash: "initial_owner_hash",
+        adminHash: "initial_admin_hash",
+      },
+    );
+
+    // Re-provision with updated owner hash (simulating password rotation)
+    const res2 = await t.mutation(
+      internal.devAccountsMutation.provisionDevAccountsMutation,
+      {
+        ownerHash: "updated_owner_hash",
+      },
+    );
+
+    expect(res2.workspaceId).toBe(res1.workspaceId);
+    expect(res2.ownerCreated).toBe(false); // already existed
+
+    await t.run(async (ctx) => {
+      const ownerAuth = await ctx.db
+        .query("authAccounts")
+        .withIndex("providerAndAccountId", (q) =>
+          q.eq("provider", "password").eq("providerAccountId", DEV_OWNER_EMAIL),
+        )
+        .unique();
+      expect(ownerAuth?.secret).toBe("updated_owner_hash");
+
+      // Verify Admin hash was preserved (not overwritten by undefined)
+      const adminAuth = await ctx.db
+        .query("authAccounts")
+        .withIndex("providerAndAccountId", (q) =>
+          q.eq("provider", "password").eq("providerAccountId", DEV_ADMIN_EMAIL),
+        )
+        .unique();
+      expect(adminAuth?.secret).toBe("initial_admin_hash");
+    });
+  });
+
+  test("Owner can authenticate and workspace identifies role as owner", async () => {
+    const t = convexTest(schema, modules);
+    process.env.DEV_SEED = "1";
+
+    const { workspaceId } = await t.mutation(
+      internal.devAccountsMutation.provisionDevAccountsMutation,
+      { ownerHash: "h1", adminHash: "h2", userHash: "h3" },
+    );
+
+    const ownerUser = await t.run(async (ctx) =>
+      (await ctx.db
+        .query("users")
+        .withIndex("email", (q) => q.eq("email", DEV_OWNER_EMAIL))
+        .unique())!._id,
+    );
+
+    const asOwner = t.withIdentity(as(ownerUser));
+    const workspaces = await asOwner.query(api.orgs.myWorkspaces, {});
+    const targetWs = workspaces.find((w) => w._id === (workspaceId as any));
+    expect(targetWs).toBeDefined();
+    expect(targetWs?.role).toBe("owner");
+  });
+
+  test("Owner can approve/reject payroll run submitted by Admin, but cannot approve run submitted by Owner", async () => {
+    const t = convexTest(schema, modules);
+    process.env.DEV_SEED = "1";
+
+    const { workspaceId } = await t.mutation(
+      internal.devAccountsMutation.provisionDevAccountsMutation,
+      { ownerHash: "h1", adminHash: "h2", userHash: "h3" },
+    );
+    const ws = workspaceId as any;
+
+    const { ownerUser, adminUser } = await t.run(async (ctx) => {
+      const o = (await ctx.db
+        .query("users")
+        .withIndex("email", (q) => q.eq("email", DEV_OWNER_EMAIL))
+        .unique())!._id;
+      const a = (await ctx.db
+        .query("users")
+        .withIndex("email", (q) => q.eq("email", DEV_ADMIN_EMAIL))
+        .unique())!._id;
+      return { ownerUser: o, adminUser: a };
+    });
+
+    const asOwner = t.withIdentity(as(ownerUser));
+    const asAdmin = t.withIdentity(as(adminUser));
+
+    // Run 1: Submitted by Admin
+    const run1Id = await t.run(async (ctx) =>
+      ctx.db.insert("payrollRuns", {
+        workspaceId: ws,
+        periodMonth: "2026-11",
+        startDate: "2026-11-01",
+        endDate: "2026-11-30",
+        status: "pending_approval",
+        submittedBy: adminUser,
+        submittedAt: Date.now(),
+        createdById: adminUser,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        totalGrossSalary: 75000,
+        totalNetSalary: 67500,
+        totalLopDeduction: 0,
+        totalCustomDeductions: 0,
+        totalStatutoryDeductions: 7500,
+        totalEmployees: 1,
+      }),
+    );
+
+    // Admin cannot approve
+    await expect(
+      asAdmin.mutation(api.payroll.approveRun, {
+        workspaceId: ws,
+        payrollRunId: run1Id,
+      }),
+    ).rejects.toThrow(/Forbidden/);
+
+    // Admin cannot reject
+    await expect(
+      asAdmin.mutation(api.payroll.rejectRun, {
+        workspaceId: ws,
+        payrollRunId: run1Id,
+        reason: "Admin trying to reject",
+      }),
+    ).rejects.toThrow(/Forbidden/);
+
+    // Owner CAN approve run submitted by Admin
+    await expect(
+      asOwner.mutation(api.payroll.approveRun, {
+        workspaceId: ws,
+        payrollRunId: run1Id,
+      }),
+    ).resolves.toBeNull();
+
+    const updatedRun1 = await t.run(async (ctx) => ctx.db.get(run1Id));
+    expect(updatedRun1?.status).toBe("approved");
+    expect(updatedRun1?.approvedBy).toBe(ownerUser);
+
+    // Run 2: Submitted by Owner
+    const run2Id = await t.run(async (ctx) =>
+      ctx.db.insert("payrollRuns", {
+        workspaceId: ws,
+        periodMonth: "2026-12",
+        startDate: "2026-12-01",
+        endDate: "2026-12-31",
+        status: "pending_approval",
+        submittedBy: ownerUser,
+        submittedAt: Date.now(),
+        createdById: ownerUser,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        totalGrossSalary: 75000,
+        totalNetSalary: 67500,
+        totalLopDeduction: 0,
+        totalCustomDeductions: 0,
+        totalStatutoryDeductions: 7500,
+        totalEmployees: 1,
+      }),
+    );
+
+    // Strict Maker-Checker: Owner CANNOT approve their own run
+    await expect(
+      asOwner.mutation(api.payroll.approveRun, {
+        workspaceId: ws,
+        payrollRunId: run2Id,
+      }),
+    ).rejects.toThrow(/You cannot approve a payroll run that you submitted/);
+
+    // Run 3: Testing Owner rejection of Admin submitted run
+    const run3Id = await t.run(async (ctx) =>
+      ctx.db.insert("payrollRuns", {
+        workspaceId: ws,
+        periodMonth: "2027-01",
+        startDate: "2027-01-01",
+        endDate: "2027-01-31",
+        status: "pending_approval",
+        submittedBy: adminUser,
+        submittedAt: Date.now(),
+        createdById: adminUser,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        totalGrossSalary: 75000,
+        totalNetSalary: 67500,
+        totalLopDeduction: 0,
+        totalCustomDeductions: 0,
+        totalStatutoryDeductions: 7500,
+        totalEmployees: 1,
+      }),
+    );
+
+    // Owner CAN reject run submitted by Admin
+    await expect(
+      asOwner.mutation(api.payroll.rejectRun, {
+        workspaceId: ws,
+        payrollRunId: run3Id,
+        reason: "Review required for bonuses",
+      }),
+    ).resolves.toBeNull();
+
+    const updatedRun3 = await t.run(async (ctx) => ctx.db.get(run3Id));
+    expect(updatedRun3?.status).toBe("calculated");
+    expect(updatedRun3?.rejectionReason).toBe("Review required for bonuses");
+    expect(updatedRun3?.rejectedBy).toBe(ownerUser);
+  });
+});
+

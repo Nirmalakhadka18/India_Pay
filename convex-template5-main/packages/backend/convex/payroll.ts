@@ -12,7 +12,6 @@ import {
 
 export { getDaysInMonth, type CalculationContext, computeEmployeePayrollItem };
 
-
 // Calculate payroll preview in memory before saving run
 export const calculatePreview = query({
   args: {
@@ -22,7 +21,7 @@ export const calculatePreview = query({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireMember(ctx, userId, args.workspaceId);
+    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
 
     const parts = args.periodMonth.split("-");
     const yearStr = parts[0] ?? "";
@@ -41,7 +40,7 @@ export const calculatePreview = query({
     const employees = await ctx.db
       .query("employees")
       .withIndex("by_workspace_status", (q) =>
-        q.eq("workspaceId", args.workspaceId).eq("status", "active")
+        q.eq("workspaceId", args.workspaceId).eq("status", "active"),
       )
       .collect();
 
@@ -51,7 +50,7 @@ export const calculatePreview = query({
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
 
-    const currentSalaries = new Map<string, typeof allSalaries[0]>();
+    const currentSalaries = new Map<string, (typeof allSalaries)[0]>();
     for (const s of allSalaries) {
       const existing = currentSalaries.get(s.employeeId);
       if (!existing || s.effectiveDate > existing.effectiveDate) {
@@ -77,7 +76,7 @@ export const calculatePreview = query({
       .collect();
 
     const periodAttendance = attendanceRecords.filter(
-      (a) => a.date >= startDate && a.date <= endDate
+      (a) => a.date >= startDate && a.date <= endDate,
     );
 
     // Get compliance settings
@@ -103,7 +102,10 @@ export const calculatePreview = query({
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
 
-    const empComplianceMap = new Map<string, typeof allEmployeeCompliance[0]>();
+    const empComplianceMap = new Map<
+      string,
+      (typeof allEmployeeCompliance)[0]
+    >();
     for (const ec of allEmployeeCompliance) {
       empComplianceMap.set(ec.employeeId, ec);
     }
@@ -111,7 +113,9 @@ export const calculatePreview = query({
     // Build calculation items per employee
     const items = employees.map((emp) => {
       const salary = currentSalaries.get(emp._id);
-      const empAttendance = periodAttendance.filter((a) => a.employeeId === emp._id);
+      const empAttendance = periodAttendance.filter(
+        (a) => a.employeeId === emp._id,
+      );
       const empComp = empComplianceMap.get(emp._id);
       return computeEmployeePayrollItem(emp, salary, empAttendance, empComp, {
         totalDaysInMonth,
@@ -125,10 +129,16 @@ export const calculatePreview = query({
     const totalLopDeduction = items.reduce((sum, i) => sum + i.lopDeduction, 0);
     const totalCustomDeductions = items.reduce(
       (sum, i) => sum + i.totalCustomDeductions,
-      0
+      0,
     );
-    const totalStatutoryDeductions = items.reduce((sum, i) => sum + i.totalStatutoryDeductions, 0);
-    const totalEmployerContributions = items.reduce((sum, i) => sum + i.totalEmployerContributions, 0);
+    const totalStatutoryDeductions = items.reduce(
+      (sum, i) => sum + i.totalStatutoryDeductions,
+      0,
+    );
+    const totalEmployerContributions = items.reduce(
+      (sum, i) => sum + i.totalEmployerContributions,
+      0,
+    );
     const totalNetSalary = items.reduce((sum, i) => sum + i.netSalary, 0);
 
     return {
@@ -162,27 +172,29 @@ export const createRun = mutation({
     const existing = await ctx.db
       .query("payrollRuns")
       .withIndex("by_workspace_period", (q) =>
-        q.eq("workspaceId", args.workspaceId).eq("periodMonth", args.periodMonth)
+        q
+          .eq("workspaceId", args.workspaceId)
+          .eq("periodMonth", args.periodMonth),
       )
       .first();
 
     if (existing) {
       if (existing.status !== "calculated" && existing.status !== "draft") {
         throw new ConvexError(
-          `Cannot recalculate a payroll run in ${existing.status} status.`
+          `Cannot recalculate a payroll run in ${existing.status} status.`,
         );
       }
-      
+
       // Delete existing calculated items safely within this transaction
       const existingItems = await ctx.db
         .query("payrollItems")
         .withIndex("by_run", (q) => q.eq("payrollRunId", existing._id))
         .collect();
-      
+
       for (const item of existingItems) {
         await ctx.db.delete(item._id);
       }
-      
+
       // Delete the run itself
       await ctx.db.delete(existing._id);
     }
@@ -204,7 +216,7 @@ export const createRun = mutation({
     const employees = await ctx.db
       .query("employees")
       .withIndex("by_workspace_status", (q) =>
-        q.eq("workspaceId", args.workspaceId).eq("status", "active")
+        q.eq("workspaceId", args.workspaceId).eq("status", "active"),
       )
       .collect();
 
@@ -213,7 +225,7 @@ export const createRun = mutation({
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
 
-    const currentSalaries = new Map<string, typeof allSalaries[0]>();
+    const currentSalaries = new Map<string, (typeof allSalaries)[0]>();
     for (const s of allSalaries) {
       const existing = currentSalaries.get(s.employeeId);
       if (!existing || s.effectiveDate > existing.effectiveDate) {
@@ -237,7 +249,7 @@ export const createRun = mutation({
       .collect();
 
     const periodAttendance = attendanceRecords.filter(
-      (a) => a.date >= startDate && a.date <= endDate
+      (a) => a.date >= startDate && a.date <= endDate,
     );
 
     // Get compliance settings
@@ -263,7 +275,10 @@ export const createRun = mutation({
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
 
-    const empComplianceMap = new Map<string, typeof allEmployeeCompliance[0]>();
+    const empComplianceMap = new Map<
+      string,
+      (typeof allEmployeeCompliance)[0]
+    >();
     for (const ec of allEmployeeCompliance) {
       empComplianceMap.set(ec.employeeId, ec);
     }
@@ -272,7 +287,9 @@ export const createRun = mutation({
 
     const calculatedItems = employees.map((emp) => {
       const salary = currentSalaries.get(emp._id);
-      const empAttendance = periodAttendance.filter((a) => a.employeeId === emp._id);
+      const empAttendance = periodAttendance.filter(
+        (a) => a.employeeId === emp._id,
+      );
       const empComp = empComplianceMap.get(emp._id);
       return computeEmployeePayrollItem(emp, salary, empAttendance, empComp, {
         totalDaysInMonth,
@@ -282,12 +299,30 @@ export const createRun = mutation({
       });
     });
 
-    const totalGrossSalary = calculatedItems.reduce((sum, i) => sum + i.grossSalary, 0);
-    const totalLopDeduction = calculatedItems.reduce((sum, i) => sum + i.lopDeduction, 0);
-    const totalCustomDeductions = calculatedItems.reduce((sum, i) => sum + i.totalCustomDeductions, 0);
-    const totalStatutoryDeductions = calculatedItems.reduce((sum, i) => sum + i.totalStatutoryDeductions, 0);
-    const totalEmployerContributions = calculatedItems.reduce((sum, i) => sum + i.totalEmployerContributions, 0);
-    const totalNetSalary = calculatedItems.reduce((sum, i) => sum + i.netSalary, 0);
+    const totalGrossSalary = calculatedItems.reduce(
+      (sum, i) => sum + i.grossSalary,
+      0,
+    );
+    const totalLopDeduction = calculatedItems.reduce(
+      (sum, i) => sum + i.lopDeduction,
+      0,
+    );
+    const totalCustomDeductions = calculatedItems.reduce(
+      (sum, i) => sum + i.totalCustomDeductions,
+      0,
+    );
+    const totalStatutoryDeductions = calculatedItems.reduce(
+      (sum, i) => sum + i.totalStatutoryDeductions,
+      0,
+    );
+    const totalEmployerContributions = calculatedItems.reduce(
+      (sum, i) => sum + i.totalEmployerContributions,
+      0,
+    );
+    const totalNetSalary = calculatedItems.reduce(
+      (sum, i) => sum + i.netSalary,
+      0,
+    );
 
     // Insert main run record
     const payrollRunId = await ctx.db.insert("payrollRuns", {
@@ -351,7 +386,7 @@ export const listRuns = query({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireMember(ctx, userId, args.workspaceId);
+    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
 
     return await ctx.db
       .query("payrollRuns")
@@ -370,7 +405,7 @@ export const getRunDetails = query({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireMember(ctx, userId, args.workspaceId);
+    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
 
     const run = await ctx.db.get(args.payrollRunId);
     if (!run || run.workspaceId !== args.workspaceId) {
@@ -388,11 +423,13 @@ export const getRunDetails = query({
         const emp = await ctx.db.get(i.employeeId);
         return {
           ...i,
-          employeeName: emp ? `${emp.firstName} ${emp.lastName}` : "Unknown Employee",
+          employeeName: emp
+            ? `${emp.firstName} ${emp.lastName}`
+            : "Unknown Employee",
           email: emp?.email ?? "",
           department: emp?.department ?? "General",
         };
-      })
+      }),
     );
 
     return {
@@ -413,7 +450,9 @@ export const getMyPayslips = query({
 
     const me = await ctx.db
       .query("employees")
-      .withIndex("by_workspace_user", (q) => q.eq("workspaceId", args.workspaceId).eq("userId", userId))
+      .withIndex("by_workspace_user", (q) =>
+        q.eq("workspaceId", args.workspaceId).eq("userId", userId),
+      )
       .first();
 
     if (!me) {
@@ -463,7 +502,7 @@ export const getPayslip = query({
       const me = await ctx.db
         .query("employees")
         .withIndex("by_workspace_user", (q) =>
-          q.eq("workspaceId", args.workspaceId).eq("userId", userId)
+          q.eq("workspaceId", args.workspaceId).eq("userId", userId),
         )
         .first();
       if (!me || me._id !== args.employeeId) {
@@ -477,7 +516,9 @@ export const getPayslip = query({
     }
 
     if (run.status !== "processed") {
-      throw new ConvexError("Payslips are only available for finalized payroll runs.");
+      throw new ConvexError(
+        "Payslips are only available for finalized payroll runs.",
+      );
     }
 
     const workspace = await ctx.db.get(args.workspaceId);
@@ -501,12 +542,13 @@ export const getPayslip = query({
       startDate: run.startDate,
       endDate: run.endDate,
       paymentDate: run.finalizedAt,
-      employeeName: emp ? `${emp.firstName} ${emp.lastName}` : "Unknown Employee",
+      employeeName: emp
+        ? `${emp.firstName} ${emp.lastName}`
+        : "Unknown Employee",
       email: emp?.email ?? "",
       department: emp?.department ?? "General",
       designation: emp?.designation ?? "Employee",
       phone: emp?.phone ?? "",
-      employeeId: args.employeeId,
       ...item,
     };
   },
@@ -566,7 +608,9 @@ export const approveRun = mutation({
 
     // Strict Two-Person Maker-Checker check
     if (run.submittedBy === userId) {
-      throw new ConvexError("You cannot approve a payroll run that you submitted. Another owner must approve it.");
+      throw new ConvexError(
+        "You cannot approve a payroll run that you submitted. Another owner must approve it.",
+      );
     }
 
     const now = Date.now();

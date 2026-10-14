@@ -39,7 +39,11 @@ export default function DashboardSettings() {
 
   const handleDeleteAccount = async () => {
     await deleteCurrentUserAccount();
-    signOut();
+    await signOut();
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("ws");
+      window.location.replace("/login");
+    }
   };
 
   const usernameForm = useForm({

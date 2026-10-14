@@ -26,9 +26,23 @@ function Shell({
   children: React.ReactNode;
 }) {
   return (
-    <form className="flex w-72 flex-col gap-3" onSubmit={onSubmit}>
+    <form
+      className="flex w-72 flex-col gap-3"
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit(e);
+      }}
+    >
       {children}
-      <Button type="submit" disabled={pending} className="font-mono">
+      <Button
+        type="submit"
+        onClick={(e) => {
+          e.preventDefault();
+          onSubmit(e);
+        }}
+        disabled={pending}
+        className="font-mono"
+      >
         {pending ? "…" : cta}
       </Button>
       {error && <p className="text-xs text-red-500">{error}</p>}
@@ -76,7 +90,9 @@ export function AuthForm() {
       ) {
         setError(msg);
       } else {
-        setError("Authentication request failed. Please check your credentials or try again.");
+        setError(
+          "Authentication request failed. Please check your credentials or try again.",
+        );
       }
     } finally {
       setPending(false);
@@ -85,6 +101,7 @@ export function AuthForm() {
 
   const submitSignIn = go(async () => {
     await signIn("password", { email, password, flow: "signIn" });
+    window.location.href = "/";
   });
   const submitSignUp = go(async () => {
     await signIn("password", { email, password, flow: "signUp" });
@@ -95,6 +112,7 @@ export function AuthForm() {
   });
   const submitVerify = go(async () => {
     await signIn("password", { email, code, flow: "email-verification" });
+    window.location.href = "/";
   });
   const submitForgot = go(async () => {
     await signIn("password", { email, flow: "reset" });

@@ -1,23 +1,23 @@
 "use client";
 
+import { PayslipModal } from "@/components/payslip-modal";
 import { useWorkspace } from "@/lib/useWorkspace";
 import { api } from "@v1/backend/convex/_generated/api";
-import { useQuery, useMutation } from "convex/react";
 import type { Id } from "@v1/backend/convex/_generated/dataModel";
-import { useState } from "react";
-import {
-  FileText,
-  UserCircle,
-  CalendarClock,
-  Printer,
-  ChevronRight,
-  AlertCircle,
-  Loader2,
-  CheckCircle2,
-} from "lucide-react";
 import { Button } from "@v1/ui/button";
+import { useMutation, useQuery } from "convex/react";
 import { format } from "date-fns";
-import { PayslipModal } from "@/components/payslip-modal";
+import {
+  AlertCircle,
+  CalendarClock,
+  CheckCircle2,
+  ChevronRight,
+  FileText,
+  Loader2,
+  Printer,
+  UserCircle,
+} from "lucide-react";
+import { useState } from "react";
 
 export default function MyPortal() {
   const { current } = useWorkspace();
@@ -27,14 +27,25 @@ export default function MyPortal() {
   const me = useQuery(api.employees.getMyProfile, scoped);
   const payslips = useQuery(api.payroll.getMyPayslips, scoped);
   const myLeaves = useQuery(api.leaves.getMyLeaves, scoped);
-  const myAttendance = useQuery(api.attendance.getMyAttendance, workspaceId ? { workspaceId, periodMonth: format(new Date(), "yyyy-MM") } : "skip");
+  const myAttendance = useQuery(
+    api.attendance.getMyAttendance,
+    workspaceId
+      ? { workspaceId, periodMonth: format(new Date(), "yyyy-MM") }
+      : "skip",
+  );
   const linkMyAccount = useMutation(api.employees.linkMyAccount);
   const submitMyLeave = useMutation(api.leaves.submitMyLeave);
 
-  const [linkState, setLinkState] = useState<"idle" | "loading" | "error" | "success">("idle");
+  const [linkState, setLinkState] = useState<
+    "idle" | "loading" | "error" | "success"
+  >("idle");
   const [linkError, setLinkError] = useState("");
-  const [selectedPayslipRunId, setSelectedPayslipRunId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"profile" | "leaves" | "attendance">("profile");
+  const [selectedPayslipRunId, setSelectedPayslipRunId] = useState<
+    string | null
+  >(null);
+  const [activeTab, setActiveTab] = useState<
+    "profile" | "leaves" | "attendance"
+  >("profile");
 
   // Leave Form State
   const [leaveType, setLeaveType] = useState("sick");
@@ -46,8 +57,12 @@ export default function MyPortal() {
   const payslipData = useQuery(
     api.payroll.getPayslip,
     workspaceId && selectedPayslipRunId && me
-      ? { workspaceId, payrollRunId: selectedPayslipRunId as Id<"payrollRuns">, employeeId: me._id }
-      : "skip"
+      ? {
+          workspaceId,
+          payrollRunId: selectedPayslipRunId as Id<"payrollRuns">,
+          employeeId: me._id,
+        }
+      : "skip",
   );
 
   const handleLink = async () => {
@@ -110,28 +125,36 @@ export default function MyPortal() {
             <UserCircle className="mx-auto h-12 w-12 text-muted-foreground opacity-50 mb-4" />
             <h2 className="text-xl font-semibold mb-2">Account Not Linked</h2>
             <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-              Your user account is not currently linked to an employee record in this workspace. Please link your account to view your payroll and profile information.
+              Your user account is not currently linked to an employee record in
+              this workspace. Please link your account to view your payroll and
+              profile information.
             </p>
             {linkState === "error" && (
               <div className="mb-4 rounded-md bg-destructive/10 p-4 text-sm text-destructive text-left space-y-2">
                 <div className="flex items-center gap-2 font-medium">
-                  <AlertCircle className="h-4 w-4 shrink-0" /> 
+                  <AlertCircle className="h-4 w-4 shrink-0" />
                   <span>{linkError.replace("ConvexError: ", "")}</span>
                 </div>
                 {linkError.includes("No employee record found") && (
                   <p className="pl-6 text-destructive/80 text-xs mt-2">
-                    Action required: Please ask your workspace administrator to go to the Employees tab and update your employee record email to match your current login email, or have them manually link your account.
+                    Action required: Please ask your workspace administrator to
+                    go to the Employees tab and update your employee record
+                    email to match your current login email, or have them
+                    manually link your account.
                   </p>
                 )}
               </div>
             )}
             {linkState === "success" ? (
               <div className="mb-4 rounded-md bg-green-500/10 p-3 text-sm text-green-500 flex items-center justify-center gap-2">
-                <CheckCircle2 className="h-4 w-4" /> Successfully linked! Refreshing...
+                <CheckCircle2 className="h-4 w-4" /> Successfully linked!
+                Refreshing...
               </div>
             ) : (
               <Button onClick={handleLink} disabled={linkState === "loading"}>
-                {linkState === "loading" && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {linkState === "loading" && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
                 Link My Account
               </Button>
             )}
@@ -147,7 +170,8 @@ export default function MyPortal() {
         <div>
           <h1 className="text-2xl font-semibold text-primary">My Portal</h1>
           <p className="text-sm text-muted-foreground">
-            Manage your personal profile, leaves, attendance, and view your payslips securely.
+            Manage your personal profile, leaves, attendance, and view your
+            payslips securely.
           </p>
         </div>
 
@@ -174,35 +198,50 @@ export default function MyPortal() {
             Attendance
           </button>
         </div>
-          
+
         {activeTab === "profile" && (
           <div className="grid gap-6 md:grid-cols-3">
             <div className="col-span-1 rounded-lg border border-border bg-card p-6 h-fit">
               <div className="flex items-center gap-4 mb-6 pb-6 border-b">
                 <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-2xl">
-                  {me.firstName[0]}{me.lastName[0]}
+                  {me.firstName[0]}
+                  {me.lastName[0]}
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold">{me.firstName} {me.lastName}</h2>
-                  <p className="text-sm text-muted-foreground">{me.designation || "Employee"}</p>
+                  <h2 className="text-lg font-semibold">
+                    {me.firstName} {me.lastName}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    {me.designation || "Employee"}
+                  </p>
                 </div>
               </div>
               <div className="space-y-4 text-sm">
                 <div>
-                  <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">Department</p>
+                  <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">
+                    Department
+                  </p>
                   <p className="font-medium">{me.department || "—"}</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">Work Email</p>
+                  <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">
+                    Work Email
+                  </p>
                   <p className="font-medium">{me.email}</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">Phone</p>
+                  <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">
+                    Phone
+                  </p>
                   <p className="font-medium">{me.phone || "—"}</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">Status</p>
-                  <p className="font-medium capitalize text-emerald-500">{me.status}</p>
+                  <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">
+                    Status
+                  </p>
+                  <p className="font-medium capitalize text-emerald-500">
+                    {me.status}
+                  </p>
                 </div>
               </div>
             </div>
@@ -215,7 +254,9 @@ export default function MyPortal() {
                   </h3>
                 </div>
                 {payslips === undefined ? (
-                  <div className="p-8 text-center text-muted-foreground"><Loader2 className="mx-auto h-5 w-5 animate-spin" /></div>
+                  <div className="p-8 text-center text-muted-foreground">
+                    <Loader2 className="mx-auto h-5 w-5 animate-spin" />
+                  </div>
                 ) : payslips.length === 0 ? (
                   <div className="p-8 text-center text-muted-foreground">
                     No finalized payslips available.
@@ -225,23 +266,42 @@ export default function MyPortal() {
                     <thead className="bg-muted/50 text-muted-foreground">
                       <tr>
                         <th className="px-6 py-3 font-medium">Period</th>
-                        <th className="px-6 py-3 font-medium">Date Finalized</th>
-                        <th className="px-6 py-3 font-medium text-emerald-500">Net Salary</th>
-                        <th className="px-6 py-3 font-medium text-right">Actions</th>
+                        <th className="px-6 py-3 font-medium">
+                          Date Finalized
+                        </th>
+                        <th className="px-6 py-3 font-medium text-emerald-500">
+                          Net Salary
+                        </th>
+                        <th className="px-6 py-3 font-medium text-right">
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border/50">
                       {payslips.map((p) => (
-                        <tr key={p._id} className="group hover:bg-muted/50 transition-colors">
-                          <td className="px-6 py-3 font-medium text-primary">{p.periodMonth}</td>
+                        <tr
+                          key={p._id}
+                          className="group hover:bg-muted/50 transition-colors"
+                        >
+                          <td className="px-6 py-3 font-medium text-primary">
+                            {p.periodMonth}
+                          </td>
                           <td className="px-6 py-3 text-muted-foreground">
-                            {p.finalizedAt ? new Date(p.finalizedAt).toLocaleDateString() : "—"}
+                            {p.finalizedAt
+                              ? new Date(p.finalizedAt).toLocaleDateString()
+                              : "—"}
                           </td>
                           <td className="px-6 py-3 font-medium text-emerald-500">
                             ₹{p.netSalary.toLocaleString("en-IN")}
                           </td>
                           <td className="px-6 py-3 text-right">
-                            <Button variant="secondary" size="sm" onClick={() => setSelectedPayslipRunId(p.payrollRunId)}>
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={() =>
+                                setSelectedPayslipRunId(p.payrollRunId)
+                              }
+                            >
                               View <ChevronRight className="ml-1 h-3 w-3" />
                             </Button>
                           </td>
@@ -260,7 +320,8 @@ export default function MyPortal() {
             <div className="rounded-lg border border-border bg-card overflow-hidden">
               <div className="border-b border-border px-6 py-4 flex items-center justify-between">
                 <h3 className="font-semibold flex items-center gap-2">
-                  <CalendarClock className="h-5 w-5 text-primary/50" /> Request Leave
+                  <CalendarClock className="h-5 w-5 text-primary/50" /> Request
+                  Leave
                 </h3>
               </div>
               <form onSubmit={handleLeaveSubmit} className="p-6 space-y-4">
@@ -309,7 +370,11 @@ export default function MyPortal() {
                     placeholder="Brief description of the leave..."
                   />
                 </div>
-                <Button type="submit" disabled={isSubmittingLeave} className="w-full">
+                <Button
+                  type="submit"
+                  disabled={isSubmittingLeave}
+                  className="w-full"
+                >
                   {isSubmittingLeave ? "Submitting..." : "Submit Leave Request"}
                 </Button>
               </form>
@@ -323,7 +388,9 @@ export default function MyPortal() {
               </div>
               <div className="p-0">
                 {myLeaves === undefined ? (
-                  <div className="p-8 text-center text-muted-foreground"><Loader2 className="mx-auto h-5 w-5 animate-spin" /></div>
+                  <div className="p-8 text-center text-muted-foreground">
+                    <Loader2 className="mx-auto h-5 w-5 animate-spin" />
+                  </div>
                 ) : myLeaves.length === 0 ? (
                   <div className="p-8 text-center text-muted-foreground">
                     No leave requests found.
@@ -339,22 +406,37 @@ export default function MyPortal() {
                     </thead>
                     <tbody className="divide-y divide-border/50">
                       {myLeaves.map((l) => (
-                        <tr key={l._id} className="group hover:bg-muted/50 transition-colors">
+                        <tr
+                          key={l._id}
+                          className="group hover:bg-muted/50 transition-colors"
+                        >
                           <td className="px-6 py-3">
-                            <div className="font-medium text-primary">{l.startDate}</div>
-                            <div className="text-xs text-muted-foreground">to {l.endDate}</div>
+                            <div className="font-medium text-primary">
+                              {l.startDate}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              to {l.endDate}
+                            </div>
                           </td>
-                          <td className="px-6 py-3 capitalize text-muted-foreground">{l.leaveType}</td>
+                          <td className="px-6 py-3 capitalize text-muted-foreground">
+                            {l.leaveType}
+                          </td>
                           <td className="px-6 py-3">
-                            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                              l.status === 'approved' ? 'bg-emerald-500/10 text-emerald-500' :
-                              l.status === 'rejected' ? 'bg-red-500/10 text-red-500' :
-                              'bg-amber-500/10 text-amber-500'
-                            }`}>
+                            <span
+                              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                                l.status === "approved"
+                                  ? "bg-emerald-500/10 text-emerald-500"
+                                  : l.status === "rejected"
+                                    ? "bg-red-500/10 text-red-500"
+                                    : "bg-amber-500/10 text-amber-500"
+                              }`}
+                            >
                               {l.status}
                             </span>
-                            {l.status === 'rejected' && l.reviewRemarks && (
-                              <div className="text-xs text-red-500/70 mt-1">{l.reviewRemarks}</div>
+                            {l.status === "rejected" && l.reviewRemarks && (
+                              <div className="text-xs text-red-500/70 mt-1">
+                                {l.reviewRemarks}
+                              </div>
                             )}
                           </td>
                         </tr>
@@ -372,12 +454,15 @@ export default function MyPortal() {
             <div className="rounded-lg border border-border bg-card overflow-hidden">
               <div className="border-b border-border px-6 py-4 flex items-center justify-between">
                 <h3 className="font-semibold flex items-center gap-2">
-                  <CalendarClock className="h-5 w-5 text-primary/50" /> My Attendance (Current Month)
+                  <CalendarClock className="h-5 w-5 text-primary/50" /> My
+                  Attendance (Current Month)
                 </h3>
               </div>
               <div className="p-0">
                 {myAttendance === undefined ? (
-                  <div className="p-8 text-center text-muted-foreground"><Loader2 className="mx-auto h-5 w-5 animate-spin" /></div>
+                  <div className="p-8 text-center text-muted-foreground">
+                    <Loader2 className="mx-auto h-5 w-5 animate-spin" />
+                  </div>
                 ) : myAttendance.length === 0 ? (
                   <div className="p-8 text-center text-muted-foreground">
                     No attendance records for the current month.
@@ -388,27 +473,42 @@ export default function MyPortal() {
                       <tr>
                         <th className="px-6 py-3 font-medium">Date</th>
                         <th className="px-6 py-3 font-medium">Status</th>
-                        <th className="px-6 py-3 font-medium">Check-In / Out</th>
+                        <th className="px-6 py-3 font-medium">
+                          Check-In / Out
+                        </th>
                         <th className="px-6 py-3 font-medium">Remarks</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border/50">
                       {myAttendance.map((a) => (
-                        <tr key={a._id} className="group hover:bg-muted/50 transition-colors">
-                          <td className="px-6 py-3 font-medium text-primary">{a.date}</td>
+                        <tr
+                          key={a._id}
+                          className="group hover:bg-muted/50 transition-colors"
+                        >
+                          <td className="px-6 py-3 font-medium text-primary">
+                            {a.date}
+                          </td>
                           <td className="px-6 py-3 capitalize">
-                            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                              a.status === 'present' ? 'bg-emerald-500/10 text-emerald-500' :
-                              a.status === 'absent' ? 'bg-red-500/10 text-red-500' :
-                              a.status === 'half_day' ? 'bg-amber-500/10 text-amber-500' :
-                              (a.status === 'paid_leave' || a.status === 'unpaid_leave') ? 'bg-blue-500/10 text-blue-500' :
-                              'bg-primary/10 text-primary'
-                            }`}>
+                            <span
+                              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                                a.status === "present"
+                                  ? "bg-emerald-500/10 text-emerald-500"
+                                  : a.status === "absent"
+                                    ? "bg-red-500/10 text-red-500"
+                                    : a.status === "half_day"
+                                      ? "bg-amber-500/10 text-amber-500"
+                                      : a.status === "paid_leave" ||
+                                          a.status === "unpaid_leave"
+                                        ? "bg-blue-500/10 text-blue-500"
+                                        : "bg-primary/10 text-primary"
+                              }`}
+                            >
                               {a.status.replace("_", " ")}
                             </span>
                           </td>
                           <td className="px-6 py-3 text-muted-foreground">
-                            {a.checkInTime || "—"} {a.checkOutTime && `to ${a.checkOutTime}`}
+                            {a.checkInTime || "—"}{" "}
+                            {a.checkOutTime && `to ${a.checkOutTime}`}
                           </td>
                           <td className="px-6 py-3 text-muted-foreground">
                             {a.remarks || "—"}

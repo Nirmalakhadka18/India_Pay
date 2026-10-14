@@ -5,3 +5,9 @@ temp-bun-test2/
 convex-template5-main/debug_output.txt
 convex-template5-main/temp_log.txt
 *.log
+FULL_DAY_REPORT.txt
+**/e2e/screenshots/*.png
+!**/e2e/screenshots/0[1-9]_*.png
+!**/e2e/screenshots/10_*.png
+!**/e2e/screenshots/prod_*.png
+!**/e2e/screenshots/diag_*.png

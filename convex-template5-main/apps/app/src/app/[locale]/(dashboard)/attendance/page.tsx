@@ -1,5 +1,6 @@
 "use client";
 
+import { RoleGuard } from "@/components/role-guard";
 import { useWorkspace } from "@/lib/useWorkspace";
 import { api } from "@v1/backend/convex/_generated/api";
 import type { Id } from "@v1/backend/convex/_generated/dataModel";
@@ -14,22 +15,30 @@ import {
 import { Input } from "@v1/ui/input";
 import { useMutation, useQuery } from "convex/react";
 import {
+  AlertCircle,
   Calendar as CalendarIcon,
   CheckCircle2,
   Clock,
+  FileCheck,
   Filter,
   Plus,
   Search,
+  Settings2,
   UserCheck,
   UserX,
-  AlertCircle,
-  FileCheck,
-  Settings2,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export default function AttendancePage() {
+  return (
+    <RoleGuard allowedRoles={["owner", "admin"]}>
+      <AttendanceContent />
+    </RoleGuard>
+  );
+}
+
+function AttendanceContent() {
   const { current } = useWorkspace();
   const workspaceId = current;
 
@@ -45,27 +54,31 @@ export default function AttendancePage() {
   // Queries
   const employees = useQuery(
     api.employees.list,
-    workspaceId ? { workspaceId } : "skip"
+    workspaceId ? { workspaceId } : "skip",
   );
   const attendanceList = useQuery(
     api.attendance.list,
-    workspaceId ? { workspaceId, startDate, endDate } : "skip"
+    workspaceId ? { workspaceId, startDate, endDate } : "skip",
   );
   const attendanceSummary = useQuery(
     api.attendance.summary,
-    workspaceId && startDate && endDate ? { workspaceId, startDate, endDate } : "skip"
+    workspaceId && startDate && endDate
+      ? { workspaceId, startDate, endDate }
+      : "skip",
   );
   const leaveRequests = useQuery(
     api.leaves.list,
-    workspaceId ? { workspaceId } : "skip"
+    workspaceId ? { workspaceId } : "skip",
   );
   const lopData = useQuery(
     api.lop.calculateLOP,
-    workspaceId && startDate && endDate ? { workspaceId, startDate, endDate, daysInPeriod: 30 } : "skip"
+    workspaceId && startDate && endDate
+      ? { workspaceId, startDate, endDate, daysInPeriod: 30 }
+      : "skip",
   );
   const lopSettings = useQuery(
     api.lop.getSettings,
-    workspaceId ? { workspaceId } : "skip"
+    workspaceId ? { workspaceId } : "skip",
   );
 
   // Mutations
@@ -162,7 +175,7 @@ export default function AttendancePage() {
 
   const handleReviewLeave = async (
     requestId: Id<"leaveRequests">,
-    status: "approved" | "rejected"
+    status: "approved" | "rejected",
   ) => {
     if (!workspaceId) return;
     try {
@@ -217,7 +230,8 @@ export default function AttendancePage() {
               Attendance & Leave Management
             </h1>
             <p className="text-sm text-primary/60">
-              Track employee attendance, manage leave requests, and calculate Loss of Pay (LOP).
+              Track employee attendance, manage leave requests, and calculate
+              Loss of Pay (LOP).
             </p>
           </div>
 
@@ -265,7 +279,9 @@ export default function AttendancePage() {
                         <label className="text-sm font-medium">Status</label>
                         <select
                           value={attStatus}
-                          onChange={(e) => setAttStatus(e.target.value as typeof attStatus)}
+                          onChange={(e) =>
+                            setAttStatus(e.target.value as typeof attStatus)
+                          }
                           className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
                         >
                           <option value="present">Present</option>
@@ -348,10 +364,14 @@ export default function AttendancePage() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Leave Type</label>
+                        <label className="text-sm font-medium">
+                          Leave Type
+                        </label>
                         <select
                           value={leaveType}
-                          onChange={(e) => setLeaveType(e.target.value as typeof leaveType)}
+                          onChange={(e) =>
+                            setLeaveType(e.target.value as typeof leaveType)
+                          }
                           className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
                         >
                           <option value="casual">Casual Leave</option>
@@ -361,7 +381,9 @@ export default function AttendancePage() {
                         </select>
                       </div>
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Days Count</label>
+                        <label className="text-sm font-medium">
+                          Days Count
+                        </label>
                         <Input
                           type="number"
                           step="0.5"
@@ -375,7 +397,9 @@ export default function AttendancePage() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Start Date</label>
+                        <label className="text-sm font-medium">
+                          Start Date
+                        </label>
                         <Input
                           type="date"
                           required
@@ -461,7 +485,9 @@ export default function AttendancePage() {
             {/* Summary KPI Cards */}
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
               <div className="rounded-lg border border-border bg-card p-4">
-                <p className="text-xs font-medium text-primary/60">Total Logs</p>
+                <p className="text-xs font-medium text-primary/60">
+                  Total Logs
+                </p>
                 <p className="mt-1 text-2xl font-semibold text-primary">
                   {attendanceSummary?.totalRecords ?? 0}
                 </p>
@@ -515,7 +541,9 @@ export default function AttendancePage() {
 
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-medium text-primary/60">From:</span>
+                  <span className="text-xs font-medium text-primary/60">
+                    From:
+                  </span>
                   <Input
                     type="date"
                     value={startDate}
@@ -524,7 +552,9 @@ export default function AttendancePage() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-medium text-primary/60">To:</span>
+                  <span className="text-xs font-medium text-primary/60">
+                    To:
+                  </span>
                   <Input
                     type="date"
                     value={endDate}
@@ -550,13 +580,19 @@ export default function AttendancePage() {
                 <tbody className="divide-y divide-border">
                   {filteredAttendance === undefined ? (
                     <tr>
-                      <td colSpan={5} className="px-4 py-8 text-center text-primary/60">
+                      <td
+                        colSpan={5}
+                        className="px-4 py-8 text-center text-primary/60"
+                      >
                         Loading attendance logs...
                       </td>
                     </tr>
                   ) : filteredAttendance.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="px-4 py-8 text-center text-primary/60">
+                      <td
+                        colSpan={5}
+                        className="px-4 py-8 text-center text-primary/60"
+                      >
                         No attendance records found for selected criteria.
                       </td>
                     </tr>
@@ -566,24 +602,27 @@ export default function AttendancePage() {
                         <td className="px-4 py-3 font-medium text-primary">
                           {getEmpName(record.employeeId)}
                         </td>
-                        <td className="px-4 py-3 text-primary/80">{record.date}</td>
+                        <td className="px-4 py-3 text-primary/80">
+                          {record.date}
+                        </td>
                         <td className="px-4 py-3">
                           <span
                             className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
                               record.status === "present"
                                 ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                                 : record.status === "absent"
-                                ? "bg-red-500/10 text-red-600 dark:text-red-400"
-                                : record.status === "half_day"
-                                ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                                : "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                                  ? "bg-red-500/10 text-red-600 dark:text-red-400"
+                                  : record.status === "half_day"
+                                    ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                                    : "bg-blue-500/10 text-blue-600 dark:text-blue-400"
                             }`}
                           >
                             {record.status.replace("_", " ")}
                           </span>
                         </td>
                         <td className="px-4 py-3 text-primary/70">
-                          {record.checkInTime || "--:--"} - {record.checkOutTime || "--:--"}
+                          {record.checkInTime || "--:--"} -{" "}
+                          {record.checkOutTime || "--:--"}
                         </td>
                         <td className="px-4 py-3 text-primary/60">
                           {record.remarks || "—"}
@@ -616,13 +655,19 @@ export default function AttendancePage() {
                 <tbody className="divide-y divide-border">
                   {leaveRequests === undefined ? (
                     <tr>
-                      <td colSpan={7} className="px-4 py-8 text-center text-primary/60">
+                      <td
+                        colSpan={7}
+                        className="px-4 py-8 text-center text-primary/60"
+                      >
                         Loading leave requests...
                       </td>
                     </tr>
                   ) : leaveRequests.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="px-4 py-8 text-center text-primary/60">
+                      <td
+                        colSpan={7}
+                        className="px-4 py-8 text-center text-primary/60"
+                      >
                         No leave requests submitted yet.
                       </td>
                     </tr>
@@ -650,10 +695,10 @@ export default function AttendancePage() {
                               req.status === "approved"
                                 ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                                 : req.status === "rejected"
-                                ? "bg-red-500/10 text-red-600 dark:text-red-400"
-                                : req.status === "pending"
-                                ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                                : "bg-gray-500/10 text-gray-600 dark:text-gray-400"
+                                  ? "bg-red-500/10 text-red-600 dark:text-red-400"
+                                  : req.status === "pending"
+                                    ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                                    : "bg-gray-500/10 text-gray-600 dark:text-gray-400"
                             }`}
                           >
                             {req.status}
@@ -666,7 +711,9 @@ export default function AttendancePage() {
                                 size="sm"
                                 variant="outline"
                                 className="h-7 text-xs text-emerald-600 hover:bg-emerald-50 dark:text-emerald-400"
-                                onClick={() => handleReviewLeave(req._id, "approved")}
+                                onClick={() =>
+                                  handleReviewLeave(req._id, "approved")
+                                }
                               >
                                 Approve
                               </Button>
@@ -674,7 +721,9 @@ export default function AttendancePage() {
                                 size="sm"
                                 variant="outline"
                                 className="h-7 text-xs text-red-600 hover:bg-red-50 dark:text-red-400"
-                                onClick={() => handleReviewLeave(req._id, "rejected")}
+                                onClick={() =>
+                                  handleReviewLeave(req._id, "rejected")
+                                }
                               >
                                 Reject
                               </Button>
@@ -699,14 +748,22 @@ export default function AttendancePage() {
                 Loss of Pay (LOP) Configuration
               </h2>
               <p className="text-sm text-primary/60 mb-4">
-                Define how unpaid absences and leave affect employee salary calculations for this organization.
+                Define how unpaid absences and leave affect employee salary
+                calculations for this organization.
               </p>
-              <form onSubmit={handleSaveLopSettings} className="space-y-4 max-w-xl">
+              <form
+                onSubmit={handleSaveLopSettings}
+                className="space-y-4 max-w-xl"
+              >
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Calculation Basis</label>
+                  <label className="text-sm font-medium">
+                    Calculation Basis
+                  </label>
                   <select
                     value={calcBasis}
-                    onChange={(e) => setCalcBasis(e.target.value as typeof calcBasis)}
+                    onChange={(e) =>
+                      setCalcBasis(e.target.value as typeof calcBasis)
+                    }
                     className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
                   >
                     <option value="calendar_days">
@@ -743,7 +800,9 @@ export default function AttendancePage() {
                 </div>
 
                 <Button type="submit" size="sm" disabled={isSavingLop}>
-                  {isSavingLop ? "Saving Settings..." : "Save LOP Configuration"}
+                  {isSavingLop
+                    ? "Saving Settings..."
+                    : "Save LOP Configuration"}
                 </Button>
               </form>
             </div>
@@ -756,7 +815,8 @@ export default function AttendancePage() {
                     Calculated Loss of Pay (Period: {startDate} to {endDate})
                   </h3>
                   <p className="text-xs text-primary/60">
-                    Calculated deduction amounts ready to be consumed by the payroll engine.
+                    Calculated deduction amounts ready to be consumed by the
+                    payroll engine.
                   </p>
                 </div>
               </div>
@@ -769,19 +829,27 @@ export default function AttendancePage() {
                       <th className="px-4 py-3">Gross Salary (₹)</th>
                       <th className="px-4 py-3">LOP Days</th>
                       <th className="px-4 py-3">Estimated Daily Rate (₹)</th>
-                      <th className="px-4 py-3 text-right">LOP Deduction (₹)</th>
+                      <th className="px-4 py-3 text-right">
+                        LOP Deduction (₹)
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
                     {lopData?.employeeSummary === undefined ? (
                       <tr>
-                        <td colSpan={5} className="px-4 py-8 text-center text-primary/60">
+                        <td
+                          colSpan={5}
+                          className="px-4 py-8 text-center text-primary/60"
+                        >
                           Calculating LOP deductions...
                         </td>
                       </tr>
                     ) : lopData.employeeSummary.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="px-4 py-8 text-center text-primary/60">
+                        <td
+                          colSpan={5}
+                          className="px-4 py-8 text-center text-primary/60"
+                        >
                           No employees configured for LOP calculations.
                         </td>
                       </tr>

@@ -1,10 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@v1/ui/dialog";
+import {
+  type PayslipData,
+  downloadPayslipPdf,
+  formatIndianCurrency,
+} from "@/lib/payslip-pdf";
 import { Button } from "@v1/ui/button";
-import { Loader2, Printer, Download, FileText } from "lucide-react";
-import { downloadPayslipPdf, formatIndianCurrency, type PayslipData } from "@/lib/payslip-pdf";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@v1/ui/dialog";
+import { Download, FileText, Loader2, Printer } from "lucide-react";
+import { useState } from "react";
 
 interface PayslipModalProps {
   open: boolean;
@@ -106,29 +115,47 @@ export function PayslipModal({
             {/* Employee Meta Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4 border-b border-slate-100 bg-slate-50/70 -mx-6 px-6 sm:-mx-8 sm:px-8 text-xs">
               <div>
-                <span className="text-slate-400 block font-medium">Employee Name</span>
-                <span className="font-semibold text-slate-800 text-sm">{payslip.employeeName}</span>
+                <span className="text-slate-400 block font-medium">
+                  Employee Name
+                </span>
+                <span className="font-semibold text-slate-800 text-sm">
+                  {payslip.employeeName}
+                </span>
               </div>
               <div>
-                <span className="text-slate-400 block font-medium">Department</span>
-                <span className="font-semibold text-slate-800">{payslip.department || "General"}</span>
+                <span className="text-slate-400 block font-medium">
+                  Department
+                </span>
+                <span className="font-semibold text-slate-800">
+                  {payslip.department || "General"}
+                </span>
               </div>
               <div>
-                <span className="text-slate-400 block font-medium">Designation</span>
-                <span className="font-semibold text-slate-800">{payslip.designation || "Staff"}</span>
+                <span className="text-slate-400 block font-medium">
+                  Designation
+                </span>
+                <span className="font-semibold text-slate-800">
+                  {payslip.designation || "Staff"}
+                </span>
               </div>
               <div>
-                <span className="text-slate-400 block font-medium">Loss of Pay Days</span>
+                <span className="text-slate-400 block font-medium">
+                  Loss of Pay Days
+                </span>
                 <span className="font-semibold text-rose-600">
                   {payslip.lopDays || 0} days
                 </span>
               </div>
               <div>
                 <span className="text-slate-400 block font-medium">Email</span>
-                <span className="text-slate-600 truncate block">{payslip.email || "-"}</span>
+                <span className="text-slate-600 truncate block">
+                  {payslip.email || "-"}
+                </span>
               </div>
               <div>
-                <span className="text-slate-400 block font-medium">Pay Period</span>
+                <span className="text-slate-400 block font-medium">
+                  Pay Period
+                </span>
                 <span className="text-slate-600">
                   {payslip.startDate && payslip.endDate
                     ? `${payslip.startDate} to ${payslip.endDate}`
@@ -136,11 +163,17 @@ export function PayslipModal({
                 </span>
               </div>
               <div>
-                <span className="text-slate-400 block font-medium">Payment Status</span>
-                <span className="font-semibold text-emerald-600">Finalized</span>
+                <span className="text-slate-400 block font-medium">
+                  Payment Status
+                </span>
+                <span className="font-semibold text-emerald-600">
+                  Finalized
+                </span>
               </div>
               <div>
-                <span className="text-slate-400 block font-medium">Currency</span>
+                <span className="text-slate-400 block font-medium">
+                  Currency
+                </span>
                 <span className="text-slate-600 font-medium">INR (₹)</span>
               </div>
             </div>
@@ -162,7 +195,10 @@ export function PayslipModal({
                       </span>
                     </div>
                     {payslip.allowances?.map((a) => (
-                      <div key={a.name} className="flex justify-between py-1 px-2 text-slate-600 border-t border-slate-50">
+                      <div
+                        key={a.name}
+                        className="flex justify-between py-1 px-2 text-slate-600 border-t border-slate-50"
+                      >
                         <span>{a.name}</span>
                         <span className="font-medium text-slate-900">
                           ₹{formatIndianCurrency(a.amount)}
@@ -173,7 +209,9 @@ export function PayslipModal({
                 </div>
                 <div className="bg-slate-50 px-3 py-2 font-bold text-slate-900 flex justify-between border-t border-slate-200">
                   <span>Gross Earnings</span>
-                  <span className="text-emerald-700">₹{formatIndianCurrency(payslip.grossSalary)}</span>
+                  <span className="text-emerald-700">
+                    ₹{formatIndianCurrency(payslip.grossSalary)}
+                  </span>
                 </div>
               </div>
 
@@ -194,26 +232,37 @@ export function PayslipModal({
                       </div>
                     )}
                     {payslip.customDeductions?.map((d) => (
-                      <div key={d.name} className="flex justify-between py-1 px-2 text-slate-600 border-t border-slate-50">
+                      <div
+                        key={d.name}
+                        className="flex justify-between py-1 px-2 text-slate-600 border-t border-slate-50"
+                      >
                         <span>{d.name}</span>
                         <span className="font-medium text-slate-900">
                           ₹{formatIndianCurrency(d.amount)}
                         </span>
                       </div>
                     ))}
-                    {payslip.statutoryDeductions?.map((d) => d.amount > 0 && (
-                      <div key={d.name} className="flex justify-between py-1 px-2 text-slate-600 border-t border-slate-50">
-                        <span>{d.name}</span>
-                        <span className="font-medium text-slate-900">
-                          ₹{formatIndianCurrency(d.amount)}
-                        </span>
-                      </div>
-                    ))}
+                    {payslip.statutoryDeductions?.map(
+                      (d) =>
+                        d.amount > 0 && (
+                          <div
+                            key={d.name}
+                            className="flex justify-between py-1 px-2 text-slate-600 border-t border-slate-50"
+                          >
+                            <span>{d.name}</span>
+                            <span className="font-medium text-slate-900">
+                              ₹{formatIndianCurrency(d.amount)}
+                            </span>
+                          </div>
+                        ),
+                    )}
                   </div>
                 </div>
                 <div className="bg-slate-50 px-3 py-2 font-bold text-slate-900 flex justify-between border-t border-slate-200">
                   <span>Total Deductions</span>
-                  <span className="text-rose-700">₹{formatIndianCurrency(payslip.totalDeductions)}</span>
+                  <span className="text-rose-700">
+                    ₹{formatIndianCurrency(payslip.totalDeductions)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -240,21 +289,32 @@ export function PayslipModal({
                   Informational: Employer Statutory Contributions
                 </h3>
                 <p className="text-[11px] text-slate-400 mb-3">
-                  These statutory benefits are contributed directly by the employer and are not deducted from gross salary.
+                  These statutory benefits are contributed directly by the
+                  employer and are not deducted from gross salary.
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded border border-slate-100 text-xs">
-                  {payslip.employerContributions?.map((c) => c.amount > 0 && (
-                    <div key={c.name}>
-                      <span className="text-slate-400 block text-[10px]">{c.name}</span>
-                      <span className="font-semibold text-slate-700">
-                        ₹{formatIndianCurrency(c.amount)}
-                      </span>
-                    </div>
-                  ))}
+                  {payslip.employerContributions?.map(
+                    (c) =>
+                      c.amount > 0 && (
+                        <div key={c.name}>
+                          <span className="text-slate-400 block text-[10px]">
+                            {c.name}
+                          </span>
+                          <span className="font-semibold text-slate-700">
+                            ₹{formatIndianCurrency(c.amount)}
+                          </span>
+                        </div>
+                      ),
+                  )}
                   <div>
-                    <span className="text-slate-400 block text-[10px] font-bold">Total Employer Cost</span>
+                    <span className="text-slate-400 block text-[10px] font-bold">
+                      Total Employer Cost
+                    </span>
                     <span className="font-bold text-slate-900">
-                      ₹{formatIndianCurrency(payslip.totalEmployerContributions ?? 0)}
+                      ₹
+                      {formatIndianCurrency(
+                        payslip.totalEmployerContributions ?? 0,
+                      )}
                     </span>
                   </div>
                 </div>
@@ -263,8 +323,13 @@ export function PayslipModal({
 
             {/* Footer */}
             <div className="mt-8 pt-4 border-t border-slate-200 text-center text-[10px] text-slate-400">
-              <p>This is an electronically generated payslip and does not require a physical signature.</p>
-              <p className="mt-0.5">Powered by IndiaPay - Indian Payroll Management SaaS</p>
+              <p>
+                This is an electronically generated payslip and does not require
+                a physical signature.
+              </p>
+              <p className="mt-0.5">
+                Powered by IndiaPay - Indian Payroll Management SaaS
+              </p>
             </div>
           </div>
         )}

@@ -1,0 +1,79 @@
+{
+  "total": 11,
+  "passed": 11,
+  "failed": 0,
+  "results": [
+    {
+      "name": "Unauthenticated access to /payroll",
+      "status": "PASS",
+      "details": "Redirected to: http://localhost:3005/login"
+    },
+    {
+      "name": "Unauthenticated access to /salaries",
+      "status": "PASS",
+      "details": "Redirected to: http://localhost:3005/login"
+    },
+    {
+      "name": "Unauthenticated access to /employees",
+      "status": "PASS",
+      "details": "Redirected to: http://localhost:3005/login"
+    },
+    {
+      "name": "Unauthenticated access to /settings",
+      "status": "PASS",
+      "details": "Redirected to: http://localhost:3005/login"
+    },
+    {
+      "name": "Admin Authentication on Prod",
+      "status": "PASS",
+      "details": "URL: http://localhost:3005/"
+    },
+    {
+      "name": "Admin Payroll Approval UI on Prod",
+      "status": "PASS",
+      "details": "Approve/Reject buttons disabled for non-owner Admin with Owner-Only notice"
+    },
+    {
+      "name": "Member Authentication on Prod",
+      "status": "PASS",
+      "details": "URL: http://localhost:3005/"
+    },
+    {
+      "name": "Member Sidebar Isolation on Prod",
+      "status": "PASS",
+      "details": "Admin links hidden"
+    },
+    {
+      "name": "Member Direct Route: /payroll on Prod",
+      "status": "PASS",
+      "details": "Safely blocked/redirected to http://localhost:3005/payroll without data leak"
+    },
+    {
+      "name": "Member Direct Route: /salaries on Prod",
+      "status": "PASS",
+      "details": "Safely blocked/redirected to http://localhost:3005/salaries without data leak"
+    },
+    {
+      "name": "Member My Portal on Prod",
+      "status": "PASS",
+      "details": "Personal employee view loads correctly"
+    }
+  ],
+  "consoleErrors": [],
+  "networkFailures": [
+    "[ADMIN] http://localhost:3005/ (net::ERR_ABORTED)",
+    "[ADMIN] http://localhost:3005/my-portal?_rsc=i3q25 (net::ERR_ABORTED)",
+    "[ADMIN] http://localhost:3005/payroll?_rsc=i3q25 (net::ERR_ABORTED)",
+    "[ADMIN] http://localhost:3005/salaries?_rsc=i3q25 (net::ERR_ABORTED)",
+    "[ADMIN] http://localhost:3005/settings?_rsc=i3q25 (net::ERR_ABORTED)",
+    "[ADMIN] http://localhost:3005/my-portal?_rsc=r3hre (net::ERR_ABORTED)",
+    "[ADMIN] http://localhost:3005/attendance?_rsc=r3hre (net::ERR_ABORTED)",
+    "[ADMIN] http://localhost:3005/compliance?_rsc=r3hre (net::ERR_ABORTED)",
+    "[ADMIN] http://localhost:3005/employees?_rsc=r3hre (net::ERR_ABORTED)",
+    "[ADMIN] http://localhost:3005/reports?_rsc=r3hre (net::ERR_ABORTED)",
+    "[ADMIN] http://localhost:3005/salaries?_rsc=r3hre (net::ERR_ABORTED)",
+    "[MEMBER] http://localhost:3005/?_rsc=r3hre (net::ERR_ABORTED)",
+    "[MEMBER] http://localhost:3005/my-portal?_rsc=9cbie (net::ERR_ABORTED)",
+    "[MEMBER] http://localhost:3005/my-portal?_rsc=wmb61 (net::ERR_ABORTED)"
+  ]
+}

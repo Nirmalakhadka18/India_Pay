@@ -24,31 +24,38 @@ import { requireDevSeed } from "./devGuard";
 import { Scrypt } from "lucia";
 
 // ── Dev account emails (non-sensitive — emails are not secrets) ────────────
+const DEV_OWNER_EMAIL = "owner@indiapaypayroll.com";
 const DEV_ADMIN_EMAIL = "admin@indiapaypayroll.com";
 const DEV_USER_EMAIL = "user@indiapaypayroll.com";
 
 /**
  * Read passwords from env vars so they are never hardcoded in source.
  *
- * Set before running:
- *   $env:DEV_ADMIN_PASSWORD = "AdminTest@2026!"
- *   $env:DEV_USER_PASSWORD  = "UserTest@2026!"
+ * Supported variables:
+ *   $env:DEV_OWNER_PASSWORD = "<OwnerPassword>"
+ *   $env:DEV_ADMIN_PASSWORD = "<AdminPassword>"
+ *   $env:DEV_USER_PASSWORD  = "<UserPassword>"
  *
  * Or set them in packages/backend/.env.local (git-ignored).
  */
-function readPasswords(): { adminPassword: string; userPassword: string } {
+function readPasswords(): {
+  ownerPassword?: string;
+  adminPassword?: string;
+  userPassword?: string;
+} {
+  const ownerPassword = process.env.DEV_OWNER_PASSWORD;
   const adminPassword = process.env.DEV_ADMIN_PASSWORD;
   const userPassword = process.env.DEV_USER_PASSWORD;
 
-  if (!adminPassword || !userPassword) {
+  if (!ownerPassword && !adminPassword && !userPassword) {
     throw new Error(
-      "DEV_ADMIN_PASSWORD and DEV_USER_PASSWORD must be set as environment " +
-        "variables before running provisionDevAccounts. " +
+      "At least one of DEV_OWNER_PASSWORD, DEV_ADMIN_PASSWORD, or DEV_USER_PASSWORD " +
+        "must be set as an environment variable before running provisionDevAccounts. " +
         "Set them in packages/backend/.env.local or export them in your shell. " +
         "They are never stored in source code.",
     );
   }
-  return { adminPassword, userPassword };
+  return { ownerPassword, adminPassword, userPassword };
 }
 
 /**
@@ -70,12 +77,13 @@ function validatePassword(label: string, password: string): void {
 }
 
 /**
- * Idempotent provisioner. Creates both test accounts and a shared dev
+ * Idempotent provisioner. Creates test accounts and a shared dev
  * workspace if they don't already exist. Safe to re-run.
  */
 export const provisionDevAccounts = internalAction({
   args: {},
   handler: async (ctx): Promise<{
+    ownerCreated: boolean;
     adminCreated: boolean;
     userCreated: boolean;
     workspaceId: string;
@@ -83,29 +91,36 @@ export const provisionDevAccounts = internalAction({
   }> => {
     requireDevSeed();
 
-    const { adminPassword, userPassword } = readPasswords();
+    const { ownerPassword, adminPassword, userPassword } = readPasswords();
 
-    // Validate passwords meet the app's policy BEFORE hashing
-    validatePassword("DEV_ADMIN_PASSWORD", adminPassword);
-    validatePassword("DEV_USER_PASSWORD", userPassword);
-
-    // Hash passwords using Scrypt — same algorithm as the Password provider
     const scrypt = new Scrypt();
-    const [adminHash, userHash] = await Promise.all([
-      scrypt.hash(adminPassword),
-      scrypt.hash(userPassword),
-    ]);
+    let ownerHash: string | undefined;
+    let adminHash: string | undefined;
+    let userHash: string | undefined;
+
+    if (ownerPassword) {
+      validatePassword("DEV_OWNER_PASSWORD", ownerPassword);
+      ownerHash = await scrypt.hash(ownerPassword);
+    }
+    if (adminPassword) {
+      validatePassword("DEV_ADMIN_PASSWORD", adminPassword);
+      adminHash = await scrypt.hash(adminPassword);
+    }
+    if (userPassword) {
+      validatePassword("DEV_USER_PASSWORD", userPassword);
+      userHash = await scrypt.hash(userPassword);
+    }
 
     // Delegate all DB writes to the V8 mutation (Scrypt not available there)
     const result = await ctx.runMutation(
       internal.devAccountsMutation.provisionDevAccountsMutation,
-      { adminHash, userHash },
+      { ownerHash, adminHash, userHash },
     );
 
     // Log completion status without exposing any credential values
     console.log(
       `[devAccounts] Provisioning complete. ` +
-        `admin created=${result.adminCreated}, user created=${result.userCreated}`,
+        `owner created=${result.ownerCreated}, admin created=${result.adminCreated}, user created=${result.userCreated}`,
     );
     console.log(`[devAccounts] ${result.message}`);
 

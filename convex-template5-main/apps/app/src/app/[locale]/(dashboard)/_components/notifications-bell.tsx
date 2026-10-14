@@ -3,13 +3,18 @@
 import { api } from "@v1/backend/convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
 import { Bell } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function NotificationsBell() {
+  const [mounted, setMounted] = useState(false);
   const notifications = useQuery(api.notifications.myNotifications);
   const unread = useQuery(api.notifications.unreadCount) ?? 0;
   const markAllRead = useMutation(api.notifications.markAllRead);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="relative">
@@ -24,7 +29,7 @@ export function NotificationsBell() {
         }}
       >
         <Bell className="h-4 w-4" />
-        {unread > 0 && (
+        {mounted && unread > 0 && (
           <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-medium text-white">
             {unread > 9 ? "9+" : unread}
           </span>

@@ -2,8 +2,9 @@
  * Dev account provisioning script.
  *
  * Usage (PowerShell):
- *   $env:DEV_ADMIN_PASSWORD = "AdminTest@2026!"
- *   $env:DEV_USER_PASSWORD  = "UserTest@2026!"
+ *   $env:DEV_OWNER_PASSWORD = "<OwnerPassword>"
+ *   $env:DEV_ADMIN_PASSWORD = "<AdminPassword>"
+ *   $env:DEV_USER_PASSWORD  = "<UserPassword>"
  *   bun run scripts/provisionDevAccounts.ts
  *
  * Or:
@@ -15,7 +16,7 @@
  *       npx convex env set DEV_SEED 1
  *
  * Security:
- *   - Plaintext passwords are read only from environment variables ($env:DEV_ADMIN_PASSWORD, $env:DEV_USER_PASSWORD).
+ *   - Plaintext passwords are read only from environment variables ($env:DEV_OWNER_PASSWORD, $env:DEV_ADMIN_PASSWORD, $env:DEV_USER_PASSWORD).
  *   - Passwords are never hardcoded in source code or committed to git.
  *   - Passwords are never logged to console or stderr.
  *   - Passwords are hashed locally using Scrypt (lucia) before being sent to Convex.
@@ -63,25 +64,46 @@ async function main() {
   console.log("🔧  IndiaPay Dev Account Provisioner");
   console.log("─────────────────────────────────────");
 
-  const adminPassword = checkEnvVar("DEV_ADMIN_PASSWORD");
-  const userPassword = checkEnvVar("DEV_USER_PASSWORD");
+  const ownerPassword = process.env.DEV_OWNER_PASSWORD;
+  const adminPassword = process.env.DEV_ADMIN_PASSWORD;
+  const userPassword = process.env.DEV_USER_PASSWORD;
 
-  validatePassword("DEV_ADMIN_PASSWORD", adminPassword);
-  validatePassword("DEV_USER_PASSWORD", userPassword);
-
-  console.log("✅  Password policy verified (not logging values)");
-  console.log("🔒  Hashing passwords locally with Scrypt (lucia)...");
+  if (!ownerPassword && !adminPassword && !userPassword) {
+    console.error(
+      "\n❌  Missing required environment variables.\n" +
+        "    Please set at least one account password before running:\n" +
+        '    $env:DEV_OWNER_PASSWORD = "<password>"\n' +
+        '    $env:DEV_ADMIN_PASSWORD = "<password>"\n' +
+        '    $env:DEV_USER_PASSWORD  = "<password>"\n',
+    );
+    process.exit(1);
+  }
 
   const scrypt = new Scrypt();
-  const [adminHash, userHash] = await Promise.all([
-    scrypt.hash(adminPassword),
-    scrypt.hash(userPassword),
-  ]);
+  let ownerHash: string | undefined;
+  let adminHash: string | undefined;
+  let userHash: string | undefined;
 
-  console.log("✅  Scrypt hashes generated securely");
+  if (ownerPassword) {
+    validatePassword("DEV_OWNER_PASSWORD", ownerPassword);
+    ownerHash = await scrypt.hash(ownerPassword);
+    console.log("✅  DEV_OWNER_PASSWORD verified & hashed locally with Scrypt");
+  }
+  if (adminPassword) {
+    validatePassword("DEV_ADMIN_PASSWORD", adminPassword);
+    adminHash = await scrypt.hash(adminPassword);
+    console.log("✅  DEV_ADMIN_PASSWORD verified & hashed locally with Scrypt");
+  }
+  if (userPassword) {
+    validatePassword("DEV_USER_PASSWORD", userPassword);
+    userHash = await scrypt.hash(userPassword);
+    console.log("✅  DEV_USER_PASSWORD verified & hashed locally with Scrypt");
+  }
+
+  console.log("🔒  Scrypt hashes generated securely (no plaintext logged)");
   console.log("📡  Syncing accounts to Convex dev deployment...\n");
 
-  const argsJson = JSON.stringify({ adminHash, userHash });
+  const argsJson = JSON.stringify({ ownerHash, adminHash, userHash });
   const isWindows = process.platform === "win32";
   const cmd = isWindows ? "npx.cmd" : "npx";
 
@@ -124,14 +146,24 @@ async function main() {
   console.log("\n✅  Dev accounts provisioned successfully!");
   console.log("\n📋  Account Credentials Summary:");
   console.log("    ────────────────────────────────────────────────────────");
-  console.log("    ADMIN ACCOUNT:");
-  console.log("      Email: admin@indiapaypayroll.com");
-  console.log("      Role:  Admin (not Owner)");
-  console.log("      Workspace: IndiaPay Dev Workspace");
-  console.log("    NORMAL USER ACCOUNT:");
-  console.log("      Email: user@indiapaypayroll.com");
-  console.log("      Role:  Member / User");
-  console.log("      Workspace: IndiaPay Dev Workspace");
+  if (ownerHash) {
+    console.log("    OWNER ACCOUNT:");
+    console.log("      Email:     owner@indiapaypayroll.com");
+    console.log("      Role:      Owner");
+    console.log("      Workspace: IndiaPay Dev Workspace");
+  }
+  if (adminHash) {
+    console.log("    ADMIN ACCOUNT:");
+    console.log("      Email:     admin@indiapaypayroll.com");
+    console.log("      Role:      Admin (not Owner)");
+    console.log("      Workspace: IndiaPay Dev Workspace");
+  }
+  if (userHash) {
+    console.log("    NORMAL USER ACCOUNT:");
+    console.log("      Email:     user@indiapaypayroll.com");
+    console.log("      Role:      Member / User");
+    console.log("      Workspace: IndiaPay Dev Workspace");
+  }
   console.log("    ────────────────────────────────────────────────────────");
   console.log("🔒  Passwords: Use the passwords set in your environment variables.");
   console.log("🌐  Sign In URL: http://localhost:3000/login (or http://localhost:3001/login)");
