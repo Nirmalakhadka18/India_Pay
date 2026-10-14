@@ -4,6 +4,7 @@ import {
   formatIndianCurrency,
   generatePayslipPdfBlob,
   generatePayslipPdfString,
+  getPayslipPdfFileName,
 } from "./payslip-pdf";
 
 const mockSamplePayslip: PayslipData = {
@@ -135,5 +136,26 @@ describe("Payslip PDF Generation", () => {
     expect(pdfString.trim().endsWith("%%EOF")).toBe(true);
     expect(pdfString).toContain("Bob Smith");
     expect(pdfString).toContain("25,000.00");
+  });
+
+  test("generates meaningful, safe filename: SalarySlip_<EmployeeID>_<YYYY-MM>.pdf", () => {
+    // When employeeId is present
+    const fileNameWithId = getPayslipPdfFileName(mockSamplePayslip);
+    expect(fileNameWithId).toBe("SalarySlip_emp_101_2026-04.pdf");
+
+    // When employeeId is missing, falls back safely to sanitized employeeName
+    const payslipWithoutId: PayslipData = {
+      ...mockSamplePayslip,
+      employeeId: undefined,
+      employeeName: "Jane Doe / Special*Chars!",
+      periodMonth: "2026-10",
+    };
+    const fileNameWithoutId = getPayslipPdfFileName(payslipWithoutId);
+    expect(fileNameWithoutId).toBe(
+      "SalarySlip_Jane_Doe___Special_Chars__2026-10.pdf",
+    );
+    expect(fileNameWithoutId.endsWith(".pdf")).toBe(true);
+    expect(fileNameWithoutId).not.toContain("/");
+    expect(fileNameWithoutId).not.toContain("*");
   });
 });

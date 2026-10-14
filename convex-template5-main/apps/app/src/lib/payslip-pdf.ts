@@ -818,29 +818,73 @@ export function generatePayslipPdfBlob(data: PayslipData): Blob {
 }
 
 /**
+ * Generates a clean, safe, and meaningful filename for the salary slip PDF.
+ * Format: SalarySlip_<EmployeeID>_<YYYY-MM>.pdf
+ * Uses safe filename characters [a-zA-Z0-9_-] only.
+ */
+export function getPayslipPdfFileName(data: PayslipData): string {
+  const rawId = data.employeeId || data.employeeName || "EMP";
+  const cleanId = rawId.replace(/[^a-zA-Z0-9_-]/g, "_");
+  const cleanPeriod = (data.periodMonth || "Period").replace(
+    /[^a-zA-Z0-9_-]/g,
+    "-",
+  );
+  return `SalarySlip_${cleanId}_${cleanPeriod}.pdf`;
+}
+
+/**
  * Client-side triggers direct download of the generated PDF file
  */
 export function downloadPayslipPdf(data: PayslipData): void {
   const blob = generatePayslipPdfBlob(data);
-  const cleanName = (data.employeeName || "Employee").replace(
-    /[^a-zA-Z0-9_-]/g,
-    "_",
-  );
-  const cleanPeriod = (data.periodMonth || "Period").replace(
-    /[^a-zA-Z0-9_-]/g,
-    "_",
-  );
-  const fileName = `Payslip_${cleanName}_${cleanPeriod}.pdf`;
+  const fileName = getPayslipPdfFileName(data);
 
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
   a.download = fileName;
-  a.style.display = "none";
+  a.setAttribute("download", fileName);
+  a.setAttribute("target", "_self");
+  a.rel = "noopener noreferrer";
+
+  // Use off-screen positioning rather than display: none so browser download managers
+  // and event dispatchers consistently recognize the anchor in all DOM contexts (including modals).
+  a.style.position = "fixed";
+  a.style.top = "-9999px";
+  a.style.left = "-9999px";
+  a.style.opacity = "0";
+
   document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+  // Trigger download with MouseEvent fallback to a.click()
+  try {
+    const event = new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+    });
+    a.dispatchEvent(event);
+  } catch {
+    a.click();
+  }
+
+  // Defer removal to next tick to let browser download manager register the download attribute
+  if (typeof requestAnimationFrame !== "undefined") {
+    requestAnimationFrame(() => {
+      if (a.parentNode) {
+        a.parentNode.removeChild(a);
+      }
+    });
+  } else {
+    setTimeout(() => {
+      if (a.parentNode) {
+        a.parentNode.removeChild(a);
+      }
+    }, 100);
+  }
+
+  // Revoke object URL after download has started safely (60s)
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 
 /**

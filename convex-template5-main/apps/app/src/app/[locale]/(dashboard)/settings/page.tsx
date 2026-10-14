@@ -1,6 +1,7 @@
 "use client";
 
 import { SessionsCard } from "@/components/sessions-card";
+import { performLogout } from "@/lib/logout";
 import { useScopedI18n } from "@/locales/client";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useForm } from "@tanstack/react-form";
@@ -39,11 +40,11 @@ export default function DashboardSettings() {
 
   const handleDeleteAccount = async () => {
     await deleteCurrentUserAccount();
-    await signOut();
-    if (typeof window !== "undefined") {
-      window.localStorage.removeItem("ws");
-      window.location.replace("/login");
-    }
+    await performLogout({
+      signOut,
+      timeoutMs: 3500,
+      redirectTo: "/login",
+    });
   };
 
   const usernameForm = useForm({

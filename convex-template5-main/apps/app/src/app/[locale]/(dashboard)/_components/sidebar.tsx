@@ -1,5 +1,10 @@
 "use client";
 
+import {
+  cleanClientSessionStorage,
+  performLogout,
+  setupBfcacheLogoutProtection,
+} from "@/lib/logout";
 import { useWorkspace } from "@/lib/useWorkspace";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { api } from "@v1/backend/convex/_generated/api";
@@ -22,7 +27,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ThemeSwitcher } from "./theme-switcher";
 
 const ALL_NAV = [
@@ -51,28 +56,39 @@ export function Sidebar() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
 
+  useEffect(() => {
+    return setupBfcacheLogoutProtection();
+  }, []);
+
   const handleLogout = async () => {
     if (isLoggingOut) return;
     setIsLoggingOut(true);
     setLogoutError(null);
     try {
-      await signOut();
+      await performLogout({
+        signOut,
+        timeoutMs: 3500,
+        redirectTo: "/login",
+        onError: () => {
+          setLogoutError("Sign out error, redirecting...");
+        },
+        onTimeout: () => {
+          setLogoutError("Sign out timed out, redirecting...");
+        },
+      });
+    } catch {
+      cleanClientSessionStorage();
       if (typeof window !== "undefined") {
-        window.localStorage.removeItem("ws");
+        window.location.replace("/login");
       }
-      window.location.replace("/login");
-    } catch (err) {
-      console.error("Sign out error:", err);
-      setLogoutError("Logout failed. Please retry.");
+    } finally {
       setIsLoggingOut(false);
     }
   };
 
   const handleForceLogout = () => {
+    cleanClientSessionStorage();
     if (typeof window !== "undefined") {
-      window.localStorage.removeItem("ws");
-      window.localStorage.removeItem("__convexAuthJWT");
-      window.localStorage.removeItem("__convexAuthRefreshToken");
       window.location.replace("/login");
     }
   };
@@ -173,6 +189,7 @@ export function Sidebar() {
             <button
               type="button"
               disabled={isLoggingOut}
+              aria-busy={isLoggingOut}
               onClick={handleLogout}
               className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-primary/60 hover:bg-primary/5 hover:text-primary disabled:opacity-50"
             >
