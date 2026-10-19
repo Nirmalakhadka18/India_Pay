@@ -1512,3 +1512,799 @@ describe("Owner Account Provisioning, RBAC & Maker-Checker Suite", () => {
   });
 });
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Role-Based Dashboard Authorization & Data Isolation Suite
+// ─────────────────────────────────────────────────────────────────────────────
+describe("Role-Based Dashboard Authorization & Data Isolation Suite", () => {
+  async function seedDashboardWorkspace(t: ReturnType<typeof convexTest>) {
+    return t.run(async (ctx) => {
+      const owner = await ctx.db.insert("users", {
+        email: "owner.dash@indiapaypayroll.test",
+      });
+      const admin = await ctx.db.insert("users", {
+        email: "admin.dash@indiapaypayroll.test",
+      });
+      const memberLinked = await ctx.db.insert("users", {
+        email: "member.linked@indiapaypayroll.test",
+      });
+      const memberUnlinked = await ctx.db.insert("users", {
+        email: "member.unlinked@indiapaypayroll.test",
+      });
+
+      const ws = await ctx.db.insert("workspaces", {
+        name: "Dashboard Test Workspace",
+        ownerId: owner,
+        createdAt: Date.now(),
+      });
+
+      // Insert second workspace for cross-workspace isolation tests
+      const otherWs = await ctx.db.insert("workspaces", {
+        name: "Other Workspace",
+        ownerId: owner,
+        createdAt: Date.now(),
+      });
+
+      await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: owner,
+        role: "owner",
+        createdAt: Date.now(),
+      });
+      await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: admin,
+        role: "admin",
+        createdAt: Date.now(),
+      });
+      await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: memberLinked,
+        role: "member",
+        createdAt: Date.now(),
+      });
+      await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: memberUnlinked,
+        role: "member",
+        createdAt: Date.now(),
+      });
+
+      // Employee 1 linked to memberLinked
+      const emp1 = await ctx.db.insert("employees", {
+        workspaceId: ws,
+        firstName: "Linked",
+        lastName: "Member",
+        email: "member.linked@indiapaypayroll.test",
+        status: "active",
+        userId: memberLinked,
+        department: "Engineering",
+        designation: "Software Engineer",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+
+      // Employee 2 (other employee)
+      const emp2 = await ctx.db.insert("employees", {
+        workspaceId: ws,
+        firstName: "Other",
+        lastName: "Colleague",
+        email: "other.colleague@indiapaypayroll.test",
+        status: "active",
+        department: "Operations",
+        designation: "Ops Lead",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+
+      // Seed processed payroll run with items for emp1 and emp2
+      const run = await ctx.db.insert("payrollRuns", {
+        workspaceId: ws,
+        periodMonth: "2026-10",
+        startDate: "2026-10-01",
+        endDate: "2026-10-31",
+        status: "processed",
+        totalEmployees: 2,
+        totalGrossSalary: 120000,
+        totalNetSalary: 110000,
+        totalLopDeduction: 0,
+        totalCustomDeductions: 0,
+        totalStatutoryDeductions: 10000,
+        createdById: admin,
+        finalizedBy: admin,
+        finalizedAt: Date.now(),
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+
+      await ctx.db.insert("payrollItems", {
+        workspaceId: ws,
+        payrollRunId: run,
+        employeeId: emp1,
+        basicSalary: 50000,
+        allowances: [{ name: "HRA", amount: 10000 }],
+        grossSalary: 60000,
+        lopDays: 0,
+        lopDeduction: 0,
+        customDeductions: [],
+        totalCustomDeductions: 0,
+        statutoryDeductions: [{ name: "PF", amount: 5000, isConfigured: true }],
+        totalStatutoryDeductions: 5000,
+        employerContributions: [],
+        totalDeductions: 5000,
+        netSalary: 55000,
+        hasSalaryStructure: true,
+        warnings: [],
+        createdAt: Date.now(),
+      });
+
+      await ctx.db.insert("payrollItems", {
+        workspaceId: ws,
+        payrollRunId: run,
+        employeeId: emp2,
+        basicSalary: 50000,
+        allowances: [{ name: "HRA", amount: 10000 }],
+        grossSalary: 60000,
+        lopDays: 0,
+        lopDeduction: 0,
+        customDeductions: [],
+        totalCustomDeductions: 0,
+        statutoryDeductions: [{ name: "PF", amount: 5000, isConfigured: true }],
+        totalStatutoryDeductions: 5000,
+        employerContributions: [],
+        totalDeductions: 5000,
+        netSalary: 55000,
+        hasSalaryStructure: true,
+        warnings: [],
+        createdAt: Date.now(),
+      });
+
+      // Pending leave for emp1
+      await ctx.db.insert("leaveRequests", {
+        workspaceId: ws,
+        employeeId: emp1,
+        leaveType: "sick",
+        startDate: "2026-10-20",
+        endDate: "2026-10-21",
+        daysCount: 2,
+        reason: "Medical appointment",
+        status: "pending",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+
+      // Attendance record for emp1
+      await ctx.db.insert("attendance", {
+        workspaceId: ws,
+        employeeId: emp1,
+        date: "2026-10-15",
+        status: "present",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+
+      // Audit log entry
+      await ctx.db.insert("auditLogs", {
+        workspaceId: ws,
+        userId: admin,
+        action: "payroll.finalize",
+        at: Date.now(),
+      });
+
+      return {
+        owner,
+        admin,
+        memberLinked,
+        memberUnlinked,
+        ws,
+        otherWs,
+        emp1,
+        emp2,
+        run,
+      };
+    });
+  }
+
+  // ── OWNER TESTS ──────────────────────────────────────────────────────────
+
+  test("Owner can access authorized company-wide dashboard metrics and audit", async () => {
+    const t = convexTest(schema, modules);
+    const { owner, ws } = await seedDashboardWorkspace(t);
+    const asOwner = t.withIdentity(as(owner));
+
+    const s = await asOwner.query(api.dashboard.stats, { workspaceId: ws });
+    expect(s?.role).toBe("owner");
+    expect(s?.activeEmployeesCount).toBe(2);
+    expect(s?.latestGrossPayroll).toBe(120000);
+    expect(s?.latestNetPayroll).toBe(110000);
+    expect(s?.canApprovePayroll).toBe(true);
+
+    const auditLogs = await asOwner.query(api.audit.recent, {
+      workspaceId: ws,
+    });
+    expect(auditLogs.length).toBeGreaterThanOrEqual(1);
+    expect(auditLogs[0]?.action).toBe("payroll.finalize");
+  });
+
+  test("Owner cannot access another workspace's dashboard data", async () => {
+    const t = convexTest(schema, modules);
+    const { owner, otherWs } = await seedDashboardWorkspace(t);
+    const asOwner = t.withIdentity(as(owner));
+
+    // Owner is not a member of otherWs, so querying otherWs must be strictly rejected
+    await expect(
+      asOwner.query(api.dashboard.stats, { workspaceId: otherWs }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+
+  // ── ADMIN TESTS ──────────────────────────────────────────────────────────
+
+  test("Admin can access operational dashboard data but cannot approve payroll", async () => {
+    const t = convexTest(schema, modules);
+    const { admin, ws, run } = await seedDashboardWorkspace(t);
+    const asAdmin = t.withIdentity(as(admin));
+
+    const ops = await asAdmin.query(api.dashboard.adminOperations, {
+      workspaceId: ws,
+    });
+    expect(ops?.role).toBe("admin");
+    expect(ops?.activeEmployeesCount).toBe(2);
+    expect(ops?.pendingLeavesCount).toBe(1);
+    expect(ops?.pendingLeaves[0]?.employeeName).toBe("Linked Member");
+    expect(ops?.canApprovePayroll).toBe(false);
+
+    // Admin calling approveRun must be rejected
+    await expect(
+      asAdmin.mutation(api.payroll.approveRun, {
+        workspaceId: ws,
+        payrollRunId: run,
+      }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+
+  test("Admin cannot access unauthorized workspace data", async () => {
+    const t = convexTest(schema, modules);
+    const { admin, otherWs } = await seedDashboardWorkspace(t);
+    const asAdmin = t.withIdentity(as(admin));
+
+    // Admin is not a member of otherWs
+    await expect(
+      asAdmin.query(api.dashboard.adminOperations, { workspaceId: otherWs }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+
+  // ── USER / MEMBER TESTS ──────────────────────────────────────────────────
+
+  test("User/Member CANNOT retrieve company-wide payroll totals through backend queries", async () => {
+    const t = convexTest(schema, modules);
+    const { memberLinked, ws } = await seedDashboardWorkspace(t);
+    const asMember = t.withIdentity(as(memberLinked));
+
+    // Direct backend request to dashboard.stats must be strictly forbidden
+    await expect(
+      asMember.query(api.dashboard.stats, { workspaceId: ws }),
+    ).rejects.toThrow(/Forbidden/);
+
+    // Direct backend request to dashboard.adminOperations must be strictly forbidden
+    await expect(
+      asMember.query(api.dashboard.adminOperations, { workspaceId: ws }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+
+  test("User/Member CANNOT access company-wide audit information", async () => {
+    const t = convexTest(schema, modules);
+    const { memberLinked, ws } = await seedDashboardWorkspace(t);
+    const asMember = t.withIdentity(as(memberLinked));
+
+    // Direct backend request to audit.recent must be strictly forbidden
+    await expect(
+      asMember.query(api.audit.recent, { workspaceId: ws }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+
+  test("User/Member CAN retrieve their own authorized personal data via memberSummary", async () => {
+    const t = convexTest(schema, modules);
+    const { memberLinked, ws } = await seedDashboardWorkspace(t);
+    const asMember = t.withIdentity(as(memberLinked));
+
+    const summary = await asMember.query(api.dashboard.memberSummary, {
+      workspaceId: ws,
+    });
+    expect(summary?.isLinked).toBe(true);
+    expect(summary?.employee?.firstName).toBe("Linked");
+    expect(summary?.employee?.lastName).toBe("Member");
+    expect(summary?.employee?.designation).toBe("Software Engineer");
+    expect(summary?.latestPayslip?.netSalary).toBe(55000);
+    expect(summary?.latestPayslip?.grossSalary).toBe(60000);
+    expect(summary?.totalPayslipsCount).toBe(1);
+    expect(summary?.pendingLeavesCount).toBe(1);
+    expect(summary?.recentLeaves[0]?.leaveType).toBe("sick");
+    expect(summary?.attendanceCurrentMonth.presentDays).toBe(1);
+  });
+
+  test("User with unlinked employee account receives unlinked state without fake data", async () => {
+    const t = convexTest(schema, modules);
+    const { memberUnlinked, ws } = await seedDashboardWorkspace(t);
+    const asUnlinked = t.withIdentity(as(memberUnlinked));
+
+    const summary = await asUnlinked.query(api.dashboard.memberSummary, {
+      workspaceId: ws,
+    });
+    expect(summary?.isLinked).toBe(false);
+    expect(summary?.employee).toBeNull();
+    expect(summary?.latestPayslip).toBeNull();
+    expect(summary?.totalPayslipsCount).toBe(0);
+    expect(summary?.recentPayslips.length).toBe(0);
+    expect(summary?.pendingLeavesCount).toBe(0);
+  });
+
+  test("User/Member cannot view other employees' payslips", async () => {
+    const t = convexTest(schema, modules);
+    const { memberLinked, ws, emp2, run } = await seedDashboardWorkspace(t);
+    const asMember = t.withIdentity(as(memberLinked));
+
+    // Member attempting to fetch emp2's payslip must be rejected with Forbidden
+    await expect(
+      asMember.query(api.payroll.getPayslip, {
+        workspaceId: ws,
+        payrollRunId: run,
+        employeeId: emp2,
+      }),
+    ).rejects.toThrow(/Forbidden: You can only view your own payslip/);
+  });
+});
+
+describe("Owner Dashboard vs Payroll Processing Page Discrepancy Reconciliation", () => {
+  async function seedDiscrepancyWorkspace(t: ReturnType<typeof convexTest>) {
+    return t.run(async (ctx) => {
+      const owner = await ctx.db.insert("users", {
+        email: "owner@indiapaypayroll.com",
+      });
+      const admin = await ctx.db.insert("users", {
+        email: "admin@indiapaypayroll.com",
+      });
+      const member = await ctx.db.insert("users", {
+        email: "user@indiapaypayroll.com",
+      });
+      const ws = await ctx.db.insert("workspaces", {
+        name: "IndiaPay Dev",
+        ownerId: owner,
+        createdAt: 1791863953035,
+      });
+
+      await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: owner,
+        role: "owner",
+        createdAt: Date.now(),
+      });
+      await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: admin,
+        role: "admin",
+        createdAt: Date.now(),
+      });
+      await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: member,
+        role: "member",
+        createdAt: Date.now(),
+      });
+
+      // Compliance settings (Karnataka, EPF, ESI enabled)
+      await ctx.db.insert("workspaceCompliance", {
+        workspaceId: ws,
+        epfEnabled: true,
+        epfWageCeiling: 15000,
+        epfRestrictToCeiling: true,
+        epsEnabled: true,
+        epsWageCeiling: 15000,
+        edliEnabled: true,
+        adminChargesEnabled: true,
+        esiEnabled: true,
+        esiWageCeiling: 21000,
+        ptEnabled: true,
+        ptState: "Karnataka",
+        updatedAt: 1791870337741,
+      });
+
+      await ctx.db.insert("lopSettings", {
+        workspaceId: ws,
+        calculationBasis: "calendar_days",
+        includeUnpaidLeave: true,
+        includeAbsent: true,
+        halfDayFactor: 0.5,
+        updatedAt: 1791870337741,
+      });
+
+      // Step 1: At initial payroll run creation, only 2 employees exist in the workspace:
+      // Employee 1: Dev User (salary: 50,000 basic & gross)
+      const emp1 = await ctx.db.insert("employees", {
+        workspaceId: ws,
+        firstName: "Dev",
+        lastName: "User",
+        email: "user@indiapaypayroll.com",
+        status: "active",
+        userId: member,
+        department: "Engineering",
+        designation: "Software Engineer",
+        createdAt: 1791866258516,
+        updatedAt: 1791866258516,
+      });
+
+      // Employee 2: Dev Admin (status: active, but no salary structure yet at run creation time)
+      const emp2 = await ctx.db.insert("employees", {
+        workspaceId: ws,
+        firstName: "Dev",
+        lastName: "Admin",
+        email: "admin@indiapaypayroll.com",
+        status: "active",
+        userId: admin,
+        department: "Human Resources",
+        designation: "HR Admin",
+        createdAt: 1791866258516,
+        updatedAt: 1791866258516,
+      });
+
+      // Salary for emp1 only
+      await ctx.db.insert("salaries", {
+        workspaceId: ws,
+        employeeId: emp1,
+        basicSalary: 50000,
+        allowances: [],
+        deductions: [],
+        grossSalary: 50000,
+        effectiveDate: 1781308800000,
+        createdAt: 1791870304222,
+      });
+
+      // Finalized payroll run for October 2026:
+      const run = await ctx.db.insert("payrollRuns", {
+        workspaceId: ws,
+        periodMonth: "2026-10",
+        startDate: "2026-10-01",
+        endDate: "2026-10-31",
+        status: "processed",
+        totalEmployees: 2,
+        totalGrossSalary: 50000,
+        totalNetSalary: 48000,
+        totalLopDeduction: 0,
+        totalCustomDeductions: 0,
+        totalStatutoryDeductions: 2000,
+        totalEmployerContributions: 1950,
+        createdById: admin,
+        submittedBy: admin,
+        submittedAt: 1791870391303,
+        approvedBy: owner,
+        approvedAt: 1791906820171,
+        finalizedBy: admin,
+        finalizedAt: 1791967611679,
+        createdAt: 1791870383648,
+        updatedAt: 1791870383648,
+      });
+
+      // Payroll item for emp1 (Dev User)
+      await ctx.db.insert("payrollItems", {
+        workspaceId: ws,
+        payrollRunId: run,
+        employeeId: emp1,
+        basicSalary: 50000,
+        allowances: [],
+        grossSalary: 50000,
+        lopDays: 0,
+        lopDeduction: 0,
+        customDeductions: [],
+        totalCustomDeductions: 0,
+        statutoryDeductions: [
+          {
+            name: "PF (Provident Fund - 12%)",
+            amount: 1800,
+            isConfigured: true,
+          },
+          {
+            name: "ESI (Employee State Insurance - 0.75%)",
+            amount: 0,
+            isConfigured: true,
+          },
+          {
+            name: "Professional Tax (PT)",
+            amount: 200,
+            isConfigured: true,
+          },
+        ],
+        totalStatutoryDeductions: 2000,
+        employerContributions: [],
+        totalEmployerContributions: 1950,
+        totalDeductions: 2000,
+        netSalary: 48000,
+        hasSalaryStructure: true,
+        warnings: [],
+        createdAt: 1791870383648,
+      });
+
+      // Payroll item for emp2 (Dev Admin, missing salary at run creation time)
+      await ctx.db.insert("payrollItems", {
+        workspaceId: ws,
+        payrollRunId: run,
+        employeeId: emp2,
+        basicSalary: 0,
+        allowances: [],
+        grossSalary: 0,
+        lopDays: 0,
+        lopDeduction: 0,
+        customDeductions: [],
+        totalCustomDeductions: 0,
+        statutoryDeductions: [],
+        totalStatutoryDeductions: 0,
+        employerContributions: [],
+        totalEmployerContributions: 0,
+        totalDeductions: 0,
+        netSalary: 0,
+        hasSalaryStructure: false,
+        warnings: ["Missing salary structure. Gross salary set to ₹0."],
+        createdAt: 1791870383648,
+      });
+
+      return { ws, owner, admin, member, emp1, emp2, run };
+    });
+  }
+
+  test("reconciles Owner dashboard finalized run (₹50k gross / ₹48k net) vs Payroll engine live preview (₹160k gross / ₹154,725 net)", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, owner, admin, emp2 } = await seedDiscrepancyWorkspace(t);
+
+    const asOwner = t.withIdentity(as(owner));
+    const asAdmin = t.withIdentity(as(admin));
+
+    // 1. Verify Owner Dashboard initial state reflects the finalized historical run:
+    const initialStats = await asOwner.query(api.dashboard.stats, {
+      workspaceId: ws,
+    });
+    expect(initialStats?.latestGrossPayroll).toBe(50000);
+    expect(initialStats?.latestNetPayroll).toBe(48000);
+    expect(initialStats?.latestPeriod).toBe("2026-10");
+    expect(initialStats?.latestPayrollStatus).toBe("processed");
+    expect(initialStats?.activeEmployeesCount).toBe(2);
+
+    // 2. Subsequent workspace changes (post-finalization mutations):
+    // Nirmala Khadka added as active employee with 10k basic/gross:
+    await t.run(async (ctx) => {
+      const emp3 = await ctx.db.insert("employees", {
+        workspaceId: ws,
+        firstName: "Nirmala",
+        lastName: "Khadka",
+        email: "khadkanirmala237@gmail.com",
+        status: "active",
+        department: "Engineering",
+        designation: "AI Full stack developer",
+        createdAt: 1791870566390,
+        updatedAt: 1791870588720,
+      });
+
+      await ctx.db.insert("salaries", {
+        workspaceId: ws,
+        employeeId: emp3,
+        basicSalary: 10000,
+        allowances: [],
+        deductions: [],
+        grossSalary: 10000,
+        effectiveDate: 1791849600000,
+        createdAt: 1791871035193,
+      });
+
+      // Dev Admin salary structure added post-finalization: 100k
+      await ctx.db.insert("salaries", {
+        workspaceId: ws,
+        employeeId: emp2,
+        basicSalary: 100000,
+        allowances: [],
+        deductions: [],
+        grossSalary: 100000,
+        effectiveDate: 1791849600000,
+        createdAt: 1791878285749,
+      });
+
+      // Dev Owner added as active employee (no salary structure):
+      await ctx.db.insert("employees", {
+        workspaceId: ws,
+        firstName: "Dev",
+        lastName: "Owner",
+        email: "owner@indiapaypayroll.com",
+        status: "active",
+        userId: owner,
+        department: "Executive",
+        designation: "Managing Director / Owner",
+        createdAt: 1791903089798,
+        updatedAt: 1791903089798,
+      });
+    });
+
+    // 3. Query calculatePreview on Payroll Processing page:
+    // It dynamically evaluates all 4 active employees and current salary structures:
+    const preview = await asAdmin.query(api.payroll.calculatePreview, {
+      workspaceId: ws,
+      periodMonth: "2026-10",
+    });
+
+    // Reconcile exact Payroll Processing page figures:
+    expect(preview.totalEmployees).toBe(4);
+    expect(preview.totalGrossSalary).toBe(160000); // 50k (Dev User) + 100k (Dev Admin) + 10k (Nirmala Khadka)
+    expect(preview.totalStatutoryDeductions).toBe(5275); // 2000 (emp1) + 2000 (emp2) + 1275 (emp3)
+    expect(preview.totalNetSalary).toBe(154725); // 48000 + 98000 + 8725
+    expect(preview.totalLopDeduction).toBe(0);
+
+    // 4. Query Owner Dashboard again — MUST PRESERVE locked historical run:
+    const postStats = await asOwner.query(api.dashboard.stats, {
+      workspaceId: ws,
+    });
+    expect(postStats?.latestGrossPayroll).toBe(50000);
+    expect(postStats?.latestNetPayroll).toBe(48000);
+    expect(postStats?.latestPeriod).toBe("2026-10");
+    expect(postStats?.latestPayrollStatus).toBe("processed");
+    expect(postStats?.activeEmployeesCount).toBe(4); // active count reflects directory, but financials remain locked
+  });
+
+  test("status filtering consistency — non-qualifying statuses (draft, calculated, pending_approval) do not inflate latest gross/net payroll", async () => {
+    const t = convexTest(schema, modules);
+    const { owner, admin, ws } = await seedDiscrepancyWorkspace(t);
+    const asOwner = t.withIdentity(as(owner));
+
+    // Initially, latest qualifying run is 2026-10 (processed, 50000 gross, 48000 net)
+    const initialStats = await asOwner.query(api.dashboard.stats, {
+      workspaceId: ws,
+    });
+    expect(initialStats?.latestGrossPayroll).toBe(50000);
+    expect(initialStats?.latestNetPayroll).toBe(48000);
+
+    // Insert a November 2026 run in pending_approval status with unapproved numbers
+    const novRun = await t.run(async (ctx) => {
+      return await ctx.db.insert("payrollRuns", {
+        workspaceId: ws,
+        periodMonth: "2026-11",
+        startDate: "2026-11-01",
+        endDate: "2026-11-30",
+        status: "pending_approval",
+        totalEmployees: 2,
+        totalGrossSalary: 999999,
+        totalNetSalary: 888888,
+        totalLopDeduction: 0,
+        totalCustomDeductions: 0,
+        totalStatutoryDeductions: 111111,
+        createdById: admin,
+        submittedBy: admin,
+        submittedAt: Date.now(),
+        createdAt: Date.now() + 1000,
+        updatedAt: Date.now() + 1000,
+      });
+    });
+
+    // Owner dashboard should NOT use the pending run for latestGrossPayroll/latestNetPayroll
+    const statsWithPending = await asOwner.query(api.dashboard.stats, {
+      workspaceId: ws,
+    });
+    expect(statsWithPending?.latestGrossPayroll).toBe(50000);
+    expect(statsWithPending?.latestNetPayroll).toBe(48000);
+    expect(statsWithPending?.latestPeriod).toBe("2026-10");
+    expect(statsWithPending?.pendingPayrollRunsCount).toBe(1);
+
+    // Once approved by Owner, it qualifies as an authorized commitment
+    await asOwner.mutation(api.payroll.approveRun, {
+      workspaceId: ws,
+      payrollRunId: novRun,
+    });
+
+    const statsAfterApproval = await asOwner.query(api.dashboard.stats, {
+      workspaceId: ws,
+    });
+    expect(statsAfterApproval?.latestGrossPayroll).toBe(999999);
+    expect(statsAfterApproval?.latestNetPayroll).toBe(888888);
+    expect(statsAfterApproval?.latestPeriod).toBe("2026-11");
+    expect(statsAfterApproval?.latestPayrollStatus).toBe("approved");
+    expect(statsAfterApproval?.pendingPayrollRunsCount).toBe(0);
+  });
+
+  test("authorization boundary — Member strictly denied from calculatePreview, listRuns, and dashboard.stats", async () => {
+    const t = convexTest(schema, modules);
+    const { member, admin, ws } = await seedDiscrepancyWorkspace(t);
+    const asMember = t.withIdentity(as(member));
+    const asAdmin = t.withIdentity(as(admin));
+
+    // Admin can calculatePreview and listRuns
+    const preview = await asAdmin.query(api.payroll.calculatePreview, {
+      workspaceId: ws,
+      periodMonth: "2026-10",
+    });
+    expect(preview).toBeDefined();
+
+    const runs = await asAdmin.query(api.payroll.listRuns, { workspaceId: ws });
+    expect(runs.length).toBeGreaterThanOrEqual(1);
+
+    // Member is strictly forbidden from calculatePreview, listRuns, and dashboard.stats
+    await expect(
+      asMember.query(api.payroll.calculatePreview, {
+        workspaceId: ws,
+        periodMonth: "2026-10",
+      }),
+    ).rejects.toThrow(/Forbidden/);
+
+    await expect(
+      asMember.query(api.payroll.listRuns, { workspaceId: ws }),
+    ).rejects.toThrow(/Forbidden/);
+
+    await expect(
+      asMember.query(api.dashboard.stats, { workspaceId: ws }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+
+  test("Member IDOR defense — Member cannot view another employee's compliance settings", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, member, admin, emp1, emp2 } = await seedDiscrepancyWorkspace(t);
+    const asMember = t.withIdentity(as(member));
+    const asAdmin = t.withIdentity(as(admin));
+
+    // Admin can inspect any employee's compliance
+    const adminView = await asAdmin.query(api.compliance.getEmployeeCompliance, {
+      workspaceId: ws,
+      employeeId: emp1,
+    });
+    expect(adminView).toBeDefined();
+
+    // Member (linked to emp1) can view their own compliance
+    const ownCompliance = await asMember.query(
+      api.compliance.getEmployeeCompliance,
+      {
+        workspaceId: ws,
+        employeeId: emp1,
+      },
+    );
+    expect(ownCompliance).toBeDefined();
+
+    // Member cannot view another employee's (emp2) compliance
+    await expect(
+      asMember.query(api.compliance.getEmployeeCompliance, {
+        workspaceId: ws,
+        employeeId: emp2,
+      }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+
+  test("multiple runs consistency — processed run is prioritized over approved or calculated run for same period", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, owner, admin } = await seedDiscrepancyWorkspace(t);
+    const asOwner = t.withIdentity(as(owner));
+
+    // Insert an approved run for 2026-10 created after the processed run
+    await t.run(async (ctx) => {
+      await ctx.db.insert("payrollRuns", {
+        workspaceId: ws,
+        periodMonth: "2026-10",
+        startDate: "2026-10-01",
+        endDate: "2026-10-31",
+        status: "approved",
+        totalEmployees: 4,
+        totalGrossSalary: 160000,
+        totalNetSalary: 154725,
+        totalLopDeduction: 0,
+        totalCustomDeductions: 0,
+        totalStatutoryDeductions: 5275,
+        createdById: admin,
+        approvedBy: owner,
+        createdAt: Date.now() + 5000,
+        updatedAt: Date.now() + 5000,
+      });
+    });
+
+    // stats with periodMonth = "2026-10" should prioritize the processed run (50k/48k)
+    const statsForOct = await asOwner.query(api.dashboard.stats, {
+      workspaceId: ws,
+      periodMonth: "2026-10",
+    });
+    expect(statsForOct?.latestGrossPayroll).toBe(50000);
+    expect(statsForOct?.latestNetPayroll).toBe(48000);
+    expect(statsForOct?.latestPayrollStatus).toBe("processed");
+    expect(statsForOct?.qualifyingRun?.status).toBe("processed");
+  });
+});
+
+
+
+

@@ -1,4 +1,5 @@
 import "@v1/ui/globals.css";
+import { ExtensionErrorGuard } from "@/components/extension-error-guard";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { TooltipProvider } from "@v1/ui/tooltip";
 import { cn } from "@v1/ui/utils";
@@ -38,6 +39,7 @@ export default function RootLayout({
             "antialiased",
           )}
         >
+          <ExtensionErrorGuard />
           <ThemeProvider
             attribute="class"
             defaultTheme="system"

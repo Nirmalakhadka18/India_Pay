@@ -9,12 +9,17 @@ import { useMutation, useQuery } from "convex/react";
 import { format } from "date-fns";
 import {
   AlertCircle,
+  Building2,
   CalendarClock,
   CheckCircle2,
   ChevronRight,
+  CreditCard,
+  Eye,
+  EyeOff,
   FileText,
   Loader2,
   Printer,
+  ShieldCheck,
   UserCircle,
 } from "lucide-react";
 import { useState } from "react";
@@ -46,6 +51,7 @@ export default function MyPortal() {
   const [activeTab, setActiveTab] = useState<
     "profile" | "leaves" | "attendance"
   >("profile");
+  const [revealSensitive, setRevealSensitive] = useState(false);
 
   // Leave Form State
   const [leaveType, setLeaveType] = useState("sick");
@@ -247,6 +253,130 @@ export default function MyPortal() {
             </div>
 
             <div className="col-span-2 space-y-6">
+              {/* Banking & Statutory Master Data */}
+              <div className="rounded-lg border border-border bg-card overflow-hidden">
+                <div className="border-b border-border px-6 py-4 flex items-center justify-between">
+                  <h3 className="font-semibold flex items-center gap-2">
+                    <CreditCard className="h-5 w-5 text-primary/50" /> Banking &
+                    Statutory Master Data
+                  </h3>
+                  {(me.bankAccountNumber || me.pan) && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setRevealSensitive((v) => !v)}
+                      className="gap-1.5 text-xs text-muted-foreground hover:text-primary"
+                    >
+                      {revealSensitive ? (
+                        <>
+                          <EyeOff className="h-3.5 w-3.5" /> Mask Confidential
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="h-3.5 w-3.5" /> Reveal Confidential
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
+                <div className="p-6 grid gap-6 sm:grid-cols-2">
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                      <Building2 className="h-3.5 w-3.5" /> Direct Payout
+                      Banking
+                    </h4>
+                    <div className="space-y-3 text-sm">
+                      <div>
+                        <p className="text-muted-foreground text-xs">
+                          Account Holder Name
+                        </p>
+                        <p className="font-medium text-primary">
+                          {me.bankAccountHolderName || "—"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs">
+                          Bank Name & Branch
+                        </p>
+                        <p className="font-medium text-primary">
+                          {me.bankName || "—"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs">
+                          Account Number
+                        </p>
+                        <p className="font-mono font-medium text-primary">
+                          {me.bankAccountNumber
+                            ? revealSensitive
+                              ? me.bankAccountNumber
+                              : me.maskedBankAccountNumber ||
+                                me.bankAccountNumber
+                            : "Not configured"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs">
+                          IFSC Code
+                        </p>
+                        <p className="font-mono font-medium text-primary">
+                          {me.ifscCode || "—"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                      <ShieldCheck className="h-3.5 w-3.5" /> Statutory
+                      Identification
+                    </h4>
+                    <div className="space-y-3 text-sm">
+                      <div>
+                        <p className="text-muted-foreground text-xs">
+                          Permanent Account Number (PAN)
+                        </p>
+                        <p className="font-mono font-medium text-primary">
+                          {me.pan
+                            ? revealSensitive
+                              ? me.pan
+                              : me.maskedPan || me.pan
+                            : "Not configured"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs">
+                          Universal Account Number (UAN)
+                        </p>
+                        <p className="font-mono font-medium text-primary">
+                          {me.uan
+                            ? revealSensitive
+                              ? me.uan
+                              : me.maskedUan || me.uan
+                            : "Not configured"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs">
+                          ESIC IP Number
+                        </p>
+                        <p className="font-mono font-medium text-primary">
+                          {me.esicIpNumber || "—"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs">
+                          PF Member ID
+                        </p>
+                        <p className="font-mono font-medium text-primary">
+                          {me.pfMemberId || "—"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="rounded-lg border border-border bg-card overflow-hidden">
                 <div className="border-b border-border px-6 py-4 flex items-center justify-between">
                   <h3 className="font-semibold flex items-center gap-2">

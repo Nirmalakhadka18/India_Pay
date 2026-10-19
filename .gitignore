@@ -11,3 +11,7 @@ FULL_DAY_REPORT.txt
 !**/e2e/screenshots/10_*.png
 !**/e2e/screenshots/prod_*.png
 !**/e2e/screenshots/diag_*.png
+cloudflared.exe
+*.exe
+temp_login.html
+

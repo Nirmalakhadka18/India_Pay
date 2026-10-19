@@ -139,6 +139,16 @@ export default defineSchema({
     designation: v.optional(v.string()),
     status: v.union(v.literal("active"), v.literal("inactive")),
     userId: v.optional(v.id("users")),
+    // Banking Master Data
+    bankAccountHolderName: v.optional(v.string()),
+    bankName: v.optional(v.string()),
+    bankAccountNumber: v.optional(v.string()),
+    ifscCode: v.optional(v.string()),
+    // Statutory Master Data
+    pan: v.optional(v.string()),
+    uan: v.optional(v.string()),
+    esicIpNumber: v.optional(v.string()),
+    pfMemberId: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })
@@ -170,7 +180,7 @@ export default defineSchema({
       v.literal("absent"),
       v.literal("half_day"),
       v.literal("paid_leave"),
-      v.literal("unpaid_leave")
+      v.literal("unpaid_leave"),
     ),
     checkInTime: v.optional(v.string()), // "HH:MM"
     checkOutTime: v.optional(v.string()), // "HH:MM"
@@ -190,7 +200,7 @@ export default defineSchema({
       v.literal("casual"),
       v.literal("sick"),
       v.literal("earned"),
-      v.literal("unpaid")
+      v.literal("unpaid"),
     ),
     startDate: v.string(), // "YYYY-MM-DD"
     endDate: v.string(), // "YYYY-MM-DD"
@@ -200,7 +210,7 @@ export default defineSchema({
       v.literal("pending"),
       v.literal("approved"),
       v.literal("rejected"),
-      v.literal("cancelled")
+      v.literal("cancelled"),
     ),
     reviewedBy: v.optional(v.id("users")),
     reviewRemarks: v.optional(v.string()),
@@ -218,7 +228,7 @@ export default defineSchema({
     calculationBasis: v.union(
       v.literal("calendar_days"), // Gross / Days in Month
       v.literal("fixed_30_days"), // Gross / 30
-      v.literal("working_days") // Gross / (Month Days - Standard Weekends)
+      v.literal("working_days"), // Gross / (Month Days - Standard Weekends)
     ),
     includeUnpaidLeave: v.boolean(),
     includeAbsent: v.boolean(),
@@ -236,7 +246,7 @@ export default defineSchema({
       v.literal("calculated"),
       v.literal("pending_approval"),
       v.literal("approved"),
-      v.literal("processed")
+      v.literal("processed"),
     ),
     totalEmployees: v.number(),
     totalGrossSalary: v.number(),
@@ -254,6 +264,15 @@ export default defineSchema({
     rejectionReason: v.optional(v.string()),
     finalizedBy: v.optional(v.id("users")),
     finalizedAt: v.optional(v.number()),
+    // Supplementary Run Fields (optional for full backward compatibility)
+    runType: v.optional(
+      v.union(v.literal("regular"), v.literal("supplementary")),
+    ),
+    originalPayrollRunId: v.optional(v.id("payrollRuns")),
+    targetEmployeeId: v.optional(v.id("employees")),
+    adjustmentReason: v.optional(v.string()),
+    adjustmentCategory: v.optional(v.string()),
+    correctionKey: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })
@@ -270,11 +289,25 @@ export default defineSchema({
     grossSalary: v.number(),
     lopDays: v.number(),
     lopDeduction: v.number(),
-    customDeductions: v.array(v.object({ name: v.string(), amount: v.number() })),
+    customDeductions: v.array(
+      v.object({ name: v.string(), amount: v.number() }),
+    ),
     totalCustomDeductions: v.number(),
-    statutoryDeductions: v.array(v.object({ name: v.string(), amount: v.number(), isConfigured: v.boolean() })),
+    statutoryDeductions: v.array(
+      v.object({
+        name: v.string(),
+        amount: v.number(),
+        isConfigured: v.boolean(),
+      }),
+    ),
     totalStatutoryDeductions: v.number(),
-    employerContributions: v.array(v.object({ name: v.string(), amount: v.number(), isConfigured: v.boolean() })),
+    employerContributions: v.array(
+      v.object({
+        name: v.string(),
+        amount: v.number(),
+        isConfigured: v.boolean(),
+      }),
+    ),
     totalEmployerContributions: v.optional(v.number()),
     totalDeductions: v.number(),
     netSalary: v.number(),
@@ -295,10 +328,34 @@ export default defineSchema({
     epsWageCeiling: v.optional(v.number()), // EPS ceiling default 15000 (capping EPS at 1250)
     edliEnabled: v.optional(v.boolean()), // 0.5% EDLI insurance
     adminChargesEnabled: v.optional(v.boolean()), // 0.5% admin charges
+    epfEstablishmentCode: v.optional(v.string()), // Optional EPFO Establishment Code (e.g. MHBAN0012345000)
     esiEnabled: v.boolean(),
     esiWageCeiling: v.optional(v.number()), // Statutory default 21000
     ptState: v.optional(v.string()), // e.g., "Karnataka"
     ptEnabled: v.boolean(),
+    lwfEnabled: v.optional(v.boolean()),
+    lwfState: v.optional(v.string()), // e.g., "Karnataka", "Maharashtra"
+    // Employer TDS Master Data (Form 138 / Form 24Q)
+    tan: v.optional(v.string()), // 10-char Tax Deduction Account Number, e.g. BLRK12345A
+    employerPan: v.optional(v.string()), // 10-char Employer PAN
+    deductorType: v.optional(
+      v.union(
+        v.literal("company"),
+        v.literal("individual"),
+        v.literal("firm"),
+        v.literal("government"),
+        v.literal("other"),
+      ),
+    ),
+    paoCode: v.optional(v.string()), // Pay and Accounts Office Code (e.g. PAO001)
+    ddoCode: v.optional(v.string()), // Drawing and Disbursing Office Code (e.g. DDO001)
+    ministryName: v.optional(v.string()), // Ministry Name for Government deductors
+    responsiblePersonName: v.optional(v.string()),
+    responsiblePersonPan: v.optional(v.string()),
+    responsiblePersonDesignation: v.optional(v.string()),
+    responsiblePersonEmail: v.optional(v.string()),
+    responsiblePersonMobile: v.optional(v.string()),
+    responsiblePersonAddress: v.optional(v.string()),
     updatedAt: v.number(),
   }).index("by_workspace", ["workspaceId"]),
 
@@ -309,8 +366,110 @@ export default defineSchema({
     epfOptOut: v.boolean(),
     epfOnActualBasic: v.optional(v.boolean()), // Voluntary EPF contribution on full basic
     tdsOverride: v.optional(v.number()), // Manual TDS override amount
+    section197CertificateNumber: v.optional(v.string()), // 10-char Certificate Number u/s 197 issued by AO
+    section197Rate: v.optional(v.number()), // Lower tax deduction rate (e.g. 0% or 2%)
+    esiContributionPeriodCovered: v.optional(v.boolean()), // Continues coverage under Sec 2(9) proviso if crossed 21k mid-period
     updatedAt: v.number(),
   })
     .index("by_workspace", ["workspaceId"])
     .index("by_employee", ["employeeId"]),
+
+  // Employee Tax Declarations (Form 12BB under Rule 26C, Income-tax Rules, 1962)
+  taxDeclarations: defineTable({
+    workspaceId: v.id("workspaces"),
+    employeeId: v.id("employees"),
+    financialYear: v.string(), // e.g. "2026-27"
+    regime: v.union(v.literal("new"), v.literal("old")),
+    status: v.union(
+      v.literal("draft"),
+      v.literal("submitted"),
+      v.literal("approved"),
+      v.literal("rejected"),
+    ),
+    hra: v.optional(
+      v.object({
+        annualRentPaid: v.number(),
+        landlordName: v.optional(v.string()),
+        landlordPan: v.optional(v.string()),
+        landlordAddress: v.optional(v.string()),
+        cityType: v.optional(
+          v.union(v.literal("metro"), v.literal("non_metro")),
+        ),
+      }),
+    ),
+    homeLoan: v.optional(
+      v.object({
+        annualInterest: v.number(),
+        lenderName: v.optional(v.string()),
+        lenderPan: v.optional(v.string()),
+      }),
+    ),
+    chapterVIA: v.optional(
+      v.object({
+        section80C: v.optional(v.number()), // Capped at ₹1.5L
+        section80D: v.optional(v.number()), // Health insurance
+        section80CCD1B: v.optional(v.number()), // Additional NPS up to ₹50k
+        section80E: v.optional(v.number()), // Education loan interest
+        section80G: v.optional(v.number()), // Donations
+        otherDeductions: v.optional(v.number()),
+      }),
+    ),
+    previousEmployer: v.optional(
+      v.object({
+        grossSalary: v.number(),
+        tdsDeducted: v.number(),
+        employerName: v.optional(v.string()),
+        employerPan: v.optional(v.string()),
+        employerTan: v.optional(v.string()),
+      }),
+    ),
+    proofs: v.array(
+      v.object({
+        id: v.string(),
+        category: v.string(), // "rent_receipt", "insurance_receipt", "home_loan_cert", "investment_proof", "other"
+        title: v.string(),
+        fileId: v.optional(v.id("files")),
+        storageId: v.optional(v.id("_storage")),
+        fileName: v.string(),
+        uploadedAt: v.number(),
+      }),
+    ),
+    reviewRemarks: v.optional(v.string()),
+    reviewedBy: v.optional(v.id("users")),
+    reviewedAt: v.optional(v.number()),
+    submittedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_employee_fy", ["employeeId", "financialYear"])
+    .index("by_workspace_status", ["workspaceId", "status"]),
+
+  // Quarterly Tax Deposit Challans (ITNS 281) for Form 138 / Form 24Q
+  tdsChallans: defineTable({
+    workspaceId: v.id("workspaces"),
+    quarter: v.union(
+      v.literal("Q1"),
+      v.literal("Q2"),
+      v.literal("Q3"),
+      v.literal("Q4"),
+    ),
+    financialYear: v.string(), // e.g. "2026-27"
+    bsrCode: v.string(), // 7 digits
+    depositDate: v.string(), // "YYYY-MM-DD"
+    challanSerialNumber: v.string(), // 5 digits
+    minorHead: v.union(v.literal("200"), v.literal("400")), // 200 = TDS Payable by taxpayer, 400 = Regular Assessment
+    taxAmount: v.number(),
+    surcharge: v.optional(v.number()),
+    cess: v.optional(v.number()),
+    interest: v.optional(v.number()),
+    fee: v.optional(v.number()), // Section 234E late fee
+    penalty: v.optional(v.number()),
+    totalAmount: v.number(),
+    remarks: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_quarter", ["workspaceId", "financialYear", "quarter"]),
 });

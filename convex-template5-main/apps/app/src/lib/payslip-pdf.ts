@@ -10,6 +10,16 @@ export interface PayslipData {
   designation: string;
   phone?: string;
   employeeId?: string;
+  bankName?: string;
+  bankAccountNumber?: string;
+  maskedBankAccountNumber?: string;
+  ifscCode?: string;
+  pan?: string;
+  maskedPan?: string;
+  uan?: string;
+  maskedUan?: string;
+  pfMemberId?: string;
+  esicIpNumber?: string;
   basicSalary: number;
   allowances: { name: string; amount: number }[];
   grossSalary: number;

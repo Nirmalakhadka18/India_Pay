@@ -1,5 +1,7 @@
 "use client";
 
+import { EpfoEcrDialog } from "@/components/epfo-ecr-dialog";
+import { Form138TdsDialog } from "@/components/form-138-tds-dialog";
 import { RoleGuard } from "@/components/role-guard";
 import { useWorkspace } from "@/lib/useWorkspace";
 import { api } from "@v1/backend/convex/_generated/api";
@@ -29,6 +31,7 @@ function ComplianceContent() {
   const [epfEnabled, setEpfEnabled] = useState(false);
   const [epfWageCeiling, setEpfWageCeiling] = useState(15000);
   const [epfRestrictToCeiling, setEpfRestrictToCeiling] = useState(true);
+  const [epfEstablishmentCode, setEpfEstablishmentCode] = useState("");
   const [epsEnabled, setEpsEnabled] = useState(true);
   const [edliEnabled, setEdliEnabled] = useState(true);
   const [adminChargesEnabled, setAdminChargesEnabled] = useState(true);
@@ -36,13 +39,30 @@ function ComplianceContent() {
   const [esiWageCeiling, setEsiWageCeiling] = useState(21000);
   const [ptEnabled, setPtEnabled] = useState(false);
   const [ptState, setPtState] = useState("Karnataka");
+  const [lwfEnabled, setLwfEnabled] = useState(false);
+  const [lwfState, setLwfState] = useState("Karnataka");
+  const [tan, setTan] = useState("");
+  const [employerPan, setEmployerPan] = useState("");
+  const [deductorType, setDeductorType] = useState<
+    "company" | "individual" | "firm" | "government" | "other"
+  >("company");
+  const [responsiblePersonName, setResponsiblePersonName] = useState("");
+  const [responsiblePersonPan, setResponsiblePersonPan] = useState("");
+  const [responsiblePersonDesignation, setResponsiblePersonDesignation] =
+    useState("");
+  const [responsiblePersonEmail, setResponsiblePersonEmail] = useState("");
+  const [responsiblePersonMobile, setResponsiblePersonMobile] = useState("");
+  const [responsiblePersonAddress, setResponsiblePersonAddress] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isEcrOpen, setIsEcrOpen] = useState(false);
+  const [isTdsOpen, setIsTdsOpen] = useState(false);
 
   useEffect(() => {
     if (compliance) {
       setEpfEnabled(compliance.epfEnabled);
       setEpfWageCeiling(compliance.epfWageCeiling ?? 15000);
       setEpfRestrictToCeiling(compliance.epfRestrictToCeiling ?? true);
+      setEpfEstablishmentCode(compliance.epfEstablishmentCode ?? "");
       setEpsEnabled(compliance.epsEnabled ?? true);
       setEdliEnabled(compliance.edliEnabled ?? true);
       setAdminChargesEnabled(compliance.adminChargesEnabled ?? true);
@@ -50,6 +70,26 @@ function ComplianceContent() {
       setEsiWageCeiling(compliance.esiWageCeiling ?? 21000);
       setPtEnabled(compliance.ptEnabled);
       setPtState(compliance.ptState || "Karnataka");
+      setLwfEnabled(compliance.lwfEnabled ?? false);
+      setLwfState(compliance.lwfState || compliance.ptState || "Karnataka");
+      setTan(compliance.tan ?? "");
+      setEmployerPan(compliance.employerPan ?? "");
+      setDeductorType(
+        (compliance.deductorType as
+          | "company"
+          | "individual"
+          | "firm"
+          | "government"
+          | "other") ?? "company",
+      );
+      setResponsiblePersonName(compliance.responsiblePersonName ?? "");
+      setResponsiblePersonPan(compliance.responsiblePersonPan ?? "");
+      setResponsiblePersonDesignation(
+        compliance.responsiblePersonDesignation ?? "",
+      );
+      setResponsiblePersonEmail(compliance.responsiblePersonEmail ?? "");
+      setResponsiblePersonMobile(compliance.responsiblePersonMobile ?? "");
+      setResponsiblePersonAddress(compliance.responsiblePersonAddress ?? "");
     }
   }, [compliance]);
 
@@ -62,6 +102,7 @@ function ComplianceContent() {
         epfEnabled,
         epfWageCeiling: Number(epfWageCeiling) || 15000,
         epfRestrictToCeiling,
+        epfEstablishmentCode: epfEstablishmentCode.trim() || undefined,
         epsEnabled,
         edliEnabled,
         adminChargesEnabled,
@@ -69,6 +110,19 @@ function ComplianceContent() {
         esiWageCeiling: Number(esiWageCeiling) || 21000,
         ptEnabled,
         ptState,
+        lwfEnabled,
+        lwfState,
+        tan: tan.trim().toUpperCase() || undefined,
+        employerPan: employerPan.trim().toUpperCase() || undefined,
+        deductorType,
+        responsiblePersonName: responsiblePersonName.trim() || undefined,
+        responsiblePersonPan:
+          responsiblePersonPan.trim().toUpperCase() || undefined,
+        responsiblePersonDesignation:
+          responsiblePersonDesignation.trim() || undefined,
+        responsiblePersonEmail: responsiblePersonEmail.trim() || undefined,
+        responsiblePersonMobile: responsiblePersonMobile.trim() || undefined,
+        responsiblePersonAddress: responsiblePersonAddress.trim() || undefined,
       });
       toast.success("Compliance settings updated successfully");
     } catch (error) {
@@ -210,6 +264,50 @@ function ComplianceContent() {
                   EPF + 8.33% to EPS + EDLI & Admin fees.
                 </p>
               </div>
+
+              <div className="pt-3 border-t border-zinc-200 dark:border-zinc-700">
+                <div className="max-w-md">
+                  <label className="block font-medium mb-1">
+                    EPFO Establishment Code / ID
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. MHBAN0012345000"
+                    value={epfEstablishmentCode}
+                    onChange={(e) =>
+                      setEpfEstablishmentCode(e.target.value.toUpperCase())
+                    }
+                    className="w-full p-2 font-mono text-sm border border-zinc-300 rounded-md dark:bg-zinc-800 dark:border-zinc-700 uppercase"
+                  />
+                  <p className="text-xs text-zinc-500 mt-1">
+                    Official 15 or 22 character alphanumeric code issued by
+                    EPFO. Used in ECR text file naming and monthly challan
+                    identification.
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-zinc-200 dark:border-zinc-700">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-blue-50/70 dark:bg-blue-950/30 p-4 rounded-md border border-blue-200 dark:border-blue-900">
+                  <div>
+                    <h4 className="font-semibold text-sm text-blue-950 dark:text-blue-200">
+                      EPFO Electronic Challan Cum Return (ECR) Export
+                    </h4>
+                    <p className="text-xs text-blue-800/80 dark:text-blue-300/80 mt-1">
+                      Generate official #~# delimited EPFO ECR text file
+                      (Version 2.0) with automated UAN validation, wage ceiling
+                      capping, and 5-Account Challan reconciliation.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsEcrOpen(true)}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-semibold whitespace-nowrap shadow-sm transition-colors shrink-0"
+                  >
+                    Open EPFO ECR Export &rarr;
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -296,16 +394,79 @@ function ComplianceContent() {
                 className="w-full max-w-xs p-2 border border-zinc-300 rounded-md dark:bg-zinc-800 dark:border-zinc-700"
               >
                 <option value="Karnataka">Karnataka</option>
-                <option value="Maharashtra" disabled>
-                  Maharashtra (Coming Soon)
-                </option>
-                <option value="Telangana" disabled>
-                  Telangana (Coming Soon)
-                </option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Telangana">Telangana / Andhra Pradesh</option>
+                <option value="Delhi">Delhi (Nil-PT)</option>
               </select>
               <p className="text-xs text-zinc-500 mt-2">
-                Karnataka slabs: ₹0 up to ₹24,999. ₹200 for ₹25,000+ (₹300 in
-                February).
+                {ptState === "Karnataka"
+                  ? "Karnataka slabs: ₹0 up to ₹24,999. ₹200 for ₹25,000+ (₹300 in February)."
+                  : ptState === "Maharashtra"
+                    ? "Maharashtra slabs: Male gross > ₹10,000: ₹200 (₹300 Feb). Females up to ₹25,000 are exempt."
+                    : ptState === "Telangana"
+                      ? "Telangana slabs: Gross > ₹20,000 is ₹200/month."
+                      : "State-specific PT schedule applied automatically."}
+              </p>
+            </div>
+          )}
+        </div>
+
+        <hr className="border-zinc-200 dark:border-zinc-800" />
+
+        {/* LWF Section */}
+        <div>
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-medium">Labour Welfare Fund (LWF)</h3>
+              <p className="text-sm text-zinc-500">
+                State-level statutory Labour Welfare Fund contributions.
+              </p>
+            </div>
+            <label className="flex items-center space-x-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={lwfEnabled}
+                onChange={(e) => setLwfEnabled(e.target.checked)}
+                className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <span className="font-medium text-sm">
+                Enable Labour Welfare Fund
+              </span>
+            </label>
+          </div>
+
+          {lwfEnabled && (
+            <div className="mt-4 p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-md border border-zinc-200 dark:border-zinc-700 text-sm">
+              <label className="block font-medium mb-1">Applicable State</label>
+              <select
+                value={lwfState}
+                onChange={(e) => setLwfState(e.target.value)}
+                className="w-full max-w-xs p-2 border border-zinc-300 rounded-md dark:bg-zinc-800 dark:border-zinc-700"
+              >
+                <option value="Karnataka">
+                  Karnataka (Annual in Dec: Emp ₹20, Employer ₹40)
+                </option>
+                <option value="Maharashtra">
+                  Maharashtra (Bi-annual in Jun & Dec: Emp ₹12, Employer ₹36)
+                </option>
+                <option value="Gujarat">
+                  Gujarat (Bi-annual in Jun & Dec)
+                </option>
+                <option value="Telangana">
+                  Telangana / AP (Annual in Dec)
+                </option>
+                <option value="Delhi">Delhi (Exempt / Nil)</option>
+              </select>
+              <p className="text-xs text-zinc-500 mt-2">
+                {lwfState === "Karnataka"
+                  ? "Karnataka: Annual deduction in December. Employee pays ₹20, Employer pays ₹40 (Total ₹60). Remittance due by 15th January."
+                  : lwfState === "Maharashtra"
+                    ? "Maharashtra: Bi-annual deduction in June and December. Gross > ₹3,000: Employee pays ₹12, Employer pays ₹36 (1:3 ratio). Remittance due by 15th July & 15th January."
+                    : lwfState === "Gujarat"
+                      ? "Gujarat: Bi-annual deduction in June and December."
+                      : lwfState === "Delhi"
+                        ? "Delhi: No statutory Labour Welfare Fund contribution levied."
+                        : "State-specific schedule applied automatically."}
               </p>
             </div>
           )}
@@ -315,25 +476,178 @@ function ComplianceContent() {
 
         {/* TDS Section */}
         <div>
-          <h3 className="text-lg font-medium">Tax Deducted at Source (TDS)</h3>
-          <div className="mt-2 p-4 bg-amber-50 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-800 text-sm text-amber-900 dark:text-amber-200">
-            <span className="font-semibold block mb-1">
-              Manual Monthly Override Mode Only:
-            </span>
-            <p className="mb-2">
-              IndiaPay does not have an automated income tax regime engine
-              (Section 115BAC / Chapter VI-A slabs). TDS deductions must be
-              entered as a manual monthly amount per employee or via payroll
-              line adjustments.
-            </p>
-            <p className="text-xs text-amber-800 dark:text-amber-300">
-              Note: Employee tax regime selection ("Old" vs "New") is stored as
-              an informational tag and does not automatically calculate
-              progressive tax brackets.
-            </p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h3 className="text-lg font-medium">
+                Tax Deducted at Source (TDS) & Quarterly Filings
+              </h3>
+              <p className="text-sm text-zinc-500">
+                Form 138 (Income-tax Act, 2025 for FY 2026–27+) / Form 24Q
+                (Income-tax Act, 1961 for FY 2025–26 & earlier).
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsTdsOpen(true)}
+              className="px-3.5 py-1.5 bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 rounded-md text-sm font-medium hover:opacity-90 inline-flex items-center gap-2 self-start sm:self-auto"
+            >
+              Quarterly TDS Module (Form 138 / 24Q)
+            </button>
+          </div>
+
+          <div className="mt-4 p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-md border border-zinc-200 dark:border-zinc-700 space-y-4 text-sm">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block font-medium mb-1">
+                  Tax Deduction Account Number (TAN) *
+                </label>
+                <input
+                  type="text"
+                  maxLength={10}
+                  placeholder="e.g. BLRR01234D"
+                  value={tan}
+                  onChange={(e) => setTan(e.target.value.toUpperCase())}
+                  className="w-full p-2 border border-zinc-300 rounded-md dark:bg-zinc-800 dark:border-zinc-700 font-mono"
+                />
+                <p className="text-xs text-zinc-500 mt-1">
+                  10-character alphanumeric TAN issued by Income Tax Dept.
+                </p>
+              </div>
+
+              <div>
+                <label className="block font-medium mb-1">
+                  Employer / Deductor PAN *
+                </label>
+                <input
+                  type="text"
+                  maxLength={10}
+                  placeholder="e.g. ABCDE1234F"
+                  value={employerPan}
+                  onChange={(e) => setEmployerPan(e.target.value.toUpperCase())}
+                  className="w-full p-2 border border-zinc-300 rounded-md dark:bg-zinc-800 dark:border-zinc-700 font-mono"
+                />
+                <p className="text-xs text-zinc-500 mt-1">
+                  Permanent Account Number of the employing entity.
+                </p>
+              </div>
+
+              <div>
+                <label className="block font-medium mb-1">
+                  Deductor Category
+                </label>
+                <select
+                  value={deductorType}
+                  onChange={(e) =>
+                    setDeductorType(
+                      e.target.value as
+                        | "company"
+                        | "individual"
+                        | "firm"
+                        | "government"
+                        | "other",
+                    )
+                  }
+                  className="w-full p-2 border border-zinc-300 rounded-md dark:bg-zinc-800 dark:border-zinc-700"
+                >
+                  <option value="company">Company (Private / Public)</option>
+                  <option value="firm">Partnership / LLP / Firm</option>
+                  <option value="individual">
+                    Individual / Proprietorship
+                  </option>
+                  <option value="government">
+                    Government / Statutory Body
+                  </option>
+                  <option value="other">Other Deductor</option>
+                </select>
+                <p className="text-xs text-zinc-500 mt-1">
+                  Entity classification for quarterly batch header record.
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-zinc-200 dark:border-zinc-700">
+              <span className="font-semibold block mb-2 text-xs uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
+                Person Responsible for Deduction (Authorized Signatory)
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block font-medium mb-1">Full Name</label>
+                  <input
+                    type="text"
+                    placeholder="Signatory Name"
+                    value={responsiblePersonName}
+                    onChange={(e) => setResponsiblePersonName(e.target.value)}
+                    className="w-full p-2 border border-zinc-300 rounded-md dark:bg-zinc-800 dark:border-zinc-700"
+                  />
+                </div>
+                <div>
+                  <label className="block font-medium mb-1">PAN</label>
+                  <input
+                    type="text"
+                    maxLength={10}
+                    placeholder="ABCDE1234F"
+                    value={responsiblePersonPan}
+                    onChange={(e) =>
+                      setResponsiblePersonPan(e.target.value.toUpperCase())
+                    }
+                    className="w-full p-2 border border-zinc-300 rounded-md dark:bg-zinc-800 dark:border-zinc-700 font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block font-medium mb-1">Designation</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Director / Finance Head"
+                    value={responsiblePersonDesignation}
+                    onChange={(e) =>
+                      setResponsiblePersonDesignation(e.target.value)
+                    }
+                    className="w-full p-2 border border-zinc-300 rounded-md dark:bg-zinc-800 dark:border-zinc-700"
+                  />
+                </div>
+                <div>
+                  <label className="block font-medium mb-1">Email</label>
+                  <input
+                    type="email"
+                    placeholder="signatory@company.com"
+                    value={responsiblePersonEmail}
+                    onChange={(e) => setResponsiblePersonEmail(e.target.value)}
+                    className="w-full p-2 border border-zinc-300 rounded-md dark:bg-zinc-800 dark:border-zinc-700"
+                  />
+                </div>
+                <div>
+                  <label className="block font-medium mb-1">Mobile</label>
+                  <input
+                    type="tel"
+                    maxLength={10}
+                    placeholder="10-digit mobile"
+                    value={responsiblePersonMobile}
+                    onChange={(e) => setResponsiblePersonMobile(e.target.value)}
+                    className="w-full p-2 border border-zinc-300 rounded-md dark:bg-zinc-800 dark:border-zinc-700"
+                  />
+                </div>
+                <div>
+                  <label className="block font-medium mb-1">
+                    Official Address
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Registered Office address"
+                    value={responsiblePersonAddress}
+                    onChange={(e) =>
+                      setResponsiblePersonAddress(e.target.value)
+                    }
+                    className="w-full p-2 border border-zinc-300 rounded-md dark:bg-zinc-800 dark:border-zinc-700"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      <EpfoEcrDialog open={isEcrOpen} onOpenChange={setIsEcrOpen} />
+      <Form138TdsDialog open={isTdsOpen} onOpenChange={setIsTdsOpen} />
     </div>
   );
 }

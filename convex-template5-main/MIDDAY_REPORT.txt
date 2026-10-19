@@ -1,8 +1,8 @@
 ================================================================================
-INDIAPAY SAAS PLATFORM — MIDDAY STATUS & STAGING READINESS AUDIT REPORT
+INDIAPAY SAAS PLATFORM — MIDDAY COMPLIANCE & STATUTORY AUDIT REPORT
 ================================================================================
-Date: 14 October 2026
-Timestamp: 15:00 IST
+Date: 16 October 2026
+Timestamp: 15:45 IST
 Platform: Windows 10/11 (Node v24 with Windows Readlink Normalization Patch)
 Project: IndiaPay — Indian Payroll Management SaaS
 Local Application URL: http://localhost:3000
@@ -10,285 +10,265 @@ Backend Deployment: Convex Dev (dev:basic-bobcat-92 | https://basic-bobcat-92.co
 Repository Root: E:\convex-template5-main
 Active Working Directory: E:\convex-template5-main\convex-template5-main
 Current Branch: main
-Execution Mode: Strict Non-Destructive Quality Verification & Staging Preparation
+Execution Mode: Strict Non-Destructive Quality Verification & Compliance Audit
 
 ================================================================================
-1. EXECUTIVE SUMMARY & KEY MILESTONES ACHIEVED
+1. EXECUTIVE SUMMARY & MULTI-TENANT ARCHITECTURE CONFIRMATION
 ================================================================================
-During this morning and midday session, all critical issues impacting authentication,
-session teardown, dashboard metrics, Windows compilation, and staging readiness were
-systematically diagnosed, remediated, and verified end-to-end.
+During today's session, IndiaPay underwent a comprehensive compliance audit 
+focusing on:
+1. Form 138 (Income-tax Act, 2025) and legacy Form 24Q quarterly TDS filing engines.
+2. Complete EPFO ECR (#~#) monthly statutory export validation.
+3. Multi-tenant / multi-organization architecture isolation and role security.
+4. End-to-end payroll lifecycle execution, maker-checker approval, and historical 
+   finalized payroll immutability guarantees.
 
-Key Milestones:
-1. IndiaPay Logout Error Completely Resolved:
-   - Diagnosed root cause: WorkspaceProvider effect unconditionally invoked 
-     api.orgs.ensureWorkspace when client tokens were wiped during signOut(), 
-     throwing unhandled "Error: Not authenticated" rejections on screen.
-   - Integrated useConvexAuth() guard to skip workspace queries and mutations 
-     when unauthenticated, safely clearing client state.
-   - Replaced fire-and-forget logout with robust handleLogout() featuring an 
-     animated loading state ("Logging out..."), Convex token invalidation, 
-     localStorage.removeItem("ws"), and immediate redirect to /login.
-   - Neutralized browser Back button and BFCache exposure via Cache-Control: 
-     no-store, no-cache, must-revalidate headers in Next.js middleware.
-   - Replaced workspace selector "..." ellipsis with descriptive contextual states.
+ARCHITECTURE CLARIFICATION: MULTI-ORGANIZATION (MULTI-TENANT) PLATFORM
+- IndiaPay is fundamentally built as a MULTI-ORGANIZATION SaaS system.
+- Workspaces table ('workspaces') models distinct corporate/legal entities.
+- Users can belong to, create, and switch between multiple organizations via the 
+  'members' junction table with granular roles ('owner', 'admin', 'member').
+- Complete Data Isolation: Every table (employees, salaries, attendance, payrollRuns, 
+  payrollItems, workspaceCompliance, taxDeclarations, tdsChallans, auditLogs, apiKeys) 
+  is strictly partitioned by 'workspaceId'.
+- 59 automated cross-tenant security tests in 'security.test.ts' verify that no user 
+  in Organization A can view, edit, or leak records from Organization B (Zero IDOR).
 
-2. Real Persisted Dashboard Payroll Data Pipeline:
-   - Completely eradicated hardcoded "Demo placeholder" text and mock totals.
-   - Connected Gross Payroll (₹50,000) and Net Payroll (₹48,000) directly to live 
-     Convex database records (Run ID: n57ayyfvmghhxkrrrwfk77j4v18g63cq, Period: 2026-10).
-   - Enforced strict lifecycle filtering: only approved and processed payroll runs 
-     qualify; draft, calculated, pending_approval, and rejected runs are excluded.
-   - Connected Active Employees count (4) and live Pending Approvals (0, "All caught up").
-
-3. Windows Node v24 Build Compatibility Fixed:
-   - Identified Node v24 Windows bug where fs.readlink on regular files threw 
-     EISDIR instead of EINVAL, breaking Next.js build compilation.
-   - Created scripts/patch-node-windows.js to map EISDIR to EINVAL transparently.
-   - Restored missing lucide-react bundle icons to node_modules from local npm cache.
-   - Production build compiles and statically generates all 48 routes with Exit code 0.
-
-4. 100% Quality & Security Validation:
-   - 72 / 72 automated tests passing via bun test.
-   - 0 TypeScript errors via tsc --noEmit.
-   - 0 Biome linter/style errors across 54 checked files.
-   - Full live browser multi-role matrix (Owner, Admin, Member) verified with 100% PASS.
+QUALITY & COMPLIANCE GATE SUMMARY:
+- Backend Vitest Suite: 13 / 13 Test Files Passed | 200 / 200 Tests Passed (100% PASS)
+- Next.js App Typecheck: 0 Type Errors (Exit Code 0)
+- Biome Linter & Formatter: 0 Errors, 0 Warnings across checked files
+- Production Build: 48 / 48 Static & Dynamic Routes Generated Cleanly (Exit Code 0)
+- File Preservation: 100% of existing user files, untracked scripts, and git tree preserved.
 
 ================================================================================
-2. LIVE APPLICATION MULTI-ROLE VERIFICATION MATRIX (100% PASS)
+2. PRIORITY 1: FORM 138 / FORM 24Q TDS AUDIT CLOSURE
 ================================================================================
-Verified live in Microsoft Edge against http://localhost:3000:
+A. "DRAFT PREVIEW ONLY" SAFETY ENFORCEMENT
+   - All quarterly TDS statutory file downloads in 'form-138-tds-dialog.tsx' are 
+     explicitly locked with a "Draft Preview Only" status badge.
+   - An amber compliance warning banner advises users that the export is internal.
+   - Download filenames prepend 'DRAFT_INTERNAL_' to prevent accidental portal submission.
+   - Parallel download of an 'Internal Audit Reconciliation CSV' is provided to allow 
+     finance teams to perform line-by-line reconciliation of gross wages, TDS deducted, 
+     ITNS 281 challans, and deposit variances before any external handoff.
 
-[ROLE 1: WORKSPACE ADMIN]
-- Account: admin@indiapaypayroll.com
-- Sign-In: Authenticated successfully via Next.js password provider.
-- Workspace Selector: Correctly displayed "IndiaPay Dev (admin)".
-- Navigation: Rendered full administrative menu (Dashboard, Employees, Salaries, 
-  Payroll, Attendance, Compliance, Reports, Settings).
-- KPI Cards: Active Employees: 4 | Gross Payroll: ₹50,000 | Net Payroll: ₹48,000 | 
-  Pending Approvals: 0 ("All caught up").
-- Logout Flow: Clicked "Log out" -> Loading spinner activated -> Clean redirect 
-  to http://localhost:3000/login. Zero console errors or red toast banners.
-- Verification Status: PASS
+B. VERIFIED FILE LAYOUT (packages/backend/convex/form138Tds.ts)
+   - Caret delimiter: '^'
+   - Form 138 (Income-tax Act, 2025 - Section 397(3)(b) & Rule 219) for FY 2026-27 onward.
+   - Form 24Q (Income-tax Act, 1961 - Section 200(3) & Rule 31A) for earlier financial years.
 
-[ROLE 2: WORKSPACE OWNER]
-- Account: owner@indiapaypayroll.com
-- Sign-In: Authenticated successfully.
-- Workspace Selector: Correctly displayed "IndiaPay Dev (owner)".
-- Permissions: Retains exclusive Maker-Checker payroll run approval & rejection authority.
-- Logout Flow: Clicked "Log out" -> Immediate session invalidation -> Clean redirect 
-  to http://localhost:3000/login.
-- Verification Status: PASS
+   Record Structure & Control Totals:
+   1. FH (File Header) — 16 Fields:
+      - Line number, record type 'FH', file type 'SL1' (Form 138), caret '^', character set 'ASCII'.
+   2. BH (Batch Header) — 60 Fields:
+      - Deductor category ('K' company, 'G' government, 'F' firm, 'I' individual).
+      - Employer TAN & PAN.
+      - Financial Year & Assessment Year.
+      - Government deductor details: PAO Code, DDO Code, Ministry Name (or '0000000000' / blank for non-govt).
+      - 2-letter State code ('KA', 'MH', 'DL', etc.).
+      - Field 53 ('Count of SD Records'): Set strictly to "0" for Q1–Q3; set to exact 
+        count of SD records for Q4. (Eliminates Protean T-FV-2129 error).
+   3. CD (Challan Detail) — 30 Fields:
+      - 7-digit BSR code, DD/MM/YYYY deposit date, 5-digit challan serial number.
+      - Minor head: 200 (TDS payable by taxpayer) or 400 (regular assessment).
+      - Book entry flag ('Y' for govt transfer, 'N' for physical banking deposit).
+      - Field 5 ('Count of Deductee Records'): Exact count of deductees allocated to this challan.
+   4. DD (Deductee Detail) — 30 Fields:
+      - Mode 'O' (regular deduction).
+      - 6-digit reference serial.
+      - Valid 10-char PAN or 'PANNOTAVBL' with Reason 'B' (Section 206AA 20% TDS).
+      - Section Code: '1002' for Form 138 (Salary TDS) / '92B' for legacy Form 24Q.
+      - Field 4: 1-based index pointing to parent ITNS 281 Challan record in CD.
+      - Field 25 (Reason Code): 'A' (Lower deduction under Section 197), 'B' (No PAN / Invalid PAN), 
+        or 'C' (Deduction below threshold).
+      - Field 26: 10-character Section 197 Certificate Number (when Reason 'A' applies).
+   5. SD (Salary Detail - Q4 Annexure II) — 30 Fields (Q4 Only):
+      - Comprehensive annual salary structure: Tax Regime ('115BAC' or 'OLD').
+      - Section 16 Standard Deduction (₹75,000 under New Regime / ₹50,000 under Old Regime).
+      - Section 16(iii) Professional Tax deduction.
+      - Previous employer gross salary and TDS deducted (from taxDeclarations table).
+      - Chapter VI-A deductions (80C, 80D, 80CCD, etc.).
+      - Net total tax liability, rebate, and net TDS payable.
 
-[ROLE 3: WORKSPACE MEMBER / PLAIN EMPLOYEE]
-- Account: user@indiapaypayroll.com
-- Sign-In: Authenticated successfully.
-- Workspace Selector: Correctly displayed "IndiaPay Dev (member)".
-- Navigation Isolation: Sidebar restricted strictly to "Dashboard" and "My Portal". 
-  All 7 administrative routes (/employees, /salaries, /payroll, /attendance, 
-  /compliance, /reports, /settings) completely hidden from DOM.
-- Logout Flow: Clicked "Log out" -> Immediate session invalidation -> Clean redirect 
-  to http://localhost:3000/login.
-- Verification Status: PASS
+C. DYNAMIC MULTI-CHALLAN ALLOCATION
+   - The engine automatically maps deductees across available ITNS 281 challans sequentially 
+     by capacity.
+   - Populates CD.5 with exact allocated deductee counts and DD.4 with matching parent links.
 
-[UNAUTHENTICATED ROUTE SECURITY & BFCACHE BACK-BUTTON DEFENSE]
-- Direct URL Access: Attempted GET requests while logged out to /payroll, /employees, 
-  /salaries, /settings, and /. Middleware immediately intercepted every attempt 
-  and redirected to /login.
-- Browser Back Button: Pressing browser Back after logout kept the user on /login. 
-  BFCache was strictly bypassed; no cached sensitive DOM fragments were restored.
-- Verification Status: PASS
-
-================================================================================
-3. LIVE CONVEX DATABASE GROUND TRUTH AUDIT
-================================================================================
-Executed direct inline readonly query on active Convex cloud deployment (dev:basic-bobcat-92):
-
-- Target Workspace:
-  ID: m974ec9bfcw79khv48erd5tf2n8g7nt7
-  Name: "IndiaPay Dev"
-
-- Active Employees (Verified in 'employees' table — Count: 4):
-  1. Dev User    (user@indiapaypayroll.com)   — Status: active
-  2. Dev Admin   (admin@indiapaypayroll.com)  — Status: active
-  3. Nirmala Khadka (khadkanirmala237@gmail.com) — Status: active
-  4. Dev Owner   (owner@indiapaypayroll.com)  — Status: active
-
-- Persisted Qualifying Payroll Run (Verified in 'payrollRuns' table):
-  Run ID: n57ayyfvmghhxkrrrwfk77j4v18g63cq
-  Workspace ID: m974ec9bfcw79khv48erd5tf2n8g7nt7
-  Period: "2026-10"
-  Status: "processed" (Finalized qualifying run)
-  Total Gross Salary: ₹50,000 (totalGrossSalary: 50000)
-  Total Net Salary: ₹48,000 (totalNetSalary: 48000)
-  Total Employees Processed: 4
-
-- Pending Approvals Calculation:
-  Pending Payroll Runs (status == 'pending_approval'): 0
-  Pending Leave Requests (status == 'pending'): 0
-  Total Pending Approvals: 0 ("All caught up")
-
-- Recent Audit Trail (Verified from 'auditLogs' table):
-  1. action: "payroll.finalize"  (Processed October 2026 finalized payroll)
-  2. action: "payroll.approve"   (Owner approved payroll run)
-  3. action: "salary.add"        (Configured employee CTC & statutory salary components)
-  4. action: "salary.add"        (Configured employee CTC & statutory salary components)
-  5. action: "employee.update"   (Updated employee profile record)
+D. OFFICIAL FVU LIMITATION STATEMENT
+   - The official Protean TDS File Validation Utility (FVU 1.2 / 8.8) is distributed as a 
+     closed-source Java binary (.jar / .exe) and is not installed in the execution environment.
+   - In strict compliance with regulatory ethics, NO certified portal e-filing acceptance 
+     is claimed. The system enforces "Draft Preview Only" status until verified via external FVU.
 
 ================================================================================
-4. OTP EMAIL DELIVERY STATUS & RESEND RESTRICTIONS
+3. PRIORITY 2: FULL PAYROLL SYSTEM AUDIT & STATUTORY RULES
 ================================================================================
-- Implementation: packages/backend/convex/resendOtp.ts
-- Verification Token Generation: 8-digit cryptographically secure numeric token 
-  with 15-minute validity window. (Verified PASS via resendOtp.test.ts).
-- Provider Dispatch Logic:
-  - If RESEND_API_KEY is present: Dispatches via Resend REST API (https://api.resend.com/emails).
-  - If RESEND_API_KEY is unset: Falls back gracefully to internal.email.sendEmail 
-    (SMTP / Mailpit for local dev environments).
-- Authorized Test Inbox Verification:
-  - Successfully verified real email dispatch to registered account owner 
-    (nirmala.olla@networkershome.com) via Resend API (id: "01a138d9-d729-7f33-8a72-4dea3661f627").
-  - Successfully verified dispatch to Resend sink (delivered@resend.dev, id: "01a138d9-852b-79ad-80ed-efa218bdf803").
-- Resend Sandbox Limitation Documented:
-  - When using default sender "onboarding@resend.dev", Resend enforces a strict 
-    sandbox restriction: emails can only be delivered to the registered account owner.
-  - Sending to arbitrary domains returns HTTP 403 Forbidden.
-- Staging Blocker & Action Required:
-  - For staging/production, register and verify a custom domain (e.g., mail.indiapay.com) 
-    at resend.com/domains.
-  - Configure RESEND_SENDER_EMAIL_AUTH=noreply@mail.indiapay.com on the deployment.
+A. EPF & EPS (Employees' Provident Fund & Pension Scheme)
+   - Wage Ceiling: ₹15,000 per month.
+   - Employee Share: 12% of EPF wages (capped at ₹1,800 unless voluntary contribution on 
+     actual basic 'epfOnActualBasic' is selected).
+   - Employer Pension Scheme (EPS): 8.33% capped at ₹1,250/month. Automatically disabled 
+     for employees aged 58 and above (all 12% redirected to Employer EPF).
+   - Employer EPF Share: 12% minus EPS share (minimum 3.67%).
+   - EDLI: 0.5% on wages up to ₹15,000 ceiling.
+   - Admin Charges: 0.5% (Account 2) with establishment-level minimum ₹500/month check.
+   - Export: Fully compliant EPFO ECR text format using '#~#' delimiter, upper-case member 
+     names, and 11 standard fields.
 
-================================================================================
-5. COMPREHENSIVE AUTOMATED QUALITY GATES (100% PASS)
-================================================================================
+B. ESI (Employee State Insurance)
+   - Gross Wage Ceiling: ₹21,000 per month.
+   - If gross wages exceed ₹21,000, employee is exempt (0% deduction).
+   - If gross wages <= ₹21,000: 0.75% employee deduction, 3.25% employer contribution.
 
-[SUITE 1: AUTOMATED TESTS — bun test]
-Result: PASS (72/72 Tests Passed — 100%)
-Total Assertions: 242 expect() calls
-Execution Time: 4.43s
-Breakdown:
-- packages/backend/convex/security.test.ts: 45 / 45 PASS
-  - Multi-tenant IDOR isolation across jobs, files, audit, and org members
-  - Two-Person Maker-Checker rule (Submitter cannot approve)
-  - Owner-only approval and rejection authority
-  - Employee cross-tenant privacy & payslip self-service restriction
-  - Maintained dashboard counters O(1) aggregation
-  - Owner account provisioning idempotence & Scrypt authentication
-- packages/backend/convex/statutory.test.ts: 15 / 15 PASS
-  - Statutory EPF calculation (₹15,000 ceiling, voluntary actual basic, Form 11 opt-out)
-  - Statutory ESI calculation (₹21,000 threshold & wage exemptions)
-  - Zero salary structures & negative deduction safety clamping
-  - February 28-day vs March 31-day LOP daily rates & Karnataka PT (₹200/₹300)
-  - Calculation idempotence and calculation consistency
-- packages/backend/convex/resendOtp.test.ts: 6 / 6 PASS
-  - 8-digit numeric token generation & 15-minute expiry
-  - RESEND_SENDER_EMAIL_AUTH handling & fallback to onboarding@resend.dev
-  - Resend API 403 sandbox error handling
-  - Fallback to internal email when API key unset
-- apps/app/src/lib/payslip-pdf.test.ts: 6 / 6 PASS
-  - Indian currency comma formatting (Lakh/Crore grouping)
-  - PDF 1.4 binary document syntax generation
-  - Statutory breakdown embedding & valid application/pdf MIME type
+C. PROFESSIONAL TAX (PT)
+   - Dynamic state-specific slab rules implemented in 'professionalTax.ts':
+     - Karnataka: ₹0 for gross < ₹25,000; ₹200 for gross >= ₹25,000.
+     - Maharashtra, West Bengal, Telangana, Andhra Pradesh, Tamil Nadu, and Gujarat supported.
 
-[SUITE 2: TYPESCRIPT COMPILER — bun x tsc --noEmit]
-Result: PASS (0 Type Errors)
-Target: apps/app (Next.js 14 App Router)
-Execution Time: ~14s
+D. LABOUR WELFARE FUND (LWF)
+   - State-specific periodicity rules implemented in 'lwf.ts':
+     - Karnataka: ₹20 EE / ₹40 ER annually in December.
+     - Maharashtra: ₹12 EE / ₹36 ER semi-annually in June and December.
+     - Other states default to applicable statutory cycles.
 
-[SUITE 3: BIOME LINTER & FORMATTER — bun x biome check src]
-Result: PASS (0 Errors, 0 Warnings)
-Target: apps/app/src (54 files checked)
-Execution Time: 482ms
+E. TDS (Tax Deducted at Source)
+   - Default: Section 115BAC (New Tax Regime).
+   - Form 12BB tax declarations supported in 'declarations.ts' for HRA (Section 10(13A)), 
+     80C, 80D, home loan interest (Section 24(b)), and previous employer income.
+   - Operational monthly overrides supported with reason codes ('A', 'B', 'C').
 
-[SUITE 4: NEXT.JS PRODUCTION BUILD — bun run --filter @v1/app build]
-Result: PASS (Exit Code 0)
-Routes Emitted: 48 static, dynamic, and server-rendered routes (48/48 routes generated)
-Bundle Highlights:
-- Shared First Load JS: 151 kB
-- Middleware Bundle: 97.3 kB
-- /[locale]/payroll: 5.41 kB (216 kB First Load JS)
-- /[locale]/salaries: 4.19 kB (206 kB First Load JS)
-- /[locale]/employees: 11.2 kB (225 kB First Load JS)
-- /[locale]/settings: 23.7 kB (235 kB First Load JS)
-- /[locale]/reports: 3.21 kB (205 kB First Load JS)
-- /[locale]/compliance: 4.34 kB (185 kB First Load JS)
-- /[locale]/attendance: 5.83 kB (208 kB First Load JS)
-- /[locale]/my-portal: 9.63 kB (211 kB First Load JS)
-- /[locale]/login: 5.46 kB (186 kB First Load JS)
+F. MAKER-CHECKER SEGREGATION OF DUTIES
+   - Creator/Admin role submits payroll for approval ('submitForApproval').
+   - Submitter cannot approve their own run (enforced at API level).
+   - Only Workspace Owner role can approve ('approveRun') and finalize ('finalizeRun').
+
+G. HISTORICAL PAYROLL IMMUTABILITY & SUPPLEMENTARY RUNS
+   - Once a payroll run is finalized ('processed'):
+     - Salary hikes, structure updates, and employee additions only impact future periods.
+     - Finalized run totals, individual payroll items, and payslips remain 100% immutable.
+   - Retroactive adjustments, arrears, or missed payments are handled via dedicated 
+     Supplementary Payroll Runs ('createSupplementaryRun'), preserving historical baselines.
 
 ================================================================================
-6. GIT STATUS, WORKING TREE & SECURITY AUDIT
+4. END-TO-END WORKFLOW VERIFICATION USING DUMMY DATA
 ================================================================================
-- Repository Root: E:\convex-template5-main
-- Active Branch: main
-- Modified & Tracked Files (20 files, +1505 / -679 lines):
-  - apps/app/package.json
-  - apps/app/src/app/[locale]/(dashboard)/_components/sidebar.tsx
-  - apps/app/src/app/[locale]/(dashboard)/_components/notifications-bell.tsx
-  - apps/app/src/app/[locale]/(dashboard)/_components/theme-switcher.tsx
-  - apps/app/src/app/[locale]/(dashboard)/page.tsx
-  - apps/app/src/app/[locale]/(dashboard)/settings/page.tsx
-  - apps/app/src/components/sign-out.tsx
-  - apps/app/src/lib/workspace-provider.tsx
-  - apps/app/src/middleware.ts
-  - packages/backend/convex/dashboard.ts
-  - packages/backend/convex/devAccounts.ts
-  - packages/backend/convex/devAccountsMutation.ts
-  - packages/backend/convex/security.test.ts
-  - scripts/provisionDevAccounts.ts
-  - FINAL_VERIFICATION_REPORT.md
-- Credentials & Secret Exposure Scan:
-  - Scanned staged and unstaged git diff using regex patterns for passwords, tokens, 
-    and secret keys (re_*, sk_*, password=*).
-  - RESULT: ZERO SECRETS EXPOSED. All passwords are read only from environment variables 
-    ($env:DEV_*_PASSWORD) and hashed locally with Scrypt before storage.
-- Untracked Test Artifacts:
-  - e2e/screenshots/*.png, FULL_DAY_REPORT.txt, scripts/patch-node-windows.js, 
-    e2e/test-logout-flow.js, e2e/verify_logout_all_roles.py.
-  - Recommended for addition to .gitignore before staging release.
-- Commit / Push Policy:
-  - NO AUTOMATED COMMITS OR PUSHES EXECUTED.
-  - All existing user modifications and working files are 100% preserved.
+Verified via automated integration suite in 'packages/backend/convex/payrollLifecycle.test.ts':
 
-================================================================================
-7. STAGING PREPARATION CHECKLIST & EXACT NEXT STEPS
-================================================================================
+1. Workspace & Roles Setup:
+   - Organization: IndiaPay Enterprises Pvt Ltd
+   - Users: Corporate Owner, Payroll Admin, Vikram Malhotra (Employee).
+   - Compliance: EPF enabled (₹15k ceiling), ESI enabled (₹21k ceiling), PT Karnataka, 
+     TAN: BLRK12345A, PAN: AABCI1234F.
 
-[PRE-DEPLOYMENT READINESS CHECKLIST]
-[x] Authentication and session teardown fully verified (no unhandled errors).
-[x] Role-Based Access Control and Maker-Checker enforcement verified.
-[x] Protected route guards and BFCache Back-button defense verified.
-[x] Real Convex payroll queries active (₹50k Gross, ₹48k Net, 4 active employees).
-[x] 72 / 72 automated test suite pass rate.
-[x] 0 TypeScript compiler errors.
-[x] 0 Biome linter errors.
-[x] 48 / 48 Next.js production build routes generated cleanly.
-[x] Zero secrets in source code or Git history.
-[ ] Register custom sending domain in Resend (resend.com/domains) for arbitrary OTPs.
-[ ] Ensure DEV_SEED=0 on staging Convex cloud deployment.
+2. Employee Master Data Setup:
+   - Employee: Vikram Malhotra
+   - Banking: HDFC Bank, Account: 50100234567890, IFSC: HDFC0001234.
+   - Statutory: PAN: ABCDE1234F, UAN: 100987654321, PF Member ID: KN/BNG/0012345/000/0000101.
 
-[EXACT ACTIONS FOR STAGING DEPLOYMENT]
-When ready to push to your staging environment, run the following commands:
+3. Salary Structure:
+   - Basic Salary: ₹50,000 | HRA: ₹20,000 | Special Allowance: ₹10,000 (Gross: ₹80,000).
 
-Step 1: Update .gitignore to exclude test artifacts
-Add-Content .gitignore "`ne2e/screenshots/`nFULL_DAY_REPORT.txt`nscripts/patch-node-windows.js`n"
+4. Attendance & Leave:
+   - 1 day Unpaid Leave (LOP) in April 2026 (30-day month).
+   - Prorated LOP Deduction: ₹80,000 / 30 * 1 = ₹2,667.
 
-Step 2: Review staged files
-git status
+5. Preview Calculation:
+   - Gross Wages Paid: ₹77,333.
+   - EPF Employee Share: ₹1,800 (12% of ₹15,000 ceiling).
+   - ESI Share: ₹0 (exempt since gross > ₹21,000).
+   - Professional Tax: ₹200 (Karnataka >= ₹25,000).
+   - Net Salary: Accurately calculated.
 
-Step 3: Stage verified source code and documentation
-git add apps/app/ packages/backend/ scripts/provisionDevAccounts.ts FINAL_VERIFICATION_REPORT.md MIDDAY_REPORT.txt .gitignore
+6. Workflow Execution:
+   - Admin creates run (status: 'calculated').
+   - Admin submits for approval (status: 'pending_approval').
+   - Admin attempts self-approval -> BLOCKED by Maker-Checker rule (Error: Forbidden).
+   - Owner approves run (status: 'approved').
+   - Owner finalizes run (status: 'processed').
 
-Step 4: Commit locally (requires user approval)
-git commit -m "fix(auth,dashboard): resolve logout teardown, route guards, and live payroll metrics"
+7. Payslip Security & IDOR Verification:
+   - Vikram Malhotra queries own payslip -> SUCCESS (Masked PAN: ••••••234F, Masked A/C: ••••••••••7890).
+   - Plain employee 'Other Employee' attempts to query Vikram's payslip -> REJECTED (Error: Forbidden).
 
-Step 5: Set staging environment variables on Convex
-npx convex env set DEV_SEED 0 --prod
-npx convex env set RESEND_SENDER_EMAIL_AUTH "noreply@mail.indiapay.com" --prod
+8. Statutory Reports Export:
+   - EPFO ECR: Generated '100987654321#~#VIKRAM MALHOTRA#~#77333#~#15000#~#15000#~#15000#~#1800#~#1250#~#550#~#1#~#0'.
+   - Form 138: Generated valid FH (SL1), BH (60 fields, Field 53 = 0), CD (30 fields), DD (30 fields).
+   - ITNS 281 Challan: BSR 0210001, Serial 00050, ₹5,000 deposit reconciled.
+   - Internal Audit CSV generated.
 
-Step 6: Push to staging remote
-git push origin <staging-branch>
+9. Historical Immutability Check:
+   - Admin updates Vikram's salary from ₹50,000 to ₹90,000 basic.
+   - Admin adds a new employee to the workspace.
+   - Re-queried finalized April 2026 payroll run: Total employees remained 1, total gross 
+     remained ₹80,000, basic remained ₹50,000. Zero retroactive mutation. (100% IMMUTABLE).
 
 ================================================================================
-END OF MIDDAY REPORT — 14 OCTOBER 2026
+5. REQUIREMENTS & GAPS CLASSIFICATION MATRIX
+================================================================================
+-------------------------------------------------------------------------------------------------------------------
+Requirement / Feature                  | Category                | Status      | Notes
+-------------------------------------------------------------------------------------------------------------------
+Employee Banking & Statutory Fields    | Original Requirement    | Complete    | Bank A/C, IFSC, PAN, UAN, ESIC, PF.
+Multi-Organization Tenant Isolation    | Original Requirement    | Complete    | Partitioned by workspaceId. Zero IDOR.
+Attendance & Calendar-Day LOP Proration| Original Requirement    | Complete    | Prorated against days in month.
+EPFO ECR Monthly Export (#~# text)     | Statutory Requirement   | Complete    | 11 fields, ₹15k ceiling, EPS ₹1,250 cap.
+Form 138 / Form 24Q Quarterly TDS      | Statutory Requirement   | Complete    | FH(16), BH(60), CD(30), DD(30), SD(30).
+                                       |                         | (Draft Only)| Draft Preview Only safety label active.
+Section 197 Lower Deduction Certificate| Statutory Requirement   | Complete    | DD.25 Reason 'A', DD.26 10-char cert#.
+Government Deductor Fields (PAO/DDO)   | Statutory Requirement   | Complete    | BH fields 11-13, workspaceCompliance.
+Two-Person Maker-Checker Policy        | Recommended Improvement | Complete    | Submitter cannot approve own payroll.
+Historical Immutability & Supplementary| Recommended Improvement | Complete    | Baseline runs preserved; adjustments auditable.
+Internal Audit Reconciliation CSV      | Recommended Improvement | Complete    | Pre-filing variance reconciliation artifact.
+Form 16 Part A & Part B PDF Generation | Recommended Improvement | Future Phase| Consolidated annual tax certificates.
+Direct TRACES / Portal API Automation  | Future-Phase Feature    | Future Phase| Direct upload pending published API access.
+-------------------------------------------------------------------------------------------------------------------
+
+================================================================================
+6. COMPLETE TEST SUITE EXECUTION RESULTS
+================================================================================
+Command: bun --filter @v1/backend test
+Result: 13 / 13 Test Files Passed | 200 / 200 Tests Passed (100% PASS)
+Execution Time: ~23.90s
+
+Test Suite Breakdown:
+1.  convex/employees.test.ts          — 16 / 16 PASS (Banking, masking, authorization)
+2.  convex/declarations.test.ts       —  6 /  6 PASS (Form 12BB tax declarations & advisory TDS)
+3.  convex/dashboardOwner.test.ts     — 10 / 10 PASS (Financial KPIs, deductions, employer shares)
+4.  convex/supplementary.test.ts      —  6 /  6 PASS (Supplementary runs, Maker-Checker, duplicate prevention)
+5.  convex/form138Tds.test.ts         — 20 / 20 PASS (Form 138/24Q, government deductors, Section 197, SD Q4)
+6.  convex/payrollLifecycle.test.ts   —  1 /  1 PASS (End-to-end full lifecycle, dummy data, immutability)
+7.  convex/security.test.ts           — 59 / 59 PASS (Multi-tenant IDOR isolation, role permissions)
+8.  convex/statutoryTds.test.ts       — 11 / 11 PASS (Section 115BAC slabs, cess, rebate 87A)
+9.  convex/statutory.test.ts          — 23 / 23 PASS (EPF ₹15k, EPS ₹1,250, age 58, ESI ₹21k, PT, LWF)
+10. convex/lwf.test.ts                — 13 / 13 PASS (State-specific LWF rules & deduction cycles)
+11. convex/professionalTax.test.ts    — 14 / 14 PASS (State PT slabs: KA, MH, WB, TS, AP, TN, GJ)
+12. convex/resendOtp.test.ts          —  6 /  6 PASS (8-digit OTP, Resend API fallback, 15m validity)
+13. convex/epfoEcr.test.ts            — 15 / 15 PASS (EPFO ECR #~# layout, NCP days, validation errors)
+
+Linter & Formatter:
+Command: bun x @biomejs/biome check
+Result: 0 Errors, 0 Warnings
+
+Typecheck:
+Command: bun --filter @v1/app typecheck
+Result: 0 Errors (Exit code 0)
+
+Next.js Production Build:
+Command: bun run --filter @v1/app build
+Result: 48 / 48 Routes Compiled & Statically Generated (Exit code 0)
+
+================================================================================
+7. GIT STATUS & WORKING REPOSITORY HYGIENE
+================================================================================
+- Repository: E:\convex-template5-main
+- Branch: main
+- Integrity:
+  - ALL tracked modifications and untracked files are strictly preserved.
+  - No automated git commits, pushes, or resets executed.
+  - Zero sensitive credentials or secrets exposed in source tree.
+
+================================================================================
+END OF MIDDAY REPORT — 16 OCTOBER 2026
 ================================================================================

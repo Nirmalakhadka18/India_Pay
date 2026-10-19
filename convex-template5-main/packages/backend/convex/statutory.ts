@@ -1,3 +1,7 @@
+import type { Id } from "./_generated/dataModel";
+import { computeLabourWelfareFund } from "./lwf";
+import { computeProfessionalTax } from "./professionalTax";
+
 // Helper to check days in month
 export function getDaysInMonth(year: number, month: number): number {
   return new Date(year, month, 0).getDate();
@@ -24,22 +28,41 @@ export interface CalculationContext {
     esiWageCeiling?: number;
     ptEnabled: boolean;
     ptState?: string;
+    lwfEnabled?: boolean;
+    lwfState?: string;
   };
+}
+
+export interface EmployeeInput {
+  _id: Id<"employees">;
+  firstName: string;
+  lastName: string;
+  email: string;
+  department?: string;
+}
+
+export interface EmployeeSalaryInput {
+  _id?: Id<"salaries">;
+  basicSalary?: number;
+  allowances?: { name: string; amount: number }[];
+  deductions?: { name: string; amount: number }[];
+  grossSalary?: number;
+}
+
+export interface EmployeeComplianceInput {
+  epfOptOut?: boolean;
+  epfOnActualBasic?: boolean;
+  tdsOverride?: number;
+  esiContributionPeriodCovered?: boolean;
 }
 
 // Statutory payroll computation engine for Indian payroll rules
 export function computeEmployeePayrollItem(
-  emp: {
-    _id: any;
-    firstName: string;
-    lastName: string;
-    email: string;
-    department?: string;
-  },
-  salary: any | undefined,
+  emp: EmployeeInput,
+  salary: EmployeeSalaryInput | undefined,
   empAttendance: { status: string }[],
-  empComp: any | undefined,
-  calcCtx: CalculationContext
+  empComp: EmployeeComplianceInput | undefined,
+  calcCtx: CalculationContext,
 ) {
   const warnings: string[] = [];
   let basicSalary = 0;
@@ -63,7 +86,10 @@ export function computeEmployeePayrollItem(
   for (const rec of empAttendance) {
     if (rec.status === "absent" && calcCtx.lopSettings.includeAbsent) {
       lopDays += 1;
-    } else if (rec.status === "unpaid_leave" && calcCtx.lopSettings.includeUnpaidLeave) {
+    } else if (
+      rec.status === "unpaid_leave" &&
+      calcCtx.lopSettings.includeUnpaidLeave
+    ) {
       lopDays += 1;
     } else if (rec.status === "half_day") {
       lopDays += calcCtx.lopSettings.halfDayFactor;
@@ -72,15 +98,20 @@ export function computeEmployeePayrollItem(
 
   let dailyRate = 0;
   if (calcCtx.lopSettings.calculationBasis === "calendar_days") {
-    dailyRate = calcCtx.totalDaysInMonth > 0 ? grossSalary / calcCtx.totalDaysInMonth : 0;
+    dailyRate =
+      calcCtx.totalDaysInMonth > 0 ? grossSalary / calcCtx.totalDaysInMonth : 0;
   } else if (calcCtx.lopSettings.calculationBasis === "fixed_30_days") {
     dailyRate = grossSalary / 30;
   } else {
-    dailyRate = calcCtx.totalDaysInMonth > 0 ? grossSalary / calcCtx.totalDaysInMonth : 0;
+    dailyRate =
+      calcCtx.totalDaysInMonth > 0 ? grossSalary / calcCtx.totalDaysInMonth : 0;
   }
 
   const lopDeduction = Math.round(lopDays * dailyRate);
-  const totalCustomDeductions = customDeductions.reduce((sum, d) => sum + d.amount, 0);
+  const totalCustomDeductions = customDeductions.reduce(
+    (sum, d) => sum + d.amount,
+    0,
+  );
 
   // 2. Statutory EPF / EPS / EDLI / Admin calculations
   // Statutory wage ceiling under EPF Act 1952 is ₹15,000/month (configurable per workspace)
@@ -95,15 +126,17 @@ export function computeEmployeePayrollItem(
 
   if (isEpfEnabled) {
     const wageCeiling = calcCtx.workspaceCompliance.epfWageCeiling ?? 15000;
-    const restrictToCeiling = calcCtx.workspaceCompliance.epfRestrictToCeiling ?? true;
+    const restrictToCeiling =
+      calcCtx.workspaceCompliance.epfRestrictToCeiling ?? true;
     const voluntaryActualBasic = empComp?.epfOnActualBasic ?? false;
 
     // Eligible wage determination:
     // If voluntary actual basic is elected (by employee or workspace), use full basicSalary;
     // otherwise enforce statutory wage ceiling.
-    const eligibleWage = (voluntaryActualBasic || !restrictToCeiling)
-      ? basicSalary
-      : Math.min(basicSalary, wageCeiling);
+    const eligibleWage =
+      voluntaryActualBasic || !restrictToCeiling
+        ? basicSalary
+        : Math.min(basicSalary, wageCeiling);
 
     // Employee EPF: 12% of eligible wage
     epfEmployee = Math.round(eligibleWage * 0.12);
@@ -129,54 +162,143 @@ export function computeEmployeePayrollItem(
     }
 
     // EPFO Admin charges: 0.5%
-    const isAdminEnabled = calcCtx.workspaceCompliance.adminChargesEnabled ?? true;
+    const isAdminEnabled =
+      calcCtx.workspaceCompliance.adminChargesEnabled ?? true;
     if (isAdminEnabled) {
       adminChargesEmployer = Math.round(eligibleWage * 0.005);
     }
   }
 
-  // 3. ESI calculation
+  // 3. ESI calculation (Section 2(9), ESI Act, 1948)
   let esiEmployee = 0;
   let esiEmployer = 0;
   const esiCeiling = calcCtx.workspaceCompliance.esiWageCeiling ?? 21000;
-  if (calcCtx.workspaceCompliance.esiEnabled && grossSalary > 0 && grossSalary <= esiCeiling) {
+  const isEsiContributionPeriodCovered =
+    empComp?.esiContributionPeriodCovered ?? false;
+
+  if (
+    calcCtx.workspaceCompliance.esiEnabled &&
+    grossSalary > 0 &&
+    (grossSalary <= esiCeiling || isEsiContributionPeriodCovered)
+  ) {
     esiEmployee = Math.ceil(grossSalary * 0.0075);
     esiEmployer = Math.ceil(grossSalary * 0.0325);
-  }
-
-  // 4. Professional Tax (Karnataka state slabs)
-  let ptAmount = 0;
-  if (calcCtx.workspaceCompliance.ptEnabled && calcCtx.workspaceCompliance.ptState === "Karnataka") {
-    if (grossSalary >= 25000) {
-      // Karnataka PT is ₹300 in February, ₹200 in all other months
-      ptAmount = calcCtx.month === 2 ? 300 : 200;
+    if (grossSalary > esiCeiling && isEsiContributionPeriodCovered) {
+      warnings.push(
+        "ESI contribution applied under Section 2(9) proviso (wage crossed ₹21,000 mid contribution period).",
+      );
     }
   }
 
-  // 5. TDS: Manual monthly override (No automated tax regime slab engine)
+  // 4. Professional Tax (Multi-state schedule engine)
+  const ptResult = computeProfessionalTax({
+    grossSalary,
+    month: calcCtx.month,
+    state: calcCtx.workspaceCompliance.ptState,
+    ptEnabled: calcCtx.workspaceCompliance.ptEnabled,
+  });
+  const ptAmount = ptResult.amount;
+  if (ptResult.warnings.length > 0) {
+    warnings.push(...ptResult.warnings);
+  }
+
+  // 5. Labour Welfare Fund (LWF)
+  const isLwfEnabled = calcCtx.workspaceCompliance.lwfEnabled ?? false;
+  const lwfResult = computeLabourWelfareFund({
+    grossSalary,
+    month: calcCtx.month,
+    state:
+      calcCtx.workspaceCompliance.lwfState ??
+      calcCtx.workspaceCompliance.ptState,
+    lwfEnabled: isLwfEnabled,
+  });
+  const lwfEmployee = lwfResult.employeeAmount;
+  const lwfEmployer = lwfResult.employerAmount;
+  if (lwfResult.warnings.length > 0) {
+    warnings.push(...lwfResult.warnings);
+  }
+
+  // 6. TDS: Manual monthly override (No automated tax regime slab engine)
   const tdsOverride = empComp?.tdsOverride;
   const tdsAmount = Math.max(0, tdsOverride ?? 0);
 
   // Line items
   const statutoryDeductions = [
-    { name: "PF (Provident Fund - 12%)", amount: epfEmployee, isConfigured: isEpfEnabled },
-    { name: "ESI (Employee State Insurance - 0.75%)", amount: esiEmployee, isConfigured: calcCtx.workspaceCompliance.esiEnabled },
-    { name: "Professional Tax (PT)", amount: ptAmount, isConfigured: calcCtx.workspaceCompliance.ptEnabled },
-    { name: "TDS (Manual Override - Non-automated)", amount: tdsAmount, isConfigured: true },
+    {
+      name: "PF (Provident Fund - 12%)",
+      amount: epfEmployee,
+      isConfigured: isEpfEnabled,
+    },
+    {
+      name: "ESI (Employee State Insurance - 0.75%)",
+      amount: esiEmployee,
+      isConfigured: calcCtx.workspaceCompliance.esiEnabled,
+    },
+    {
+      name: "Professional Tax (PT)",
+      amount: ptAmount,
+      isConfigured: calcCtx.workspaceCompliance.ptEnabled,
+    },
+    {
+      name: "Labour Welfare Fund (LWF)",
+      amount: lwfEmployee,
+      isConfigured: isLwfEnabled,
+    },
+    {
+      name: "TDS (Manual Override - Non-automated)",
+      amount: tdsAmount,
+      isConfigured: true,
+    },
   ];
-  const totalStatutoryDeductions = epfEmployee + esiEmployee + ptAmount + tdsAmount;
+  const totalStatutoryDeductions =
+    epfEmployee + esiEmployee + ptAmount + lwfEmployee + tdsAmount;
 
   const employerContributions = [
-    { name: "Employer EPF (3.67% share)", amount: epfEmployer, isConfigured: isEpfEnabled },
-    { name: "Employer EPS (8.33% Pension, capped at ₹1,250)", amount: epsEmployer, isConfigured: isEpfEnabled && (calcCtx.workspaceCompliance.epsEnabled ?? true) },
-    { name: "EDLI (0.5% Insurance)", amount: edliEmployer, isConfigured: isEpfEnabled && (calcCtx.workspaceCompliance.edliEnabled ?? true) },
-    { name: "EPFO Admin Charges (0.5%)", amount: adminChargesEmployer, isConfigured: isEpfEnabled && (calcCtx.workspaceCompliance.adminChargesEnabled ?? true) },
-    { name: "Employer ESI (3.25%)", amount: esiEmployer, isConfigured: calcCtx.workspaceCompliance.esiEnabled },
+    {
+      name: "Employer EPF (3.67% share)",
+      amount: epfEmployer,
+      isConfigured: isEpfEnabled,
+    },
+    {
+      name: "Employer EPS (8.33% Pension, capped at ₹1,250)",
+      amount: epsEmployer,
+      isConfigured:
+        isEpfEnabled && (calcCtx.workspaceCompliance.epsEnabled ?? true),
+    },
+    {
+      name: "EDLI (0.5% Insurance)",
+      amount: edliEmployer,
+      isConfigured:
+        isEpfEnabled && (calcCtx.workspaceCompliance.edliEnabled ?? true),
+    },
+    {
+      name: "EPFO Admin Charges (0.5%)",
+      amount: adminChargesEmployer,
+      isConfigured:
+        isEpfEnabled &&
+        (calcCtx.workspaceCompliance.adminChargesEnabled ?? true),
+    },
+    {
+      name: "Employer ESI (3.25%)",
+      amount: esiEmployer,
+      isConfigured: calcCtx.workspaceCompliance.esiEnabled,
+    },
+    {
+      name: "Employer LWF Contribution",
+      amount: lwfEmployer,
+      isConfigured: isLwfEnabled,
+    },
   ];
   const totalEmployerContributions =
-    epfEmployer + epsEmployer + edliEmployer + adminChargesEmployer + esiEmployer;
+    epfEmployer +
+    epsEmployer +
+    edliEmployer +
+    adminChargesEmployer +
+    esiEmployer +
+    lwfEmployer;
 
-  const totalDeductions = lopDeduction + totalCustomDeductions + totalStatutoryDeductions;
+  const totalDeductions =
+    lopDeduction + totalCustomDeductions + totalStatutoryDeductions;
   const netSalary = Math.max(0, grossSalary - totalDeductions);
 
   return {

@@ -178,6 +178,38 @@ export function PayslipModal({
               </div>
             </div>
 
+            {/* Banking & Statutory Master Data (Masked) */}
+            {(payslip.bankName || payslip.maskedPan || payslip.maskedUan) && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 py-2.5 px-6 sm:px-8 border-b border-slate-100 bg-slate-50/50 text-xs">
+                <div>
+                  <span className="text-slate-400 block text-[11px] font-medium">
+                    Bank Account
+                  </span>
+                  <span className="font-mono text-slate-700">
+                    {payslip.bankName
+                      ? `${payslip.bankName} (${payslip.maskedBankAccountNumber || "Configured"})`
+                      : "—"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[11px] font-medium">
+                    PAN
+                  </span>
+                  <span className="font-mono text-slate-700">
+                    {payslip.maskedPan || "—"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[11px] font-medium">
+                    UAN / PF Member ID
+                  </span>
+                  <span className="font-mono text-slate-700">
+                    {payslip.maskedUan || payslip.pfMemberId || "—"}
+                  </span>
+                </div>
+              </div>
+            )}
+
             {/* Two Column Earnings vs Deductions */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6 text-xs">
               {/* Earnings */}

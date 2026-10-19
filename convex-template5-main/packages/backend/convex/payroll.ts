@@ -1,13 +1,14 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireMember, requireRole } from "./orgs";
 import { audit } from "./auditLog";
+import { requireMember, requireRole } from "./orgs";
 
+import { maskAccountNumber, maskPan, maskUan } from "./employees";
 import {
-  getDaysInMonth,
   type CalculationContext,
   computeEmployeePayrollItem,
+  getDaysInMonth,
 } from "./statutory";
 
 export { getDaysInMonth, type CalculationContext, computeEmployeePayrollItem };
@@ -95,6 +96,8 @@ export const calculatePreview = query({
       esiWageCeiling: 21000,
       ptState: undefined,
       ptEnabled: false,
+      lwfEnabled: false,
+      lwfState: undefined,
     };
 
     const allEmployeeCompliance = await ctx.db
@@ -168,7 +171,7 @@ export const createRun = mutation({
     if (!userId) throw new ConvexError("Not authenticated");
     await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
 
-    // Check duplicate run for period
+    // Check duplicate regular run for period (ignore supplementary runs)
     const existing = await ctx.db
       .query("payrollRuns")
       .withIndex("by_workspace_period", (q) =>
@@ -176,6 +179,7 @@ export const createRun = mutation({
           .eq("workspaceId", args.workspaceId)
           .eq("periodMonth", args.periodMonth),
       )
+      .filter((q) => q.neq(q.field("runType"), "supplementary"))
       .first();
 
     if (existing) {
@@ -268,6 +272,8 @@ export const createRun = mutation({
       esiWageCeiling: 21000,
       ptState: undefined,
       ptEnabled: false,
+      lwfEnabled: false,
+      lwfState: undefined,
     };
 
     const allEmployeeCompliance = await ctx.db
@@ -331,6 +337,7 @@ export const createRun = mutation({
       startDate,
       endDate,
       status: "calculated",
+      runType: "regular",
       totalEmployees: employees.length,
       totalGrossSalary,
       totalLopDeduction,
@@ -478,6 +485,8 @@ export const getMyPayslips = query({
           netSalary: item.netSalary,
           totalDeductions: item.totalDeductions,
           totalEmployerContributions: item.totalEmployerContributions,
+          runType: run.runType ?? "regular",
+          adjustmentReason: run.adjustmentReason,
         });
       }
     }
@@ -549,6 +558,20 @@ export const getPayslip = query({
       department: emp?.department ?? "General",
       designation: emp?.designation ?? "Employee",
       phone: emp?.phone ?? "",
+      bankName: emp?.bankName,
+      bankAccountNumber: emp?.bankAccountNumber,
+      maskedBankAccountNumber: maskAccountNumber(emp?.bankAccountNumber),
+      ifscCode: emp?.ifscCode,
+      pan: emp?.pan,
+      maskedPan: maskPan(emp?.pan),
+      uan: emp?.uan,
+      maskedUan: maskUan(emp?.uan),
+      pfMemberId: emp?.pfMemberId,
+      esicIpNumber: emp?.esicIpNumber,
+      runType: run.runType ?? "regular",
+      originalPayrollRunId: run.originalPayrollRunId,
+      adjustmentReason: run.adjustmentReason,
+      adjustmentCategory: run.adjustmentCategory,
       ...item,
     };
   },
@@ -694,5 +717,176 @@ export const finalizeRun = mutation({
       payrollRunId: run._id,
       periodMonth: run.periodMonth,
     });
+  },
+});
+
+/**
+ * Create a separate, auditable Supplementary Payroll Run for retroactive adjustments or missed payments.
+ *
+ * SAFETY & INTEGRITY GUARANTEES:
+ * 1. Never mutates, recalculates, or overwrites original processed runs or payslips.
+ * 2. Original run must exist and be in 'processed' (finalized) status.
+ * 3. Enforces deterministic duplicate prevention via correctionKey (originalRunId + targetEmployeeId + category).
+ * 4. Submitter cannot approve their own run (strict Maker-Checker policy on submit/approve).
+ * 5. Tracked separately in financial reporting so baseline payroll is not double-counted.
+ */
+export const createSupplementaryRun = mutation({
+  args: {
+    workspaceId: v.id("workspaces"),
+    originalPayrollRunId: v.id("payrollRuns"),
+    targetEmployeeId: v.id("employees"),
+    adjustmentCategory: v.string(), // "missed_salary" | "retroactive_hike" | "lop_reversal" | "bonus_adjustment" | "other"
+    adjustmentReason: v.string(),
+    grossAdjustment: v.number(),
+    taxDeduction: v.optional(v.number()),
+    customDeductions: v.optional(
+      v.array(v.object({ name: v.string(), amount: v.number() })),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError("Not authenticated");
+    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+
+    if (args.grossAdjustment <= 0) {
+      throw new ConvexError(
+        "Gross adjustment amount must be greater than zero",
+      );
+    }
+
+    if (!args.adjustmentReason.trim()) {
+      throw new ConvexError("Adjustment reason is required");
+    }
+
+    // 1. Verify original run exists, belongs to workspace, and is finalized (processed)
+    const originalRun = await ctx.db.get(args.originalPayrollRunId);
+    if (!originalRun || originalRun.workspaceId !== args.workspaceId) {
+      throw new ConvexError("Original payroll run not found");
+    }
+
+    if (originalRun.status !== "processed") {
+      throw new ConvexError(
+        `Cannot create supplementary run: Original run is in ${originalRun.status} status. Only processed (finalized) payroll runs can have supplementary adjustments.`,
+      );
+    }
+
+    // 2. Verify target employee exists in workspace
+    const employee = await ctx.db.get(args.targetEmployeeId);
+    if (!employee || employee.workspaceId !== args.workspaceId) {
+      throw new ConvexError("Employee not found in workspace");
+    }
+
+    // 3. Duplicate Prevention: Check for existing active or finalized supplementary run
+    const normalizedCategory = args.adjustmentCategory.trim().toLowerCase();
+    const correctionKey = `${args.originalPayrollRunId}:${args.targetEmployeeId}:${normalizedCategory}`;
+
+    const existingSupplementary = await ctx.db
+      .query("payrollRuns")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("runType"), "supplementary"),
+          q.eq(q.field("correctionKey"), correctionKey),
+          q.neq(q.field("status"), "rejected"),
+        ),
+      )
+      .first();
+
+    if (existingSupplementary) {
+      throw new ConvexError(
+        `Duplicate adjustment rejected: An active or finalized supplementary payroll run already exists for employee ${employee.firstName} ${employee.lastName} with correction key '${normalizedCategory}' for period ${originalRun.periodMonth}.`,
+      );
+    }
+
+    // 4. Calculate deductions and net salary
+    const customDeductions = args.customDeductions ?? [];
+    const totalCustomDeductions = customDeductions.reduce(
+      (sum, d) => sum + Math.max(0, d.amount),
+      0,
+    );
+    const taxDeduction = Math.max(0, args.taxDeduction ?? 0);
+    const statutoryDeductions =
+      taxDeduction > 0
+        ? [
+            {
+              name: "TDS / Income Tax Withholding",
+              amount: taxDeduction,
+              isConfigured: true,
+            },
+          ]
+        : [];
+    const totalStatutoryDeductions = taxDeduction;
+    const totalDeductions = totalCustomDeductions + totalStatutoryDeductions;
+    const netSalary = Math.max(0, args.grossAdjustment - totalDeductions);
+
+    const now = Date.now();
+
+    // 5. Insert supplementary run record (Original run is completely untouched!)
+    const supplementaryRunId = await ctx.db.insert("payrollRuns", {
+      workspaceId: args.workspaceId,
+      periodMonth: originalRun.periodMonth,
+      startDate: originalRun.startDate,
+      endDate: originalRun.endDate,
+      status: "calculated",
+      runType: "supplementary",
+      originalPayrollRunId: originalRun._id,
+      targetEmployeeId: employee._id,
+      adjustmentCategory: normalizedCategory,
+      adjustmentReason: args.adjustmentReason.trim(),
+      correctionKey,
+      totalEmployees: 1,
+      totalGrossSalary: args.grossAdjustment,
+      totalLopDeduction: 0,
+      totalCustomDeductions,
+      totalStatutoryDeductions,
+      totalEmployerContributions: 0,
+      totalNetSalary: netSalary,
+      createdById: userId,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    // 6. Insert supplementary item
+    await ctx.db.insert("payrollItems", {
+      workspaceId: args.workspaceId,
+      payrollRunId: supplementaryRunId,
+      employeeId: employee._id,
+      basicSalary: args.grossAdjustment,
+      allowances: [],
+      grossSalary: args.grossAdjustment,
+      lopDays: 0,
+      lopDeduction: 0,
+      customDeductions,
+      totalCustomDeductions,
+      statutoryDeductions,
+      totalStatutoryDeductions,
+      employerContributions: [],
+      totalEmployerContributions: 0,
+      totalDeductions,
+      netSalary,
+      hasSalaryStructure: true,
+      warnings: [
+        `Supplementary adjustment for period ${originalRun.periodMonth}: ${args.adjustmentReason.trim()}`,
+      ],
+      createdAt: now,
+    });
+
+    // 7. Immutable audit entry
+    await audit(
+      ctx,
+      args.workspaceId,
+      userId,
+      "payroll.createSupplementaryRun",
+      {
+        supplementaryRunId,
+        originalPayrollRunId: originalRun._id,
+        targetEmployeeId: employee._id,
+        adjustmentCategory: normalizedCategory,
+        grossAdjustment: args.grossAdjustment,
+        netSalary,
+      },
+    );
+
+    return supplementaryRunId;
   },
 });

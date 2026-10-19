@@ -1,5 +1,6 @@
 import { AuthForm } from "@/components/auth-form";
 import { EmailOtpSignin } from "@/components/email-otp-signin";
+import { ExtensionErrorGuard } from "@/components/extension-error-guard";
 import Image from "next/image";
 
 export const metadata = {
@@ -9,6 +10,7 @@ export const metadata = {
 export default function Page() {
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center">
+      <ExtensionErrorGuard />
       <div className="flex flex-col items-center justify-center gap-4 py-8">
         <Image src="/logo.png" alt="logo" width={96} height={96} />
         <AuthForm />

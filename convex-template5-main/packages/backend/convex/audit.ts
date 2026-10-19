@@ -3,7 +3,7 @@ import { v } from "convex/values";
 import { internalMutation, query } from "./_generated/server";
 import { audit } from "./auditLog";
 import { requireDevSeed } from "./devGuard";
-import { requireMember } from "./orgs";
+import { requireRole } from "./orgs";
 
 export { audit } from "./auditLog";
 
@@ -21,17 +21,30 @@ export const record = internalMutation({
   },
 });
 
-/** Reactive: the current user's recent audit entries (for the dashboard). */
+/** Reactive: the current user's recent audit entries (for the dashboard).
+ * RESTRICTED: Only Workspace Owners and Administrators can view company-wide audit trails.
+ */
 export const recent = query({
   args: { workspaceId: v.id("workspaces") },
   handler: async (ctx, { workspaceId }) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) return [];
-    await requireMember(ctx, userId, workspaceId);
-    return ctx.db
+    await requireRole(ctx, userId, workspaceId, ["owner", "admin"]);
+    const logs = await ctx.db
       .query("auditLogs")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", workspaceId))
       .order("desc")
       .take(50);
+
+    return await Promise.all(
+      logs.map(async (log) => {
+        const u = await ctx.db.get(log.userId);
+        return {
+          ...log,
+          userName: u?.name ?? u?.email ?? "System User",
+          userEmail: u?.email ?? "unknown@company.com",
+        };
+      }),
+    );
   },
 });

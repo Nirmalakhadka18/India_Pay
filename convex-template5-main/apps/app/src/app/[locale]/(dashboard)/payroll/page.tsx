@@ -141,7 +141,31 @@ function PayrollContent() {
     }
   };
 
-  const activeRun = runsList?.find((r) => r.periodMonth === periodMonth);
+  // Consistently resolve activeRun for periodMonth (handling multiple runs deterministically)
+  const activeRunsForPeriod =
+    runsList?.filter((r) => r.periodMonth === periodMonth) ?? [];
+  const activeRun = [...activeRunsForPeriod].sort((a, b) => {
+    const statusPriority: Record<string, number> = {
+      processed: 5,
+      approved: 4,
+      pending_approval: 3,
+      calculated: 2,
+      draft: 1,
+    };
+    const pA = statusPriority[a.status] ?? 0;
+    const pB = statusPriority[b.status] ?? 0;
+    if (pB !== pA) return pB - pA;
+    return b.createdAt - a.createdAt;
+  })[0];
+
+  const hasVariance = Boolean(
+    activeRun &&
+      activeRun.status === "processed" &&
+      preview &&
+      (preview.totalGrossSalary !== activeRun.totalGrossSalary ||
+        preview.totalNetSalary !== activeRun.totalNetSalary ||
+        preview.totalEmployees !== activeRun.totalEmployees),
+  );
 
   return (
     <div className="flex h-full w-full flex-col bg-secondary px-6 py-8 dark:bg-black">
@@ -181,6 +205,148 @@ function PayrollContent() {
             </Button>
           </div>
         </div>
+
+        {/* Discrepancy & Reconciliation Alert (Task 1 Requirements) */}
+        {hasVariance && activeRun && preview && (
+          <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-5 space-y-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-primary">
+                    Payroll Reconciliation Notice ({periodMonth})
+                  </h3>
+                  <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-400">
+                    Preview Differs From Finalized Run
+                  </span>
+                </div>
+                <p className="text-xs text-primary/80 leading-relaxed">
+                  The live calculation preview differs from the historical
+                  finalized payroll run for {periodMonth}. The preview
+                  dynamically evaluates all currently active staff, whereas the
+                  finalized run is an immutable snapshot locked at the time of
+                  processing.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="rounded-lg border border-border bg-card p-4 space-y-2">
+                <div className="flex items-center justify-between border-b border-border/50 pb-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-primary">
+                    Finalized Historical Payroll (Locked)
+                  </span>
+                  <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400 capitalize">
+                    {activeRun.status}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs pt-1">
+                  <div>
+                    <span className="text-primary/50 block text-[11px]">
+                      Employees in Run
+                    </span>
+                    <span className="font-semibold text-primary">
+                      {activeRun.totalEmployees}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-primary/50 block text-[11px]">
+                      Gross Total
+                    </span>
+                    <span className="font-semibold text-primary">
+                      ₹{activeRun.totalGrossSalary.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-primary/50 block text-[11px]">
+                      Statutory Deductions
+                    </span>
+                    <span className="font-semibold text-primary">
+                      ₹
+                      {(activeRun.totalStatutoryDeductions ?? 0).toLocaleString(
+                        "en-IN",
+                      )}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-primary/50 block text-[11px]">
+                      Net Payout
+                    </span>
+                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                      ₹{activeRun.totalNetSalary.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-border bg-card p-4 space-y-2">
+                <div className="flex items-center justify-between border-b border-border/50 pb-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-primary">
+                    Current Payroll Preview (Simulation)
+                  </span>
+                  <span className="rounded bg-blue-500/10 px-2 py-0.5 text-[10px] font-medium text-blue-600 dark:text-blue-400">
+                    Live Directory
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs pt-1">
+                  <div>
+                    <span className="text-primary/50 block text-[11px]">
+                      Active Staff
+                    </span>
+                    <span className="font-semibold text-primary">
+                      {preview.totalEmployees}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-primary/50 block text-[11px]">
+                      Preview Gross
+                    </span>
+                    <span className="font-semibold text-primary">
+                      ₹{preview.totalGrossSalary.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-primary/50 block text-[11px]">
+                      Statutory Deductions
+                    </span>
+                    <span className="font-semibold text-blue-600 dark:text-blue-400">
+                      ₹
+                      {preview.totalStatutoryDeductions.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-primary/50 block text-[11px]">
+                      Preview Net
+                    </span>
+                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                      ₹{preview.totalNetSalary.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded bg-background/50 p-3 text-[11px] text-primary/70 space-y-1.5 border border-border/40">
+              <p>
+                <strong>Audit Finding:</strong> When {periodMonth} was
+                finalized, {activeRun.totalEmployees} employee(s) were eligible
+                (Gross: ₹{activeRun.totalGrossSalary.toLocaleString("en-IN")},
+                Net: ₹{activeRun.totalNetSalary.toLocaleString("en-IN")}).
+                Subsequent employee additions or salary updates (current active
+                staff: {preview.totalEmployees}) altered the live preview.
+              </p>
+              <p className="font-medium text-amber-700 dark:text-amber-300">
+                ⚠️ Critical Safety Notice: The preview calculation does NOT
+                modify, recalculate, or overwrite the finalized payroll.
+              </p>
+              <p className="text-primary/50 italic">
+                Gap Note: Retroactive adjustment workflows (such as
+                supplementary payroll runs) are currently not implemented.
+                Processed runs cannot be recalculated, edited, or deleted.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Existing Run Banner */}
         {activeRun && (
@@ -401,50 +567,66 @@ function PayrollContent() {
         )}
 
         {/* Calculation Summary KPIs */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
-          <div className="rounded-lg border border-border bg-card p-4">
-            <p className="text-xs font-medium text-primary/60">
-              Eligible Employees
-            </p>
-            <p className="mt-1 text-2xl font-semibold text-primary">
-              {preview?.totalEmployees ?? 0}
-            </p>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-primary/70">
+              {activeRun?.status === "processed"
+                ? `Current Live Workforce Preview (${periodMonth})`
+                : `Payroll Calculation Summary (${periodMonth})`}
+            </h2>
+            {activeRun?.status === "processed" && (
+              <span className="text-xs text-primary/50">
+                Note: Preview values do not modify the finalized run above
+              </span>
+            )}
           </div>
-          <div className="rounded-lg border border-border bg-card p-4">
-            <p className="text-xs font-medium text-primary/60">
-              Total Gross Salary
-            </p>
-            <p className="mt-1 text-2xl font-semibold text-primary">
-              ₹{(preview?.totalGrossSalary ?? 0).toLocaleString("en-IN")}
-            </p>
-          </div>
-          <div className="rounded-lg border border-border bg-card p-4">
-            <p className="text-xs font-medium text-amber-600 dark:text-amber-400">
-              Total LOP Deductions
-            </p>
-            <p className="mt-1 text-2xl font-semibold text-amber-600 dark:text-amber-400">
-              ₹{(preview?.totalLopDeduction ?? 0).toLocaleString("en-IN")}
-            </p>
-          </div>
-          <div className="rounded-lg border border-border bg-card p-4">
-            <p className="text-xs font-medium text-blue-600 dark:text-blue-400">
-              Statutory Deductions
-            </p>
-            <p className="mt-1 text-2xl font-semibold text-blue-600 dark:text-blue-400">
-              ₹
-              {(preview?.totalStatutoryDeductions ?? 0).toLocaleString("en-IN")}
-            </p>
-            <span className="text-[10px] text-primary/40">
-              Unconfigured (₹0)
-            </span>
-          </div>
-          <div className="rounded-lg border border-border bg-card p-4">
-            <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
-              Net Payable Amount
-            </p>
-            <p className="mt-1 text-2xl font-semibold text-emerald-600 dark:text-emerald-400">
-              ₹{(preview?.totalNetSalary ?? 0).toLocaleString("en-IN")}
-            </p>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
+            <div className="rounded-lg border border-border bg-card p-4">
+              <p className="text-xs font-medium text-primary/60">
+                Eligible Employees
+              </p>
+              <p className="mt-1 text-2xl font-semibold text-primary">
+                {preview?.totalEmployees ?? 0}
+              </p>
+            </div>
+            <div className="rounded-lg border border-border bg-card p-4">
+              <p className="text-xs font-medium text-primary/60">
+                Total Gross Salary
+              </p>
+              <p className="mt-1 text-2xl font-semibold text-primary">
+                ₹{(preview?.totalGrossSalary ?? 0).toLocaleString("en-IN")}
+              </p>
+            </div>
+            <div className="rounded-lg border border-border bg-card p-4">
+              <p className="text-xs font-medium text-amber-600 dark:text-amber-400">
+                Total LOP Deductions
+              </p>
+              <p className="mt-1 text-2xl font-semibold text-amber-600 dark:text-amber-400">
+                ₹{(preview?.totalLopDeduction ?? 0).toLocaleString("en-IN")}
+              </p>
+            </div>
+            <div className="rounded-lg border border-border bg-card p-4">
+              <p className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                Statutory Deductions
+              </p>
+              <p className="mt-1 text-2xl font-semibold text-blue-600 dark:text-blue-400">
+                ₹
+                {(preview?.totalStatutoryDeductions ?? 0).toLocaleString(
+                  "en-IN",
+                )}
+              </p>
+              <span className="text-[10px] text-primary/40">
+                Unconfigured (₹0)
+              </span>
+            </div>
+            <div className="rounded-lg border border-border bg-card p-4">
+              <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                Net Payable Amount
+              </p>
+              <p className="mt-1 text-2xl font-semibold text-emerald-600 dark:text-emerald-400">
+                ₹{(preview?.totalNetSalary ?? 0).toLocaleString("en-IN")}
+              </p>
+            </div>
           </div>
         </div>
 

@@ -1,5 +1,7 @@
 "use client";
 
+import { EpfoEcrDialog } from "@/components/epfo-ecr-dialog";
+import { Form138TdsDialog } from "@/components/form-138-tds-dialog";
 import { PayslipModal } from "@/components/payslip-modal";
 import { RoleGuard } from "@/components/role-guard";
 import { useWorkspace } from "@/lib/useWorkspace";
@@ -10,9 +12,11 @@ import { useQuery } from "convex/react";
 import {
   ChevronRight,
   Download,
+  FileSpreadsheet,
   FileText,
   Loader2,
   Printer,
+  Receipt,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -45,6 +49,8 @@ function ReportsContent() {
 
   const [payslipEmployeeId, setPayslipEmployeeId] =
     useState<Id<"employees"> | null>(null);
+  const [isEcrOpen, setIsEcrOpen] = useState(false);
+  const [isTdsOpen, setIsTdsOpen] = useState(false);
 
   const payslipData = useQuery(
     api.payroll.getPayslip,
@@ -241,13 +247,31 @@ function ReportsContent() {
                   <h2 className="text-lg font-medium">
                     Payroll Summary: {runDetails.run.periodMonth}
                   </h2>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={handleExportCSV}
-                  >
-                    <Download className="mr-2 h-4 w-4" /> Export CSV
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsEcrOpen(true)}
+                      className="gap-2 border-blue-200 dark:border-blue-900 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/50"
+                    >
+                      <FileSpreadsheet className="h-4 w-4" /> EPFO ECR Export
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsTdsOpen(true)}
+                      className="gap-2 border-indigo-200 dark:border-indigo-900 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 font-semibold"
+                    >
+                      <Receipt className="h-4 w-4" /> Form 138 / 24Q TDS
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={handleExportCSV}
+                    >
+                      <Download className="mr-2 h-4 w-4" /> Export CSV
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
@@ -403,6 +427,14 @@ function ReportsContent() {
           payslip={payslipData}
           isLoading={payslipEmployeeId !== null && !payslipData}
         />
+
+        <EpfoEcrDialog
+          open={isEcrOpen}
+          onOpenChange={setIsEcrOpen}
+          defaultRunId={selectedRunId}
+        />
+
+        <Form138TdsDialog open={isTdsOpen} onOpenChange={setIsTdsOpen} />
       </div>
     </div>
   );
