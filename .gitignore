@@ -5,7 +5,6 @@ temp-bun-test2/
 convex-template5-main/debug_output.txt
 convex-template5-main/temp_log.txt
 *.log
-FULL_DAY_REPORT.txt
 **/e2e/screenshots/*.png
 !**/e2e/screenshots/0[1-9]_*.png
 !**/e2e/screenshots/10_*.png
@@ -14,4 +13,5 @@ FULL_DAY_REPORT.txt
 cloudflared.exe
 *.exe
 temp_login.html
+reports_dom.html
 

@@ -22,10 +22,22 @@ import {
   ShieldCheck,
   UserCircle,
 } from "lucide-react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function MyPortal() {
-  const { current } = useWorkspace();
+  const router = useRouter();
+  const { current, workspaces } = useWorkspace();
+  const currentWorkspace = workspaces.find((w) => w._id === current);
+  const isHR =
+    currentWorkspace?.role === "owner" || currentWorkspace?.role === "admin";
+
+  useEffect(() => {
+    if (isHR) {
+      router.replace("/");
+    }
+  }, [isHR, router]);
+
   const workspaceId = current;
   const scoped = workspaceId ? { workspaceId } : "skip";
 
@@ -110,6 +122,14 @@ export default function MyPortal() {
   const handlePrint = () => {
     window.print();
   };
+
+  if (isHR) {
+    return (
+      <div className="flex h-full w-full items-center justify-center p-12 text-muted-foreground">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   if (!workspaceId) {
     return <div className="p-8">Select a workspace.</div>;

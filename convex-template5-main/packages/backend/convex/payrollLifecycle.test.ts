@@ -205,7 +205,7 @@ describe("Full IndiaPay End-to-End Payroll Lifecycle & Immutability Audit", () =
         workspaceId: wsId,
         payrollRunId,
       }),
-    ).rejects.toThrow("Forbidden"); // Admin does not have owner role
+    ).rejects.toThrow("You cannot approve a payroll run that you submitted");
 
     // Owner approves run
     await asOwner.mutation(api.payroll.approveRun, {

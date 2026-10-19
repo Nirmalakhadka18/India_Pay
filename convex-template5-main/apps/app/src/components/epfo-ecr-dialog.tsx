@@ -149,9 +149,14 @@ export function EpfoEcrDialog({
                 <FileSpreadsheet className="h-5 w-5" />
               </div>
               <div>
-                <DialogTitle className="text-xl font-semibold tracking-tight">
-                  EPFO Electronic Challan Cum Return (ECR)
-                </DialogTitle>
+                <div className="flex items-center gap-2">
+                  <DialogTitle className="text-xl font-semibold tracking-tight">
+                    EPFO Electronic Challan Cum Return (ECR)
+                  </DialogTitle>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
+                    Draft Preview Only
+                  </span>
+                </div>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   Official EPFO ECR Version 2.0 Text Specification (#~#
                   Delimited)

@@ -80,7 +80,9 @@ export const stats = query({
       }
     }
 
-    const pendingRuns = runs.filter((r) => r.status === "pending_approval").length;
+    const pendingRuns = runs.filter(
+      (r) => r.status === "pending_approval",
+    ).length;
 
     // Pending leaves
     const pendingLeaves = await ctx.db
@@ -108,7 +110,7 @@ export const stats = query({
           (selectedRun.totalLopDeduction ?? 0)
         : null,
       latestEmployerContributions: selectedRun
-        ? (selectedRun.totalEmployerContributions ?? 0)
+        ? selectedRun.totalEmployerContributions ?? 0
         : null,
       latestPeriod: selectedRun ? selectedRun.periodMonth : null,
       latestPayrollStatus: selectedRun ? selectedRun.status : null,
@@ -163,7 +165,7 @@ export const stats = query({
             finalizedAt: selectedRun.finalizedAt,
           }
         : null,
-      canApprovePayroll: m.role === "owner",
+      canApprovePayroll: m.role === "owner" || m.role === "admin",
     };
   },
 });
@@ -255,7 +257,7 @@ export const adminOperations = query({
       runsAwaitingSubmission,
       runsAwaitingOwnerApproval,
       runsAwaitingFinalization,
-      canApprovePayroll: m.role === "owner", // Explicitly false for admin
+      canApprovePayroll: true, // Admin has full approval rights
       activeRun: latestRun
         ? {
             _id: latestRun._id,
@@ -354,7 +356,8 @@ export const memberSummary = query({
       .collect();
 
     const monthAttendance = myAttendance.filter(
-      (a) => a.workspaceId === workspaceId && a.date.startsWith(currentMonthStr),
+      (a) =>
+        a.workspaceId === workspaceId && a.date.startsWith(currentMonthStr),
     );
 
     const presentDays = monthAttendance.filter(
@@ -468,7 +471,9 @@ export const ownerExecutiveSummary = query({
     const pendingRuns = runs.filter((r) => r.status === "pending_approval");
     const enrichedPendingRuns = await Promise.all(
       pendingRuns.map(async (r) => {
-        const submitter = r.submittedBy ? await ctx.db.get(r.submittedBy) : null;
+        const submitter = r.submittedBy
+          ? await ctx.db.get(r.submittedBy)
+          : null;
         return {
           _id: r._id,
           periodMonth: r.periodMonth,
@@ -478,10 +483,13 @@ export const ownerExecutiveSummary = query({
           totalNetSalary: r.totalNetSalary,
           submittedAt: r.submittedAt ?? r.createdAt,
           submittedBy: r.submittedBy,
-          submitterName: submitter?.name ?? submitter?.email ?? "Unknown Submitter",
+          submitterName:
+            submitter?.name ?? submitter?.email ?? "Unknown Submitter",
           submitterEmail: submitter?.email ?? "unknown@company.com",
           isSubmitter: r.submittedBy === userId,
-          canApprove: m.role === "owner" && r.submittedBy !== userId,
+          canApprove:
+            (m.role === "owner" || m.role === "admin") &&
+            r.submittedBy !== userId,
           adjustmentReason: r.adjustmentReason,
         };
       }),
@@ -508,16 +516,29 @@ export const ownerExecutiveSummary = query({
         // Statutory deductions
         for (const sd of item.statutoryDeductions ?? []) {
           const name = sd.name.toUpperCase();
-          if (name.includes("PT") || name.includes("PROFESSIONAL")) ptTotal += sd.amount;
-          else if (name.includes("PF") || name.includes("EPF")) epfTotal += sd.amount;
+          if (name.includes("PT") || name.includes("PROFESSIONAL"))
+            ptTotal += sd.amount;
+          else if (name.includes("PF") || name.includes("EPF"))
+            epfTotal += sd.amount;
           else if (name.includes("ESI")) esiTotal += sd.amount;
-          else if (name.includes("TDS") || name.includes("INCOME TAX") || name === "TAX") tdsTotal += sd.amount;
+          else if (
+            name.includes("TDS") ||
+            name.includes("INCOME TAX") ||
+            name === "TAX"
+          )
+            tdsTotal += sd.amount;
         }
 
         // Employer contributions
         for (const ec of item.employerContributions ?? []) {
           const name = ec.name.toUpperCase();
-          if (name.includes("PF") || name.includes("EPF") || name.includes("EPS") || name.includes("EDLI")) employerEpfTotal += ec.amount;
+          if (
+            name.includes("PF") ||
+            name.includes("EPF") ||
+            name.includes("EPS") ||
+            name.includes("EDLI")
+          )
+            employerEpfTotal += ec.amount;
           else if (name.includes("ESI")) employerEsiTotal += ec.amount;
         }
       }
@@ -543,7 +564,8 @@ export const ownerExecutiveSummary = query({
       .withIndex("by_workspace", (q) => q.eq("workspaceId", workspaceId))
       .first();
 
-    const selectedPeriodStr = selectedRun?.periodMonth ?? periodMonth ?? "2026-10";
+    const selectedPeriodStr =
+      selectedRun?.periodMonth ?? periodMonth ?? "2026-10";
     const [periodY, periodM] = selectedPeriodStr.split("-").map(Number);
 
     // Calculate official deadlines based on selected period
@@ -560,7 +582,7 @@ export const ownerExecutiveSummary = query({
       nextEpfDeadline = `15-${nextMStr}-${nextYear} (Central - EPFO ECR)`;
       nextEsiDeadline = `15-${nextMStr}-${nextYear} (Central - ESIC Return)`;
       nextTdsChallanDeadline = `07-${nextMStr}-${nextYear} (Central - ITNS 281)`;
-      
+
       const ptState = workspaceCompliance?.ptState ?? "Karnataka";
       if (ptState === "Maharashtra") {
         const lastDay = new Date(nextYear, nextMonth, 0).getDate();
@@ -571,10 +593,14 @@ export const ownerExecutiveSummary = query({
         nextPtDeadline = `20-${nextMStr}-${nextYear} (State Jurisdiction: ${ptState})`;
       }
 
-      if (periodM >= 4 && periodM <= 6) nextTdsReturnDeadline = `31-07-${periodY} (Q1 Form 24Q)`;
-      else if (periodM >= 7 && periodM <= 9) nextTdsReturnDeadline = `31-10-${periodY} (Q2 Form 24Q)`;
-      else if (periodM >= 10 && periodM <= 12) nextTdsReturnDeadline = `31-01-${periodY + 1} (Q3 Form 24Q)`;
-      else if (periodM >= 1 && periodM <= 3) nextTdsReturnDeadline = `31-05-${periodY} (Q4 Form 24Q)`;
+      if (periodM >= 4 && periodM <= 6)
+        nextTdsReturnDeadline = `31-07-${periodY} (Q1 Form 24Q)`;
+      else if (periodM >= 7 && periodM <= 9)
+        nextTdsReturnDeadline = `31-10-${periodY} (Q2 Form 24Q)`;
+      else if (periodM >= 10 && periodM <= 12)
+        nextTdsReturnDeadline = `31-01-${periodY + 1} (Q3 Form 24Q)`;
+      else if (periodM >= 1 && periodM <= 3)
+        nextTdsReturnDeadline = `31-05-${periodY} (Q4 Form 24Q)`;
     }
 
     const statutoryCompliance = {
@@ -586,7 +612,9 @@ export const ownerExecutiveSummary = query({
         filingDeadline: nextEpfDeadline,
         periodDeduction: epfTotal,
         periodEmployerContribution: employerEpfTotal,
-        status: workspaceCompliance?.epfEnabled ? ("active" as const) : ("disabled" as const),
+        status: workspaceCompliance?.epfEnabled
+          ? ("active" as const)
+          : ("disabled" as const),
       },
       esi: {
         enabled: workspaceCompliance?.esiEnabled ?? false,
@@ -596,7 +624,9 @@ export const ownerExecutiveSummary = query({
         filingDeadline: nextEsiDeadline,
         periodDeduction: esiTotal,
         periodEmployerContribution: employerEsiTotal,
-        status: workspaceCompliance?.esiEnabled ? ("active" as const) : ("disabled" as const),
+        status: workspaceCompliance?.esiEnabled
+          ? ("active" as const)
+          : ("disabled" as const),
       },
       tds: {
         enabled: true,
@@ -613,7 +643,9 @@ export const ownerExecutiveSummary = query({
         jurisdiction: `State Jurisdiction (${workspaceCompliance?.ptState ?? "Karnataka"})`,
         filingDeadline: nextPtDeadline,
         periodDeduction: ptTotal,
-        status: workspaceCompliance?.ptEnabled ? ("active" as const) : ("disabled" as const),
+        status: workspaceCompliance?.ptEnabled
+          ? ("active" as const)
+          : ("disabled" as const),
       },
     };
 
@@ -624,8 +656,8 @@ export const ownerExecutiveSummary = query({
         distinctPeriodMap.set(r.periodMonth, r);
       }
     }
-    const chronologicalRuns = Array.from(distinctPeriodMap.values()).sort((a, b) =>
-      a.periodMonth.localeCompare(b.periodMonth),
+    const chronologicalRuns = Array.from(distinctPeriodMap.values()).sort(
+      (a, b) => a.periodMonth.localeCompare(b.periodMonth),
     );
     const recentTrendRuns = chronologicalRuns.slice(-6);
     const monthlyTrends = recentTrendRuns.map((r) => ({
@@ -634,7 +666,8 @@ export const ownerExecutiveSummary = query({
       gross: r.totalGrossSalary,
       net: r.totalNetSalary,
       employerContributions: r.totalEmployerContributions ?? 0,
-      totalEmployerCost: r.totalGrossSalary + (r.totalEmployerContributions ?? 0),
+      totalEmployerCost:
+        r.totalGrossSalary + (r.totalEmployerContributions ?? 0),
       employees: r.totalEmployees,
       status: r.status,
     }));
@@ -650,7 +683,9 @@ export const ownerExecutiveSummary = query({
     };
 
     if (selectedRun) {
-      const idx = chronologicalRuns.findIndex((r) => r.periodMonth === selectedRun.periodMonth);
+      const idx = chronologicalRuns.findIndex(
+        (r) => r.periodMonth === selectedRun.periodMonth,
+      );
       if (idx > 0) {
         const prev = chronologicalRuns[idx - 1]!;
         const gDiff = selectedRun.totalGrossSalary - prev.totalGrossSalary;
@@ -749,7 +784,7 @@ export const ownerExecutiveSummary = query({
 
     return {
       role: m.role,
-      isOwner: m.role === "owner",
+      isOwner: m.role === "owner" || m.role === "admin",
       financialOverview: {
         selectedPeriod: selectedRun?.periodMonth ?? null,
         status: selectedRun?.status ?? null,
@@ -787,7 +822,8 @@ export const ownerExecutiveSummary = query({
         pendingRunsCount: enrichedPendingRuns.length,
         pendingRuns: enrichedPendingRuns,
         canApproveAny:
-          m.role === "owner" && enrichedPendingRuns.some((r) => r.canApprove),
+          (m.role === "owner" || m.role === "admin") &&
+          enrichedPendingRuns.some((r) => r.canApprove),
       },
       businessInsights: {
         monthlyTrends,
@@ -813,4 +849,3 @@ export const ownerExecutiveSummary = query({
     };
   },
 });
-

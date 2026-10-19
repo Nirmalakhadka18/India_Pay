@@ -1023,13 +1023,13 @@ describe("Admin vs Member RBAC — dev account role verification", () => {
       }),
     );
 
-    // Admin is not owner, so admin cannot approve (strict RBAC protection)
+    // Admin submitted the run, so Admin cannot approve own run when another approver exists (Maker-Checker)
     await expect(
       t.withIdentity(as(admin)).mutation(api.payroll.approveRun, {
         workspaceId: ws,
         payrollRunId: runId,
       }),
-    ).rejects.toThrow(/Forbidden/);
+    ).rejects.toThrow("You cannot approve a payroll run that you submitted");
 
     // Owner (different person) can approve
     await expect(
@@ -1040,9 +1040,9 @@ describe("Admin vs Member RBAC — dev account role verification", () => {
     ).resolves.toBeNull();
   });
 
-  test("admin cannot reject payroll runs (owner-only permission)", async () => {
+  test("plain member cannot reject payroll runs (RBAC permission)", async () => {
     const t = convexTest(schema, modules);
-    const { admin, ws } = await seedWithAdmin(t);
+    const { member, admin, ws } = await seedWithAdmin(t);
 
     const runId = await t.run(async (ctx) =>
       ctx.db.insert("payrollRuns", {
@@ -1065,9 +1065,9 @@ describe("Admin vs Member RBAC — dev account role verification", () => {
       }),
     );
 
-    // Admin cannot reject (strict RBAC protection: owner only)
+    // Member cannot reject (strict RBAC protection)
     await expect(
-      t.withIdentity(as(admin)).mutation(api.payroll.rejectRun, {
+      t.withIdentity(as(member)).mutation(api.payroll.rejectRun, {
         workspaceId: ws,
         payrollRunId: runId,
         reason: "Test rejection",
@@ -1378,7 +1378,7 @@ describe("Owner Account Provisioning, RBAC & Maker-Checker Suite", () => {
     );
     const ws = workspaceId as any;
 
-    const { ownerUser, adminUser } = await t.run(async (ctx) => {
+    const { ownerUser, adminUser, userUser } = await t.run(async (ctx) => {
       const o = (await ctx.db
         .query("users")
         .withIndex("email", (q) => q.eq("email", DEV_OWNER_EMAIL))
@@ -1387,11 +1387,16 @@ describe("Owner Account Provisioning, RBAC & Maker-Checker Suite", () => {
         .query("users")
         .withIndex("email", (q) => q.eq("email", DEV_ADMIN_EMAIL))
         .unique())!._id;
-      return { ownerUser: o, adminUser: a };
+      const u = (await ctx.db
+        .query("users")
+        .withIndex("email", (q) => q.eq("email", DEV_USER_EMAIL))
+        .unique())!._id;
+      return { ownerUser: o, adminUser: a, userUser: u };
     });
 
     const asOwner = t.withIdentity(as(ownerUser));
     const asAdmin = t.withIdentity(as(adminUser));
+    const asUser = t.withIdentity(as(userUser));
 
     // Run 1: Submitted by Admin
     const run1Id = await t.run(async (ctx) =>
@@ -1415,20 +1420,20 @@ describe("Owner Account Provisioning, RBAC & Maker-Checker Suite", () => {
       }),
     );
 
-    // Admin cannot approve
+    // Admin who submitted cannot self-approve due to Maker-Checker
     await expect(
       asAdmin.mutation(api.payroll.approveRun, {
         workspaceId: ws,
         payrollRunId: run1Id,
       }),
-    ).rejects.toThrow(/Forbidden/);
+    ).rejects.toThrow("You cannot approve a payroll run that you submitted");
 
-    // Admin cannot reject
+    // Plain member cannot reject
     await expect(
-      asAdmin.mutation(api.payroll.rejectRun, {
+      asUser.mutation(api.payroll.rejectRun, {
         workspaceId: ws,
         payrollRunId: run1Id,
-        reason: "Admin trying to reject",
+        reason: "User trying to reject",
       }),
     ).rejects.toThrow(/Forbidden/);
 
@@ -1738,10 +1743,11 @@ describe("Role-Based Dashboard Authorization & Data Isolation Suite", () => {
 
   // ── ADMIN TESTS ──────────────────────────────────────────────────────────
 
-  test("Admin can access operational dashboard data but cannot approve payroll", async () => {
+  test("Admin can access operational dashboard data and has payroll approval authority in 2-role system", async () => {
     const t = convexTest(schema, modules);
-    const { admin, ws, run } = await seedDashboardWorkspace(t);
+    const { admin, memberLinked, ws, run } = await seedDashboardWorkspace(t);
     const asAdmin = t.withIdentity(as(admin));
+    const asMember = t.withIdentity(as(memberLinked));
 
     const ops = await asAdmin.query(api.dashboard.adminOperations, {
       workspaceId: ws,
@@ -1750,11 +1756,11 @@ describe("Role-Based Dashboard Authorization & Data Isolation Suite", () => {
     expect(ops?.activeEmployeesCount).toBe(2);
     expect(ops?.pendingLeavesCount).toBe(1);
     expect(ops?.pendingLeaves[0]?.employeeName).toBe("Linked Member");
-    expect(ops?.canApprovePayroll).toBe(false);
+    expect(ops?.canApprovePayroll).toBe(true);
 
-    // Admin calling approveRun must be rejected
+    // Plain member calling approveRun must be strictly rejected
     await expect(
-      asAdmin.mutation(api.payroll.approveRun, {
+      asMember.mutation(api.payroll.approveRun, {
         workspaceId: ws,
         payrollRunId: run,
       }),

@@ -282,7 +282,7 @@ describe("Two-Organization Multi-Tenant User Acceptance Test (UAT)", () => {
         workspaceId: ws1Id,
         payrollRunId: run1Id,
       }),
-    ).rejects.toThrow("Forbidden");
+    ).rejects.toThrow("You cannot approve a payroll run that you submitted");
 
     // Cross-tenant approval attempt: Org 2 Owner cannot approve Org 1 run
     await expect(

@@ -501,23 +501,15 @@ describe("Owner Dashboard Executive Intelligence & Security", () => {
       }),
     ).rejects.toThrow("You cannot approve a payroll run that you submitted");
 
-    // Admin attempting to approve must be rejected (owner-only permission)
-    await expect(
-      t.withIdentity(as(admin)).mutation(api.payroll.approveRun, {
-        workspaceId: ws,
-        payrollRunId: runId,
-      }),
-    ).rejects.toThrow();
-
-    // Secondary Owner (not submitter) can approve successfully
-    await t.withIdentity(as(owner2)).mutation(api.payroll.approveRun, {
+    // Admin (not submitter) can approve successfully in 2-role system
+    await t.withIdentity(as(admin)).mutation(api.payroll.approveRun, {
       workspaceId: ws,
       payrollRunId: runId,
     });
 
     const run = await t.run(async (ctx: any) => ctx.db.get(runId));
     expect(run.status).toBe("approved");
-    expect(run.approvedBy).toBe(owner2);
+    expect(run.approvedBy).toBe(admin);
   });
 
   test("8. Security RBAC: Member account is strictly forbidden from accessing ownerExecutiveSummary or audit", async () => {

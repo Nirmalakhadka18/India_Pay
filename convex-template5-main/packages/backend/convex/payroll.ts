@@ -618,7 +618,7 @@ export const approveRun = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner"]);
+    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
 
     const run = await ctx.db.get(args.payrollRunId);
     if (!run || run.workspaceId !== args.workspaceId) {
@@ -631,9 +631,24 @@ export const approveRun = mutation({
 
     // Strict Two-Person Maker-Checker check
     if (run.submittedBy === userId) {
-      throw new ConvexError(
-        "You cannot approve a payroll run that you submitted. Another owner must approve it.",
-      );
+      const otherApprover = await ctx.db
+        .query("members")
+        .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+        .filter((q) =>
+          q.and(
+            q.or(
+              q.eq(q.field("role"), "owner"),
+              q.eq(q.field("role"), "admin"),
+            ),
+            q.neq(q.field("userId"), userId),
+          ),
+        )
+        .first();
+      if (otherApprover) {
+        throw new ConvexError(
+          "You cannot approve a payroll run that you submitted. Another owner or administrator must approve it.",
+        );
+      }
     }
 
     const now = Date.now();
@@ -659,7 +674,7 @@ export const rejectRun = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner"]);
+    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
 
     const run = await ctx.db.get(args.payrollRunId);
     if (!run || run.workspaceId !== args.workspaceId) {

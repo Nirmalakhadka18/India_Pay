@@ -32,7 +32,12 @@ import { ThemeSwitcher } from "./theme-switcher";
 
 const ALL_NAV = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/my-portal", label: "My Portal", icon: UserCircle },
+  {
+    href: "/my-portal",
+    label: "My Portal",
+    icon: UserCircle,
+    memberOnly: true,
+  },
   { href: "/employees", label: "Employees", icon: Users, hrOnly: true },
   { href: "/salaries", label: "Salaries", icon: Banknote, hrOnly: true },
   { href: "/payroll", label: "Payroll", icon: Banknote, hrOnly: true },
@@ -98,6 +103,7 @@ export function Sidebar() {
   const NAV = useMemo(() => {
     return ALL_NAV.filter((item) => {
       if (item.hrOnly && !isHR) return false;
+      if (item.memberOnly && isHR) return false;
       return true;
     });
   }, [isHR]);

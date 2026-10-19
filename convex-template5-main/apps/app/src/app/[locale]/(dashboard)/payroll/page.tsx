@@ -44,7 +44,8 @@ function PayrollContent() {
   const { current, workspaces } = useWorkspace();
   const workspaceId = current;
   const currentWorkspace = workspaces.find((w) => w._id === current);
-  const isOwner = currentWorkspace?.role === "owner";
+  const isOwner =
+    currentWorkspace?.role === "owner" || currentWorkspace?.role === "admin";
 
   // Selected period month (YYYY-MM)
   const currentMonthStr = new Date().toISOString().slice(0, 7);

@@ -176,13 +176,15 @@ export function computeEmployeePayrollItem(
   const isEsiContributionPeriodCovered =
     empComp?.esiContributionPeriodCovered ?? false;
 
+  const earnedGross = Math.max(0, grossSalary - lopDeduction);
+
   if (
     calcCtx.workspaceCompliance.esiEnabled &&
-    grossSalary > 0 &&
+    earnedGross > 0 &&
     (grossSalary <= esiCeiling || isEsiContributionPeriodCovered)
   ) {
-    esiEmployee = Math.ceil(grossSalary * 0.0075);
-    esiEmployer = Math.ceil(grossSalary * 0.0325);
+    esiEmployee = Math.ceil(earnedGross * 0.0075);
+    esiEmployer = Math.ceil(earnedGross * 0.0325);
     if (grossSalary > esiCeiling && isEsiContributionPeriodCovered) {
       warnings.push(
         "ESI contribution applied under Section 2(9) proviso (wage crossed ₹21,000 mid contribution period).",
@@ -192,7 +194,7 @@ export function computeEmployeePayrollItem(
 
   // 4. Professional Tax (Multi-state schedule engine)
   const ptResult = computeProfessionalTax({
-    grossSalary,
+    grossSalary: earnedGross,
     month: calcCtx.month,
     state: calcCtx.workspaceCompliance.ptState,
     ptEnabled: calcCtx.workspaceCompliance.ptEnabled,

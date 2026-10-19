@@ -4,6 +4,7 @@ import { EpfoEcrDialog } from "@/components/epfo-ecr-dialog";
 import { Form138TdsDialog } from "@/components/form-138-tds-dialog";
 import { PayslipModal } from "@/components/payslip-modal";
 import { RoleGuard } from "@/components/role-guard";
+import { StatutoryReportsSection } from "@/components/statutory-reports";
 import { useWorkspace } from "@/lib/useWorkspace";
 import { api } from "@v1/backend/convex/_generated/api";
 import type { Id } from "@v1/backend/convex/_generated/dataModel";
@@ -132,7 +133,8 @@ function ReportsContent() {
         </div>
 
         {!selectedRunId ? (
-          <div className="rounded-lg border border-border bg-card overflow-hidden">
+          <>
+            <div className="rounded-lg border border-border bg-card overflow-hidden">
             <div className="px-4 py-3 border-b border-border bg-muted/30">
               <h2 className="font-medium text-sm">Payroll History</h2>
             </div>
@@ -230,6 +232,10 @@ function ReportsContent() {
               </tbody>
             </table>
           </div>
+
+          {/* Statutory Compliance Reports Sections (ESI, PF, PT) */}
+          <StatutoryReportsSection runs={runs || []} />
+        </>
         ) : (
           <div className="space-y-6">
             <div className="flex items-center gap-4">
@@ -416,6 +422,11 @@ function ReportsContent() {
                     </tbody>
                   </table>
                 </div>
+
+                <StatutoryReportsSection
+                  runs={runs || []}
+                  initialPeriodMonth={runDetails.run.periodMonth}
+                />
               </>
             )}
           </div>
