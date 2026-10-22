@@ -246,7 +246,7 @@ export const add = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const normalizedEmail = args.email.trim().toLowerCase();
 
@@ -344,7 +344,7 @@ export const update = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const employee = await ctx.db.get(args.employeeId);
     if (!employee || employee.workspaceId !== args.workspaceId) {
@@ -461,7 +461,7 @@ export const deactivate = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const employee = await ctx.db.get(args.employeeId);
     if (!employee || employee.workspaceId !== args.workspaceId) {

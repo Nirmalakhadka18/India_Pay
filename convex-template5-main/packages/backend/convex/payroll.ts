@@ -10,6 +10,7 @@ import {
   computeEmployeePayrollItem,
   getDaysInMonth,
 } from "./statutory";
+import { numberToIndianWords } from "./statutoryReports";
 
 export { getDaysInMonth, type CalculationContext, computeEmployeePayrollItem };
 
@@ -22,7 +23,7 @@ export const calculatePreview = query({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const parts = args.periodMonth.split("-");
     const yearStr = parts[0] ?? "";
@@ -393,7 +394,7 @@ export const listRuns = query({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     return await ctx.db
       .query("payrollRuns")
@@ -412,7 +413,7 @@ export const getRunDetails = query({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const run = await ctx.db.get(args.payrollRunId);
     if (!run || run.workspaceId !== args.workspaceId) {
@@ -545,15 +546,91 @@ export const getPayslip = query({
 
     const emp = await ctx.db.get(args.employeeId);
 
+    // Fetch master salary configuration if available
+    const salary = item.salaryId
+      ? await ctx.db.get(item.salaryId)
+      : await ctx.db
+          .query("salaries")
+          .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
+          .first();
+
+    const masterBasicSalary = salary ? salary.basicSalary : item.basicSalary;
+    const masterGrossSalary = salary ? salary.grossSalary : item.grossSalary;
+
+    // Map allowances with master configured amounts
+    const enrichedAllowances = (item.allowances || []).map((a) => {
+      const match = salary?.allowances?.find(
+        (sa) => sa.name.trim().toLowerCase() === a.name.trim().toLowerCase(),
+      );
+      return {
+        name: a.name,
+        amount: a.amount,
+        masterAmount: match ? match.amount : a.amount,
+      };
+    });
+
+    // Working days and attendance
+    const parts = run.periodMonth.split("-");
+    const year = Number.parseInt(parts[0] ?? "2026", 10);
+    const month = Number.parseInt(parts[1] ?? "10", 10);
+    const totalWorkingDays = getDaysInMonth(year, month);
+    const lopDays = item.lopDays || 0;
+    const effectiveWorkDays = Math.max(0, totalWorkingDays - lopDays);
+
+    // Workspace Compliance for location & state
+    const compliance = await ctx.db
+      .query("workspaceCompliance")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .first();
+
+    const location =
+      compliance?.ptState === "Karnataka"
+        ? "Bangalore"
+        : compliance?.ptState || "Bangalore";
+
+    // Formatted employee number and joining date
+    const empCode =
+      emp?.pfMemberId && emp.pfMemberId.startsWith("NH-")
+        ? emp.pfMemberId
+        : `NH-OL-${String(emp?._id ?? "578").slice(-3).toUpperCase()}`;
+
+    const joinDateStr = emp?.createdAt
+      ? new Date(emp.createdAt).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })
+      : "01 Sep 2026";
+
+    // Format current / finalized print date
+    const printDate = new Date().toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    const netPayInWords = numberToIndianWords(item.netSalary);
+    const totalCostToCompany =
+      item.grossSalary + (item.totalEmployerContributions ?? 0);
+
     return {
       workspaceName: workspace.name,
+      companyAddress:
+        "2ND AND 3RD FLOOR, SRI ESHWARI MANSION, 5TH MAIN, 6TH SECTOR, HSR LAYOUT, BENGALURU",
+      location,
       periodMonth: run.periodMonth,
       startDate: run.startDate,
       endDate: run.endDate,
       paymentDate: run.finalizedAt,
+      printDate,
       employeeName: emp
         ? `${emp.firstName} ${emp.lastName}`
         : "Unknown Employee",
+      employeeNo: empCode,
+      joiningDate: joinDateStr,
       email: emp?.email ?? "",
       department: emp?.department ?? "General",
       designation: emp?.designation ?? "Employee",
@@ -568,11 +645,18 @@ export const getPayslip = query({
       maskedUan: maskUan(emp?.uan),
       pfMemberId: emp?.pfMemberId,
       esicIpNumber: emp?.esicIpNumber,
+      totalWorkingDays,
+      effectiveWorkDays,
+      masterBasicSalary,
+      masterGrossSalary,
+      netPayInWords,
+      totalCostToCompany,
       runType: run.runType ?? "regular",
       originalPayrollRunId: run.originalPayrollRunId,
       adjustmentReason: run.adjustmentReason,
       adjustmentCategory: run.adjustmentCategory,
       ...item,
+      allowances: enrichedAllowances,
     };
   },
 });
@@ -585,7 +669,7 @@ export const submitForApproval = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const run = await ctx.db.get(args.payrollRunId);
     if (!run || run.workspaceId !== args.workspaceId) {
@@ -618,7 +702,7 @@ export const approveRun = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const run = await ctx.db.get(args.payrollRunId);
     if (!run || run.workspaceId !== args.workspaceId) {
@@ -646,7 +730,7 @@ export const approveRun = mutation({
         .first();
       if (otherApprover) {
         throw new ConvexError(
-          "You cannot approve a payroll run that you submitted. Another owner or administrator must approve it.",
+          "You cannot approve a payroll run that you submitted. Another administrator must approve it.",
         );
       }
     }
@@ -674,7 +758,7 @@ export const rejectRun = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const run = await ctx.db.get(args.payrollRunId);
     if (!run || run.workspaceId !== args.workspaceId) {
@@ -710,7 +794,7 @@ export const finalizeRun = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const run = await ctx.db.get(args.payrollRunId);
     if (!run || run.workspaceId !== args.workspaceId) {
@@ -761,7 +845,7 @@ export const createSupplementaryRun = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     if (args.grossAdjustment <= 0) {
       throw new ConvexError(

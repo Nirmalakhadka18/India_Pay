@@ -288,7 +288,7 @@ export const previewEpfoEcrExport = query({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const run = await ctx.db.get(args.payrollRunId);
     if (!run || run.workspaceId !== args.workspaceId) {
@@ -564,7 +564,7 @@ export const logEcrDownload = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     await audit(ctx, args.workspaceId, userId, "epfo.ecr_download", {
       payrollRunId: args.payrollRunId,

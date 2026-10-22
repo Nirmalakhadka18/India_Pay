@@ -1,6 +1,11 @@
 "use client";
 
 import {
+  downloadEsiMonthlyUploadExcel,
+  downloadPfEcrExcel,
+  downloadPfEcrTxt,
+} from "@/lib/statutory-excel";
+import {
   downloadEsiChallanReportPdf,
   downloadEsiMonthlyStatementPdf,
   downloadKarnatakaForm5APdf,
@@ -9,11 +14,6 @@ import {
   downloadPtMonthlyStatementPdf,
   formatINR,
 } from "@/lib/statutory-pdf";
-import {
-  downloadEsiMonthlyUploadExcel,
-  downloadPfEcrExcel,
-  downloadPfEcrTxt,
-} from "@/lib/statutory-excel";
 import { Button } from "@v1/ui/button";
 import {
   Dialog,
@@ -282,7 +282,8 @@ export function StatutoryReportPreviewModal({
                 )}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Period: {periodMonth} &bull; Entity: {currentData?.workspaceName} &bull; Jurisdiction: {state}
+                Period: {periodMonth} &bull; Entity:{" "}
+                {currentData?.workspaceName} &bull; Jurisdiction: {state}
               </p>
             </div>
 
@@ -353,7 +354,8 @@ export function StatutoryReportPreviewModal({
               </span>
             </div>
             <div className="font-mono">
-              Report: ₹{formatINR(reconciliation.reportTotal)} &bull; Payroll Items: ₹{formatINR(reconciliation.payrollItemsTotal)}
+              Report: ₹{formatINR(reconciliation.reportTotal)} &bull; Payroll
+              Items: ₹{formatINR(reconciliation.payrollItemsTotal)}
             </div>
           </div>
         )}
@@ -362,10 +364,13 @@ export function StatutoryReportPreviewModal({
         {!currentData || !currentData.hasRun ? (
           <div className="py-16 text-center text-muted-foreground">
             <AlertTriangle className="mx-auto h-8 w-8 text-amber-500 mb-2" />
-            <h3 className="font-medium text-foreground">No Processed Payroll Run</h3>
+            <h3 className="font-medium text-foreground">
+              No Processed Payroll Run
+            </h3>
             <p className="text-xs mt-1">
               There is no payroll run calculated or finalized for {periodMonth}.
-              Please select a month with payroll activity or run payroll from the Payroll engine.
+              Please select a month with payroll activity or run payroll from
+              the Payroll engine.
             </p>
           </div>
         ) : (
@@ -376,7 +381,9 @@ export function StatutoryReportPreviewModal({
                 <span>{currentData.workspaceName}</span>
                 <span>Period: {periodMonth}</span>
               </div>
-              <p className="text-muted-foreground">{currentData.companyAddress}</p>
+              <p className="text-muted-foreground">
+                {currentData.companyAddress}
+              </p>
               {isPf && pfData?.establishmentCode && (
                 <p className="text-muted-foreground">
                   <strong>EPFO Est. Code:</strong> {pfData.establishmentCode}
@@ -416,14 +423,18 @@ export function StatutoryReportPreviewModal({
             {reportId === "pf_ecr" && activeTab === "txt" ? (
               <div className="p-4 bg-slate-900 text-slate-100 font-mono text-xs rounded-lg overflow-x-auto max-h-96">
                 <div className="text-slate-400 border-b border-slate-700 pb-2 mb-2">
-                  // Delimited with standard #~# delimiter (11 columns per EPFO ECR 2.0 specification)
+                  // Delimited with standard #~# delimiter (11 columns per EPFO
+                  ECR 2.0 specification)
                 </div>
                 <pre>{pfData?.txtContent}</pre>
               </div>
             ) : reportId === "esi_challan" && esiData ? (
               /* DUAL COPY CHALLAN PREVIEW FOR ESI */
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {["ORIGINAL E.S.I.C. (For Bank)", "DUPLICATE E.S.I.C. (For ESIC)"].map((title) => (
+                {[
+                  "ORIGINAL E.S.I.C. (For Bank)",
+                  "DUPLICATE E.S.I.C. (For ESIC)",
+                ].map((title) => (
                   <div
                     key={title}
                     className="p-4 border rounded-lg bg-card text-xs space-y-3 shadow-sm"
@@ -433,7 +444,9 @@ export function StatutoryReportPreviewModal({
                       <p className="text-[11px] text-muted-foreground mt-0.5">
                         EMPLOYEES&apos; STATE INSURANCE FUND, ACCOUNT NO. 1
                       </p>
-                      <p className="text-[10px] text-muted-foreground">STATE BANK OF INDIA</p>
+                      <p className="text-[10px] text-muted-foreground">
+                        STATE BANK OF INDIA
+                      </p>
                     </div>
 
                     <div className="space-y-1 text-muted-foreground">
@@ -443,7 +456,9 @@ export function StatutoryReportPreviewModal({
                           ₹{formatINR(esiData.totalContribution)}
                         </strong>
                       </p>
-                      <p className="italic text-[11px]">({esiData.amountInWords})</p>
+                      <p className="italic text-[11px]">
+                        ({esiData.amountInWords})
+                      </p>
                     </div>
 
                     <div className="p-2.5 bg-muted/30 rounded border space-y-1">
@@ -457,11 +472,15 @@ export function StatutoryReportPreviewModal({
                       </div>
                       <div className="flex justify-between">
                         <span>Employees&apos; Cont. (0.75%):</span>
-                        <strong>₹{formatINR(esiData.totalEmployeeContribution)}</strong>
+                        <strong>
+                          ₹{formatINR(esiData.totalEmployeeContribution)}
+                        </strong>
                       </div>
                       <div className="flex justify-between">
                         <span>Employers&apos; Cont. (3.25%):</span>
-                        <strong>₹{formatINR(esiData.totalEmployerContribution)}</strong>
+                        <strong>
+                          ₹{formatINR(esiData.totalEmployerContribution)}
+                        </strong>
                       </div>
                       <div className="flex justify-between border-t pt-1 font-bold text-foreground">
                         <span>Total Payable:</span>
@@ -486,7 +505,9 @@ export function StatutoryReportPreviewModal({
                     <strong>₹{formatINR(pfData.totalEpfWages)}</strong>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Total Remittance:</span>{" "}
+                    <span className="text-muted-foreground">
+                      Total Remittance:
+                    </span>{" "}
                     <strong className="text-emerald-600">
                       ₹{formatINR(pfData.accountBreakdown.totalRemittance)}
                     </strong>
@@ -510,20 +531,37 @@ export function StatutoryReportPreviewModal({
                     <tbody className="divide-y divide-border">
                       <tr>
                         <td className="p-2 text-center">1</td>
-                        <td className="p-2 font-medium">Employer&apos;s Share</td>
-                        <td className="p-2 text-right">₹{formatINR(pfData.accountBreakdown.ac1_er)}</td>
+                        <td className="p-2 font-medium">
+                          Employer&apos;s Share
+                        </td>
+                        <td className="p-2 text-right">
+                          ₹{formatINR(pfData.accountBreakdown.ac1_er)}
+                        </td>
                         <td className="p-2 text-right">-</td>
-                        <td className="p-2 text-right">₹{formatINR(pfData.accountBreakdown.ac10_eps)}</td>
-                        <td className="p-2 text-right">₹{formatINR(pfData.accountBreakdown.ac21_edli)}</td>
+                        <td className="p-2 text-right">
+                          ₹{formatINR(pfData.accountBreakdown.ac10_eps)}
+                        </td>
+                        <td className="p-2 text-right">
+                          ₹{formatINR(pfData.accountBreakdown.ac21_edli)}
+                        </td>
                         <td className="p-2 text-right">-</td>
                         <td className="p-2 text-right font-semibold">
-                          ₹{formatINR(pfData.accountBreakdown.ac1_er + pfData.accountBreakdown.ac10_eps + pfData.accountBreakdown.ac21_edli)}
+                          ₹
+                          {formatINR(
+                            pfData.accountBreakdown.ac1_er +
+                              pfData.accountBreakdown.ac10_eps +
+                              pfData.accountBreakdown.ac21_edli,
+                          )}
                         </td>
                       </tr>
                       <tr>
                         <td className="p-2 text-center">2</td>
-                        <td className="p-2 font-medium">Employee&apos;s Share</td>
-                        <td className="p-2 text-right">₹{formatINR(pfData.accountBreakdown.ac1_ee)}</td>
+                        <td className="p-2 font-medium">
+                          Employee&apos;s Share
+                        </td>
+                        <td className="p-2 text-right">
+                          ₹{formatINR(pfData.accountBreakdown.ac1_ee)}
+                        </td>
                         <td className="p-2 text-right">-</td>
                         <td className="p-2 text-right">-</td>
                         <td className="p-2 text-right">-</td>
@@ -534,9 +572,13 @@ export function StatutoryReportPreviewModal({
                       </tr>
                       <tr>
                         <td className="p-2 text-center">3</td>
-                        <td className="p-2 font-medium">Admin Charges (0.50%)</td>
+                        <td className="p-2 font-medium">
+                          Admin Charges (0.50%)
+                        </td>
                         <td className="p-2 text-right">-</td>
-                        <td className="p-2 text-right">₹{formatINR(pfData.accountBreakdown.ac2_admin)}</td>
+                        <td className="p-2 text-right">
+                          ₹{formatINR(pfData.accountBreakdown.ac2_admin)}
+                        </td>
                         <td className="p-2 text-right">-</td>
                         <td className="p-2 text-right">-</td>
                         <td className="p-2 text-right">-</td>
@@ -545,13 +587,25 @@ export function StatutoryReportPreviewModal({
                         </td>
                       </tr>
                       <tr className="bg-muted/40 font-bold border-t-2">
-                        <td className="p-2" colSpan={2}>TOTAL</td>
-                        <td className="p-2 text-right">
-                          ₹{formatINR(pfData.accountBreakdown.ac1_ee + pfData.accountBreakdown.ac1_er)}
+                        <td className="p-2" colSpan={2}>
+                          TOTAL
                         </td>
-                        <td className="p-2 text-right">₹{formatINR(pfData.accountBreakdown.ac2_admin)}</td>
-                        <td className="p-2 text-right">₹{formatINR(pfData.accountBreakdown.ac10_eps)}</td>
-                        <td className="p-2 text-right">₹{formatINR(pfData.accountBreakdown.ac21_edli)}</td>
+                        <td className="p-2 text-right">
+                          ₹
+                          {formatINR(
+                            pfData.accountBreakdown.ac1_ee +
+                              pfData.accountBreakdown.ac1_er,
+                          )}
+                        </td>
+                        <td className="p-2 text-right">
+                          ₹{formatINR(pfData.accountBreakdown.ac2_admin)}
+                        </td>
+                        <td className="p-2 text-right">
+                          ₹{formatINR(pfData.accountBreakdown.ac10_eps)}
+                        </td>
+                        <td className="p-2 text-right">
+                          ₹{formatINR(pfData.accountBreakdown.ac21_edli)}
+                        </td>
                         <td className="p-2 text-right">₹0.00</td>
                         <td className="p-2 text-right text-emerald-600 text-sm">
                           ₹{formatINR(pfData.accountBreakdown.totalRemittance)}
@@ -569,7 +623,9 @@ export function StatutoryReportPreviewModal({
               /* KARNATAKA FORM 5A PREVIEW */
               <div className="space-y-4 text-xs">
                 <div className="p-3 bg-muted/30 rounded border">
-                  <h4 className="font-semibold mb-2">Form 5A Return on Tax Payable (Rule 11A)</h4>
+                  <h4 className="font-semibold mb-2">
+                    Form 5A Return on Tax Payable (Rule 11A)
+                  </h4>
                   <table className="w-full text-left border rounded overflow-hidden">
                     <thead className="bg-muted text-muted-foreground text-[11px]">
                       <tr>
@@ -581,18 +637,30 @@ export function StatutoryReportPreviewModal({
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
-                      {ptData.slabsSummary?.map((s: PtSlabRecordType, idx: number) => (
-                        <tr key={s.slabLabel}>
-                          <td className="p-2 text-center">{idx + 1}</td>
-                          <td className="p-2">{s.slabLabel}</td>
-                          <td className="p-2 text-right">{s.employeeCount}</td>
-                          <td className="p-2 text-right">₹{formatINR(s.rate)}</td>
-                          <td className="p-2 text-right font-medium">₹{formatINR(s.amount)}</td>
-                        </tr>
-                      ))}
+                      {ptData.slabsSummary?.map(
+                        (s: PtSlabRecordType, idx: number) => (
+                          <tr key={s.slabLabel}>
+                            <td className="p-2 text-center">{idx + 1}</td>
+                            <td className="p-2">{s.slabLabel}</td>
+                            <td className="p-2 text-right">
+                              {s.employeeCount}
+                            </td>
+                            <td className="p-2 text-right">
+                              ₹{formatINR(s.rate)}
+                            </td>
+                            <td className="p-2 text-right font-medium">
+                              ₹{formatINR(s.amount)}
+                            </td>
+                          </tr>
+                        ),
+                      )}
                       <tr className="bg-muted/40 font-bold border-t">
-                        <td className="p-2" colSpan={2}>Grand Total</td>
-                        <td className="p-2 text-right">{ptData.totalEmployees}</td>
+                        <td className="p-2" colSpan={2}>
+                          Grand Total
+                        </td>
+                        <td className="p-2 text-right">
+                          {ptData.totalEmployees}
+                        </td>
                         <td className="p-2 text-right">-</td>
                         <td className="p-2 text-right text-emerald-600">
                           ₹{formatINR(ptData.totalTaxDeducted)}
@@ -623,8 +691,12 @@ export function StatutoryReportPreviewModal({
                           <td className="p-2">{r.employeeNo}</td>
                           <td className="p-2 font-medium">{r.name}</td>
                           <td className="p-2">{r.joinDate}</td>
-                          <td className="p-2 text-right">₹{formatINR(r.grossSalary)}</td>
-                          <td className="p-2 text-right font-semibold">₹{formatINR(r.ptAmount)}</td>
+                          <td className="p-2 text-right">
+                            ₹{formatINR(r.grossSalary)}
+                          </td>
+                          <td className="p-2 text-right font-semibold">
+                            ₹{formatINR(r.ptAmount)}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -684,33 +756,61 @@ export function StatutoryReportPreviewModal({
                     {isEsi ? (
                       esiData?.records?.length === 0 ? (
                         <tr>
-                          <td colSpan={9} className="p-8 text-center text-muted-foreground">
+                          <td
+                            colSpan={9}
+                            className="p-8 text-center text-muted-foreground"
+                          >
                             No eligible employees found for this report.
                           </td>
                         </tr>
                       ) : (
                         esiData?.records?.map((r) => (
-                          <tr key={r.employeeId || r.slNo} className="hover:bg-muted/40">
+                          <tr
+                            key={r.employeeId || r.slNo}
+                            className="hover:bg-muted/40"
+                          >
                             {reportId === "esi_upload_excel" ? (
                               <>
-                                <td className="p-2 font-mono">{r.insuranceNo}</td>
+                                <td className="p-2 font-mono">
+                                  {r.insuranceNo}
+                                </td>
                                 <td className="p-2 font-medium">{r.name}</td>
-                                <td className="p-2 text-right">{r.daysWorked}</td>
-                                <td className="p-2 text-right">₹{formatINR(r.esiGross)}</td>
-                                <td className="p-2 text-center">{r.reasonCode}</td>
-                                <td className="p-2 text-center">{r.lastWorkingDay || "-"}</td>
+                                <td className="p-2 text-right">
+                                  {r.daysWorked}
+                                </td>
+                                <td className="p-2 text-right">
+                                  ₹{formatINR(r.esiGross)}
+                                </td>
+                                <td className="p-2 text-center">
+                                  {r.reasonCode}
+                                </td>
+                                <td className="p-2 text-center">
+                                  {r.lastWorkingDay || "-"}
+                                </td>
                               </>
                             ) : (
                               <>
                                 <td className="p-2 text-center">{r.slNo}</td>
                                 <td className="p-2">{r.employeeNo}</td>
-                                <td className="p-2 font-mono">{r.insuranceNo}</td>
+                                <td className="p-2 font-mono">
+                                  {r.insuranceNo}
+                                </td>
                                 <td className="p-2 font-medium">{r.name}</td>
-                                <td className="p-2 text-right">{r.daysWorked}</td>
-                                <td className="p-2 text-right">₹{formatINR(r.esiGross)}</td>
-                                <td className="p-2 text-right">₹{formatINR(r.employeeContribution)}</td>
-                                <td className="p-2 text-right">₹{formatINR(r.employerContribution)}</td>
-                                <td className="p-2 text-right font-semibold">₹{formatINR(r.totalContribution)}</td>
+                                <td className="p-2 text-right">
+                                  {r.daysWorked}
+                                </td>
+                                <td className="p-2 text-right">
+                                  ₹{formatINR(r.esiGross)}
+                                </td>
+                                <td className="p-2 text-right">
+                                  ₹{formatINR(r.employeeContribution)}
+                                </td>
+                                <td className="p-2 text-right">
+                                  ₹{formatINR(r.employerContribution)}
+                                </td>
+                                <td className="p-2 text-right font-semibold">
+                                  ₹{formatINR(r.totalContribution)}
+                                </td>
                               </>
                             )}
                           </tr>
@@ -719,43 +819,67 @@ export function StatutoryReportPreviewModal({
                     ) : reportId === "pf_monthly_statement" ? (
                       pfData?.records?.length === 0 ? (
                         <tr>
-                          <td colSpan={9} className="p-8 text-center text-muted-foreground">
+                          <td
+                            colSpan={9}
+                            className="p-8 text-center text-muted-foreground"
+                          >
                             No eligible employees found for this report.
                           </td>
                         </tr>
                       ) : (
                         pfData?.records?.map((r) => (
-                          <tr key={r.employeeId || r.slNo} className="hover:bg-muted/40">
+                          <tr
+                            key={r.employeeId || r.slNo}
+                            className="hover:bg-muted/40"
+                          >
                             <td className="p-2 text-center">{r.slNo}</td>
                             <td className="p-2">{r.employeeNo}</td>
                             <td className="p-2 font-medium">{r.name}</td>
                             <td className="p-2 font-mono">{r.uan}</td>
-                            <td className="p-2 text-right">₹{formatINR(r.epfWages)}</td>
-                            <td className="p-2 text-right">₹{formatINR(r.eePf)}</td>
-                            <td className="p-2 text-right">₹{formatINR(r.erPf)}</td>
-                            <td className="p-2 text-right">₹{formatINR(r.erEps)}</td>
-                            <td className="p-2 text-right font-semibold">₹{formatINR(r.erTotal)}</td>
+                            <td className="p-2 text-right">
+                              ₹{formatINR(r.epfWages)}
+                            </td>
+                            <td className="p-2 text-right">
+                              ₹{formatINR(r.eePf)}
+                            </td>
+                            <td className="p-2 text-right">
+                              ₹{formatINR(r.erPf)}
+                            </td>
+                            <td className="p-2 text-right">
+                              ₹{formatINR(r.erEps)}
+                            </td>
+                            <td className="p-2 text-right font-semibold">
+                              ₹{formatINR(r.erTotal)}
+                            </td>
                           </tr>
                         ))
                       )
+                    ) : ptData?.records?.length === 0 ? (
+                      <tr>
+                        <td
+                          colSpan={5}
+                          className="p-8 text-center text-muted-foreground"
+                        >
+                          No eligible employees found for this report.
+                        </td>
+                      </tr>
                     ) : (
-                      ptData?.records?.length === 0 ? (
-                        <tr>
-                          <td colSpan={5} className="p-8 text-center text-muted-foreground">
-                            No eligible employees found for this report.
+                      ptData?.records?.map((r) => (
+                        <tr
+                          key={r.employeeId || r.slNo}
+                          className="hover:bg-muted/40"
+                        >
+                          <td className="p-2 text-center">{r.slNo}</td>
+                          <td className="p-2">{r.employeeNo}</td>
+                          <td className="p-2 font-medium">{r.name}</td>
+                          <td className="p-2 text-right">
+                            ₹{formatINR(r.grossSalary)}
+                          </td>
+                          <td className="p-2 text-right font-semibold">
+                            ₹{formatINR(r.ptAmount)}
                           </td>
                         </tr>
-                      ) : (
-                        ptData?.records?.map((r) => (
-                          <tr key={r.employeeId || r.slNo} className="hover:bg-muted/40">
-                            <td className="p-2 text-center">{r.slNo}</td>
-                            <td className="p-2">{r.employeeNo}</td>
-                            <td className="p-2 font-medium">{r.name}</td>
-                            <td className="p-2 text-right">₹{formatINR(r.grossSalary)}</td>
-                            <td className="p-2 text-right font-semibold">₹{formatINR(r.ptAmount)}</td>
-                          </tr>
-                        ))
-                      )
+                      ))
                     )}
                   </tbody>
                 </table>

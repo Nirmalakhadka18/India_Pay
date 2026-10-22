@@ -44,6 +44,9 @@ const modules: Record<string, () => Promise<any>> =
         "./payroll.ts": () => import("./payroll"),
         "./salaries.ts": () => import("./salaries"),
         "./statutory.ts": () => import("./statutory"),
+        "./statutoryReports.ts": () => import("./statutoryReports"),
+        "./epfoEcr.ts": () => import("./epfoEcr"),
+        "./form138Tds.ts": () => import("./form138Tds"),
         "./devAccounts.ts": () => import("./devAccounts"),
         "./devAccountsMutation.ts": () => import("./devAccountsMutation"),
         "./_generated/api.js": () => import("./_generated/api.js"),
@@ -91,14 +94,14 @@ describe("authorization helpers", () => {
     });
   });
 
-  test("requireRole(owner) rejects a plain member", async () => {
+  test("requireRole(admin) rejects a plain member", async () => {
     const t = convexTest(schema, modules);
     const { ws, owner, member } = await seedWorkspace(t);
     await t.run(async (ctx) => {
       await expect(
-        requireRole(ctx, owner, ws, ["owner"]),
+        requireRole(ctx, owner, ws, ["admin"]),
       ).resolves.toBeTruthy();
-      await expect(requireRole(ctx, member, ws, ["owner"])).rejects.toThrow(
+      await expect(requireRole(ctx, member, ws, ["admin"])).rejects.toThrow(
         /Forbidden/,
       );
     });
@@ -106,7 +109,7 @@ describe("authorization helpers", () => {
 });
 
 describe("member management (RBAC + integrity)", () => {
-  test("removeMember refuses to remove the owner", async () => {
+  test("removeMember refuses to remove the last admin", async () => {
     const t = convexTest(schema, modules);
     const { ws, owner } = await seedWorkspace(t);
     const ownerMemberRow = await t.run(
@@ -116,14 +119,14 @@ describe("member management (RBAC + integrity)", () => {
             .query("members")
             .withIndex("by_workspace", (q) => q.eq("workspaceId", ws))
             .collect()
-        ).find((m) => m.role === "owner")?._id,
+        ).find((m) => m.role === "admin" || m.role === "owner")?._id,
     );
     await expect(
       t.withIdentity(as(owner)).mutation(api.orgs.removeMember, {
         workspaceId: ws,
         memberId: ownerMemberRow!,
       }),
-    ).rejects.toThrow(/owner/i);
+    ).rejects.toThrow(/last administrator/i);
   });
 
   test("a plain member cannot remove anyone", async () => {
@@ -1256,14 +1259,14 @@ describe("Owner Account Provisioning, RBAC & Maker-Checker Suite", () => {
       expect(ownerAuth?.secret).toBe("scrypt_mock_owner_hash");
       expect(ownerAuth?.emailVerified).toBe(DEV_OWNER_EMAIL);
 
-      // 2. Verify Members table roles: Owner=owner, Admin=admin, User=member
+      // 2. Verify Members table roles: Admin=admin, User=member (legacy owner provisioned as admin)
       const ownerMember = await ctx.db
         .query("members")
         .withIndex("by_user_workspace", (q) =>
           q.eq("userId", ownerUser!._id).eq("workspaceId", wsId),
         )
         .unique();
-      expect(ownerMember?.role).toBe("owner");
+      expect(ownerMember?.role).toBe("admin");
 
       const adminUser = await ctx.db
         .query("users")
@@ -1365,7 +1368,7 @@ describe("Owner Account Provisioning, RBAC & Maker-Checker Suite", () => {
     const workspaces = await asOwner.query(api.orgs.myWorkspaces, {});
     const targetWs = workspaces.find((w) => w._id === (workspaceId as any));
     expect(targetWs).toBeDefined();
-    expect(targetWs?.role).toBe("owner");
+    expect(targetWs?.role).toBe("admin");
   });
 
   test("Owner can approve/reject payroll run submitted by Admin, but cannot approve run submitted by Owner", async () => {
@@ -2311,6 +2314,414 @@ describe("Owner Dashboard vs Payroll Processing Page Discrepancy Reconciliation"
   });
 });
 
+describe("Simplified 2-Role System (Admin & Member Only RBAC)", () => {
+  async function seedTwoRoleWorkspace(t: ReturnType<typeof convexTest>) {
+    return t.run(async (ctx) => {
+      const adminUser = await ctx.db.insert("users", {
+        name: "Admin User",
+        email: "admin-role@indiapay.test",
+      });
+      const memberUser = await ctx.db.insert("users", {
+        name: "Member User",
+        email: "member-role@indiapay.test",
+      });
+      const otherMemberUser = await ctx.db.insert("users", {
+        name: "Other Member User",
+        email: "other-member@indiapay.test",
+      });
+      const outsiderUser = await ctx.db.insert("users", {
+        name: "Outsider User",
+        email: "outsider-role@indiapay.test",
+      });
 
+      const ws = await ctx.db.insert("workspaces", {
+        name: "IndiaPay Corp",
+        ownerId: adminUser,
+        createdAt: Date.now(),
+      });
 
+      const adminMember = await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: adminUser,
+        role: "admin",
+        createdAt: Date.now(),
+      });
 
+      const memberMember = await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: memberUser,
+        role: "member",
+        createdAt: Date.now(),
+      });
+
+      const otherMemberMember = await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: otherMemberUser,
+        role: "member",
+        createdAt: Date.now(),
+      });
+
+      // Insert employees for member and otherMember
+      const emp1 = await ctx.db.insert("employees", {
+        workspaceId: ws,
+        userId: memberUser,
+        firstName: "Member",
+        lastName: "One",
+        email: "member-role@indiapay.test",
+        status: "active",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        bankAccountHolderName: "Member One",
+        bankName: "HDFC Bank",
+        bankAccountNumber: "123456789012",
+        ifscCode: "HDFC0001234",
+        pan: "ABCDE1234F",
+      });
+
+      const emp2 = await ctx.db.insert("employees", {
+        workspaceId: ws,
+        userId: otherMemberUser,
+        firstName: "Other",
+        lastName: "Member",
+        email: "other-member@indiapay.test",
+        status: "active",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        bankAccountHolderName: "Other Member",
+        bankName: "ICICI Bank",
+        bankAccountNumber: "987654321098",
+        ifscCode: "ICIC0001234",
+        pan: "XYZAB5678C",
+      });
+
+      return {
+        ws,
+        adminUser,
+        adminMember,
+        memberUser,
+        memberMember,
+        otherMemberUser,
+        otherMemberMember,
+        outsiderUser,
+        emp1,
+        emp2,
+      };
+    });
+  }
+
+  test("1. Assignable roles are strictly restricted to admin and member", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, adminUser, memberMember } = await seedTwoRoleWorkspace(t);
+    const asAdmin = t.withIdentity(as(adminUser));
+
+    // Valid invitation roles
+    await asAdmin.mutation(api.orgs.invite, {
+      workspaceId: ws,
+      email: "newadmin@indiapay.test",
+      role: "admin",
+    });
+    await asAdmin.mutation(api.orgs.invite, {
+      workspaceId: ws,
+      email: "newmember@indiapay.test",
+      role: "member",
+    });
+
+    // Invalid roles rejected (including legacy owner)
+    await expect(
+      asAdmin.mutation(api.orgs.invite, {
+        workspaceId: ws,
+        email: "invalid1@indiapay.test",
+        role: "owner" as any,
+      }),
+    ).rejects.toThrow(/Invalid role/);
+
+    await expect(
+      asAdmin.mutation(api.orgs.invite, {
+        workspaceId: ws,
+        email: "invalid2@indiapay.test",
+        role: "superuser" as any,
+      }),
+    ).rejects.toThrow(/Invalid role/);
+
+    // changeRole role validation
+    await expect(
+      asAdmin.mutation(api.orgs.changeRole, {
+        workspaceId: ws,
+        memberId: memberMember,
+        role: "owner" as any,
+      }),
+    ).rejects.toThrow(/Invalid role/);
+  });
+
+  test("2. Admin can access all administrative modules & process payroll", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, adminUser, emp1 } = await seedTwoRoleWorkspace(t);
+    const asAdmin = t.withIdentity(as(adminUser));
+
+    // Admin can add salary
+    await asAdmin.mutation(api.salaries.add, {
+      workspaceId: ws,
+      employeeId: emp1,
+      basicSalary: 30000,
+      allowances: [{ name: "HRA", amount: 15000 }],
+      deductions: [],
+      effectiveDate: Date.now(),
+    });
+
+    // Admin can list all salaries
+    const salaries = await asAdmin.query(api.salaries.getCurrentSalaries, {
+      workspaceId: ws,
+    });
+    expect(salaries.length).toBeGreaterThanOrEqual(1);
+
+    // Admin can view attendance summary
+    const attendanceStats = await asAdmin.query(api.attendance.summary, {
+      workspaceId: ws,
+      startDate: "2026-10-01",
+      endDate: "2026-10-31",
+    });
+    expect(attendanceStats.totalRecords).toBeDefined();
+
+    // Admin can view compliance
+    const compliance = await asAdmin.query(
+      api.compliance.getWorkspaceCompliance,
+      { workspaceId: ws },
+    );
+    expect(compliance).toBeDefined();
+
+    // Admin can run preview calculation
+    const preview = await asAdmin.query(api.payroll.calculatePreview, {
+      workspaceId: ws,
+      periodMonth: "2026-10",
+    });
+    expect(preview.items.length).toBeGreaterThanOrEqual(1);
+
+    // Admin can preview statutory reports
+    const ptReport = await asAdmin.query(
+      api.statutoryReports.getPtReportData,
+      { workspaceId: ws, periodMonth: "2026-10" },
+    );
+    expect(ptReport.periodMonth).toBe("2026-10");
+  });
+
+  test("3. Member can view their own profile, attendance, leaves, and payslips", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, memberUser } = await seedTwoRoleWorkspace(t);
+    const asMember = t.withIdentity(as(memberUser));
+
+    // Member can view their own profile
+    const myProfile = await asMember.query(api.employees.getMyProfile, {
+      workspaceId: ws,
+    });
+    expect(myProfile).toBeDefined();
+    expect(myProfile?.email).toBe("member-role@indiapay.test");
+
+    // Member can view their own payslips
+    const myPayslips = await asMember.query(api.payroll.getMyPayslips, {
+      workspaceId: ws,
+    });
+    expect(Array.isArray(myPayslips)).toBe(true);
+
+    // Member can view their own leaves
+    const myLeaves = await asMember.query(api.leaves.getMyLeaves, {
+      workspaceId: ws,
+    });
+    expect(Array.isArray(myLeaves)).toBe(true);
+  });
+
+  test("4. Member cannot view other employees' salary, bank info, or payslips", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, adminUser, memberUser, emp2 } = await seedTwoRoleWorkspace(t);
+    const asMember = t.withIdentity(as(memberUser));
+
+    // Member cannot list company salaries
+    await expect(
+      asMember.query(api.salaries.getCurrentSalaries, { workspaceId: ws }),
+    ).rejects.toThrow();
+
+    // Member cannot access another employee's payslip directly
+    const runId = await t.run(async (ctx) => {
+      return await ctx.db.insert("payrollRuns", {
+        workspaceId: ws,
+        periodMonth: "2026-10",
+        startDate: "2026-10-01",
+        endDate: "2026-10-31",
+        status: "processed",
+        totalEmployees: 1,
+        totalGrossSalary: 40000,
+        totalNetSalary: 37000,
+        totalLopDeduction: 0,
+        totalCustomDeductions: 0,
+        totalStatutoryDeductions: 3000,
+        createdById: adminUser,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+    });
+
+    // Member (emp1) cannot fetch emp2's payslip
+    await expect(
+      asMember.query(api.payroll.getPayslip, {
+        workspaceId: ws,
+        payrollRunId: runId,
+        employeeId: emp2,
+      }),
+    ).rejects.toThrow(/Forbidden: You can only view your own payslip/i);
+  });
+
+  test("5. Member cannot process payroll, view reports, or invite users", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, memberUser } = await seedTwoRoleWorkspace(t);
+    const asMember = t.withIdentity(as(memberUser));
+
+    // Cannot calculate payroll preview
+    await expect(
+      asMember.query(api.payroll.calculatePreview, {
+        workspaceId: ws,
+        periodMonth: "2026-10",
+      }),
+    ).rejects.toThrow();
+
+    // Cannot view reports
+    await expect(
+      asMember.query(api.statutoryReports.previewPfEcrSummary, {
+        workspaceId: ws,
+        periodMonth: "2026-10",
+      }),
+    ).rejects.toThrow();
+
+    // Cannot invite users
+    await expect(
+      asMember.mutation(api.orgs.invite, {
+        workspaceId: ws,
+        email: "hacked@test.com",
+        role: "admin",
+      }),
+    ).rejects.toThrow();
+  });
+
+  test("6. Member cannot self-promote to Admin", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, memberUser, memberMember } = await seedTwoRoleWorkspace(t);
+    const asMember = t.withIdentity(as(memberUser));
+
+    await expect(
+      asMember.mutation(api.orgs.changeRole, {
+        workspaceId: ws,
+        memberId: memberMember,
+        role: "admin",
+      }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+
+  test("7. Cross-workspace access is rejected for both Admin and Member", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, outsiderUser } = await seedTwoRoleWorkspace(t);
+    const asOutsider = t.withIdentity(as(outsiderUser));
+
+    await expect(
+      asOutsider.query(api.salaries.getCurrentSalaries, { workspaceId: ws }),
+    ).rejects.toThrow(/Forbidden/);
+
+    await expect(
+      asOutsider.query(api.employees.getMyProfile, { workspaceId: ws }),
+    ).rejects.toThrow(/Forbidden/);
+  });
+
+  test("8. Retain at least one Admin: cannot delete or demote the last admin", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, adminUser, adminMember } = await seedTwoRoleWorkspace(t);
+    const asAdmin = t.withIdentity(as(adminUser));
+
+    // Attempt to demote the sole admin to member
+    await expect(
+      asAdmin.mutation(api.orgs.changeRole, {
+        workspaceId: ws,
+        memberId: adminMember,
+        role: "member",
+      }),
+    ).rejects.toThrow(/last administrator/i);
+
+    // Attempt to remove the sole admin
+    await expect(
+      asAdmin.mutation(api.orgs.removeMember, {
+        workspaceId: ws,
+        memberId: adminMember,
+      }),
+    ).rejects.toThrow(/last administrator/i);
+
+    // If a second admin is added, demoting one is permitted
+    const secondAdminUser = await t.run(async (ctx) => {
+      const u = await ctx.db.insert("users", {
+        email: "admin2@indiapay.test",
+      });
+      await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: u,
+        role: "admin",
+        createdAt: Date.now(),
+      });
+      return u;
+    });
+
+    // Now demoting adminMember succeeds because secondAdminUser exists
+    await asAdmin.mutation(api.orgs.changeRole, {
+      workspaceId: ws,
+      memberId: adminMember,
+      role: "member",
+    });
+
+    const updatedRole = await t.run(async (ctx) => (await ctx.db.get(adminMember))?.role);
+    expect(updatedRole).toBe("member");
+  });
+
+  test("9. migrateOwnerRolesToAdmin safely migrates legacy owner roles and is repeatable", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, adminUser } = await seedTwoRoleWorkspace(t);
+
+    // Insert a legacy owner member and legacy owner invite
+    const { legacyMemberId, legacyInviteId } = await t.run(async (ctx) => {
+      const legacyUser = await ctx.db.insert("users", {
+        email: "legacy-owner@indiapay.test",
+      });
+      const mId = await ctx.db.insert("members", {
+        workspaceId: ws,
+        userId: legacyUser,
+        role: "owner" as any,
+        createdAt: Date.now(),
+      });
+      const invId = await ctx.db.insert("invites", {
+        workspaceId: ws,
+        email: "legacy-invite@indiapay.test",
+        role: "owner" as any,
+        invitedBy: adminUser,
+        accepted: false,
+        createdAt: Date.now(),
+      });
+      return { legacyMemberId: mId, legacyInviteId: invId };
+    });
+
+    const asAdmin = t.withIdentity(as(adminUser));
+
+    // Run migration
+    const result1 = await asAdmin.mutation(api.orgs.migrateOwnerRolesToAdmin, {
+      workspaceId: ws,
+    });
+    expect(result1.migratedMembersCount).toBe(1);
+    expect(result1.migratedInvitesCount).toBe(1);
+
+    // Verify database record has role: "admin"
+    const migratedMember = await t.run(async (ctx) => ctx.db.get(legacyMemberId));
+    expect(migratedMember?.role).toBe("admin");
+
+    const migratedInvite = await t.run(async (ctx) => ctx.db.get(legacyInviteId));
+    expect(migratedInvite?.role).toBe("admin");
+
+    // Repeatable / idempotent: second run updates 0 records
+    const result2 = await asAdmin.mutation(api.orgs.migrateOwnerRolesToAdmin, {
+      workspaceId: ws,
+    });
+    expect(result2.migratedMembersCount).toBe(0);
+    expect(result2.migratedInvitesCount).toBe(0);
+  });
+});

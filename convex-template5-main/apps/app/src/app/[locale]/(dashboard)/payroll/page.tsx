@@ -34,7 +34,7 @@ import { toast } from "sonner";
 
 export default function PayrollPage() {
   return (
-    <RoleGuard allowedRoles={["owner", "admin"]}>
+    <RoleGuard allowedRoles={["admin"]}>
       <PayrollContent />
     </RoleGuard>
   );
@@ -44,8 +44,8 @@ function PayrollContent() {
   const { current, workspaces } = useWorkspace();
   const workspaceId = current;
   const currentWorkspace = workspaces.find((w) => w._id === current);
-  const isOwner =
-    currentWorkspace?.role === "owner" || currentWorkspace?.role === "admin";
+  const isAdmin =
+    currentWorkspace?.role === "admin" || currentWorkspace?.role === "owner";
 
   // Selected period month (YYYY-MM)
   const currentMonthStr = new Date().toISOString().slice(0, 7);
@@ -132,7 +132,7 @@ function PayrollContent() {
         msg.toLowerCase().includes("forbidden")
       ) {
         toast.error(
-          "Forbidden: Only workspace Owners can approve or reject payroll runs.",
+          "Forbidden: Only workspace Administrators can approve or reject payroll runs.",
         );
       } else {
         toast.error(msg || "Operation failed");
@@ -405,57 +405,31 @@ function PayrollContent() {
 
                 {activeRun.status === "pending_approval" && (
                   <>
-                    {isOwner ? (
-                      <>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => setIsRejectDialogOpen(true)}
-                          disabled={isProcessing}
-                        >
-                          Reject
-                        </Button>
-                        <Button
-                          size="sm"
-                          className="bg-green-600 hover:bg-green-700 text-white"
-                          onClick={() =>
-                            handleAction(
-                              () =>
-                                approveRun({
-                                  workspaceId: workspaceId!,
-                                  payrollRunId: activeRun._id,
-                                }),
-                              "Payroll approved",
-                            )
-                          }
-                          disabled={isProcessing}
-                        >
-                          Approve
-                        </Button>
-                      </>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded">
-                          Awaiting Owner Approval (Owner Only)
-                        </span>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          disabled
-                          title="Only workspace Owners can reject payroll runs"
-                        >
-                          Reject
-                        </Button>
-                        <Button
-                          size="sm"
-                          disabled
-                          className="opacity-50"
-                          title="Only workspace Owners can approve payroll runs"
-                        >
-                          Approve
-                        </Button>
-                      </div>
-                    )}
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => setIsRejectDialogOpen(true)}
+                      disabled={isProcessing}
+                    >
+                      Reject
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                      onClick={() =>
+                        handleAction(
+                          () =>
+                            approveRun({
+                              workspaceId: workspaceId!,
+                              payrollRunId: activeRun._id,
+                            }),
+                          "Payroll approved",
+                        )
+                      }
+                      disabled={isProcessing}
+                    >
+                      Approve
+                    </Button>
                   </>
                 )}
 

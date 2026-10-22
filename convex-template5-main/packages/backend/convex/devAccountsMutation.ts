@@ -234,8 +234,7 @@ export const provisionDevAccountsMutation = internalMutation({
       }
     }
 
-    // ── 5. Ensure workspace memberships ─────────────────────────────────
-    // Owner: role="owner"
+    // Formerly Owner, now Admin: role="admin"
     const ownerMembership = await ctx.db
       .query("members")
       .withIndex("by_user_workspace", (q) =>
@@ -246,11 +245,11 @@ export const provisionDevAccountsMutation = internalMutation({
       await ctx.db.insert("members", {
         workspaceId,
         userId: ownerUserId,
-        role: "owner",
+        role: "admin",
         createdAt: now,
       });
-    } else if (ownerMembership.role !== "owner") {
-      await ctx.db.patch(ownerMembership._id, { role: "owner" });
+    } else if (ownerMembership.role === "owner") {
+      await ctx.db.patch(ownerMembership._id, { role: "admin" });
     }
 
     // Admin: role="admin" (do not promote to owner)

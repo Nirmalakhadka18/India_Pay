@@ -19,8 +19,25 @@ const isSignInPage = createRouteMatcher([
 ]);
 
 export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {
-  const isAuthenticated = await convexAuth.isAuthenticated();
   const isSignIn = isSignInPage(request);
+  const isExpired =
+    request.nextUrl.searchParams.has("expired") ||
+    request.nextUrl.searchParams.has("force");
+
+  // If redirecting to login with expired=1, strip the stale cookies and show the login page
+  if (isSignIn && isExpired) {
+    const response = I18nMiddleware(request);
+    const host = request.headers.get("Host") ?? "";
+    const isLocalhost =
+      host.includes("localhost") || host.includes("127.0.0.1");
+    const prefix = isLocalhost ? "" : "__Host-";
+    response.cookies.delete(prefix + "__convexAuthJWT");
+    response.cookies.delete(prefix + "__convexAuthRefreshToken");
+    response.cookies.delete(prefix + "__convexAuthOAuthVerifier");
+    return response;
+  }
+
+  const isAuthenticated = await convexAuth.isAuthenticated();
   if (isSignIn && isAuthenticated) {
     return nextjsMiddlewareRedirect(request, "/");
   }

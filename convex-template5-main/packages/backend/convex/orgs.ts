@@ -8,7 +8,7 @@ import { bump } from "./counters";
 import { requireDevSeed } from "./devGuard";
 import { notify } from "./notifications";
 
-type Role = "owner" | "admin" | "member";
+export type Role = "admin" | "member";
 
 async function membership(
   ctx: QueryCtx,
@@ -27,10 +27,14 @@ export async function requireRole(
   ctx: QueryCtx,
   userId: Id<"users">,
   workspaceId: Id<"workspaces">,
-  roles: Role[],
+  roles: (Role | "owner")[],
 ) {
   const m = await membership(ctx, userId, workspaceId);
-  if (!m || !roles.includes(m.role as Role)) throw new ConvexError("Forbidden");
+  if (!m) throw new ConvexError("Forbidden");
+  const effectiveRole = m.role === "owner" ? "admin" : m.role;
+  if (!roles.includes(effectiveRole as Role) && !roles.includes(m.role as any)) {
+    throw new ConvexError("Forbidden");
+  }
   return m;
 }
 
@@ -39,7 +43,7 @@ export async function requireMember(
   userId: Id<"users">,
   workspaceId: Id<"workspaces">,
 ) {
-  return requireRole(ctx, userId, workspaceId, ["owner", "admin", "member"]);
+  return requireRole(ctx, userId, workspaceId, ["admin", "member"]);
 }
 
 async function createWorkspaceImpl(
@@ -56,7 +60,7 @@ async function createWorkspaceImpl(
   await ctx.db.insert("members", {
     workspaceId,
     userId,
-    role: "owner",
+    role: "admin",
     createdAt: now,
   });
   await audit(ctx, workspaceId, userId, "workspace.create", { name });
@@ -148,7 +152,10 @@ export const invite = mutation({
   handler: async (ctx, { workspaceId, email, role }) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Not authenticated");
-    await requireRole(ctx, userId, workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, workspaceId, ["admin"]);
+    if (!["admin", "member"].includes(role)) {
+      throw new ConvexError("Invalid role. Role must be admin or member.");
+    }
     const id = await ctx.db.insert("invites", {
       workspaceId,
       email: email.toLowerCase(),
@@ -204,7 +211,7 @@ export const pendingInvites = query({
   handler: async (ctx, { workspaceId }) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) return [];
-    await requireRole(ctx, userId, workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, workspaceId, ["admin"]);
     return ctx.db
       .query("invites")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", workspaceId))
@@ -296,10 +303,27 @@ export const removeMember = mutation({
   handler: async (ctx, { workspaceId, memberId }) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, workspaceId, ["admin"]);
     const m = await ctx.db.get(memberId);
     if (!m || m.workspaceId !== workspaceId) throw new ConvexError("Not found");
-    if (m.role === "owner") throw new ConvexError("Cannot remove the owner");
+    if (m.role === "admin" || m.role === "owner") {
+      const otherAdmin = await ctx.db
+        .query("members")
+        .withIndex("by_workspace", (q) => q.eq("workspaceId", workspaceId))
+        .filter((q) =>
+          q.and(
+            q.or(
+              q.eq(q.field("role"), "admin"),
+              q.eq(q.field("role"), "owner"),
+            ),
+            q.neq(q.field("_id"), memberId),
+          ),
+        )
+        .first();
+      if (!otherAdmin) {
+        throw new ConvexError("Cannot remove the last administrator of the workspace");
+      }
+    }
     await ctx.db.delete(memberId);
     await bump(ctx, workspaceId, "members", -1);
     await audit(ctx, workspaceId, userId, "member.remove", {
@@ -317,17 +341,81 @@ export const changeRole = mutation({
   handler: async (ctx, { workspaceId, memberId, role }) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, workspaceId, ["admin"]);
     if (!["admin", "member"].includes(role))
       throw new ConvexError("Invalid role");
     const m = await ctx.db.get(memberId);
     if (!m || m.workspaceId !== workspaceId) throw new ConvexError("Not found");
-    if (m.role === "owner")
-      throw new ConvexError("Cannot change the owner's role");
+    if ((m.role === "admin" || m.role === "owner") && role !== "admin") {
+      const otherAdmin = await ctx.db
+        .query("members")
+        .withIndex("by_workspace", (q) => q.eq("workspaceId", workspaceId))
+        .filter((q) =>
+          q.and(
+            q.or(
+              q.eq(q.field("role"), "admin"),
+              q.eq(q.field("role"), "owner"),
+            ),
+            q.neq(q.field("_id"), memberId),
+          ),
+        )
+        .first();
+      if (!otherAdmin) {
+        throw new ConvexError("Cannot demote the last administrator of the workspace");
+      }
+    }
     await ctx.db.patch(memberId, { role });
     await audit(ctx, workspaceId, userId, "member.role", {
       member: m.userId,
       role,
     });
+  },
+});
+
+/**
+ * Migration helper: Safely and auditably migrate any existing legacy "owner" member/invite records to "admin".
+ */
+export const migrateOwnerRolesToAdmin = mutation({
+  args: { workspaceId: v.optional(v.id("workspaces")) },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError("Not authenticated");
+
+    if (args.workspaceId) {
+      await requireRole(ctx, userId, args.workspaceId, ["admin"]);
+    }
+    const allMembers = args.workspaceId
+      ? await ctx.db
+          .query("members")
+          .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId!))
+          .collect()
+      : await ctx.db.query("members").collect();
+
+    const ownerMembers = allMembers.filter((m) => m.role === "owner");
+    for (const m of ownerMembers) {
+      await ctx.db.patch(m._id, { role: "admin" });
+      await audit(ctx, m.workspaceId, userId, "member.role_migration", {
+        memberId: m._id,
+        userId: m.userId,
+        oldRole: "owner",
+        newRole: "admin",
+      });
+    }
+
+    const allInvites = args.workspaceId
+      ? await ctx.db
+          .query("invites")
+          .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId!))
+          .collect()
+      : await ctx.db.query("invites").collect();
+    const ownerInvites = allInvites.filter((i) => i.role === "owner");
+    for (const i of ownerInvites) {
+      await ctx.db.patch(i._id, { role: "admin" });
+    }
+
+    return {
+      migratedMembersCount: ownerMembers.length,
+      migratedInvitesCount: ownerInvites.length,
+    };
   },
 });

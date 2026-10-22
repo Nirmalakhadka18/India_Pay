@@ -19,7 +19,7 @@ import { toast } from "sonner";
 
 export default function SalariesPage() {
   return (
-    <RoleGuard allowedRoles={["owner", "admin"]}>
+    <RoleGuard allowedRoles={["admin"]}>
       <SalariesContent />
     </RoleGuard>
   );

@@ -1,5 +1,19 @@
 "use client";
 
+import {
+  downloadEsiMonthlyUploadExcel,
+  downloadPfEcrExcel,
+  downloadPfEcrTxt,
+} from "@/lib/statutory-excel";
+import {
+  downloadEsiChallanReportPdf,
+  downloadEsiMonthlyStatementPdf,
+  downloadKarnatakaForm5APdf,
+  downloadPfCombinedChallanReportPdf,
+  downloadPfMonthlyStatementPdf,
+  downloadPtMonthlyStatementPdf,
+  formatINR,
+} from "@/lib/statutory-pdf";
 import { useWorkspace } from "@/lib/useWorkspace";
 import { api } from "@v1/backend/convex/_generated/api";
 import type { Id } from "@v1/backend/convex/_generated/dataModel";
@@ -24,27 +38,10 @@ import {
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
-  downloadEsiChallanReportPdf,
-  downloadEsiMonthlyStatementPdf,
-  downloadKarnatakaForm5APdf,
-  downloadPfCombinedChallanReportPdf,
-  downloadPfMonthlyStatementPdf,
-  downloadPtMonthlyStatementPdf,
-  formatINR,
-} from "@/lib/statutory-pdf";
-import {
-  downloadEsiMonthlyUploadExcel,
-  downloadPfEcrExcel,
-  downloadPfEcrTxt,
-} from "@/lib/statutory-excel";
-import {
   type StatutoryReportId,
   StatutoryReportPreviewModal,
 } from "./preview-modal";
-import type {
-  EsiEmployeeRecordType,
-  PfEmployeeRecordType,
-} from "./types";
+import type { EsiEmployeeRecordType, PfEmployeeRecordType } from "./types";
 
 interface StatutoryReportsSectionProps {
   initialPeriodMonth?: string;
@@ -65,7 +62,7 @@ export function StatutoryReportsSection({
   // Find latest period from runs, or fallback to current or initial
   const defaultPeriod =
     initialPeriodMonth ||
-    (runs.length > 0 ? (runs[0]?.periodMonth ?? "2026-10") : "2026-10");
+    (runs.length > 0 ? runs[0]?.periodMonth ?? "2026-10" : "2026-10");
 
   const [periodMonth, setPeriodMonth] = useState<string>(defaultPeriod);
 
@@ -101,7 +98,8 @@ export function StatutoryReportsSection({
   const logDownload = useMutation(api.statutoryReports.logReportDownload);
 
   const activeRun = runs.find((r) => r.periodMonth === periodMonth);
-  const runStatus = activeRun?.status || (esiData?.hasRun ? esiData.runStatus : "none");
+  const runStatus =
+    activeRun?.status || (esiData?.hasRun ? esiData.runStatus : "none");
   const isFinalized = runStatus === "processed";
 
   const handleDownloadDirect = async (
@@ -291,7 +289,8 @@ export function StatutoryReportsSection({
             )}
           </div>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Download standard statutory filing statements, challans, and upload formats for ESI, PF, and Professional Tax.
+            Download standard statutory filing statements, challans, and upload
+            formats for ESI, PF, and Professional Tax.
           </p>
         </div>
 
@@ -335,10 +334,13 @@ export function StatutoryReportsSection({
         <div className="flex items-center gap-2 p-3 bg-muted/40 border border-border/80 rounded-lg text-xs text-muted-foreground">
           <Info className="h-4 w-4 text-sky-500 shrink-0" />
           <span>
-            No payroll run found for <strong>{periodMonth}</strong>. Statutory figures reflect ₹0.00 until a payroll run is processed for this month.
+            No payroll run found for <strong>{periodMonth}</strong>. Statutory
+            figures reflect ₹0.00 until a payroll run is processed for this
+            month.
             {runs.length > 0 && (
               <>
-                {" "}Switch to an existing run:{" "}
+                {" "}
+                Switch to an existing run:{" "}
                 {runs.map((r) => (
                   <button
                     key={r._id}
@@ -368,7 +370,8 @@ export function StatutoryReportsSection({
                 ESI - EMPLOYEES&apos; STATE INSURANCE FUND
               </h3>
               <p className="text-[11px] text-white/80">
-                {esiData?.totalEmployeesCovered || 0} covered &bull; ₹{formatINR(esiData?.totalContribution || 0)} total
+                {esiData?.totalEmployeesCovered || 0} covered &bull; ₹
+                {formatINR(esiData?.totalContribution || 0)} total
               </p>
             </div>
           </div>
@@ -402,7 +405,9 @@ export function StatutoryReportsSection({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleDownloadDirect("esi_monthly_statement", "pdf")}
+                  onClick={() =>
+                    handleDownloadDirect("esi_monthly_statement", "pdf")
+                  }
                   className="h-7 px-2 text-xs gap-1 border-sky-300 dark:border-sky-800 text-sky-700 dark:text-sky-300 hover:bg-sky-50 dark:hover:bg-sky-950/50"
                   title="Download PDF"
                 >
@@ -476,7 +481,9 @@ export function StatutoryReportsSection({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleDownloadDirect("esi_upload_excel", "excel")}
+                  onClick={() =>
+                    handleDownloadDirect("esi_upload_excel", "excel")
+                  }
                   className="h-7 px-2 text-xs gap-1 border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 font-semibold"
                   title="Download Excel"
                 >
@@ -498,7 +505,9 @@ export function StatutoryReportsSection({
                 PF - PROVIDENT FUND
               </h3>
               <p className="text-[11px] text-white/80">
-                {pfData?.totalMembers || 0} members &bull; ₹{formatINR(pfData?.accountBreakdown?.totalRemittance || 0)} remittance
+                {pfData?.totalMembers || 0} members &bull; ₹
+                {formatINR(pfData?.accountBreakdown?.totalRemittance || 0)}{" "}
+                remittance
               </p>
             </div>
           </div>
@@ -532,7 +541,9 @@ export function StatutoryReportsSection({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleDownloadDirect("pf_monthly_statement", "pdf")}
+                  onClick={() =>
+                    handleDownloadDirect("pf_monthly_statement", "pdf")
+                  }
                   className="h-7 px-2 text-xs gap-1 border-teal-300 dark:border-teal-800 text-teal-700 dark:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-950/50"
                   title="Download PDF"
                 >
@@ -569,7 +580,9 @@ export function StatutoryReportsSection({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleDownloadDirect("pf_combined_challan", "pdf")}
+                  onClick={() =>
+                    handleDownloadDirect("pf_combined_challan", "pdf")
+                  }
                   className="h-7 px-2 text-xs gap-1 border-teal-300 dark:border-teal-800 text-teal-700 dark:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-950/50"
                   title="Download PDF"
                 >
@@ -640,7 +653,8 @@ export function StatutoryReportsSection({
                 PT - PROFESSION TAX
               </h3>
               <p className="text-[11px] text-white/80">
-                {selectedState} &bull; {ptData?.totalEmployees || 0} employees &bull; ₹{formatINR(ptData?.totalTaxDeducted || 0)} tax
+                {selectedState} &bull; {ptData?.totalEmployees || 0} employees
+                &bull; ₹{formatINR(ptData?.totalTaxDeducted || 0)} tax
               </p>
             </div>
           </div>
@@ -674,7 +688,9 @@ export function StatutoryReportsSection({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleDownloadDirect("pt_monthly_statement", "pdf")}
+                  onClick={() =>
+                    handleDownloadDirect("pt_monthly_statement", "pdf")
+                  }
                   className="h-7 px-2 text-xs gap-1 border-indigo-300 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50"
                   title="Download PDF"
                 >
@@ -711,7 +727,9 @@ export function StatutoryReportsSection({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleDownloadDirect("karnataka_form_5a", "pdf")}
+                  onClick={() =>
+                    handleDownloadDirect("karnataka_form_5a", "pdf")
+                  }
                   className="h-7 px-2 text-xs gap-1 border-indigo-300 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50"
                   title="Download PDF"
                 >

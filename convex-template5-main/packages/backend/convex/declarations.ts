@@ -329,7 +329,7 @@ export const listDeclarations = query({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     let q = ctx.db
       .query("taxDeclarations")
@@ -373,7 +373,7 @@ export const reviewDeclaration = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const decl = await ctx.db.get(args.declarationId);
     if (!decl || decl.workspaceId !== args.workspaceId) {

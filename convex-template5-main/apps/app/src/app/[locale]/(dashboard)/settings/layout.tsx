@@ -57,7 +57,7 @@ export default function Layout({
   params,
 }: { children: React.ReactNode; params: { locale: string } }) {
   return (
-    <RoleGuard allowedRoles={["owner", "admin"]}>
+    <RoleGuard allowedRoles={["admin"]}>
       <I18nProviderClient locale={params.locale}>
         <LayoutContainer>{children}</LayoutContainer>
       </I18nProviderClient>

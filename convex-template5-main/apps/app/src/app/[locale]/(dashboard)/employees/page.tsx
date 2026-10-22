@@ -39,7 +39,7 @@ import { toast } from "sonner";
 
 export default function EmployeesPage() {
   return (
-    <RoleGuard allowedRoles={["owner", "admin"]}>
+    <RoleGuard allowedRoles={["admin"]}>
       <EmployeesContent />
     </RoleGuard>
   );

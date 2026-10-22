@@ -169,7 +169,7 @@ export const listTdsChallans = query({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     return await ctx.db
       .query("tdsChallans")
@@ -209,7 +209,7 @@ export const saveTdsChallan = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const cleanBsr = args.bsrCode.trim();
     if (!/^\d{7}$/.test(cleanBsr)) {
@@ -292,7 +292,7 @@ export const deleteTdsChallan = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const existing = await ctx.db.get(args.challanId);
     if (!existing || existing.workspaceId !== args.workspaceId) {
@@ -320,7 +320,7 @@ export const previewQuarterlyTds = query({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const workspace = await ctx.db.get(args.workspaceId);
     if (!workspace) throw new ConvexError("Workspace not found");
@@ -1150,7 +1150,7 @@ export const logTdsExportDownload = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     await audit(ctx, args.workspaceId, userId, "tds.export_download", {
       formType: args.formType,

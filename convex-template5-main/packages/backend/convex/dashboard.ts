@@ -16,7 +16,7 @@ export const stats = query({
   handler: async (ctx, { workspaceId, periodMonth }) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) return null;
-    const m = await requireRole(ctx, userId, workspaceId, ["owner", "admin"]);
+    const m = await requireRole(ctx, userId, workspaceId, ["admin"]);
     const c = await readCounters(ctx, workspaceId);
     // usage rows are few per workspace (one per metric) — a small scan is fine.
     const usage = await ctx.db
@@ -181,7 +181,7 @@ export const adminOperations = query({
   handler: async (ctx, { workspaceId }) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) return null;
-    const m = await requireRole(ctx, userId, workspaceId, ["owner", "admin"]);
+    const m = await requireRole(ctx, userId, workspaceId, ["admin"]);
 
     const activeEmployees = await ctx.db
       .query("employees")
@@ -419,7 +419,7 @@ export const ownerExecutiveSummary = query({
   handler: async (ctx, { workspaceId, periodMonth }) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) return null;
-    const m = await requireRole(ctx, userId, workspaceId, ["owner", "admin"]);
+    const m = await requireRole(ctx, userId, workspaceId, ["admin"]);
 
     // Active employees
     const activeEmployees = await ctx.db

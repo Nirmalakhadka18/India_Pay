@@ -32,7 +32,7 @@ import { toast } from "sonner";
 
 export default function AttendancePage() {
   return (
-    <RoleGuard allowedRoles={["owner", "admin"]}>
+    <RoleGuard allowedRoles={["admin"]}>
       <AttendanceContent />
     </RoleGuard>
   );

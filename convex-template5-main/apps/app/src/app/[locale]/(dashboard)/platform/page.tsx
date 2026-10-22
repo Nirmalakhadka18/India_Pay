@@ -182,10 +182,10 @@ export default function PlatformPage() {
                   key={m._id}
                   left={m.name ?? m.email ?? "—"}
                   right={
-                    canManage && m.role !== "owner" ? (
+                    canManage ? (
                       <span className="flex items-center gap-2">
                         <select
-                          value={m.role}
+                          value={m.role === "owner" ? "admin" : m.role}
                           onChange={async (e) => {
                             await changeRole({
                               workspaceId: current,

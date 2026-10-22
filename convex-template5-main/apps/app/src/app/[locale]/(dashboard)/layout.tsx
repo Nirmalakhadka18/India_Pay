@@ -11,11 +11,20 @@ import { Topbar } from "./_components/topbar";
 export default async function Layout({
   children,
 }: { children: React.ReactNode }) {
-  const user = await fetchQuery(
-    api.users.getUser,
-    {},
-    { token: await convexAuthNextjsToken() },
-  );
+  let user = null;
+  try {
+    const token = await convexAuthNextjsToken();
+    if (!token) {
+      return redirect("/login");
+    }
+    user = await fetchQuery(api.users.getUser, {}, { token });
+  } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_REDIRECT")) {
+      throw error;
+    }
+    return redirect("/login?expired=1");
+  }
+
   if (!user) {
     return redirect("/login");
   }

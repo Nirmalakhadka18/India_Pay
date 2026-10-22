@@ -129,7 +129,7 @@ export const getEsiReportData = query({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const workspace = await ctx.db.get(args.workspaceId);
     if (!workspace) throw new ConvexError("Workspace not found");
@@ -348,7 +348,7 @@ export const getPfReportData = query({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const workspace = await ctx.db.get(args.workspaceId);
     if (!workspace) throw new ConvexError("Workspace not found");
@@ -638,7 +638,7 @@ export const getPtReportData = query({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const workspace = await ctx.db.get(args.workspaceId);
     if (!workspace) throw new ConvexError("Workspace not found");
@@ -841,7 +841,7 @@ export const logReportDownload = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     await audit(ctx, args.workspaceId, userId, "statutory.report_download", {
       reportType: args.reportType,

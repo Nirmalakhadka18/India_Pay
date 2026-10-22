@@ -22,14 +22,14 @@ export const record = internalMutation({
 });
 
 /** Reactive: the current user's recent audit entries (for the dashboard).
- * RESTRICTED: Only Workspace Owners and Administrators can view company-wide audit trails.
+ * RESTRICTED: Only Workspace Administrators can view company-wide audit trails.
  */
 export const recent = query({
   args: { workspaceId: v.id("workspaces") },
   handler: async (ctx, { workspaceId }) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) return [];
-    await requireRole(ctx, userId, workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, workspaceId, ["admin"]);
     const logs = await ctx.db
       .query("auditLogs")
       .withIndex("by_workspace", (q) => q.eq("workspaceId", workspaceId))

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 interface RoleGuardProps {
-  allowedRoles: Array<"owner" | "admin" | "member">;
+  allowedRoles: Array<"admin" | "member">;
   children: React.ReactNode;
   redirectTo?: string;
 }
@@ -21,15 +21,18 @@ export function RoleGuard({
 
   const currentWorkspace = workspaces.find((w) => w._id === current);
   const currentRole = currentWorkspace?.role as
-    | "owner"
     | "admin"
     | "member"
+    | "owner" // safe backward compatibility for unmigrated sessions
     | undefined;
 
   // We are loaded when workspace data is available and role is known
   const isLoaded =
     workspaces.length > 0 && current !== null && currentRole !== undefined;
-  const isAuthorized = currentRole ? allowedRoles.includes(currentRole) : false;
+  const normalizedRole = currentRole === "owner" ? "admin" : currentRole;
+  const isAuthorized = normalizedRole
+    ? allowedRoles.includes(normalizedRole as "admin" | "member")
+    : false;
 
   useEffect(() => {
     if (isLoaded && !isAuthorized) {

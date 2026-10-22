@@ -11,7 +11,7 @@ import { toast } from "sonner";
 
 export default function CompliancePage() {
   return (
-    <RoleGuard allowedRoles={["owner", "admin"]}>
+    <RoleGuard allowedRoles={["admin"]}>
       <ComplianceContent />
     </RoleGuard>
   );

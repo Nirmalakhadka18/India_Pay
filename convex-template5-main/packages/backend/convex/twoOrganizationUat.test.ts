@@ -4,8 +4,57 @@ import { api } from "./_generated/api";
 import type { Id, MutationCtx } from "./_generated/dataModel";
 import schema from "./schema";
 
-// biome-ignore lint/suspicious/noExplicitAny: convexTest modules map
-const modules: any = import.meta.glob("./**/*.*s");
+// Discover function modules for convex-test (includes _generated, excludes *.test.ts).
+const modules: Record<string, () => Promise<any>> =
+  typeof (import.meta as any).glob === "function"
+    ? (import.meta as any).glob(["./**/*.*s", "!./**/*.test.*"])
+    : {
+        "./ResendOTP.ts": () => import("./ResendOTP"),
+        "./apiKeys.ts": () => import("./apiKeys"),
+        "./audit.ts": () => import("./audit"),
+        "./auditLog.ts": () => import("./auditLog"),
+        "./auth.config.ts": () => import("./auth.config"),
+        "./auth.ts": () => import("./auth"),
+        "./backend.ts": () => import("./backend"),
+        "./counters.ts": () => import("./counters"),
+        "./dashboard.ts": () => import("./dashboard"),
+        "./devGuard.ts": () => import("./devGuard"),
+        "./email.ts": () => import("./email"),
+        "./env.ts": () => import("./env"),
+        "./files.ts": () => import("./files"),
+        "./http.ts": () => import("./http"),
+        "./init.ts": () => import("./init"),
+        "./jobs.ts": () => import("./jobs"),
+        "./notifications.ts": () => import("./notifications"),
+        "./orgs.ts": () => import("./orgs"),
+        "./passwordProviders.ts": () => import("./passwordProviders"),
+        "./schema.ts": () => import("./schema"),
+        "./seed.ts": () => import("./seed"),
+        "./sessions.ts": () => import("./sessions"),
+        "./subscriptions.ts": () => import("./subscriptions"),
+        "./usage.ts": () => import("./usage"),
+        "./users.ts": () => import("./users"),
+        "./web.ts": () => import("./web"),
+        "./attendance.ts": () => import("./attendance"),
+        "./compliance.ts": () => import("./compliance"),
+        "./employees.ts": () => import("./employees"),
+        "./leaves.ts": () => import("./leaves"),
+        "./lop.ts": () => import("./lop"),
+        "./payroll.ts": () => import("./payroll"),
+        "./salaries.ts": () => import("./salaries"),
+        "./statutory.ts": () => import("./statutory"),
+        "./devAccounts.ts": () => import("./devAccounts"),
+        "./devAccountsMutation.ts": () => import("./devAccountsMutation"),
+        "./statutoryReports.ts": () => import("./statutoryReports"),
+        "./epfoEcr.ts": () => import("./epfoEcr"),
+        "./form138Tds.ts": () => import("./form138Tds"),
+        "./declarations.ts": () => import("./declarations"),
+        "./professionalTax.ts": () => import("./professionalTax"),
+        "./lwf.ts": () => import("./lwf"),
+        "./statutoryTds.ts": () => import("./statutoryTds"),
+        "./_generated/api.js": () => import("./_generated/api.js"),
+        "./_generated/server.js": () => import("./_generated/server.js"),
+      };
 
 const as = (userId: string) => ({ subject: `${userId}|sess_${userId}` });
 

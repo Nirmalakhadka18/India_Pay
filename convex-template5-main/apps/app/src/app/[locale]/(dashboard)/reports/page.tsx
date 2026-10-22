@@ -23,7 +23,7 @@ import { useState } from "react";
 
 export default function ReportsPage() {
   return (
-    <RoleGuard allowedRoles={["owner", "admin"]}>
+    <RoleGuard allowedRoles={["admin"]}>
       <ReportsContent />
     </RoleGuard>
   );
@@ -135,107 +135,110 @@ function ReportsContent() {
         {!selectedRunId ? (
           <>
             <div className="rounded-lg border border-border bg-card overflow-hidden">
-            <div className="px-4 py-3 border-b border-border bg-muted/30">
-              <h2 className="font-medium text-sm">Payroll History</h2>
-            </div>
-            <table className="w-full text-left text-sm">
-              <thead className="bg-muted/50 text-muted-foreground">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Period</th>
-                  <th className="px-4 py-3 font-medium">Status</th>
-                  <th className="px-4 py-3 font-medium">Employees</th>
-                  <th className="px-4 py-3 font-medium">Total Gross</th>
-                  <th className="px-4 py-3 font-medium text-red-500">
-                    Deductions
-                  </th>
-                  <th className="px-4 py-3 font-medium text-emerald-500">
-                    Total Net
-                  </th>
-                  <th className="px-4 py-3 font-medium text-indigo-500">
-                    Employer Contr.
-                  </th>
-                  <th className="px-4 py-3 font-medium text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/50">
-                {!runs ? (
+              <div className="px-4 py-3 border-b border-border bg-muted/30">
+                <h2 className="font-medium text-sm">Payroll History</h2>
+              </div>
+              <table className="w-full text-left text-sm">
+                <thead className="bg-muted/50 text-muted-foreground">
                   <tr>
-                    <td
-                      colSpan={6}
-                      className="px-4 py-8 text-center text-muted-foreground"
-                    >
-                      <Loader2 className="mx-auto h-5 w-5 animate-spin" />
-                    </td>
+                    <th className="px-4 py-3 font-medium">Period</th>
+                    <th className="px-4 py-3 font-medium">Status</th>
+                    <th className="px-4 py-3 font-medium">Employees</th>
+                    <th className="px-4 py-3 font-medium">Total Gross</th>
+                    <th className="px-4 py-3 font-medium text-red-500">
+                      Deductions
+                    </th>
+                    <th className="px-4 py-3 font-medium text-emerald-500">
+                      Total Net
+                    </th>
+                    <th className="px-4 py-3 font-medium text-indigo-500">
+                      Employer Contr.
+                    </th>
+                    <th className="px-4 py-3 font-medium text-right">
+                      Actions
+                    </th>
                   </tr>
-                ) : runs.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={6}
-                      className="px-4 py-8 text-center text-muted-foreground"
-                    >
-                      No payroll runs found.
-                    </td>
-                  </tr>
-                ) : (
-                  runs.map((run) => (
-                    <tr
-                      key={run._id}
-                      className="group transition-colors hover:bg-muted/50"
-                    >
-                      <td className="px-4 py-3 font-medium text-primary">
-                        <div>{run.periodMonth}</div>
-                        {run.finalizedAt && (
-                          <div className="text-xs text-muted-foreground font-normal">
-                            Finalized:{" "}
-                            {new Date(run.finalizedAt).toLocaleDateString()}
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-primary/70 uppercase text-xs font-semibold">
-                        {run.status.replace("_", " ")}
-                      </td>
-                      <td className="px-4 py-3 text-primary/70">
-                        {run.totalEmployees}
-                      </td>
-                      <td className="px-4 py-3 text-primary/70">
-                        ₹{run.totalGrossSalary.toLocaleString("en-IN")}
-                      </td>
-                      <td className="px-4 py-3 text-red-500/80">
-                        ₹
-                        {(
-                          run.totalLopDeduction +
-                          run.totalCustomDeductions +
-                          run.totalStatutoryDeductions
-                        ).toLocaleString("en-IN")}
-                      </td>
-                      <td className="px-4 py-3 font-medium text-emerald-500">
-                        ₹{run.totalNetSalary.toLocaleString("en-IN")}
-                      </td>
-                      <td className="px-4 py-3 text-indigo-500/80">
-                        ₹
-                        {(run.totalEmployerContributions || 0).toLocaleString(
-                          "en-IN",
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => setSelectedRunId(run._id)}
-                        >
-                          View Details <ChevronRight className="ml-2 h-4 w-4" />
-                        </Button>
+                </thead>
+                <tbody className="divide-y divide-border/50">
+                  {!runs ? (
+                    <tr>
+                      <td
+                        colSpan={6}
+                        className="px-4 py-8 text-center text-muted-foreground"
+                      >
+                        <Loader2 className="mx-auto h-5 w-5 animate-spin" />
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                  ) : runs.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={6}
+                        className="px-4 py-8 text-center text-muted-foreground"
+                      >
+                        No payroll runs found.
+                      </td>
+                    </tr>
+                  ) : (
+                    runs.map((run) => (
+                      <tr
+                        key={run._id}
+                        className="group transition-colors hover:bg-muted/50"
+                      >
+                        <td className="px-4 py-3 font-medium text-primary">
+                          <div>{run.periodMonth}</div>
+                          {run.finalizedAt && (
+                            <div className="text-xs text-muted-foreground font-normal">
+                              Finalized:{" "}
+                              {new Date(run.finalizedAt).toLocaleDateString()}
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-primary/70 uppercase text-xs font-semibold">
+                          {run.status.replace("_", " ")}
+                        </td>
+                        <td className="px-4 py-3 text-primary/70">
+                          {run.totalEmployees}
+                        </td>
+                        <td className="px-4 py-3 text-primary/70">
+                          ₹{run.totalGrossSalary.toLocaleString("en-IN")}
+                        </td>
+                        <td className="px-4 py-3 text-red-500/80">
+                          ₹
+                          {(
+                            run.totalLopDeduction +
+                            run.totalCustomDeductions +
+                            run.totalStatutoryDeductions
+                          ).toLocaleString("en-IN")}
+                        </td>
+                        <td className="px-4 py-3 font-medium text-emerald-500">
+                          ₹{run.totalNetSalary.toLocaleString("en-IN")}
+                        </td>
+                        <td className="px-4 py-3 text-indigo-500/80">
+                          ₹
+                          {(run.totalEmployerContributions || 0).toLocaleString(
+                            "en-IN",
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => setSelectedRunId(run._id)}
+                          >
+                            View Details{" "}
+                            <ChevronRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
 
-          {/* Statutory Compliance Reports Sections (ESI, PF, PT) */}
-          <StatutoryReportsSection runs={runs || []} />
-        </>
+            {/* Statutory Compliance Reports Sections (ESI, PF, PT) */}
+            <StatutoryReportsSection runs={runs || []} />
+          </>
         ) : (
           <div className="space-y-6">
             <div className="flex items-center gap-4">

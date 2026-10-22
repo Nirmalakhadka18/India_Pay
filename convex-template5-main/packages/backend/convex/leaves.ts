@@ -141,7 +141,7 @@ export const review = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Not authenticated");
-    await requireRole(ctx, userId, args.workspaceId, ["owner", "admin"]);
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
 
     const request = await ctx.db.get(args.requestId);
     if (!request || request.workspaceId !== args.workspaceId) {
