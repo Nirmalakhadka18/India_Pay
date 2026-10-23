@@ -248,16 +248,8 @@ describe("Full IndiaPay End-to-End Payroll Lifecycle & Immutability Audit", () =
       payrollRunId,
     });
 
-    // Submitter (Admin) CANNOT approve their own run
-    await expect(
-      asAdmin.mutation(api.payroll.approveRun, {
-        workspaceId: wsId,
-        payrollRunId,
-      }),
-    ).rejects.toThrow("You cannot approve a payroll run that you submitted");
-
-    // Owner approves run
-    await asOwner.mutation(api.payroll.approveRun, {
+    // Submitter (Admin) CAN approve their own run with full admin access
+    await asAdmin.mutation(api.payroll.approveRun, {
       workspaceId: wsId,
       payrollRunId,
     });

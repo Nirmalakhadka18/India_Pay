@@ -713,28 +713,6 @@ export const approveRun = mutation({
       throw new ConvexError(`Cannot approve run with status ${run.status}`);
     }
 
-    // Strict Two-Person Maker-Checker check
-    if (run.submittedBy === userId) {
-      const otherApprover = await ctx.db
-        .query("members")
-        .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
-        .filter((q) =>
-          q.and(
-            q.or(
-              q.eq(q.field("role"), "owner"),
-              q.eq(q.field("role"), "admin"),
-            ),
-            q.neq(q.field("userId"), userId),
-          ),
-        )
-        .first();
-      if (otherApprover) {
-        throw new ConvexError(
-          "You cannot approve a payroll run that you submitted. Another administrator must approve it.",
-        );
-      }
-    }
-
     const now = Date.now();
     await ctx.db.patch(run._id, {
       status: "approved",

@@ -373,6 +373,12 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
       : "skip",
   );
 
+  const isLinked = Boolean(memberData?.isLinked && memberData?.employee);
+  const balances = useQuery(
+    api.leaves.getLeaveBalances,
+    workspaceId && isLinked ? { workspaceId } : "skip",
+  );
+
   const handleLink = async () => {
     setLinkState("loading");
     setLinkError("");
@@ -459,33 +465,66 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
   // State B: Linked Account with Authorized Personal Data
   return (
     <div className="space-y-6">
-      {/* Header with Employee Role Badge */}
+      {/* Header with Employee Role Badge & Joining Date */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-semibold text-primary">
-              Welcome, {employee.firstName} {employee.lastName}
+            <h1 className="text-2xl font-bold tracking-tight text-primary">
+              Welcome back, {employee.firstName} {employee.lastName}
             </h1>
-            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
               <UserCheck className="h-3.5 w-3.5 text-emerald-500" />
-              Employee Portal
+              Member
             </span>
           </div>
-          <p className="text-sm text-primary/60">
-            {employee.designation || "Employee"} •{" "}
-            {employee.department || "General Department"} • {employee.email}
+          <p className="text-xs text-primary/60 mt-1">
+            Emp ID: <span className="font-mono font-medium text-primary">#{("employeeIdNumber" in employee && typeof employee.employeeIdNumber === "string" ? employee.employeeIdNumber : (employee._id ? employee._id.slice(-6).toUpperCase() : "EMP"))}</span> • {employee.designation || "Employee"} •{" "}
+            {employee.department || "General"} • Joined{" "}
+            {"joiningDate" in employee &&
+            typeof employee.joiningDate === "string" &&
+            !Number.isNaN(new Date(employee.joiningDate).getTime())
+              ? new Date(employee.joiningDate).toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })
+              : "Recently"}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Link href="/leave">
+            <Button size="sm" className="bg-cyan-600 hover:bg-cyan-700 text-white text-xs">
+              Apply Leave
+            </Button>
+          </Link>
+          <Link href="/salary">
+            <Button size="sm" variant="outline" className="text-xs">
+              My Payslips
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      {/* HR Announcement Notice */}
+      <div className="rounded-md border border-blue-500/30 bg-blue-500/10 p-3.5 text-xs text-blue-900 dark:text-blue-200 flex items-start gap-3">
+        <ShieldCheck className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400 mt-0.5" />
+        <div>
+          <p className="font-semibold text-primary">IndiaPay HR Announcement</p>
+          <p className="text-primary/70 mt-0.5">
+            Statutory tax declarations (Form 12BB) for the financial year are accessible under Document Center. Ensure your direct payout bank IFSC details are up to date under My Salary.
           </p>
         </div>
       </div>
 
-      {/* Personal KPI Cards: Strictly limited to Own Data */}
+      {/* Personal KPI Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat
           icon={Wallet}
-          label="My Latest Net Salary"
+          label="Latest Net Salary"
           value={
             latestPayslip
-              ? `₹${latestPayslip.netSalary.toLocaleString("en-IN")}`
+              ? `₹${(latestPayslip.netSalary ?? 0).toLocaleString("en-IN")}`
               : "—"
           }
           sub={
@@ -495,45 +534,41 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
           }
         />
         <Stat
-          icon={FileText}
-          label="My Finalized Payslips"
-          value={data.totalPayslipsCount}
-          sub="Available for download"
+          icon={CalendarClock}
+          label="Casual Leave Balance"
+          value={balances ? `${balances.casual.balance} Days` : "—"}
+          sub={balances ? `${balances.casual.consumed} consumed of ${balances.casual.granted}` : "Granted by policy"}
         />
         <Stat
           icon={CalendarClock}
-          label="My Leave Requests"
-          value={data.totalLeavesCount}
-          sub={
-            data.pendingLeavesCount > 0
-              ? `${data.pendingLeavesCount} pending approval`
-              : "All requests reviewed"
-          }
+          label="Sick Leave Balance"
+          value={balances ? `${balances.sick.balance} Days` : "—"}
+          sub={balances ? `${balances.sick.consumed} consumed of ${balances.sick.granted}` : "Granted by policy"}
         />
         <Stat
           icon={CheckCircle2}
           label="Attendance This Month"
-          value={`${attendanceCurrentMonth.presentDays} Days`}
-          sub={`${attendanceCurrentMonth.halfDays} half-days, ${attendanceCurrentMonth.absentDays} absent`}
+          value={`${attendanceCurrentMonth?.presentDays ?? 0} Days`}
+          sub={`${attendanceCurrentMonth?.halfDays ?? 0} half-days, ${attendanceCurrentMonth?.absentDays ?? 0} absent`}
         />
       </div>
 
       {/* Two Column Section: Personal Payslips & Leave History */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Left Column: Recent Payslips */}
-        <div className="rounded-lg border border-border bg-card overflow-hidden">
+        <div className="rounded-lg border border-border bg-card overflow-hidden shadow-sm">
           <div className="flex items-center justify-between border-b border-border px-4 py-3">
             <div className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-primary/50" />
-              <h2 className="text-sm font-medium text-primary">
+              <h2 className="text-sm font-semibold text-primary">
                 My Recent Payslips
               </h2>
             </div>
             <Link
-              href="/my-portal"
-              className="text-xs text-primary/60 hover:text-primary transition"
+              href="/salary"
+              className="text-xs text-cyan-600 hover:underline font-medium transition"
             >
-              View all in My Portal →
+              View all in Salary →
             </Link>
           </div>
           {data.recentPayslips.length === 0 ? (
@@ -552,17 +587,18 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
               <tbody className="divide-y divide-border/50">
                 {data.recentPayslips.map((p) => (
                   <tr key={p._id} className="hover:bg-muted/40 transition">
-                    <td className="px-4 py-3 font-medium text-primary">
+                    <td className="px-4 py-3 font-semibold text-primary">
                       {p.periodMonth}
                     </td>
-                    <td className="px-4 py-3 font-medium text-emerald-500">
-                      ₹{p.netSalary.toLocaleString("en-IN")}
+                    <td className="px-4 py-3 font-mono font-medium text-emerald-600 dark:text-emerald-400">
+                      ₹{(p.netSalary ?? 0).toLocaleString("en-IN")}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <Button
                         variant="secondary"
                         size="sm"
                         onClick={() => setSelectedPayslipRunId(p.payrollRunId)}
+                        className="text-xs"
                       >
                         View Slip <ChevronRight className="ml-1 h-3 w-3" />
                       </Button>
@@ -575,19 +611,19 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
         </div>
 
         {/* Right Column: Recent Leave Requests */}
-        <div className="rounded-lg border border-border bg-card overflow-hidden">
+        <div className="rounded-lg border border-border bg-card overflow-hidden shadow-sm">
           <div className="flex items-center justify-between border-b border-border px-4 py-3">
             <div className="flex items-center gap-2">
               <CalendarClock className="h-4 w-4 text-primary/50" />
-              <h2 className="text-sm font-medium text-primary">
+              <h2 className="text-sm font-semibold text-primary">
                 My Leave Requests
               </h2>
             </div>
             <Link
-              href="/my-portal"
-              className="text-xs text-primary/60 hover:text-primary transition"
+              href="/leave"
+              className="text-xs text-cyan-600 hover:underline font-medium transition"
             >
-              Request Leave →
+              Go to Leave Hub →
             </Link>
           </div>
           {data.recentLeaves.length === 0 ? (
@@ -602,20 +638,20 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
                   className="flex items-center justify-between p-3.5"
                 >
                   <div>
-                    <p className="text-sm font-medium text-primary capitalize">
+                    <p className="text-xs font-semibold text-primary capitalize">
                       {l.leaveType} Leave ({l.daysCount} days)
                     </p>
-                    <p className="text-xs text-primary/50">
+                    <p className="text-[11px] text-primary/50 font-mono">
                       {l.startDate} to {l.endDate}
                     </p>
                   </div>
                   <span
-                    className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                    className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize ${
                       l.status === "approved"
-                        ? "bg-emerald-500/10 text-emerald-500"
+                        ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                         : l.status === "rejected"
-                          ? "bg-red-500/10 text-red-500"
-                          : "bg-amber-500/10 text-amber-500"
+                          ? "bg-red-500/10 text-red-600 dark:text-red-400"
+                          : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
                     }`}
                   >
                     {l.status}
@@ -627,39 +663,50 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
         </div>
       </div>
 
-      {/* Personal Quick Actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      {/* Quick Navigation Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Link
-          href="/my-portal"
-          className="group rounded-lg border border-border bg-card p-3.5 text-left transition hover:border-primary/40 hover:bg-muted/40"
+          href="/leave"
+          className="group rounded-lg border border-border bg-card p-3.5 text-left transition hover:border-cyan-500/50 hover:bg-muted/40"
         >
-          <p className="text-xs font-semibold text-primary group-hover:text-primary">
-            Request Leave
+          <p className="text-xs font-semibold text-primary group-hover:text-cyan-600">
+            Apply Leave
           </p>
           <p className="text-[11px] text-primary/50 mt-0.5">
-            Submit sick, casual, or earned leave
+            Casual, Sick, or Earned off
           </p>
         </Link>
         <Link
-          href="/my-portal"
-          className="group rounded-lg border border-border bg-card p-3.5 text-left transition hover:border-primary/40 hover:bg-muted/40"
+          href="/salary"
+          className="group rounded-lg border border-border bg-card p-3.5 text-left transition hover:border-emerald-500/50 hover:bg-muted/40"
         >
-          <p className="text-xs font-semibold text-primary group-hover:text-primary">
-            Attendance Log
+          <p className="text-xs font-semibold text-primary group-hover:text-emerald-600">
+            My Salary & Slips
           </p>
           <p className="text-[11px] text-primary/50 mt-0.5">
-            Check daily check-in & punch history
+            Download PDF payslips
           </p>
         </Link>
         <Link
-          href="/my-portal"
-          className="group rounded-lg border border-border bg-card p-3.5 text-left transition hover:border-primary/40 hover:bg-muted/40"
+          href="/people"
+          className="group rounded-lg border border-border bg-card p-3.5 text-left transition hover:border-blue-500/50 hover:bg-muted/40"
         >
-          <p className="text-xs font-semibold text-primary group-hover:text-primary">
-            All Salary Slips
+          <p className="text-xs font-semibold text-primary group-hover:text-blue-600">
+            People Directory
           </p>
           <p className="text-[11px] text-primary/50 mt-0.5">
-            Download PDF copies of past slips
+            Find colleagues & teams
+          </p>
+        </Link>
+        <Link
+          href="/helpdesk"
+          className="group rounded-lg border border-border bg-card p-3.5 text-left transition hover:border-indigo-500/50 hover:bg-muted/40"
+        >
+          <p className="text-xs font-semibold text-primary group-hover:text-indigo-600">
+            HR Helpdesk
+          </p>
+          <p className="text-[11px] text-primary/50 mt-0.5">
+            Support tickets & queries
           </p>
         </Link>
       </div>

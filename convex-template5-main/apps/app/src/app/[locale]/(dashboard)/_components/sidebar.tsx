@@ -13,15 +13,24 @@ import { Logo } from "@v1/ui/logo";
 import { useQuery } from "convex/react";
 import {
   Banknote,
+  Briefcase,
   CalendarClock,
+  CalendarDays,
+  ClipboardCheck,
   FileText,
+  GitFork,
+  HelpCircle,
+  Home,
   LayoutDashboard,
   LogOut,
   Menu,
   Settings,
   ShieldCheck,
+  Sparkles,
+  User,
   UserCircle,
   Users,
+  Wallet,
   X,
 } from "lucide-react";
 import Image from "next/image";
@@ -32,6 +41,11 @@ import { ThemeSwitcher } from "./theme-switcher";
 
 const ALL_NAV = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  {
+    href: "/engage",
+    label: "Engage",
+    icon: Sparkles,
+  },
   {
     href: "/my-portal",
     label: "My Portal",
@@ -100,12 +114,37 @@ export function Sidebar() {
 
   const currentRole = workspaces.find((w) => w._id === current)?.role;
   const isHR = currentRole === "owner" || currentRole === "admin";
+  const myProfile = useQuery(
+    api.employees.getMyProfile,
+    current ? { workspaceId: current } : "skip",
+  );
+
   const NAV = useMemo(() => {
-    return ALL_NAV.filter((item) => {
-      if (item.hrOnly && !isHR) return false;
-      if (item.memberOnly && isHR) return false;
-      return true;
-    });
+    if (isHR) {
+      return [
+        { href: "/", label: "Dashboard", icon: LayoutDashboard },
+        { href: "/engage", label: "Engage", icon: Sparkles },
+        { href: "/employees", label: "Employees", icon: Users },
+        { href: "/salaries", label: "Salaries", icon: Banknote },
+        { href: "/payroll", label: "Payroll", icon: Banknote },
+        { href: "/attendance", label: "Attendance", icon: CalendarClock },
+        { href: "/compliance", label: "Compliance", icon: ShieldCheck },
+        { href: "/reports", label: "Reports", icon: FileText },
+        { href: "/settings", label: "Settings", icon: Settings },
+      ];
+    }
+    return [
+      { href: "/", label: "Home", icon: Home },
+      { href: "/engage", label: "Engage", icon: Sparkles },
+      { href: "/worklife", label: "My Worklife", icon: Briefcase },
+      { href: "/todo", label: "To Do", icon: ClipboardCheck },
+      { href: "/salary", label: "Salary", icon: Wallet },
+      { href: "/leave", label: "Leave", icon: CalendarDays },
+      { href: "/people", label: "People", icon: Users },
+      { href: "/documents", label: "Document Center", icon: FileText },
+      { href: "/helpdesk", label: "Helpdesk", icon: HelpCircle },
+      { href: "/delegates", label: "Workflow Delegates", icon: GitFork },
+    ];
   }, [isHR]);
 
   const Body = (
@@ -114,7 +153,7 @@ export function Sidebar() {
         <Logo width={26} height={26} />
       </div>
 
-      <div className="p-3">
+      <div className="p-3 pb-2">
         <span className="mb-1 block text-[10px] uppercase tracking-wide text-primary/40">
           Workspace
         </span>
@@ -137,6 +176,27 @@ export function Sidebar() {
         </select>
       </div>
 
+      {/* Member Profile Card from Screenshots ("Hi Javeria - View My Info") */}
+      {!isHR && (
+        <div className="mx-3 mb-2 flex items-center gap-2.5 rounded-lg border border-border/80 bg-muted/40 p-2.5 shadow-sm">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <User className="h-4 w-4" />
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-xs font-semibold text-primary">
+              Hi {myProfile?.firstName || user?.name || "Member"}
+            </p>
+            <Link
+              href="/worklife"
+              onClick={() => setOpen(false)}
+              className="text-[11px] font-medium text-cyan-600 dark:text-cyan-400 hover:underline"
+            >
+              View My Info
+            </Link>
+          </div>
+        </div>
+      )}
+
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-1">
         {NAV.map((item) => {
           const active = pathname === item.href;
@@ -146,10 +206,10 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm ${
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition ${
                 active
-                  ? "bg-primary/10 font-medium text-primary"
-                  : "text-primary/70 hover:bg-primary/5"
+                  ? "bg-primary/10 font-semibold text-primary"
+                  : "text-primary/70 hover:bg-primary/5 hover:text-primary"
               }`}
             >
               <Icon className="h-4 w-4 shrink-0" />

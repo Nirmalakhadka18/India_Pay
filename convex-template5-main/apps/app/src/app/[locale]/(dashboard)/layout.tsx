@@ -18,8 +18,14 @@ export default async function Layout({
       return redirect("/login");
     }
     user = await fetchQuery(api.users.getUser, {}, { token });
-  } catch (error: any) {
-    if (error?.digest?.startsWith("NEXT_REDIRECT")) {
+  } catch (error: unknown) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "digest" in error &&
+      typeof (error as { digest: unknown }).digest === "string" &&
+      ((error as { digest: string }).digest.startsWith("NEXT_REDIRECT"))
+    ) {
       throw error;
     }
     return redirect("/login?expired=1");

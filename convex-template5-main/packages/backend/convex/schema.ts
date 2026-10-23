@@ -139,6 +139,8 @@ export default defineSchema({
     designation: v.optional(v.string()),
     status: v.union(v.literal("active"), v.literal("inactive")),
     userId: v.optional(v.id("users")),
+    employeeIdNumber: v.optional(v.string()),
+    joiningDate: v.optional(v.string()),
     // Banking Master Data
     bankAccountHolderName: v.optional(v.string()),
     bankName: v.optional(v.string()),
@@ -201,6 +203,8 @@ export default defineSchema({
       v.literal("sick"),
       v.literal("earned"),
       v.literal("unpaid"),
+      v.literal("restricted_holiday"),
+      v.literal("comp_off"),
     ),
     startDate: v.string(), // "YYYY-MM-DD"
     endDate: v.string(), // "YYYY-MM-DD"
@@ -212,6 +216,16 @@ export default defineSchema({
       v.literal("rejected"),
       v.literal("cancelled"),
     ),
+    session: v.optional(
+      v.union(
+        v.literal("full_day"),
+        v.literal("session_1"),
+        v.literal("session_2"),
+      ),
+    ),
+    contactDetails: v.optional(v.string()),
+    fileAttachment: v.optional(v.string()),
+    storageId: v.optional(v.id("_storage")),
     reviewedBy: v.optional(v.id("users")),
     reviewRemarks: v.optional(v.string()),
     reviewedAt: v.optional(v.number()),
@@ -472,4 +486,177 @@ export default defineSchema({
   })
     .index("by_workspace", ["workspaceId"])
     .index("by_workspace_quarter", ["workspaceId", "financialYear", "quarter"]),
+
+  // Company Holiday Calendar (Indian Statutory / Gazetted & Restricted Holidays)
+  holidays: defineTable({
+    workspaceId: v.id("workspaces"),
+    name: v.string(),
+    date: v.string(), // "YYYY-MM-DD"
+    type: v.union(v.literal("gazetted"), v.literal("restricted"), v.literal("company")),
+    description: v.optional(v.string()),
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_date", ["workspaceId", "date"]),
+
+  // Employee Helpdesk & Support Tickets
+  helpdeskTickets: defineTable({
+    workspaceId: v.id("workspaces"),
+    employeeId: v.id("employees"),
+    ticketNumber: v.string(),
+    category: v.union(
+      v.literal("payroll"),
+      v.literal("leaves"),
+      v.literal("attendance"),
+      v.literal("benefits"),
+      v.literal("general"),
+    ),
+    subject: v.string(),
+    description: v.string(),
+    priority: v.union(
+      v.literal("low"),
+      v.literal("medium"),
+      v.literal("high"),
+      v.literal("urgent"),
+    ),
+    status: v.union(
+      v.literal("open"),
+      v.literal("in_progress"),
+      v.literal("resolved"),
+      v.literal("closed"),
+    ),
+    assignedTo: v.optional(v.id("users")),
+    resolutionRemarks: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_employee", ["employeeId"])
+    .index("by_workspace_status", ["workspaceId", "status"]),
+
+  // Resignation & Notice Period Requests
+  resignations: defineTable({
+    workspaceId: v.id("workspaces"),
+    employeeId: v.id("employees"),
+    proposedResignationDate: v.string(), // "YYYY-MM-DD"
+    noticePeriodDays: v.number(),
+    expectedLastWorkingDay: v.string(), // "YYYY-MM-DD"
+    approvedLastWorkingDay: v.optional(v.string()),
+    reason: v.optional(v.string()),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("approved"),
+      v.literal("rejected"),
+      v.literal("withdrawn"),
+    ),
+    hrComments: v.optional(v.string()),
+    reviewedBy: v.optional(v.id("users")),
+    reviewedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_employee", ["employeeId"])
+    .index("by_workspace_status", ["workspaceId", "status"]),
+
+  // Workflow Delegation Settings
+  workflowDelegates: defineTable({
+    workspaceId: v.id("workspaces"),
+    employeeId: v.id("employees"),
+    delegateEmployeeId: v.id("employees"),
+    workflowType: v.union(
+      v.literal("leave_approvals"),
+      v.literal("attendance_approvals"),
+      v.literal("all"),
+    ),
+    startDate: v.string(), // "YYYY-MM-DD"
+    endDate: v.string(), // "YYYY-MM-DD"
+    status: v.union(v.literal("active"), v.literal("inactive")),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_employee", ["employeeId"]),
+
+  // Compensatory Off (Comp-Off) Grant Requests
+  compOffRequests: defineTable({
+    workspaceId: v.id("workspaces"),
+    employeeId: v.id("employees"),
+    workDate: v.string(), // "YYYY-MM-DD"
+    reason: v.string(),
+    daysCount: v.number(), // typically 1 or 0.5
+    status: v.union(
+      v.literal("pending"),
+      v.literal("approved"),
+      v.literal("rejected"),
+    ),
+    reviewedBy: v.optional(v.id("users")),
+    reviewRemarks: v.optional(v.string()),
+    reviewedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_employee", ["employeeId"])
+    .index("by_workspace_status", ["workspaceId", "status"]),
+
+  // Engage — Company Announcements
+  announcements: defineTable({
+    workspaceId: v.id("workspaces"),
+    title: v.string(),
+    content: v.string(),
+    category: v.union(
+      v.literal("general"),
+      v.literal("hr"),
+      v.literal("event"),
+      v.literal("policy"),
+    ),
+    authorId: v.id("users"),
+    authorName: v.string(),
+    pinned: v.optional(v.boolean()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_pinned", ["workspaceId", "pinned"]),
+
+  // Engage — Interactive Team Polls
+  polls: defineTable({
+    workspaceId: v.id("workspaces"),
+    question: v.string(),
+    options: v.array(v.string()),
+    createdById: v.id("users"),
+    creatorName: v.string(),
+    status: v.union(v.literal("active"), v.literal("closed")),
+    expiresAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_status", ["workspaceId", "status"]),
+
+  // Engage — Poll Votes
+  pollVotes: defineTable({
+    workspaceId: v.id("workspaces"),
+    pollId: v.id("polls"),
+    userId: v.id("users"),
+    optionIndex: v.number(),
+    createdAt: v.number(),
+  })
+    .index("by_poll", ["pollId"])
+    .index("by_poll_user", ["pollId", "userId"])
+    .index("by_workspace", ["workspaceId"]),
+
+  // Engage — Peer Recognition & Kudos
+  kudos: defineTable({
+    workspaceId: v.id("workspaces"),
+    senderEmployeeId: v.id("employees"),
+    receiverEmployeeId: v.id("employees"),
+    message: v.string(),
+    badge: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_receiver", ["receiverEmployeeId"]),
 });

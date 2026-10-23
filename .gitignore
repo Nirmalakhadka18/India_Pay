@@ -22,4 +22,6 @@ cloudflared.exe
 *.exe
 temp_login.html
 reports_dom.html
-
+*.zip
+*.bundle
+graphify-out/cache/

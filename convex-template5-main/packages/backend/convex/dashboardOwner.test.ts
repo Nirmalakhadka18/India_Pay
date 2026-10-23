@@ -347,7 +347,7 @@ describe("Owner Dashboard Executive Intelligence & Security", () => {
     expect(comp.pt.jurisdiction).toContain("State Jurisdiction (Karnataka)");
   });
 
-  test("4. Maker-Checker enforcement: Submitter cannot approve their own run", async () => {
+  test("4. Approval access: Submitter admin has full access to approve pending run", async () => {
     const t = convexTest(schema, modules);
     const { ws, owner1, owner2, admin } = await seedOwnerDashboardWorkspace(t);
 
@@ -375,7 +375,7 @@ describe("Owner Dashboard Executive Intelligence & Security", () => {
       });
     });
 
-    // When Owner 1 queries summary, they are marked as submitter and CANNOT self-approve
+    // When Owner 1 queries summary, they are marked as submitter and CAN approve with full admin access
     const summaryOwner1 = await t
       .withIdentity(as(owner1))
       .query(api.dashboard.ownerExecutiveSummary, {
@@ -385,9 +385,9 @@ describe("Owner Dashboard Executive Intelligence & Security", () => {
 
     const pendingO1 = summaryOwner1.payrollApprovals.pendingRuns[0];
     expect(pendingO1.isSubmitter).toBe(true);
-    expect(pendingO1.canApprove).toBe(false);
+    expect(pendingO1.canApprove).toBe(true);
 
-    // When Owner 2 queries summary, they CAN approve because they did not submit it
+    // When Owner 2 queries summary, they also CAN approve
     const summaryOwner2 = await t
       .withIdentity(as(owner2))
       .query(api.dashboard.ownerExecutiveSummary, {
@@ -466,7 +466,7 @@ describe("Owner Dashboard Executive Intelligence & Security", () => {
     expect(recentAudit[0].action).toBe("payroll_run_finalized");
   });
 
-  test("7. Maker-Checker enforcement on approveRun backend mutation rejects self-approval", async () => {
+  test("7. Admin has full access to approve payroll run directly", async () => {
     const t = convexTest(schema, modules);
     const { ws, owner1, owner2, admin } = await seedOwnerDashboardWorkspace(t);
 
@@ -493,23 +493,15 @@ describe("Owner Dashboard Executive Intelligence & Security", () => {
       });
     });
 
-    // Submitter Owner 1 attempting to approve must be rejected
-    await expect(
-      t.withIdentity(as(owner1)).mutation(api.payroll.approveRun, {
-        workspaceId: ws,
-        payrollRunId: runId,
-      }),
-    ).rejects.toThrow("You cannot approve a payroll run that you submitted");
-
-    // Admin (not submitter) can approve successfully in 2-role system
-    await t.withIdentity(as(admin)).mutation(api.payroll.approveRun, {
+    // Submitter has full admin access to approve directly
+    await t.withIdentity(as(owner1)).mutation(api.payroll.approveRun, {
       workspaceId: ws,
       payrollRunId: runId,
     });
 
     const run = await t.run(async (ctx: any) => ctx.db.get(runId));
     expect(run.status).toBe("approved");
-    expect(run.approvedBy).toBe(admin);
+    expect(run.approvedBy).toBe(owner1);
   });
 
   test("8. Security RBAC: Member account is strictly forbidden from accessing ownerExecutiveSummary or audit", async () => {

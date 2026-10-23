@@ -319,18 +319,8 @@ describe("Supplementary Payroll Workflow Suite", () => {
       payrollRunId: suppRunId,
     });
 
-    // Primary Owner CANNOT approve their own run (Maker-Checker violation)
-    await expect(
-      asOwner.mutation(api.payroll.approveRun, {
-        workspaceId: ws,
-        payrollRunId: suppRunId,
-      }),
-    ).rejects.toThrow(
-      /Maker-Checker violation|cannot approve a payroll run that you submitted/,
-    );
-
-    // Secondary Owner CAN approve it
-    await asOwner2.mutation(api.payroll.approveRun, {
+    // Primary Owner/Admin CAN approve their own run with full access
+    await asOwner.mutation(api.payroll.approveRun, {
       workspaceId: ws,
       payrollRunId: suppRunId,
     });

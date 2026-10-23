@@ -70,8 +70,7 @@ function validatePassword(label: string, password: string): void {
     !/\d/.test(password)
   ) {
     throw new Error(
-      `${label} does not meet password requirements: ` +
-        "must be at least 8 characters and include upper, lower, and a number.",
+      `${label} does not meet password requirements: must be at least 8 characters and include upper, lower, and a number.`,
     );
   }
 }
@@ -119,8 +118,7 @@ export const provisionDevAccounts = internalAction({
 
     // Log completion status without exposing any credential values
     console.log(
-      `[devAccounts] Provisioning complete. ` +
-        `owner created=${result.ownerCreated}, admin created=${result.adminCreated}, user created=${result.userCreated}`,
+      `[devAccounts] Provisioning complete. owner created=${result.ownerCreated}, admin created=${result.adminCreated}, user created=${result.userCreated}`,
     );
     console.log(`[devAccounts] ${result.message}`);
 

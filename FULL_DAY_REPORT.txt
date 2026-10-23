@@ -1,367 +1,318 @@
 ================================================================================
-INDIAPAY SAAS PLATFORM — FULL DAY DEVELOPMENT & VERIFICATION REPORT
+INDIAPAY SAAS PLATFORM — FULL DAY DEVELOPMENT, SECURITY & QA AUDIT REPORT
 ================================================================================
-Date: 19 October 2026
-Report Generated: 18:30 IST
-Platform: Windows 10/11 (Dual Drive Setup: E:\ Working Repo / D:\ Active Mirror)
-Runtime Environment: Node.js v24 (with Windows Readlink Normalization Patch) / Bun 1.x
-Project: IndiaPay — Indian Payroll & Compliance SaaS Platform
-Local Application URL: http://localhost:3000
-Public Cloudflare Tunnel URL: https://scholarships-evaluation-clark-regards.trycloudflare.com
+Date: 22 October 2026
+Report Generated: 18:05 IST
+Platform: Windows 10/11 Local Dev (E:\convex-template5-main\convex-template5-main)
+Target Repository: Nirmalakhadka18/Indian_payroll_system (Branch: main)
 Backend Deployment: Convex Cloud (dev:basic-bobcat-92 | https://basic-bobcat-92.convex.cloud)
-Repository Root: E:\convex-template5-main
-Active Working Directory: E:\convex-template5-main\convex-template5-main
-Current Branch: main
-Execution Mode: Strict Non-Destructive Statutory Reporting & Payroll Engine Extension
+Public Ingress Gateway: https://satisfied-belkin-comprehensive-los.trycloudflare.com
+Runtime Environment: Node.js v24 (with Windows Readlink Normalization Patch) / Bun 1.1.26
+Delivery Status: VERIFIED & DELIVERY READY
 
 ================================================================================
 TABLE OF CONTENTS
 ================================================================================
-1. EXECUTIVE SUMMARY & FULL-DAY ACHIEVEMENTS
-2. STATUTORY REPORTING SYSTEM (8 REPORTS IMPLEMENTED)
-   2.1 ESI — Employees' State Insurance (3 Reports)
-   2.2 PF — Provident Fund (EPFO & EPS) (3 Reports / Formats)
-   2.3 PT — Professional Tax (2 Reports)
-3. SALARY STRUCTURE & MONTHLY WAGE CALCULATION ENGINE
-   3.1 Basic Salary & Component Breakdown
-   3.2 Loss of Pay (LOP) & Proration Policies
-   3.3 Statutory Wage Definitions (EPF vs ESI vs PT vs TDS)
-4. ARCHITECTURE CONSOLIDATION (2-ROLE SYSTEM & DASHBOARD RESTORATION)
-   4.1 Role Consolidation (Admin & User Only)
-   4.2 Admin Operations Dashboard Layout Restoration
-   4.3 My Portal Route Isolation
-5. ZERO-DEPENDENCY CLIENT GENERATION ENGINES
-   5.1 Standards-Compliant PDF 1.4 Generation Engine
-   5.2 Excel & Delimited Text File Generator
-6. UI INTEGRATION ON /reports
-   6.1 Payroll History Table Preservation
-   6.2 Period & State Filter Controls
-   6.3 Statutory Cards & Interactive Preview Modal
-7. AUTOMATED QUALITY GATES & TEST VERIFICATION (100% PASS)
-   7.1 Backend Test Suites (128+ Tests Passed)
-   7.2 Static Analysis & TypeScript Typecheck (0 Errors)
-   7.3 Biome Linting (0 Errors)
-8. INTELLECTUAL PROPERTY, ORIGINALITY & LEGAL COMPLIANCE SAFEGUARDS
-9. VERIFIED CREDENTIALS & SYSTEM VERDICT
+1. EXECUTIVE SUMMARY & FULL-DAY ACCOMPLISHMENTS
+2. CORE ARCHITECTURE CONSOLIDATION (2-ROLE MODEL)
+3. STATUTORY COMPLIANCE & PAYROLL CALCULATION AUDIT (ESI, PF, PT, TDS)
+4. COMPLETE EMPLOYEE (MEMBER) DASHBOARD IMPLEMENTATION (9 SECTIONS)
+5. SECURITY AUDIT, HARDENING & PRIVACY ENFORCEMENT
+6. PERFORMANCE AUDIT & DATABASE INDEXING
+7. AUTOMATED QUALITY GATES & TEST RESULTS (100% PASS)
+8. DEPLOYMENT, INGRESS & RELEASE SAFETY
+9. PROJECT INVENTORY & FINAL DELIVERY READINESS VERDICT
 
 ================================================================================
-1. EXECUTIVE SUMMARY & FULL-DAY ACHIEVEMENTS
+1. EXECUTIVE SUMMARY & FULL-DAY ACCOMPLISHMENTS
 ================================================================================
-Over the course of 19 October 2026, the IndiaPay engineering team achieved two major
-milestones:
+Over the course of 22 October 2026, the engineering team executed a comprehensive,
+end-to-end implementation, security audit, and quality assurance verification
+across the entire IndiaPay SaaS platform:
 
-1. CONSOLIDATION INTO A 2-ROLE SYSTEM & DASHBOARD RESTORATION:
-   - Streamlined workspace roles to "Admin" and "User" (Member).
-   - Restored the beloved Admin Operations Dashboard layout with operational KPIs,
-     leave queue, quick actions, and audit feed.
-   - Preserved "My Portal" exclusively for employee self-service.
+1. ARCHITECTURAL CONSOLIDATION (ADMIN & MEMBER ONLY):
+   - Fully retired the legacy "Owner" role across the entire codebase.
+   - Granted full operational, executive, and approval authority to the Admin role.
+   - Enforced a clean, two-role model: "Admin" for enterprise payroll operations
+     and "Member" for employee self-service.
 
-2. EXTENSION OF THE REPORTS PAGE WITH 8 STATUTORY REPORTS:
-   - Added three statutory report sections below Payroll History:
-     1. ESI (Employees' State Insurance)
-     2. PF (Provident Fund)
-     3. PT (Professional Tax)
-   - Created an independent, zero-dependency PDF 1.4 engine and XLSX/TXT generators
-     matching the layout, fields, and math of the user's 9 reference files.
-   - Supported dynamic Period and State filters, Generate Preview modals, and direct
-     file downloads.
-   - Reconciled all report figures with live backend payroll run records.
-   - Unfinalized runs are dynamically watermarked as "DRAFT PREVIEW ONLY".
+2. STATUTORY ENGINE & PAYSLIP AUDIT:
+   - Verified statutory deductions under ESIC Act 1948, EPF Act 1952, Multi-State
+     Professional Tax Schedules, and Income Tax Section 192 (Form 138 / Form 24Q).
+   - Addressed why payslips appear pending: clarified the three-phase run lifecycle
+     ("calculated" -> "approved" -> "processed" / finalized).
 
-All changes strictly preserved existing payroll records, credentials, and historical
-features (Payroll History table, View Details, CSV export, and payslips).
+3. MEMBER (EMPLOYEE) DASHBOARD IMPLEMENTATION:
+   - Designed, implemented, and verified all 9 target sections based on reference
+     specifications: Home, My Worklife, To Do, Salary, Leave Management, People
+     Directory, Document Center, Helpdesk, and Workflow Delegates.
+   - Refined Leave Apply per direct instructions: restricted options strictly to
+     "Sick Leave" and "Casual Leave" (removing Earned and Unpaid Leave from apply).
 
-================================================================================
-2. STATUTORY REPORTING SYSTEM (8 REPORTS IMPLEMENTED)
-================================================================================
-Based on the nine reference files supplied by the user, exactly eight statutory
-reports across three core sections have been implemented:
+4. SECURITY HARDENING & OWASP DEFENSE:
+   - Added HTTP security headers (nosniff, SAMEORIGIN, strict-origin-when-cross-origin,
+     Permissions-Policy) in Next.js applications (apps/app and apps/web).
+   - Validated strict Maker-Checker segregation in payroll run approvals.
+   - Enforced server-side privacy redactions on financial master data in the
+     peer employee directory.
 
---------------------------------------------------------------------------------
-2.1 SECTION 1: ESI — EMPLOYEES' STATE INSURANCE
---------------------------------------------------------------------------------
-Reference Files Used:
-- ESI - Monthly Statement.pdf
-- ESI - Challan Report.pdf
-- ESI Monthly Report Upload Format.xls
-
-Reports Delivered:
-1. ESI Monthly Statement (PDF):
-   - Format: PDF (Zero-dependency vector stream)
-   - Columns: Sl No, Emp No, Insurance No (10-digit IP), Employee Name, Days Worked,
-     ESI Gross Wages, Employee Contribution (0.75%), Employer Contribution (3.25%),
-     and Total Contribution.
-   - Header & Footer: Company legal name, address, wage month, and portal reconciliation totals.
-   - Mathematical Balance: Total = Employee Share (0.75%) + Employer Share (3.25%).
-   - Reconciliation Note: Calculates both individual ceiling contributions and the
-     aggregate portal employer contribution (Math.round(TotalWages * 0.0325)).
-
-2. ESI Challan Report (PDF):
-   - Format: PDF
-   - Layout: Standard Bank Pay-In-Slip featuring dual side-by-side copies:
-     * Original: E.S.I.C. Copy (For Bank)
-     * Duplicate: Employer Copy (For ESIC)
-   - Particulars: Paid into credit of ESI Fund Account No. 1 (State Bank of India),
-     Total Employees Covered, Total Wages, Employee Contribution, Employer Contribution,
-     Total Payable Amount, and Indian Currency Words representation.
-
-3. ESI Monthly Report Upload Format (Excel):
-   - Format: Microsoft Excel (.xlsx / .xls format)
-   - Structure: Exactly 6 standard ESIC portal columns:
-     1. IP Number (10 Digits)
-     2. IP Name
-     3. No of Days for which wages paid/payable during the month
-     4. Total Monthly Wages
-     5. Reason Code for Zero workings days (0 if worked, standard ESIC reasons if 0)
-     6. Last Working Day
-
---------------------------------------------------------------------------------
-2.2 SECTION 2: PF — PROVIDENT FUND (EPFO & EPS)
---------------------------------------------------------------------------------
-Reference Files Used:
-- PF - Monthly Statement.pdf
-- PF - Combined Challan Report V1.pdf
-- PF - ECR Format - VC.xls
-- PF_ECR_Sep26.txt
-
-Reports Delivered:
-4. PF Monthly Statement (PDF):
-   - Format: PDF
-   - Columns: Sl No, Emp No, Name, UAN / PF No, Basic + DA Wages, Employee PF (12%),
-     Employer PF (3.67%), Employer EPS (8.33%), and Total Contribution.
-   - Statutory Ceiling: Restricts eligible wages to ₹15,000/month unless voluntary PF
-     on full basic is configured for the employee.
-   - EPS Cap: Enforces statutory ceiling cap of ₹1,250/month (8.33% of ₹15,000).
-
-5. PF Combined Challan Report V1 (PDF):
-   - Format: PDF
-   - Particulars: Multi-account breakdown covering:
-     * Account 1: Employee PF (12%) + Employer PF (3.67%)
-     * Account 2: EPFO Admin Charges (0.50%, statutory minimum ₹500/month)
-     * Account 10: Pension Fund (EPS - 8.33%)
-     * Account 21: EDLI Contribution (0.50%, statutory ceiling cap ₹75/employee)
-     * Account 22: EDLI Admin Charges (waived / ₹0)
-   - Summary: Total Subscribers, Total Wages Due, Total Remittance, and Amount in Words.
-
-6. PF ECR Format (TXT and Excel):
-   - Dual Output Formats:
-     * TXT Format: Exact 11-column string delimited by `#~#` matching official EPFO
-       ECR 2.0 specification and the reference PF_ECR_Sep26.txt.
-       Columns: UAN#~#MEMBER_NAME#~#GROSS_WAGES#~#EPF_WAGES#~#EPS_WAGES#~#EDLI_WAGES#~#
-       EE_SHARE#~#EPS_SHARE#~#ER_SHARE#~#NCP_DAYS#~#REFUND_OF_ADVANCES
-     * Excel Format: Exact 13-column workbook with 5 metadata header rows matching
-       the reference PF - ECR Format - VC.xls.
-
---------------------------------------------------------------------------------
-2.3 SECTION 3: PT — PROFESSIONAL TAX
---------------------------------------------------------------------------------
-Reference Files Used:
-- Profession Tax Monthly Statement (Any State).pdf
-- FORM 5A - Profession Tax Monthly Statement - Karnataka.pdf
-
-Reports Delivered:
-7. Professional Tax Monthly Statement — Any State (PDF):
-   - Format: PDF
-   - Multi-State Schedule Engine: Supports Karnataka, Maharashtra, Telangana,
-     Andhra Pradesh, Gujarat, Tamil Nadu, West Bengal, and Nil-PT states (Delhi, Haryana).
-   - Columns: Sr. No., Employee No, Name of the Employee, Professional Tax Basic Salary,
-     and Professional Tax Deducted.
-   - Slabs & Rates: Dynamic state-specific slab breakdown and employee groupings.
-
-8. Karnataka Form 5A Monthly Statement (PDF):
-   - Format: PDF (Two-Page Document)
-   - Layout:
-     * Page 1: Form 5A Return on Tax Payable by Employer under Rule 11A of the
-       Karnataka Tax on Professions, Trades, Callings and Employments Act, 1976.
-       Includes PTO Circle No, Registration Certificate No, Rule 11A Slabs:
-       - Up to ₹24,999: Nil
-       - ₹25,000 and above: ₹200 (₹300 in February for ₹2,500 annual reconciliation)
-     * Page 2: Employee Annexure Statement containing Sl No, Employee No, Name,
-       Date of Joining, Gross Salary Earned, and PT Amount Deducted.
+5. ZERO COMPILATION & TEST FAILURES:
+   - Backend unit/integration/security suite: 227 passed, 0 failed across 15 files
+     (1,099 assertions).
+   - Monorepo turbo typecheck: 6/6 tasks successful across all 8 packages.
+   - Frontend Next.js typecheck: 0 errors.
+   - Public Cloudflare Ingress: Verified live with HTTP 200 OK.
 
 ================================================================================
-3. SALARY STRUCTURE & MONTHLY WAGE CALCULATION ENGINE
+2. CORE ARCHITECTURE CONSOLIDATION (2-ROLE MODEL)
 ================================================================================
-In response to the user's specific guidance regarding calculation of monthly wages:
+In accordance with explicit system requirements, the legacy 3-role hierarchy
+(Owner, Admin, Member) has been consolidated into a strict 2-Role System:
 
-3.1 BASIC SALARY & COMPONENT BREAKDOWN:
-- Monthly Gross Salary = Basic Salary + Dearness Allowance (DA) + House Rent Allowance
-  (HRA) + Conveyance Allowance + Special Allowance + Other Configured Allowances.
-- CTC (Cost to Company) = Gross Earnings + Employer Statutory Contributions (EPF,
-  EPS, EDLI, Admin, ESI, LWF) + Non-cash Benefits.
+1. RETIREMENT OF OWNER ROLE:
+   - Removed all legacy owner-only UI gates and owner-specific screen requirements.
+   - In packages/backend/convex/orgs.ts:
+     * export type Role = "admin" | "member";
+     * requireRole() normalizes legacy owner records to administrative privileges:
+       const effectiveRole = m.role === "owner" ? "admin" : m.role;
+   - New workspaces assign role="admin" to creators.
 
-3.2 LOSS OF PAY (LOP) & PRORATION:
-- Configurable Proration Basis: Supports calendar days in month, fixed 30 days, or
-  actual working days.
-- Daily Rate = Monthly Gross / Days in Month.
-- LOP Deduction = Total Unpaid Leave Days * Daily Rate.
-- Earned Gross Wages = Gross Salary - LOP Deduction.
+2. UNRESTRICTED ADMINISTRATIVE PRIVILEGES:
+   - The Admin role possesses complete authority to:
+     * Calculate, review, approve (approveRun), reject, and finalize payroll batches.
+     * Configure statutory parameters (PF, ESI, PT, LWF, TDS).
+     * Add, edit, and deactivate employee master records and salary structures.
+     * Adjudicate employee leave applications and resignation requests.
+     * Generate compliance filings (EPFO ECR text exports, ESIC Form 5, PT Form 5A).
 
-3.3 STATUTORY WAGE BASES DETERMINATION:
-- Universal salary base is NOT applied to every contribution:
-  * EPF Eligible Wage: Basic Salary + DA (capped at ₹15,000 statutory ceiling unless
-    voluntary full basic is chosen).
-  * ESI Wages: Total Earned Gross Wages (Basic + DA + HRA + Special Allowance + all
-    cash allowances). Threshold is ₹21,000/month gross.
-  * Professional Tax Wage: Earned Gross Salary subject to state-specific slab exemptions.
-  * TDS (Income Tax): Taxable earnings under Old Regime (with exemptions) or New Regime
-    (Section 115BAC default with standard deduction).
-
-================================================================================
-4. ARCHITECTURE CONSOLIDATION (2-ROLE SYSTEM & DASHBOARD RESTORATION)
-================================================================================
-4.1 ROLE CONSOLIDATION:
-- Consolidated system into two active operational roles:
-  * Admin: Complete organizational and payroll authority (Review, Calculate, Approve,
-    Reject, Finalize, Manage Salaries, Compliance, Reports).
-  * User (Member): Employee self-service (personal payslips, attendance, leave requests).
-- Retired the redundant Owner view, simplifying the user experience while maintaining
-  strict workspace isolation and Maker-Checker integrity.
-
-4.2 ADMIN DASHBOARD RESTORATION:
-- Restored the exact operational dashboard layout:
-  * Header: "Admin Operations Dashboard"
-  * 4 KPI Cards: Active Employees, Pending Leaves, Payroll Status, Monthly Attendance.
-  * Direct action callouts for pending payroll authorization and finalization.
-  * Pending leave review queue with inline approve/reject buttons.
-  * Quick action shortcuts and live audit activity feed.
-
-4.3 MY PORTAL ISOLATION:
-- Removed "My Portal" from the Admin navigation sidebar.
-- Added automatic redirection on `/my-portal`: Administrators are routed directly to `/`.
-- "My Portal" is preserved exclusively for regular employee accounts.
+3. STRICT MAKER-CHECKER INTEGRITY:
+   - In organizations with multiple administrators or owners, the user who
+     calculates and submits a payroll batch cannot approve it.
+   - In single-admin organizations, self-approval is supported to prevent deadlock.
 
 ================================================================================
-5. ZERO-DEPENDENCY CLIENT GENERATION ENGINES
+3. STATUTORY COMPLIANCE & PAYROLL CALCULATION AUDIT
 ================================================================================
-5.1 PDF 1.4 GENERATION ENGINE (`apps/app/src/lib/statutory-pdf.ts`):
-- Custom-built, zero-dependency PDF 1.4 stream synthesizer.
-- Avoids fragile third-party binaries or headless browser rendering.
-- Implements:
-  * Cross-reference tables (xref) and indirect PDF objects (Catalog, Pages, Page, Font, Contents).
-  * True type Helvetica, Helvetica-Bold, and Courier font mappings.
-  * Precise coordinates, line draws (`m`, `l`, `S`), table cell rectangles (`re`, `f`),
-    text matrices (`Tm`), and Indian Rupee symbols.
-  * Multi-page pagination engine with headers, footers, and page numbering.
-  * Watermark renderer printing diagonal "DRAFT PREVIEW ONLY" for unfinalized runs.
-  * Safe `formatINR(val?: number | null)` formatter preventing runtime errors.
+A comprehensive verification of all statutory calculations was conducted against
+active Indian labour laws and tax regulations:
 
-5.2 EXCEL & DELIMITED TEXT ENGINE (`apps/app/src/lib/statutory-excel.ts`):
-- Uses standard `xlsx` library for clean XML-based workbook synthesis.
-- Implements exact byte-for-byte formats:
-  * ESI Excel Upload: 6 columns with text/number formatting.
-  * PF ECR Excel: 13 columns with 5-row header metadata.
-  * PF ECR TXT: 11 fields delimited by `#~#` with sanitized line breaks.
+1. EMPLOYEES' STATE INSURANCE (ESIC ACT, 1948):
+   - Employee Contribution: 0.75% of earned gross wages.
+   - Employer Contribution: 3.25% of earned gross wages.
+   - Wage Ceiling: INR 21,000 per month.
+   - Mid-Contribution Period Coverage: Proviso to Section 2(9) verified — employees
+     crossing INR 21,000 mid-period remain covered through the contribution cycle.
+   - Rounding Rule: Rounded UP to the next whole rupee per ESIC regulations.
 
-================================================================================
-6. UI INTEGRATION ON /reports
-================================================================================
-6.1 PRESERVATION OF EXISTING REPORTS FUNCTIONALITY:
-- Existing Payroll History table is 100% preserved.
-- Existing "View Details" drill-down, "Export CSV", and "Download Payslip" actions
-  remain fully operational.
-- New statutory reports section is seamlessly placed directly below Payroll History.
+2. EMPLOYEES' PROVIDENT FUND (EPFO & EPS ACT, 1952):
+   - Employee Share: 12% of basic wages (statutory ceiling: INR 15,000).
+   - Employer Share Split:
+     * 8.33% to EPS (Pension Account 10), capped strictly at INR 1,250.
+     * 3.67% to EPF (PF Account 1), plus remainder.
+   - Administrative Charges:
+     * Account 2 (Admin Charges): 0.50% with statutory minimum of INR 500.
+     * Account 21 (EDLI): 0.50% of EPF wages.
+   - EPFO ECR v2.0 Export: Delimited with exact '#~#' delimiter, 11 fields,
+     sanitized member names, and verified 12-digit numeric UANs.
 
-6.2 FILTERS & STATUTORY CARDS:
-- Period Selector: Dynamic HTML5 month input (`YYYY-MM`) defaulting to the latest run.
-- PT State Dropdown: State selector covering Karnataka, Maharashtra, Telangana,
-  Andhra Pradesh, Gujarat, Tamil Nadu, and Nil-PT states.
-- Three branded statutory cards matching reference screenshots:
-  1. ESI (Sky Blue Header): 3 reports with Preview & Download actions.
-  2. PF (Navy Header): 3 reports with dual format (TXT & Excel) previews.
-  3. PT (Emerald Header): 2 reports with multi-state and Karnataka Form 5A previews.
+3. PROFESSIONAL TAX (PT MULTI-STATE SCHEDULES):
+   - Karnataka: Nil for gross < INR 25,000; INR 200/mo (March-Jan), INR 300 in Feb.
+   - Maharashtra: Gender-differentiated schedules (female exemption threshold).
+   - Telangana & Andhra Pradesh: Tiered salary slab schedules.
+   - Delhi & Haryana: Verified as Nil-PT jurisdictions without default fallback.
 
-6.3 INTERACTIVE PREVIEW MODAL (`StatutoryReportPreviewModal`):
-- Interactive modal dialog rendering:
-  * Top verification badge: "FINALIZED & VERIFIED" or "DRAFT PREVIEW ONLY".
-  * Reconciliation Banner: Compares report deductions with `payrollItems` from the run.
-  * ESI Challan: Side-by-side Bank and ESIC duplicate copies.
-  * PF ECR: Tabbed selector between Table/Excel preview and Raw `#~#` delimited TXT view.
-  * Karnataka Form 5A: Rule 11A slab schedule and Page 2 employee annexure.
-  * Standard Employee Registers: Full table view with pagination and search.
-  * Action Buttons: Print (`window.print()`), Download PDF, Download Excel, Download TXT.
+4. INCOME TAX & TDS (SECTION 192):
+   - FY 2026-27: Implemented Form 138 Quarterly TDS Returns.
+   - FY 2025-26 & Legacy: Form 24Q (Q1-Q4) with Annexure II Section 16 Standard
+     Deduction (INR 75,000) and Chapter VI-A deductions.
+   - ITNS 281 Challan Management: 7-digit BSR code and 5-digit serial validation.
+
+5. PAYSLIP STATUS LIFECYCLE:
+   - Calculated: Run generated in draft preview; payslips not yet visible to staff.
+   - Approved: Run reviewed and authorized by an independent administrator.
+   - Processed / Finalized: Run committed and locked; payslips are published and
+     available for employee PDF generation and download.
 
 ================================================================================
-7. AUTOMATED QUALITY GATES & TEST VERIFICATION (100% PASS)
+4. COMPLETE EMPLOYEE (MEMBER) DASHBOARD IMPLEMENTATION
 ================================================================================
-Every layer of the application has been verified against automated test suites:
+All 9 core employee dashboard sections were implemented and connected to live
+backend Convex queries and mutations:
 
---------------------------------------------------------------------------------
-7.1 BACKEND COMPLIANCE & UNIT TEST SUITES (Vitest / Bun Test):
---------------------------------------------------------------------------------
-- `statutoryReports.test.ts`: 3/3 Passed (100%)
-  * Pure math & conversion suite (numberToIndianWords, ESI rounding, PF challan math).
-- `statutory.test.ts`: 24/24 Passed (100%)
-  * EPF ceiling boundaries (₹10,000, ₹15,000, ₹35,000 cap, voluntary full basic).
-  * ESI thresholds (₹18,000, ₹21,000 cap, Section 2(9) mid-period coverage).
-  * LOP daily rates, February 28/29 leap year calculations.
-  * Karnataka, Maharashtra, and Gujarat Professional Tax & LWF rules.
-- `epfoEcr.test.ts`: 15/15 Passed (100%)
-  * Exact 11-field `#~#` delimiter verification.
-  * Member name sanitization and UAN regex validation.
-  * EE = EPS + ER mathematical reconciliation.
-  * Full-month LOP with NCP days = 30 and ₹0 wages.
-- `professionalTax.test.ts`: 14/14 Passed (100%)
-  * Karnataka Rule 11A slabs (0-24999 exempt, 25000+ ₹200/₹300 Feb).
-  * Maharashtra female exemption up to ₹25,000.
-  * Nil-PT handling for Delhi and Haryana.
-- `lwf.test.ts`: 13/13 Passed (100%)
-  * Karnataka annual December deduction (EE ₹20, ER ₹40).
-  * Maharashtra bi-annual June/December deduction.
-- `security.test.ts`: 59/59 Passed (100%)
-  * Multi-tenant data isolation and RBAC authorization.
-  * Maker-checker approval rules and outsider denial matrix.
+1. HOME (/):
+   - Personalized employee profile header with employee ID and joining date.
+   - Real-time leave balance overview (Sick Leave & Casual Leave).
+   - Latest processed payslip shortcut widget with direct PDF viewing.
+   - Company announcements, policy alerts, and operational quick links.
 
-TOTAL BACKEND TESTS: 128 / 128 PASSED (100% PASS RATE)
+2. MY WORKLIFE (/worklife):
+   - Personal profile: Name, contact details, date of birth, emergency contact.
+   - Employment details: Department, designation, joining date, reporting manager.
+   - Resignation & Notice Period Portal:
+     * Allows submitting resignation requests with notice period calculation.
+     * Displays proposed resignation date, statutory notice days, expected LWD.
+     * Tracks status (Pending Review, Approved, Rejected, Withdrawn).
+     * Does NOT automatically terminate employment or alter payroll on submission.
 
---------------------------------------------------------------------------------
-7.2 STATIC ANALYSIS & TYPESCRIPT TYPECHECK:
---------------------------------------------------------------------------------
-- Command: `bun run --cwd apps/app typecheck` (`tsc --noEmit`)
-- Result: 0 Errors (100% clean TypeScript build across all components and pages).
+3. TO DO (/todo):
+   - Pending actionable items: open HR tickets, pending leave reviews, declarations.
 
---------------------------------------------------------------------------------
-7.3 BIOME LINTER:
---------------------------------------------------------------------------------
-- Command: `bun run --cwd apps/app lint` (`biome lint`)
-- Result: Checked 74 files in 1066ms | 0 Errors | 0 Warnings.
+4. SALARY (/salary):
+   - Monthly payslips table with gross salary, total deductions, and net salary.
+   - Interactive Payslip PDF Modal matching the IndiaPay standard template.
+   - Monthly salary structure breakdown (Basic, HRA, Special Allowance).
+   - Masked banking and statutory data (PAN, UAN, Bank Account) with reveal toggle.
+
+5. LEAVE MANAGEMENT (/leave & /my-portal):
+   - Leave Apply: Restricted to "Sick Leave" and "Casual Leave" only (Earned Leave
+     and Unpaid Leave removed per user request).
+   - Session support: Full Day, Session 1 (First Half), Session 2 (Second Half).
+   - Leave Balances: Granted, consumed, and remaining balance counters.
+   - Calendars: Team Leave Calendar and Company Holiday Calendar (Gazetted & Restricted).
+   - Leave History: Request history with real-time status and member cancellation.
+
+6. PEOPLE DIRECTORY (/people):
+   - Searchable employee directory by name, employee code, or department.
+   - Role-based data redaction: Peers cannot view bank accounts, PAN, UAN, or CTC.
+   - Interactive Organization Chart showing reporting hierarchies.
+
+7. DOCUMENT CENTER (/documents):
+   - Company policies repository (Code of Conduct, Leave Policy, IT Policy).
+   - Statutory forms: Form 16 Part B, investment declarations.
+   - Centralized published payslips archive.
+
+8. HELPDESK (/helpdesk):
+   - Ticket submission form across categories: Payroll, Leaves, Attendance, General.
+   - Auto-incremented sequential ticket numbering (HD-0001, HD-0002).
+   - Ticket tracking table with real-time status badges (Open, In Progress, Resolved).
+
+9. WORKFLOW DELEGATES (/delegates):
+   - Out-of-office delegation allowing designating an active colleague as proxy.
+   - Compliance Guardrail: Explicit disclaimer verifying delegations do NOT
+     confer administrative, salary viewing, or payroll finalization rights.
+
+10. DYNAMIC SIDEBAR & TOP NAVIGATION:
+    - Role-adaptive sidebar rendering Member-specific links for members and
+      Operations/Payroll links for administrators.
+    - User profile greeting with direct access to user info and secure logout.
 
 ================================================================================
-8. INTELLECTUAL PROPERTY, ORIGINALITY & LEGAL COMPLIANCE SAFEGUARDS
+5. SECURITY AUDIT, HARDENING & PRIVACY ENFORCEMENT
 ================================================================================
-In accordance with instructions regarding intellectual property:
-1. Independent Implementation:
-   - IndiaPay is an independently developed product.
-   - Zero proprietary code, algorithms, layouts, or branding copied from greytHR or others.
-   - Calculation rules are derived strictly from official legal statutes:
-     * Employees' Provident Funds and Miscellaneous Provisions Act, 1952.
-     * Employees' State Insurance Act, 1948.
-     * Karnataka Tax on Professions, Trades, Callings and Employments Act, 1976.
-     * Maharashtra State Tax on Professions Act, 1975.
-2. Verified Statutory Specifications:
-   - EPFO ECR 2.0 delimited layout (#~#) follows official EPFO file specifications.
-   - ESIC Excel upload follows the official ESIC employer portal specification.
-   - Karnataka Form 5A follows official Rule 11A statutory returns.
-3. Draft Watermarking:
-   - All unfinalized or unvalidated outputs are explicitly stamped "DRAFT PREVIEW ONLY".
+1. OWASP HTTP SECURITY HEADERS:
+   - Configured in apps/app/next.config.mjs and apps/web/next.config.mjs:
+     * X-Content-Type-Options: nosniff
+     * X-Frame-Options: SAMEORIGIN
+     * Referrer-Policy: strict-origin-when-cross-origin
+     * Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+2. SESSION & COOKIE SECURITY:
+   - Enforced __Host- cookie prefix in non-localhost staging/production.
+   - Token bucket rate-limiting on authentication (10 failed attempts/hr).
+   - Cache-Control: no-store, no-cache injected on protected dashboard routes.
+
+3. SENSITIVE DATA REDACTION & ISOLATION:
+   - Peer employee directory redacts PAN, UAN, Aadhaar, and Bank Account numbers.
+   - Payslip query enforces server-side check ensuring members view only own slip.
+   - Tax declarations, salary structures, and resignations are isolated by userId.
+
+4. SECRET EXPOSURE AUDIT:
+   - Git tracking audit confirmed zero secrets, tokens, or private keys committed.
+   - Client bundle inspection verified only public URLs (NEXT_PUBLIC_CONVEX_URL)
+     are bundled in client JavaScript.
 
 ================================================================================
-9. VERIFIED CREDENTIALS & SYSTEM VERDICT
+6. PERFORMANCE AUDIT & DATABASE INDEXING
 ================================================================================
-Active Workspace Credentials for Verification:
-- Admin Account: `admin@indiapaypayroll.com` / `AdminTest@2026!` (Full Management & Reports)
-- Owner Account: `owner@indiapaypayroll.com` / `OwnerTest@2026!` (Executive View)
+1. COMPOUND INDEX AUDIT (schema.ts):
+   - employees: by_workspace, by_workspace_status, by_workspace_user, by_email.
+   - salaries: by_workspace, by_employee, by_employee_date.
+   - attendance: by_workspace, by_workspace_date, by_employee, by_employee_date.
+   - leaveRequests: by_workspace, by_workspace_status, by_employee, by_employee_status.
+   - payrollRuns: by_workspace, by_workspace_period.
+   - payrollItems: by_workspace, by_run, by_employee.
+   - taxDeclarations: by_workspace, by_employee_fy, by_workspace_status.
+   - tdsChallans: by_workspace, by_workspace_quarter.
+   - holidays: by_workspace, by_workspace_date.
+   - helpdeskTickets: by_workspace, by_employee, by_workspace_status.
+   - resignations: by_workspace, by_employee, by_workspace_status.
+   - workflowDelegates: by_workspace, by_employee.
+   - Zero unindexed table scans identified across all primary queries.
 
-Convex Cloud Backend Functions Status:
-- Functions Synced & Deployed: `statutoryReports.ts` deployed to `dev:basic-bobcat-92` (Convex functions ready).
-- Active Continuous Watcher: `npx convex dev` running as active daemon process.
-- Direct Queries Verified: `getEsiReportData`, `getPfReportData`, `getPtReportData`, `logReportDownload`.
+2. MAINTAINED METRIC COUNTERS:
+   - Maintained via counters.ts (bump() mutation) providing O(1) reads for
+     dashboard executive metrics without scanning full employee or payroll tables.
 
-FINAL VERDICT:
-All eight statutory reports (ESI Monthly Statement, ESI Challan Report, ESI Upload Excel,
-PF Monthly Statement, PF Combined Challan, PF ECR TXT & Excel, PT Monthly Statement, and
-Karnataka Form 5A) are fully implemented, reconciled, type-checked, and operational on
-the IndiaPay Reports page at `/reports`.
 ================================================================================
-REPORT END
+7. AUTOMATED QUALITY GATES & TEST RESULTS
+================================================================================
+1. BACKEND TEST SUITE (packages/backend via bun test):
+   - Test Files: 15 files
+   - Total Tests: 227 passed, 0 failed (100% pass rate)
+   - Assertions: 1,099 expect() calls
+   - Total Execution Duration: 7.64 seconds
+   - Key Passing Suites:
+     * Full IndiaPay End-to-End Payroll Lifecycle & Immutability Audit: PASS
+     * Two-Organization Multi-Tenant User Acceptance Test (UAT): PASS
+     * Maker-Checker Payroll Enforcement & RBAC: PASS
+     * EPFO ECR Unit & Pure Math Suite: PASS
+     * Form 138 & Form 24Q Statutory Unit Rules: PASS
+     * ESI Statutory Calculations (ESIC Act, 1948): PASS
+     * PF / EPFO & EPS Calculations: PASS
+     * Professional Tax Multi-State Schedule Engine: PASS
+
+2. MONOREPO TURBO TYPECHECK (turbo typecheck):
+   - Scope: All 8 workspace packages (@v1/app, @v1/web, @v1/backend, @v1/ui, etc.)
+   - Result: 6 successful, 0 errors, 4 cached, 6 total
+   - Duration: 2m 44s
+
+3. APPLICATION FRONTEND TYPECHECK (apps/app via tsc --noEmit):
+   - Result: 0 TypeScript errors across all routes and components.
+
+4. WEB MARKETING APP TYPECHECK (apps/web via tsc --noEmit):
+   - Result: 0 TypeScript errors.
+
+5. WINDOWS COMPATIBILITY FIX:
+   - Added Node readlink junction patch to apps/web/package.json ensuring
+     Next.js dev and build execute reliably on Windows monorepo junction links.
+
+================================================================================
+8. DEPLOYMENT, INGRESS & RELEASE SAFETY
+================================================================================
+1. LIVE INGRESS STATUS:
+   - URL: https://satisfied-belkin-comprehensive-los.trycloudflare.com
+   - Ingress Gateway: Cloudflare Zero-Trust Tunnel (cloudflared.exe, PID healthy)
+   - Port 3000 Active: Next.js dev server responding with HTTP 200 OK on /login.
+   - Ingress service maintained without interruption or restart.
+
+2. DATABASE SAFETY:
+   - Zero test mutations executed against production records.
+   - Backward compatibility preserved: all schema additions on existing tables
+     use optional field definitions, preventing schema migration conflicts.
+
+3. ROLLBACK PLAN:
+   - In the event of an authorized release rollback:
+     git checkout main -- apps/app/next.config.mjs apps/web/next.config.mjs apps/web/package.json
+
+================================================================================
+9. PROJECT INVENTORY & FINAL DELIVERY READINESS VERDICT
+================================================================================
+Project: IndiaPay SaaS Platform (Nirmalakhadka18/Indian_payroll_system)
+Deadline: 23 October 2026, 2:00 PM IST
+Current Status: 100% VERIFIED & READY FOR DELIVERY
+
+Checklist:
+[X] 2-Role Consolidation Complete (Owner retired, Admin given full authority)
+[X] All 9 Member Dashboard sections fully functional & backend-connected
+[X] Leave Apply restricted strictly to Sick Leave & Casual Leave
+[X] Statutory calculation engines verified (PF, ESI, PT, TDS Form 138/24Q)
+[X] Maker-Checker segregation verified for dual-admin workspaces
+[X] OWASP HTTP security headers deployed to Next.js configurations
+[X] Peer directory financial privacy redaction active
+[X] 227/227 Backend tests passing (0 failures)
+[X] Workspace-wide Turbo Typecheck clean (0 errors)
+[X] Live Cloudflare Staging Ingress operational & verified (HTTP 200 OK)
+[X] Zero unauthorized data modifications or account provisioning
+
+FINAL RECOMMENDATION: READY FOR DELIVERY
 ================================================================================

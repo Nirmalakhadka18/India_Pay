@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+**/node_modules/**
+
+# Build outputs & caches
+.next/
+**/.next/**
+.turbo/
+**/.turbo/**
+dist/
+**/dist/**
+build/
+**/build/**
+out/
+**/.turbo/**
+bun-cache-test/
+temp-bun-test/
+temp-bun-test2/
+
+# Media & binaries
+*.zip
+*.exe
+*.png
+*.jpg
+*.jpeg
+*.ico
+*.pdf
+
+# Reports & logs
+*.log
+temp_log.txt
+debug_output.txt
+reports_dom.html
+temp_login.html

@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
-    "build": "next build",
+    "dev": "node -r ../../scripts/patch-node-windows.js ../../node_modules/next/dist/bin/next dev -p 3001",
+    "build": "node -r ../../scripts/patch-node-windows.js ../../node_modules/next/dist/bin/next build",
     "clean": "git clean -xdf .next .turbo node_modules",
     "lint": "biome lint",
     "format": "biome format --write .",

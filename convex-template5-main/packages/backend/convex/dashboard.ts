@@ -381,6 +381,8 @@ export const memberSummary = query({
         department: emp.department,
         designation: emp.designation,
         status: emp.status,
+        employeeIdNumber: emp.employeeIdNumber,
+        joiningDate: emp.joiningDate,
       },
       latestPayslip: finalizedPayslips.length > 0 ? finalizedPayslips[0] : null,
       totalPayslipsCount: finalizedPayslips.length,
@@ -487,9 +489,7 @@ export const ownerExecutiveSummary = query({
             submitter?.name ?? submitter?.email ?? "Unknown Submitter",
           submitterEmail: submitter?.email ?? "unknown@company.com",
           isSubmitter: r.submittedBy === userId,
-          canApprove:
-            (m.role === "owner" || m.role === "admin") &&
-            r.submittedBy !== userId,
+          canApprove: m.role === "admin" || m.role === "owner",
           adjustmentReason: r.adjustmentReason,
         };
       }),

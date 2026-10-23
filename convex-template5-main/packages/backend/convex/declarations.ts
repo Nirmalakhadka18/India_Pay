@@ -131,7 +131,7 @@ export const saveDraftDeclaration = mutation({
       if (args.hra.annualRentPaid < 0) {
         throw new ConvexError("Annual rent paid cannot be negative");
       }
-      if (args.hra.landlordPan && args.hra.landlordPan.trim()) {
+      if (args.hra.landlordPan?.trim()) {
         const pan = args.hra.landlordPan.trim().toUpperCase();
         if (!PAN_REGEX.test(pan)) {
           throw new ConvexError("Invalid Landlord PAN format. Must be 10 characters (e.g. ABCDE1234F)");
@@ -143,7 +143,7 @@ export const saveDraftDeclaration = mutation({
       if (args.homeLoan.annualInterest < 0) {
         throw new ConvexError("Home loan interest cannot be negative");
       }
-      if (args.homeLoan.lenderPan && args.homeLoan.lenderPan.trim()) {
+      if (args.homeLoan.lenderPan?.trim()) {
         const pan = args.homeLoan.lenderPan.trim().toUpperCase();
         if (!PAN_REGEX.test(pan)) {
           throw new ConvexError("Invalid Lender PAN format. Must be 10 characters (e.g. ABCDE1234F)");
@@ -339,7 +339,7 @@ export const listDeclarations = query({
       q = ctx.db
         .query("taxDeclarations")
         .withIndex("by_workspace_status", (q) =>
-          q.eq("workspaceId", args.workspaceId).eq("status", args.status as any),
+          q.eq("workspaceId", args.workspaceId).eq("status", args.status as "draft" | "submitted" | "approved" | "rejected"),
         );
     }
 

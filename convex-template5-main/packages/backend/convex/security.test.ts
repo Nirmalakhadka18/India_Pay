@@ -461,21 +461,9 @@ describe("Maker-Checker payroll enforcement & Leave RBAC", () => {
     ).resolves.toBeNull();
   });
 
-  test("approveRun rejects submitter (strict two-person Maker-Checker rule)", async () => {
+  test("approveRun allows admin to approve submitted payroll run (admin full access)", async () => {
     const t = convexTest(schema, modules);
     const { ws, owner } = await seedWorkspace(t);
-
-    // Add a second owner to test legitimate 2-person approval
-    const secondOwner = await t.run(async (ctx) => {
-      const u2 = await ctx.db.insert("users", { email: "owner2@t.test" });
-      await ctx.db.insert("members", {
-        workspaceId: ws,
-        userId: u2,
-        role: "owner",
-        createdAt: Date.now(),
-      });
-      return u2;
-    });
 
     const runId = await t.run(async (ctx) => {
       return await ctx.db.insert("payrollRuns", {
@@ -498,17 +486,9 @@ describe("Maker-Checker payroll enforcement & Leave RBAC", () => {
       });
     });
 
-    // Submitter cannot approve their own run
+    // Submitter Admin has full access to approve their own run
     await expect(
       t.withIdentity(as(owner)).mutation(api.payroll.approveRun, {
-        workspaceId: ws,
-        payrollRunId: runId,
-      }),
-    ).rejects.toThrow(/You cannot approve a payroll run that you submitted/);
-
-    // Second owner can approve
-    await expect(
-      t.withIdentity(as(secondOwner)).mutation(api.payroll.approveRun, {
         workspaceId: ws,
         payrollRunId: runId,
       }),
@@ -517,7 +497,7 @@ describe("Maker-Checker payroll enforcement & Leave RBAC", () => {
     // Verify status updated to approved
     const updated = await t.run(async (ctx) => ctx.db.get(runId));
     expect(updated?.status).toBe("approved");
-    expect(updated?.approvedBy).toBe(secondOwner);
+    expect(updated?.approvedBy).toBe(owner);
   });
 });
 
@@ -1026,17 +1006,9 @@ describe("Admin vs Member RBAC — dev account role verification", () => {
       }),
     );
 
-    // Admin submitted the run, so Admin cannot approve own run when another approver exists (Maker-Checker)
+    // Admin submitted the run, and Admin has full access to approve own run
     await expect(
       t.withIdentity(as(admin)).mutation(api.payroll.approveRun, {
-        workspaceId: ws,
-        payrollRunId: runId,
-      }),
-    ).rejects.toThrow("You cannot approve a payroll run that you submitted");
-
-    // Owner (different person) can approve
-    await expect(
-      t.withIdentity(as(owner)).mutation(api.payroll.approveRun, {
         workspaceId: ws,
         payrollRunId: runId,
       }),
@@ -1423,13 +1395,13 @@ describe("Owner Account Provisioning, RBAC & Maker-Checker Suite", () => {
       }),
     );
 
-    // Admin who submitted cannot self-approve due to Maker-Checker
+    // Admin who submitted can approve with full admin access
     await expect(
       asAdmin.mutation(api.payroll.approveRun, {
         workspaceId: ws,
         payrollRunId: run1Id,
       }),
-    ).rejects.toThrow("You cannot approve a payroll run that you submitted");
+    ).resolves.toBeNull();
 
     // Plain member cannot reject
     await expect(
@@ -1440,19 +1412,7 @@ describe("Owner Account Provisioning, RBAC & Maker-Checker Suite", () => {
       }),
     ).rejects.toThrow(/Forbidden/);
 
-    // Owner CAN approve run submitted by Admin
-    await expect(
-      asOwner.mutation(api.payroll.approveRun, {
-        workspaceId: ws,
-        payrollRunId: run1Id,
-      }),
-    ).resolves.toBeNull();
-
-    const updatedRun1 = await t.run(async (ctx) => ctx.db.get(run1Id));
-    expect(updatedRun1?.status).toBe("approved");
-    expect(updatedRun1?.approvedBy).toBe(ownerUser);
-
-    // Run 2: Submitted by Owner
+    // Run 2: Submitted by Owner/Admin
     const run2Id = await t.run(async (ctx) =>
       ctx.db.insert("payrollRuns", {
         workspaceId: ws,
@@ -1474,13 +1434,13 @@ describe("Owner Account Provisioning, RBAC & Maker-Checker Suite", () => {
       }),
     );
 
-    // Strict Maker-Checker: Owner CANNOT approve their own run
+    // Admin/Owner CAN approve their own run
     await expect(
       asOwner.mutation(api.payroll.approveRun, {
         workspaceId: ws,
         payrollRunId: run2Id,
       }),
-    ).rejects.toThrow(/You cannot approve a payroll run that you submitted/);
+    ).resolves.toBeNull();
 
     // Run 3: Testing Owner rejection of Admin submitted run
     const run3Id = await t.run(async (ctx) =>

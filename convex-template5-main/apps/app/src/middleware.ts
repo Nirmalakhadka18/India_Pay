@@ -18,6 +18,19 @@ const isSignInPage = createRouteMatcher([
   "/(.*)/login",
 ]);
 
+function applySecurityHeaders<T extends { headers?: Headers }>(res: T): T {
+  if (res?.headers) {
+    res.headers.set("X-Content-Type-Options", "nosniff");
+    res.headers.set("X-Frame-Options", "SAMEORIGIN");
+    res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.headers.set(
+      "Permissions-Policy",
+      "camera=(), microphone=(), geolocation=()",
+    );
+  }
+  return res;
+}
+
 export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {
   const isSignIn = isSignInPage(request);
   const isExpired =
@@ -31,15 +44,15 @@ export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {
     const isLocalhost =
       host.includes("localhost") || host.includes("127.0.0.1");
     const prefix = isLocalhost ? "" : "__Host-";
-    response.cookies.delete(prefix + "__convexAuthJWT");
-    response.cookies.delete(prefix + "__convexAuthRefreshToken");
-    response.cookies.delete(prefix + "__convexAuthOAuthVerifier");
-    return response;
+    response.cookies.delete(`${prefix}__convexAuthJWT`);
+    response.cookies.delete(`${prefix}__convexAuthRefreshToken`);
+    response.cookies.delete(`${prefix}__convexAuthOAuthVerifier`);
+    return applySecurityHeaders(response);
   }
 
   const isAuthenticated = await convexAuth.isAuthenticated();
   if (isSignIn && isAuthenticated) {
-    return nextjsMiddlewareRedirect(request, "/");
+    return applySecurityHeaders(nextjsMiddlewareRedirect(request, "/"));
   }
   if (!isSignIn && !isAuthenticated) {
     const redirectResponse = nextjsMiddlewareRedirect(request, "/login");
@@ -49,7 +62,7 @@ export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {
     );
     redirectResponse.headers.set("Pragma", "no-cache");
     redirectResponse.headers.set("Expires", "0");
-    return redirectResponse;
+    return applySecurityHeaders(redirectResponse);
   }
 
   const response = I18nMiddleware(request);
@@ -61,7 +74,7 @@ export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {
     response.headers.set("Pragma", "no-cache");
     response.headers.set("Expires", "0");
   }
-  return response;
+  return applySecurityHeaders(response);
 });
 
 export const config = {

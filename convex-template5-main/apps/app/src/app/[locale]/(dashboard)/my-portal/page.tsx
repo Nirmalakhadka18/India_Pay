@@ -6,7 +6,6 @@ import { api } from "@v1/backend/convex/_generated/api";
 import type { Id } from "@v1/backend/convex/_generated/dataModel";
 import { Button } from "@v1/ui/button";
 import { useMutation, useQuery } from "convex/react";
-import { format } from "date-fns";
 import {
   AlertCircle,
   Building2,
@@ -44,12 +43,6 @@ export default function MyPortal() {
   const me = useQuery(api.employees.getMyProfile, scoped);
   const payslips = useQuery(api.payroll.getMyPayslips, scoped);
   const myLeaves = useQuery(api.leaves.getMyLeaves, scoped);
-  const myAttendance = useQuery(
-    api.attendance.getMyAttendance,
-    workspaceId
-      ? { workspaceId, periodMonth: format(new Date(), "yyyy-MM") }
-      : "skip",
-  );
   const linkMyAccount = useMutation(api.employees.linkMyAccount);
   const submitMyLeave = useMutation(api.leaves.submitMyLeave);
 
@@ -60,9 +53,7 @@ export default function MyPortal() {
   const [selectedPayslipRunId, setSelectedPayslipRunId] = useState<
     string | null
   >(null);
-  const [activeTab, setActiveTab] = useState<
-    "profile" | "leaves" | "attendance"
-  >("profile");
+  const [activeTab, setActiveTab] = useState<"profile" | "leaves">("profile");
   const [revealSensitive, setRevealSensitive] = useState(false);
 
   // Leave Form State
@@ -196,12 +187,11 @@ export default function MyPortal() {
         <div>
           <h1 className="text-2xl font-semibold text-primary">My Portal</h1>
           <p className="text-sm text-muted-foreground">
-            Manage your personal profile, leaves, attendance, and view your
-            payslips securely.
+            Manage your personal profile, leaves, and view your payslips securely.
           </p>
         </div>
 
-        <div className="flex space-x-1 rounded-lg bg-muted p-1 w-full max-w-lg mb-4">
+        <div className="flex space-x-1 rounded-lg bg-muted p-1 w-full max-w-md mb-4">
           <button
             type="button"
             className={`w-full rounded-md px-3 py-1.5 text-sm font-medium ${activeTab === "profile" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:bg-background/50 hover:text-foreground"}`}
@@ -215,13 +205,6 @@ export default function MyPortal() {
             onClick={() => setActiveTab("leaves")}
           >
             Leave Requests
-          </button>
-          <button
-            type="button"
-            className={`w-full rounded-md px-3 py-1.5 text-sm font-medium ${activeTab === "attendance" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:bg-background/50 hover:text-foreground"}`}
-            onClick={() => setActiveTab("attendance")}
-          >
-            Attendance
           </button>
         </div>
 
@@ -483,8 +466,6 @@ export default function MyPortal() {
                     className="mt-1 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
                   >
                     <option value="sick">Sick Leave</option>
-                    <option value="casual">Casual Leave</option>
-                    <option value="earned">Earned Leave</option>
                     <option value="unpaid">Unpaid Leave</option>
                   </select>
                 </div>
@@ -588,80 +569,6 @@ export default function MyPortal() {
                                 {l.reviewRemarks}
                               </div>
                             )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "attendance" && (
-          <div className="grid gap-6">
-            <div className="rounded-lg border border-border bg-card overflow-hidden">
-              <div className="border-b border-border px-6 py-4 flex items-center justify-between">
-                <h3 className="font-semibold flex items-center gap-2">
-                  <CalendarClock className="h-5 w-5 text-primary/50" /> My
-                  Attendance (Current Month)
-                </h3>
-              </div>
-              <div className="p-0">
-                {myAttendance === undefined ? (
-                  <div className="p-8 text-center text-muted-foreground">
-                    <Loader2 className="mx-auto h-5 w-5 animate-spin" />
-                  </div>
-                ) : myAttendance.length === 0 ? (
-                  <div className="p-8 text-center text-muted-foreground">
-                    No attendance records for the current month.
-                  </div>
-                ) : (
-                  <table className="w-full text-left text-sm">
-                    <thead className="bg-muted/50 text-muted-foreground">
-                      <tr>
-                        <th className="px-6 py-3 font-medium">Date</th>
-                        <th className="px-6 py-3 font-medium">Status</th>
-                        <th className="px-6 py-3 font-medium">
-                          Check-In / Out
-                        </th>
-                        <th className="px-6 py-3 font-medium">Remarks</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border/50">
-                      {myAttendance.map((a) => (
-                        <tr
-                          key={a._id}
-                          className="group hover:bg-muted/50 transition-colors"
-                        >
-                          <td className="px-6 py-3 font-medium text-primary">
-                            {a.date}
-                          </td>
-                          <td className="px-6 py-3 capitalize">
-                            <span
-                              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                                a.status === "present"
-                                  ? "bg-emerald-500/10 text-emerald-500"
-                                  : a.status === "absent"
-                                    ? "bg-red-500/10 text-red-500"
-                                    : a.status === "half_day"
-                                      ? "bg-amber-500/10 text-amber-500"
-                                      : a.status === "paid_leave" ||
-                                          a.status === "unpaid_leave"
-                                        ? "bg-blue-500/10 text-blue-500"
-                                        : "bg-primary/10 text-primary"
-                              }`}
-                            >
-                              {a.status.replace("_", " ")}
-                            </span>
-                          </td>
-                          <td className="px-6 py-3 text-muted-foreground">
-                            {a.checkInTime || "—"}{" "}
-                            {a.checkOutTime && `to ${a.checkOutTime}`}
-                          </td>
-                          <td className="px-6 py-3 text-muted-foreground">
-                            {a.remarks || "—"}
                           </td>
                         </tr>
                       ))}

@@ -54,7 +54,7 @@ export const provisionDevAccountsMutation = internalMutation({
 
     if (existingOwner) {
       ownerUserId = existingOwner._id;
-      const patchObj: Record<string, any> = {};
+      const patchObj: { emailVerificationTime?: number; username?: string } = {};
       if (!existingOwner.emailVerificationTime) {
         patchObj.emailVerificationTime = now;
       }
@@ -108,7 +108,7 @@ export const provisionDevAccountsMutation = internalMutation({
 
     if (existingAdmin) {
       adminUserId = existingAdmin._id;
-      const patchObj: Record<string, any> = {};
+      const patchObj: { emailVerificationTime?: number; username?: string } = {};
       if (!existingAdmin.emailVerificationTime) {
         patchObj.emailVerificationTime = now;
       }
@@ -162,7 +162,7 @@ export const provisionDevAccountsMutation = internalMutation({
 
     if (existingUser) {
       userUserId = existingUser._id;
-      const patchObj: Record<string, any> = {};
+      const patchObj: { emailVerificationTime?: number; username?: string } = {};
       if (!existingUser.emailVerificationTime) {
         patchObj.emailVerificationTime = now;
       }

@@ -325,14 +325,6 @@ describe("Two-Organization Multi-Tenant User Acceptance Test (UAT)", () => {
       payrollRunId: run1Id,
     });
 
-    // Submitter cannot approve their own run
-    await expect(
-      asAdmin1.mutation(api.payroll.approveRun, {
-        workspaceId: ws1Id,
-        payrollRunId: run1Id,
-      }),
-    ).rejects.toThrow("You cannot approve a payroll run that you submitted");
-
     // Cross-tenant approval attempt: Org 2 Owner cannot approve Org 1 run
     await expect(
       asOwner2.mutation(api.payroll.approveRun, {
@@ -341,8 +333,8 @@ describe("Two-Organization Multi-Tenant User Acceptance Test (UAT)", () => {
       }),
     ).rejects.toThrow("Forbidden");
 
-    // Valid Approval & Finalization in Org 1:
-    await asOwner1.mutation(api.payroll.approveRun, {
+    // Submitter Admin1 can approve their own run with full access:
+    await asAdmin1.mutation(api.payroll.approveRun, {
       workspaceId: ws1Id,
       payrollRunId: run1Id,
     });
