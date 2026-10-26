@@ -13,8 +13,18 @@ import {
 } from "@v1/ui/dialog";
 import { Input } from "@v1/ui/input";
 import { useMutation, useQuery } from "convex/react";
-import { IndianRupee, Loader2, Plus, Search, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import {
+  AlertCircle,
+  CheckCircle2,
+  IndianRupee,
+  Loader2,
+  Plus,
+  Search,
+  Trash2,
+  Wand2,
+} from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
 export default function SalariesPage() {
@@ -26,6 +36,8 @@ export default function SalariesPage() {
 }
 
 function SalariesContent() {
+  const searchParams = useSearchParams();
+  const targetEmployeeId = searchParams?.get("employeeId");
   const { current } = useWorkspace();
   const workspaceId = current;
 
@@ -47,6 +59,7 @@ function SalariesContent() {
   } | null>(null);
 
   // Salary Form State
+  const [monthlyGross, setMonthlyGross] = useState("");
   const [basicSalary, setBasicSalary] = useState("");
   const [allowances, setAllowances] = useState<
     { name: string; amount: number }[]
@@ -56,6 +69,65 @@ function SalariesContent() {
   >([]);
   const [effectiveDate, setEffectiveDate] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // 50/20/30 Distribution: Basic 50%, HRA 20%, Special Allowance remaining 30%
+  const apply502030Distribution = (grossVal: number) => {
+    const gross = Math.max(0, Math.round(grossVal));
+    const basic = Math.round(gross * 0.5);
+    const hra = Math.round(gross * 0.2);
+    // Special Allowance absorbs any odd-rupee rounding differences
+    const special = Math.max(0, gross - basic - hra);
+
+    setBasicSalary(basic.toString());
+    const newAllowances: { name: string; amount: number }[] = [];
+    if (hra > 0 || gross > 0) {
+      newAllowances.push({ name: "HRA", amount: hra });
+    }
+    if (special > 0 || gross > 0) {
+      newAllowances.push({ name: "Special Allowance", amount: special });
+    }
+    setAllowances(newAllowances);
+  };
+
+  const handleGrossChange = (val: string) => {
+    setMonthlyGross(val);
+    const num = Number(val);
+    if (!Number.isNaN(num) && num > 0) {
+      apply502030Distribution(num);
+    } else if (val === "") {
+      setBasicSalary("");
+      setAllowances([]);
+    }
+  };
+
+  const handleRebalanceSpecialAllowance = () => {
+    const gross = Number(monthlyGross) || 0;
+    const basic = Number(basicSalary) || 0;
+    const nonSpecial = allowances.filter(
+      (a) => a.name.trim().toLowerCase() !== "special allowance"
+    );
+    const nonSpecialSum = nonSpecial.reduce(
+      (acc, a) => acc + (a.amount || 0),
+      0
+    );
+    const remainder = Math.max(0, gross - basic - nonSpecialSum);
+
+    setAllowances([
+      ...nonSpecial,
+      { name: "Special Allowance", amount: remainder },
+    ]);
+  };
+
+  // Real-time component reconciliation
+  const grossNum = Number(monthlyGross) || 0;
+  const basicNum = Number(basicSalary) || 0;
+  const allowancesTotal = allowances.reduce(
+    (sum, a) => sum + (Number(a.amount) || 0),
+    0
+  );
+  const totalComponents = basicNum + allowancesTotal;
+  const diff = grossNum - totalComponents;
+  const isBalanced = grossNum > 0 && Math.abs(diff) < 0.01;
 
   const activeEmployees = useMemo(() => {
     return employees?.filter((e) => e.status === "active") || [];
@@ -87,26 +159,62 @@ function SalariesContent() {
     // Pre-fill if exists
     const existing = currentSalaries?.find((s) => s.employeeId === emp._id);
     if (existing) {
+      const computedGross =
+        existing.grossSalary ??
+        (existing.basicSalary || 0) +
+          (existing.allowances || []).reduce(
+            (acc, a) => acc + (a.amount || 0),
+            0
+          );
+      setMonthlyGross(computedGross > 0 ? computedGross.toString() : "");
       setBasicSalary(existing.basicSalary?.toString() ?? "");
-      setAllowances(existing.allowances || []);
-      setDeductions(existing.deductions || []);
+      setAllowances(
+        existing.allowances ? existing.allowances.map((a) => ({ ...a })) : []
+      );
+      setDeductions(
+        existing.deductions ? existing.deductions.map((d) => ({ ...d })) : []
+      );
     } else {
+      setMonthlyGross("");
       setBasicSalary("");
       setAllowances([]);
       setDeductions([]);
     }
   };
 
+  // Automatically open manage modal if targetEmployeeId is passed via query params
+  useEffect(() => {
+    if (targetEmployeeId && activeEmployees.length > 0 && !selectedEmployee) {
+      const target = activeEmployees.find((e) => e._id === targetEmployeeId);
+      if (target) {
+        handleManage(target);
+      }
+    }
+  }, [targetEmployeeId, activeEmployees, selectedEmployee, currentSalaries]);
+
   const handleSaveSalary = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!workspaceId || !selectedEmployee) return;
+
+    if (grossNum <= 0) {
+      toast.error("Please enter a valid positive Monthly Gross Salary");
+      return;
+    }
+
+    if (!isBalanced) {
+      toast.error(
+        `Components total (₹${totalComponents.toLocaleString("en-IN")}) does not match Monthly Gross Salary (₹${grossNum.toLocaleString("en-IN")})`,
+      );
+      return;
+    }
 
     setIsSubmitting(true);
     try {
       await addSalary({
         workspaceId,
         employeeId: selectedEmployee._id as Id<"employees">,
-        basicSalary: Number(basicSalary) || 0,
+        grossSalary: grossNum,
+        basicSalary: basicNum,
         allowances,
         deductions,
         effectiveDate: new Date(effectiveDate).getTime(),
@@ -221,32 +329,71 @@ function SalariesContent() {
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSaveSalary} className="space-y-6 pt-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Basic Salary</label>
-                  <Input
-                    type="number"
-                    required
-                    min="0"
-                    value={basicSalary}
-                    onChange={(e) => setBasicSalary(e.target.value)}
-                    placeholder="e.g. 50000"
-                  />
+              {/* Monthly Gross Salary & Effective Date */}
+              <div className="rounded-lg border bg-card p-4 space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold flex items-center gap-1.5">
+                      <IndianRupee className="h-4 w-4 text-primary" />
+                      Monthly Gross Salary
+                    </label>
+                    <Input
+                      type="number"
+                      required
+                      min="1"
+                      step="1"
+                      value={monthlyGross}
+                      onChange={(e) => handleGrossChange(e.target.value)}
+                      placeholder="e.g. 50000"
+                      className="text-base font-medium"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Total monthly salary budget for the employee.
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold">Effective Date</label>
+                    <Input
+                      type="date"
+                      required
+                      value={effectiveDate}
+                      onChange={(e) => setEffectiveDate(e.target.value)}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Date from which this structure takes effect.
+                    </p>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Effective Date</label>
-                  <Input
-                    type="date"
-                    required
-                    value={effectiveDate}
-                    onChange={(e) => setEffectiveDate(e.target.value)}
-                  />
-                </div>
+
+                {grossNum > 0 && (
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t text-xs">
+                    <span className="text-muted-foreground">
+                      Standard Policy: Basic 50% | HRA 20% | Special 30%
+                    </span>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="h-7 text-xs"
+                      onClick={() => apply502030Distribution(grossNum)}
+                    >
+                      <Wand2 className="mr-1.5 h-3 w-3" /> Auto-Distribute (50/20/30)
+                    </Button>
+                  </div>
+                )}
               </div>
 
+              {/* Salary Components Breakdown */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium">Allowances</label>
+                  <div>
+                    <h3 className="text-sm font-semibold text-primary">
+                      Salary Components (Gross Breakdown)
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      Basic is a core component. The sum of Basic and all allowances must equal the entered Monthly Gross Salary.
+                    </p>
+                  </div>
                   <Button
                     type="button"
                     variant="outline"
@@ -255,55 +402,129 @@ function SalariesContent() {
                       setAllowances([...allowances, { name: "", amount: 0 }])
                     }
                   >
-                    <Plus className="mr-1 h-3 w-3" /> Add
+                    <Plus className="mr-1 h-3 w-3" /> Add Component
                   </Button>
                 </div>
-                {allowances.map((item, idx) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: form builder array
-                  <div key={idx} className="flex items-center gap-2">
-                    <Input
-                      placeholder="Name (e.g. HRA)"
-                      value={item.name}
-                      onChange={(e) => {
-                        const newArr = [...allowances];
-                        if (newArr[idx]) {
-                          newArr[idx].name = e.target.value;
-                        }
-                        setAllowances(newArr);
-                      }}
-                      required
-                    />
+
+                {/* Core Component: Basic */}
+                <div className="flex items-center gap-3 rounded-md border bg-muted/30 p-3">
+                  <div className="w-1/2">
+                    <div className="text-xs font-semibold text-primary">Basic Salary</div>
+                    <div className="text-[11px] text-muted-foreground">
+                      Core statutory component (50% standard)
+                    </div>
+                  </div>
+                  <div className="w-1/2">
                     <Input
                       type="number"
                       min="0"
-                      placeholder="Amount"
-                      value={item.amount || ""}
-                      onChange={(e) => {
-                        const newArr = [...allowances];
-                        if (newArr[idx]) {
-                          newArr[idx].amount = Number(e.target.value);
-                        }
-                        setAllowances(newArr);
-                      }}
+                      placeholder="Basic Amount"
+                      value={basicSalary}
+                      onChange={(e) => setBasicSalary(e.target.value)}
                       required
                     />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() =>
-                        setAllowances(allowances.filter((_, i) => i !== idx))
-                      }
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
                   </div>
-                ))}
+                </div>
+
+                {/* Allowances List */}
+                <div className="space-y-2">
+                  {allowances.map((item, idx) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: form builder array
+                    <div key={idx} className="flex items-center gap-2">
+                      <Input
+                        placeholder="Component Name (e.g. HRA, Special Allowance)"
+                        value={item.name}
+                        onChange={(e) => {
+                          const newArr = [...allowances];
+                          if (newArr[idx]) {
+                            newArr[idx].name = e.target.value;
+                          }
+                          setAllowances(newArr);
+                        }}
+                        required
+                        className="w-1/2"
+                      />
+                      <Input
+                        type="number"
+                        min="0"
+                        placeholder="Amount"
+                        value={item.amount || ""}
+                        onChange={(e) => {
+                          const newArr = [...allowances];
+                          if (newArr[idx]) {
+                            newArr[idx].amount = Number(e.target.value);
+                          }
+                          setAllowances(newArr);
+                        }}
+                        required
+                        className="w-1/2"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() =>
+                          setAllowances(allowances.filter((_, i) => i !== idx))
+                        }
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               </div>
 
+              {/* Real-time Reconciliation Meter */}
+              {grossNum > 0 && (
+                <div
+                  className={`rounded-lg border p-3 text-xs ${
+                    isBalanced
+                      ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300"
+                      : "border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-300"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {isBalanced ? (
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                      ) : (
+                        <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                      )}
+                      <span className="font-semibold">
+                        {isBalanced
+                          ? "Reconciliation: Balanced (100% Allocated)"
+                          : `Reconciliation Mismatch: ₹${Math.abs(diff).toLocaleString("en-IN")} ${diff > 0 ? "Unallocated" : "Overallocated"}`}
+                      </span>
+                    </div>
+                    {!isBalanced && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="h-6 text-xs bg-background"
+                        onClick={handleRebalanceSpecialAllowance}
+                      >
+                        Balance into Special Allowance
+                      </Button>
+                    )}
+                  </div>
+                  <div className="mt-1 flex gap-4 text-[11px] opacity-90">
+                    <span>Budgeted Gross: ₹{grossNum.toLocaleString("en-IN")}</span>
+                    <span>Components Total: ₹{totalComponents.toLocaleString("en-IN")}</span>
+                    <span>Difference: ₹{diff.toLocaleString("en-IN")}</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Other / Voluntary Deductions */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium">Deductions</label>
+                  <div>
+                    <label className="text-sm font-semibold">Other / Voluntary Deductions</label>
+                    <p className="text-xs text-muted-foreground">
+                      Statutory deductions (PF, ESI, PT) are computed automatically during payroll runs.
+                    </p>
+                  </div>
                   <Button
                     type="button"
                     variant="outline"
@@ -319,7 +540,7 @@ function SalariesContent() {
                   // biome-ignore lint/suspicious/noArrayIndexKey: form builder array
                   <div key={idx} className="flex items-center gap-2">
                     <Input
-                      placeholder="Name (e.g. Tax)"
+                      placeholder="Name (e.g. Voluntary Advance)"
                       value={item.name}
                       onChange={(e) => {
                         const newArr = [...deductions];
@@ -358,13 +579,18 @@ function SalariesContent() {
                 ))}
               </div>
 
+              {/* Dialog Footer */}
               <div className="flex items-center justify-between pt-4 border-t">
-                <div className="text-sm font-medium">
-                  Gross Salary: ₹
-                  {(
-                    (Number(basicSalary) || 0) +
-                    allowances.reduce((acc, a) => acc + (a.amount || 0), 0)
-                  ).toLocaleString("en-IN")}
+                <div className="text-sm">
+                  <span className="text-muted-foreground">Monthly Gross: </span>
+                  <span className="font-semibold text-primary">
+                    ₹{grossNum.toLocaleString("en-IN")}
+                  </span>
+                  {isBalanced && (
+                    <span className="ml-2 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                      (Components Validated)
+                    </span>
+                  )}
                 </div>
                 <div className="space-x-2">
                   <Button
@@ -374,11 +600,14 @@ function SalariesContent() {
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting || !isBalanced || grossNum <= 0}
+                  >
                     {isSubmitting && (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    Save Salary
+                    Save Salary Structure
                   </Button>
                 </div>
               </div>

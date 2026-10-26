@@ -8,6 +8,7 @@ import { Button } from "@v1/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -28,12 +29,15 @@ import {
   Edit,
   Eye,
   EyeOff,
+  IndianRupee,
   Loader2,
   MoreVertical,
   Plus,
   Search,
   ShieldCheck,
+  Trash2,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -46,6 +50,7 @@ export default function EmployeesPage() {
 }
 
 function EmployeesContent() {
+  const router = useRouter();
   const { current } = useWorkspace();
   const workspaceId = current;
   const employees = useQuery(
@@ -55,10 +60,12 @@ function EmployeesContent() {
 
   const addEmployee = useMutation(api.employees.add);
   const updateEmployee = useMutation(api.employees.update);
-  const deactivateEmployee = useMutation(api.employees.deactivate);
+  const removeEmployee = useMutation(api.employees.remove);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Doc<"employees"> | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [editingEmployee, setEditingEmployee] =
     useState<Doc<"employees"> | null>(null);
   const [search, setSearch] = useState("");
@@ -82,6 +89,7 @@ function EmployeesContent() {
   const [uan, setUan] = useState("");
   const [esicIpNumber, setEsicIpNumber] = useState("");
   const [pfMemberId, setPfMemberId] = useState("");
+  const [isPfMember, setIsPfMember] = useState(true);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -111,6 +119,7 @@ function EmployeesContent() {
     setUan("");
     setEsicIpNumber("");
     setPfMemberId("");
+    setIsPfMember(true);
   };
 
   const handleAdd = async (e: React.FormEvent) => {
@@ -119,7 +128,7 @@ function EmployeesContent() {
 
     setIsSubmitting(true);
     try {
-      await addEmployee({
+      const newEmpId = await addEmployee({
         workspaceId,
         firstName,
         lastName,
@@ -132,13 +141,15 @@ function EmployeesContent() {
         bankAccountNumber: bankAccountNumber.trim() || undefined,
         ifscCode: ifscCode.trim() || undefined,
         pan: pan.trim() || undefined,
-        uan: uan.trim() || undefined,
+        uan: isPfMember ? (uan.trim() || undefined) : undefined,
         esicIpNumber: esicIpNumber.trim() || undefined,
-        pfMemberId: pfMemberId.trim() || undefined,
+        pfMemberId: isPfMember ? (pfMemberId.trim() || undefined) : undefined,
+        isPfMember,
       });
-      toast.success("Employee added successfully with master records");
+      toast.success("Employee added successfully. Opening Salary Setup...");
       setIsOpen(false);
       resetForm();
+      router.push(`/salaries?employeeId=${newEmpId}`);
     } catch (error: unknown) {
       toast.error((error as Error).message || "Failed to add employee");
     } finally {
@@ -146,13 +157,17 @@ function EmployeesContent() {
     }
   };
 
-  const handleDeactivate = async (id: Id<"employees">) => {
-    if (!workspaceId) return;
+  const handleRemove = async () => {
+    if (!workspaceId || !deleteTarget) return;
+    setIsDeleting(true);
     try {
-      await deactivateEmployee({ workspaceId, employeeId: id });
-      toast.success("Employee deactivated");
+      await removeEmployee({ workspaceId, employeeId: deleteTarget._id });
+      toast.success(`Removed ${deleteTarget.firstName} ${deleteTarget.lastName}`);
+      setDeleteTarget(null);
     } catch (error: unknown) {
-      toast.error((error as Error).message || "Failed to deactivate employee");
+      toast.error((error as Error).message || "Failed to remove employee");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -172,6 +187,7 @@ function EmployeesContent() {
     setUan(emp.uan || "");
     setEsicIpNumber(emp.esicIpNumber || "");
     setPfMemberId(emp.pfMemberId || "");
+    setIsPfMember(emp.isPfMember !== false);
     setIsEditOpen(true);
   };
 
@@ -195,9 +211,10 @@ function EmployeesContent() {
         bankAccountNumber: bankAccountNumber.trim(),
         ifscCode: ifscCode.trim(),
         pan: pan.trim(),
-        uan: uan.trim(),
+        uan: isPfMember ? (uan.trim() || undefined) : undefined,
         esicIpNumber: esicIpNumber.trim(),
-        pfMemberId: pfMemberId.trim(),
+        pfMemberId: isPfMember ? (pfMemberId.trim() || undefined) : undefined,
+        isPfMember,
       });
       toast.success("Employee master records updated successfully");
       setIsEditOpen(false);
@@ -378,6 +395,46 @@ function EmployeesContent() {
                     <ShieldCheck className="h-3.5 w-3.5" /> Statutory
                     Identifications
                   </h3>
+
+                  {/* PF Member Yes / No Selection */}
+                  <div className="p-3 rounded-lg border border-border bg-muted/40 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-semibold">
+                        PF Member (Provident Fund) *
+                      </label>
+                      <span className="text-[11px] font-medium text-muted-foreground">
+                        {isPfMember ? "Enrolled in EPF (12%)" : "Excluded from EPF (PT only)"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-6 pt-1">
+                      <label className="flex items-center gap-2 cursor-pointer text-xs font-medium">
+                        <input
+                          type="radio"
+                          name="addPfMember"
+                          checked={isPfMember === true}
+                          onChange={() => setIsPfMember(true)}
+                          className="h-4 w-4 accent-primary"
+                        />
+                        <span>Yes (Include in EPF)</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer text-xs font-medium">
+                        <input
+                          type="radio"
+                          name="addPfMember"
+                          checked={isPfMember === false}
+                          onChange={() => setIsPfMember(false)}
+                          className="h-4 w-4 accent-primary"
+                        />
+                        <span>No (Exclude from EPF)</span>
+                      </label>
+                    </div>
+                    {!isPfMember && (
+                      <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-1">
+                        Employee will be excluded from Provident Fund deductions. Professional Tax (PT) will continue to apply per state rules.
+                      </p>
+                    )}
+                  </div>
+
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <label className="text-xs font-medium">
@@ -397,6 +454,7 @@ function EmployeesContent() {
                         value={uan}
                         onChange={(e) => setUan(e.target.value)}
                         placeholder="12 numeric digits"
+                        disabled={!isPfMember}
                       />
                     </div>
                   </div>
@@ -421,6 +479,7 @@ function EmployeesContent() {
                           setPfMemberId(e.target.value.toUpperCase())
                         }
                         placeholder="e.g. KNBLR00123450000001234"
+                        disabled={!isPfMember}
                       />
                     </div>
                   </div>
@@ -558,6 +617,46 @@ function EmployeesContent() {
                     <ShieldCheck className="h-3.5 w-3.5" /> Statutory
                     Identifications
                   </h3>
+
+                  {/* PF Member Yes / No Selection */}
+                  <div className="p-3 rounded-lg border border-border bg-muted/40 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-semibold">
+                        PF Member (Provident Fund) *
+                      </label>
+                      <span className="text-[11px] font-medium text-muted-foreground">
+                        {isPfMember ? "Enrolled in EPF (12%)" : "Excluded from EPF (PT only)"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-6 pt-1">
+                      <label className="flex items-center gap-2 cursor-pointer text-xs font-medium">
+                        <input
+                          type="radio"
+                          name="editPfMember"
+                          checked={isPfMember === true}
+                          onChange={() => setIsPfMember(true)}
+                          className="h-4 w-4 accent-primary"
+                        />
+                        <span>Yes (Include in EPF)</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer text-xs font-medium">
+                        <input
+                          type="radio"
+                          name="editPfMember"
+                          checked={isPfMember === false}
+                          onChange={() => setIsPfMember(false)}
+                          className="h-4 w-4 accent-primary"
+                        />
+                        <span>No (Exclude from EPF)</span>
+                      </label>
+                    </div>
+                    {!isPfMember && (
+                      <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-1">
+                        Employee will be excluded from Provident Fund deductions. Professional Tax (PT) will continue to apply per state rules.
+                      </p>
+                    )}
+                  </div>
+
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <label className="text-xs font-medium">PAN</label>
@@ -571,6 +670,7 @@ function EmployeesContent() {
                       <Input
                         value={uan}
                         onChange={(e) => setUan(e.target.value)}
+                        disabled={!isPfMember}
                       />
                     </div>
                   </div>
@@ -593,6 +693,7 @@ function EmployeesContent() {
                         onChange={(e) =>
                           setPfMemberId(e.target.value.toUpperCase())
                         }
+                        disabled={!isPfMember}
                       />
                     </div>
                   </div>
@@ -770,17 +871,23 @@ function EmployeesContent() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem
+                              onClick={() => router.push(`/salaries?employeeId=${emp._id}`)}
+                            >
+                              <IndianRupee className="mr-2 h-4 w-4" />
+                              Configure Salary
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
                               onClick={() => handleEditOpen(emp)}
                             >
                               <Edit className="mr-2 h-4 w-4" />
                               Edit Master Records
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                              onClick={() => handleDeactivate(emp._id)}
-                              className="text-destructive"
+                              onClick={() => setDeleteTarget(emp)}
+                              className="text-destructive focus:text-destructive cursor-pointer"
                             >
-                              <Ban className="mr-2 h-4 w-4" />
-                              Deactivate
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Remove
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -792,6 +899,53 @@ function EmployeesContent() {
             </tbody>
           </table>
         </div>
+
+        {/* Remove Employee Confirmation Dialog */}
+        <Dialog
+          open={!!deleteTarget}
+          onOpenChange={(open) => !open && !isDeleting && setDeleteTarget(null)}
+        >
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-destructive">
+                <Trash2 className="h-5 w-5" />
+                Remove Employee
+              </DialogTitle>
+              <DialogDescription className="pt-2 text-sm text-muted-foreground leading-relaxed">
+                Are you sure you want to remove{" "}
+                <span className="font-semibold text-primary">
+                  {deleteTarget?.firstName} {deleteTarget?.lastName}
+                </span>
+                {deleteTarget?.designation ? ` (${deleteTarget.designation})` : ""}?
+                <br /><br />
+                This will permanently delete this employee from the directory along with their salary records and attendance entries.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="gap-2 sm:gap-0 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setDeleteTarget(null)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleRemove}
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Removing...
+                  </>
+                ) : (
+                  "Remove Employee"
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

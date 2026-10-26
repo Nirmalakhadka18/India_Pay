@@ -166,6 +166,7 @@ export function numberToIndianWords(amount: number): string {
 function escapePdfText(text: string): string {
   if (!text) return "";
   return text
+    .replace(/[—–]/g, "-") // Normalize em-dash and en-dash to hyphen for PDF Type 1 fonts
     .replace(/\\/g, "\\\\")
     .replace(/\(/g, "\\(")
     .replace(/\)/g, "\\)")
@@ -468,7 +469,12 @@ export function generatePayslipPdfString(data: PayslipData): string {
   }
 
   // Build Deductions list (ONLY applicable deductions with amount > 0)
-  const deductionsList: { name: string; amount: number }[] = [];
+  interface DeductionRowItem {
+    name: string;
+    amount: number;
+    isInformational?: boolean;
+  }
+  const deductionsList: DeductionRowItem[] = [];
 
   // LOP deduction
   if (data.lopDeduction > 0) {
@@ -518,6 +524,34 @@ export function generatePayslipPdfString(data: PayslipData): string {
         amount: c.amount,
       });
     }
+  }
+
+  // Informational Employer Contributions presented in the Deduction column/area
+  const empContributions = Array.isArray(data.employerContributions)
+    ? data.employerContributions.filter((c) => c.amount > 0)
+    : [];
+
+  const empPfTotal = empContributions
+    .filter((c) => !c.name.toUpperCase().includes("ESI"))
+    .reduce((sum, c) => sum + c.amount, 0);
+
+  const empEsiTotal = empContributions
+    .filter((c) => c.name.toUpperCase().includes("ESI"))
+    .reduce((sum, c) => sum + c.amount, 0);
+
+  if (empPfTotal > 0) {
+    deductionsList.push({
+      name: "Employer PF Contribution (informational — not deducted from net pay)",
+      amount: empPfTotal,
+      isInformational: true,
+    });
+  }
+  if (empEsiTotal > 0) {
+    deductionsList.push({
+      name: "Employer ESI Contribution (informational — not deducted from net pay)",
+      amount: empEsiTotal,
+      isInformational: true,
+    });
   }
 
   const rowCount = Math.max(earningsList.length, deductionsList.length, 5);
@@ -640,14 +674,18 @@ export function generatePayslipPdfString(data: PayslipData): string {
     const item = deductionsList[i];
     if (!item) continue;
     const y = headerLineY - 11 - i * tableRowH;
-    drawText(item.name, midX + 8, y, 7.8, false, [0.2, 0.2, 0.2]);
+    const fontSize = item.isInformational ? 5.8 : 7.8;
+    const textColor: [number, number, number] = item.isInformational
+      ? [0.45, 0.45, 0.45]
+      : [0.2, 0.2, 0.2];
+    drawText(item.name, midX + 8, y, fontSize, false, textColor);
     drawText(
       formatIndianCurrency(item.amount),
       margin + contentWidth - 8,
       y,
-      7.8,
+      fontSize,
       false,
-      [0.1, 0.1, 0.1],
+      textColor,
       "right",
     );
   }
@@ -731,145 +769,7 @@ export function generatePayslipPdfString(data: PayslipData): string {
 
   currentY = netPayY - 8;
 
-  // 5. Employer Statutory Contributions (Separate Section)
-  const empContributions = Array.isArray(data.employerContributions)
-    ? data.employerContributions.filter((c) => c.amount > 0)
-    : [];
-
-  const totalEmployer =
-    data.totalEmployerContributions ??
-    empContributions.reduce((sum, c) => sum + c.amount, 0);
-
-  if (totalEmployer > 0 && empContributions.length > 0) {
-    const secHeaderH = 15;
-    const secRowH = 13;
-    const secFooterH = 16;
-    const secTotalH =
-      secHeaderH + 12 + empContributions.length * secRowH + secFooterH;
-    const secY = currentY - secTotalH;
-
-    drawRect(
-      margin,
-      secY,
-      contentWidth,
-      secTotalH,
-      [1, 1, 1],
-      [0.2, 0.2, 0.2],
-      0.75,
-    );
-
-    // Section Header Bar
-    drawRect(
-      margin,
-      currentY - secHeaderH,
-      contentWidth,
-      secHeaderH,
-      [0.95, 0.96, 0.98],
-      [0.2, 0.2, 0.2],
-      0.75,
-    );
-    drawText(
-      "EMPLOYER STATUTORY CONTRIBUTIONS (NOT DEDUCTED FROM EMPLOYEE NET PAY)",
-      margin + 8,
-      currentY - 11,
-      7.5,
-      true,
-      [0.1, 0.2, 0.35],
-    );
-
-    // Subtitle note
-    drawText(
-      "Statutory benefits contributed by employer directly to authorities; separate from employee salary.",
-      margin + 8,
-      currentY - secHeaderH - 9,
-      6.8,
-      false,
-      [0.4, 0.45, 0.5],
-    );
-
-    // Contribution rows
-    const cStartY = currentY - secHeaderH - 22;
-    for (let i = 0; i < empContributions.length; i++) {
-      const c = empContributions[i];
-      if (!c) continue;
-      const y = cStartY - i * secRowH;
-      drawText(
-        c.name.toUpperCase(),
-        margin + 8,
-        y,
-        7.5,
-        false,
-        [0.25, 0.25, 0.25],
-      );
-      drawText(
-        formatIndianCurrency(c.amount),
-        margin + 240,
-        y,
-        7.5,
-        false,
-        [0.1, 0.1, 0.1],
-        "right",
-      );
-    }
-
-    // Horizontal line above summary
-    drawLine(
-      margin,
-      secY + secFooterH,
-      margin + contentWidth,
-      secY + secFooterH,
-      [0.2, 0.2, 0.2],
-      0.5,
-    );
-
-    const ctfY = secY + 5;
-    drawText(
-      `Total Employer Contribution: INR ${formatIndianCurrency(totalEmployer)}`,
-      margin + 8,
-      ctfY,
-      7.8,
-      true,
-      [0.1, 0.2, 0.35],
-    );
-
-    const ctcTotal =
-      data.totalCostToCompany ?? data.grossSalary + totalEmployer;
-    drawText(
-      `Total Cost to Company (CTC): INR ${formatIndianCurrency(ctcTotal)}`,
-      margin + contentWidth - 8,
-      ctfY,
-      7.8,
-      true,
-      [0.1, 0.15, 0.25],
-      "right",
-    );
-
-    currentY = secY - 8;
-  } else {
-    // Clean note when employer contributions are not applicable (Scenario B)
-    const emptyH = 22;
-    const emptyY = currentY - emptyH;
-    drawRect(
-      margin,
-      emptyY,
-      contentWidth,
-      emptyH,
-      [0.99, 0.99, 0.99],
-      [0.85, 0.85, 0.85],
-      0.5,
-    );
-    drawText(
-      "EMPLOYER STATUTORY CONTRIBUTIONS: No employer statutory contributions applicable for this employee profile.",
-      margin + 8,
-      emptyY + 7.5,
-      7.2,
-      false,
-      [0.45, 0.5, 0.55],
-    );
-    currentY = emptyY - 8;
-  }
-
-  // 6. System Generated Footer & Print Date
+  // 5. System Generated Footer & Print Date
   drawLine(margin, 52, margin + contentWidth, 52, [0.3, 0.3, 0.3], 0.5);
   drawText(
     "This is a system generated payslip and does not require signature.",

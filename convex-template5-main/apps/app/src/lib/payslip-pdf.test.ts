@@ -244,11 +244,21 @@ describe("Scenario A — ESI Applicable (Munnat Ali)", () => {
     expect(pdf).toContain("2,700.00");
     expect(pdf).toContain("154.00");
     expect(pdf).toContain("200.00");
+    // Strictly employee deductions total:
     expect(pdf).toContain("3,054.00");
+    // Strictly net pay:
     expect(pdf).toContain("26,946.00");
-    expect(pdf).toContain("EMPLOYER STATUTORY CONTRIBUTIONS");
-    expect(pdf).toContain("3,592.00");
-    expect(pdf).toContain("33,592.00");
+    // Separate bottom section must be completely removed:
+    expect(pdf).not.toContain("EMPLOYER STATUTORY CONTRIBUTIONS");
+    // Informational employer contributions present in deduction area:
+    expect(pdf).toContain(
+      "Employer PF Contribution \\(informational - not deducted from net pay\\)",
+    );
+    expect(pdf).toContain(
+      "Employer ESI Contribution \\(informational - not deducted from net pay\\)",
+    );
+    // PF percentage (12%) must never be displayed:
+    expect(pdf).not.toContain("12%");
     expect(pdf).toContain(
       "Rupees Twenty Six Thousand Nine Hundred Forty Six Only",
     );
@@ -279,10 +289,9 @@ describe("Scenario B — No ESI, No PF, PT Only (Satish Biradar)", () => {
     // PF and ESI deduction rows must be completely omitted
     expect(pdf).not.toContain("(PF) Tj");
     expect(pdf).not.toContain("(ESI) Tj");
-    expect(pdf).toContain(
-      "No employer statutory contributions applicable for this employee profile",
-    );
-    expect(pdf).toContain("Rupees Thirty Four Thousand Eight Hundred Only");
+    // Separate bottom section must be completely removed
+    expect(pdf).not.toContain("EMPLOYER STATUTORY CONTRIBUTIONS");
+    expect(pdf).toContain("Rupees Thirty Four Hundred Eight Hundred Only".replace("Four Hundred", "Four Thousand"));
   });
 });
 
@@ -297,14 +306,8 @@ describe("Scenario C — PF Applicable, ESI Not Applicable (Gowramma KB)", () =>
     // Net Pay + Deductions must strictly equal Gross Earnings
     expect(data.netSalary + data.totalDeductions).toBe(data.grossSalary);
 
-    // Audit reconciliation against sample PDF discrepancy:
-    // Sample PDF reported 63,550 by deducting 6,450 (which included 3,250 employer costs).
-    const sampleIncorrectDeductions = 3200 + 3250; // 6450
-    const sampleIncorrectNetPay = 70000 - sampleIncorrectDeductions; // 63550
-    expect(sampleIncorrectNetPay).toBe(63550);
     // Correct IndiaPay statutory net pay must be 66,800:
     expect(data.netSalary).toBe(66800);
-    expect(data.netSalary).not.toBe(sampleIncorrectNetPay);
   });
 
   test("generates valid PDF embedding Scenario C breakdown", () => {
@@ -321,10 +324,17 @@ describe("Scenario C — PF Applicable, ESI Not Applicable (Gowramma KB)", () =>
     expect(pdf).toContain("200.00");
     expect(pdf).toContain("3,200.00");
     expect(pdf).toContain("66,800.00");
+    // Informational employer PF contribution in deduction area:
+    expect(pdf).toContain(
+      "Employer PF Contribution \\(informational - not deducted from net pay\\)",
+    );
     expect(pdf).toContain("3,250.00");
-    expect(pdf).toContain("73,250.00");
+    // Separate bottom section must be completely removed:
+    expect(pdf).not.toContain("EMPLOYER STATUTORY CONTRIBUTIONS");
     // ESI deduction row must be completely omitted
     expect(pdf).not.toContain("(ESI) Tj");
+    // PF percentage (12%) must never be displayed:
+    expect(pdf).not.toContain("12%");
     expect(pdf).toContain("Rupees Sixty Six Thousand Eight Hundred Only");
   });
 });
@@ -356,6 +366,10 @@ describe("Zero Deductions, LOP & Proration Handling", () => {
     expect(pdf).toContain("Alice Walker");
     expect(pdf).toContain("50,000.00");
     expect(pdf).toContain("Rupees Fifty Thousand Only");
+    expect(pdf).not.toContain("Employer PF Contribution");
+    expect(pdf).not.toContain("Employer ESI Contribution");
+    expect(pdf).not.toContain("EMPLOYER STATUTORY CONTRIBUTIONS");
+    expect(pdf).not.toContain("12%");
   });
 
   test("accurately reflects LOP deduction and master vs payable basic", () => {

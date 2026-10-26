@@ -11,7 +11,7 @@ import {
 } from "./_generated/server";
 import { audit } from "./auditLog";
 import { requireDevSeed } from "./devGuard";
-import { requireMember } from "./orgs";
+import { requireMember, requireRole } from "./orgs";
 
 function toHex(bytes: Uint8Array): string {
   return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
@@ -36,9 +36,19 @@ export const store = internalMutation({
     name: v.string(),
     prefix: v.string(),
     hash: v.string(),
+    // SECURITY: workspace-wide API keys are an administrative capability.
+    // The public `create` action (which cannot query memberships itself)
+    // defers this admin-role check to this mutation context. The internal
+    // dev-seed path (`createForUser`, gated by requireDevSeed) may create
+    // member-owned keys for provisioning workflows.
+    requireAdminRole: v.optional(v.boolean()),
   },
   handler: async (ctx, a) => {
-    await requireMember(ctx, a.userId, a.workspaceId);
+    if (a.requireAdminRole) {
+      await requireRole(ctx, a.userId, a.workspaceId, ["admin"]);
+    } else {
+      await requireMember(ctx, a.userId, a.workspaceId);
+    }
     const id = await ctx.db.insert("apiKeys", {
       workspaceId: a.workspaceId,
       userId: a.userId,
@@ -68,6 +78,7 @@ export const create = action({
       name,
       prefix: key.slice(0, 11),
       hash: await sha256Hex(key),
+      requireAdminRole: true,
     });
     return { key, prefix: key.slice(0, 11) };
   },
@@ -121,8 +132,18 @@ export const revoke = mutation({
     if (!userId) throw new Error("Not authenticated");
     const k = await ctx.db.get(id);
     if (!k) throw new Error("Not found");
-    if (k.workspaceId) await requireMember(ctx, userId, k.workspaceId);
-    else if (k.userId !== userId) throw new Error("Forbidden");
+    // SECURITY: the key owner may revoke their own key; only workspace
+    // admins may revoke other users' keys.
+    const isOwner = k.userId === userId;
+    if (k.workspaceId) {
+      if (isOwner) {
+        await requireMember(ctx, userId, k.workspaceId);
+      } else {
+        await requireRole(ctx, userId, k.workspaceId, ["admin"]);
+      }
+    } else if (!isOwner) {
+      throw new Error("Forbidden");
+    }
     await ctx.db.patch(id, { revoked: true });
     if (k.workspaceId)
       await audit(ctx, k.workspaceId, userId, "apikey.revoke", {

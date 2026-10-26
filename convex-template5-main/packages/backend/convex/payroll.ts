@@ -5,6 +5,7 @@ import { audit } from "./auditLog";
 import { requireMember, requireRole } from "./orgs";
 
 import { maskAccountNumber, maskPan, maskUan } from "./employees";
+import { isSalaryNewer } from "./salaries";
 import {
   type CalculationContext,
   computeEmployeePayrollItem,
@@ -55,7 +56,7 @@ export const calculatePreview = query({
     const currentSalaries = new Map<string, (typeof allSalaries)[0]>();
     for (const s of allSalaries) {
       const existing = currentSalaries.get(s.employeeId);
-      if (!existing || s.effectiveDate > existing.effectiveDate) {
+      if (!existing || isSalaryNewer(s, existing)) {
         currentSalaries.set(s.employeeId, s);
       }
     }
@@ -233,7 +234,7 @@ export const createRun = mutation({
     const currentSalaries = new Map<string, (typeof allSalaries)[0]>();
     for (const s of allSalaries) {
       const existing = currentSalaries.get(s.employeeId);
-      if (!existing || s.effectiveDate > existing.effectiveDate) {
+      if (!existing || isSalaryNewer(s, existing)) {
         currentSalaries.set(s.employeeId, s);
       }
     }

@@ -268,10 +268,11 @@ function ReportsContent() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setIsTdsOpen(true)}
-                      className="gap-2 border-indigo-200 dark:border-indigo-900 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 font-semibold"
+                      disabled
+                      className="gap-2 border-indigo-200 dark:border-indigo-900 text-indigo-400 dark:text-indigo-500 font-semibold opacity-60 cursor-not-allowed"
+                      title="Form 138 / 24Q TDS skipped — TDS withholding is not currently required"
                     >
-                      <Receipt className="h-4 w-4" /> Form 138 / 24Q TDS
+                      <Receipt className="h-4 w-4" /> Form 138 / 24Q TDS (Skipped)
                     </Button>
                     <Button
                       variant="secondary"

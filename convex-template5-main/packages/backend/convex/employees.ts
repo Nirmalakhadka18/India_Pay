@@ -242,6 +242,7 @@ export const add = mutation({
     uan: v.optional(v.string()),
     esicIpNumber: v.optional(v.string()),
     pfMemberId: v.optional(v.string()),
+    isPfMember: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -302,9 +303,31 @@ export const add = mutation({
       uan,
       esicIpNumber,
       pfMemberId,
+      isPfMember: args.isPfMember !== undefined ? args.isPfMember : true,
       createdAt: now,
       updatedAt: now,
     });
+
+    if (args.isPfMember !== undefined) {
+      const existingComp = await ctx.db
+        .query("employeeCompliance")
+        .withIndex("by_employee", (q) => q.eq("employeeId", employeeId))
+        .first();
+      if (existingComp) {
+        await ctx.db.patch(existingComp._id, {
+          epfOptOut: !args.isPfMember,
+          updatedAt: now,
+        });
+      } else {
+        await ctx.db.insert("employeeCompliance", {
+          workspaceId: args.workspaceId,
+          employeeId,
+          taxRegime: "new",
+          epfOptOut: !args.isPfMember,
+          updatedAt: now,
+        });
+      }
+    }
 
     // Masked audit logging - never write sensitive raw values to logs
     await audit(ctx, args.workspaceId, userId, "employee.add", {
@@ -340,6 +363,7 @@ export const update = mutation({
     uan: v.optional(v.string()),
     esicIpNumber: v.optional(v.string()),
     pfMemberId: v.optional(v.string()),
+    isPfMember: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -362,6 +386,28 @@ export const update = mutation({
     if (incomingUserId !== undefined) {
       finalUpdates.userId =
         incomingUserId === null ? undefined : incomingUserId;
+    }
+
+    if (updates.isPfMember !== undefined) {
+      finalUpdates.isPfMember = updates.isPfMember;
+      const existingComp = await ctx.db
+        .query("employeeCompliance")
+        .withIndex("by_employee", (q) => q.eq("employeeId", employeeId))
+        .first();
+      if (existingComp) {
+        await ctx.db.patch(existingComp._id, {
+          epfOptOut: !updates.isPfMember,
+          updatedAt: Date.now(),
+        });
+      } else {
+        await ctx.db.insert("employeeCompliance", {
+          workspaceId: args.workspaceId,
+          employeeId,
+          taxRegime: "new",
+          epfOptOut: !updates.isPfMember,
+          updatedAt: Date.now(),
+        });
+      }
     }
 
     if (updates.firstName !== undefined) {
@@ -474,6 +520,138 @@ export const deactivate = mutation({
     });
     await audit(ctx, args.workspaceId, userId, "employee.deactivate", {
       employeeId: args.employeeId,
+    });
+  },
+});
+
+export const remove = mutation({
+  args: {
+    workspaceId: v.id("workspaces"),
+    employeeId: v.id("employees"),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError("Not authenticated");
+    await requireRole(ctx, userId, args.workspaceId, ["admin"]);
+
+    const employee = await ctx.db.get(args.employeeId);
+    if (!employee || employee.workspaceId !== args.workspaceId) {
+      throw new ConvexError("Employee not found");
+    }
+
+    // Cascade delete all associated records to ensure no orphaned documents
+    const salaries = await ctx.db
+      .query("salaries")
+      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
+      .collect();
+    for (const s of salaries) {
+      await ctx.db.delete(s._id);
+    }
+
+    const attendances = await ctx.db
+      .query("attendance")
+      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
+      .collect();
+    for (const a of attendances) {
+      await ctx.db.delete(a._id);
+    }
+
+    const leaves = await ctx.db
+      .query("leaveRequests")
+      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
+      .collect();
+    for (const l of leaves) {
+      await ctx.db.delete(l._id);
+    }
+
+    const compliances = await ctx.db
+      .query("employeeCompliance")
+      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
+      .collect();
+    for (const c of compliances) {
+      await ctx.db.delete(c._id);
+    }
+
+    const taxDecs = await ctx.db
+      .query("taxDeclarations")
+      .withIndex("by_employee_fy", (q) => q.eq("employeeId", args.employeeId))
+      .collect();
+    for (const t of taxDecs) {
+      await ctx.db.delete(t._id);
+    }
+
+    const tickets = await ctx.db
+      .query("helpdeskTickets")
+      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
+      .collect();
+    for (const t of tickets) {
+      await ctx.db.delete(t._id);
+    }
+
+    const resignations = await ctx.db
+      .query("resignations")
+      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
+      .collect();
+    for (const r of resignations) {
+      await ctx.db.delete(r._id);
+    }
+
+    const compOffs = await ctx.db
+      .query("compOffRequests")
+      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
+      .collect();
+    for (const c of compOffs) {
+      await ctx.db.delete(c._id);
+    }
+
+    const delegates = await ctx.db
+      .query("workflowDelegates")
+      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
+      .collect();
+    for (const d of delegates) {
+      await ctx.db.delete(d._id);
+    }
+
+    const asDelegates = await ctx.db
+      .query("workflowDelegates")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .filter((q) => q.eq(q.field("delegateEmployeeId"), args.employeeId))
+      .collect();
+    for (const d of asDelegates) {
+      await ctx.db.delete(d._id);
+    }
+
+    const payrollItems = await ctx.db
+      .query("payrollItems")
+      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
+      .collect();
+    for (const p of payrollItems) {
+      await ctx.db.delete(p._id);
+    }
+
+    const kudosReceived = await ctx.db
+      .query("kudos")
+      .withIndex("by_receiver", (q) => q.eq("receiverEmployeeId", args.employeeId))
+      .collect();
+    for (const k of kudosReceived) {
+      await ctx.db.delete(k._id);
+    }
+
+    const kudosSent = await ctx.db
+      .query("kudos")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .filter((q) => q.eq(q.field("senderEmployeeId"), args.employeeId))
+      .collect();
+    for (const k of kudosSent) {
+      await ctx.db.delete(k._id);
+    }
+
+    await ctx.db.delete(args.employeeId);
+
+    await audit(ctx, args.workspaceId, userId, "employee.remove", {
+      employeeId: args.employeeId,
+      name: `${employee.firstName} ${employee.lastName}`,
+      email: employee.email,
     });
   },
 });

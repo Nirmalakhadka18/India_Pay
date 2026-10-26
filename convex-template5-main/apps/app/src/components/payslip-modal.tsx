@@ -23,6 +23,34 @@ interface PayslipModalProps {
   isLoading?: boolean;
 }
 
+function formatDeductionLabel(name: string): string {
+  const upper = name.toUpperCase();
+  if (upper.includes("PROVIDENT") || upper.includes("PF")) {
+    return "PF (PROVIDENT FUND)";
+  }
+  if (upper.includes("STATE INSURANCE") || upper.includes("ESI")) {
+    return "ESI (EMPLOYEE STATE INSURANCE)";
+  }
+  if (
+    upper.includes("PROFESSIONAL") ||
+    upper.includes("PT") ||
+    upper.includes("PROF TAX")
+  ) {
+    return "PROFESSIONAL TAX (PT)";
+  }
+  if (upper.includes("LABOUR WELFARE") || upper.includes("LWF")) {
+    return "LABOUR WELFARE FUND (LWF)";
+  }
+  if (upper.includes("TDS")) {
+    return "TAX DEDUCTED AT SOURCE (TDS)";
+  }
+  return name
+    .replace(/\s*\(.*?12%.*?\)/gi, "")
+    .replace(/\s*-\s*\d+(\.\d+)?%/g, "")
+    .trim()
+    .toUpperCase();
+}
+
 function formatPeriodMonth(period: string): string {
   if (!period) return "";
   const parts = period.split("-");
@@ -83,13 +111,27 @@ export function PayslipModal({
   const applicableEmployerContributions =
     payslip?.employerContributions?.filter((c) => c.amount > 0) || [];
 
-  const totalEmployerContr =
-    payslip?.totalEmployerContributions ??
-    applicableEmployerContributions.reduce((sum, c) => sum + c.amount, 0);
+  const empPfTotal = applicableEmployerContributions
+    .filter((c) => !c.name.toUpperCase().includes("ESI"))
+    .reduce((sum, c) => sum + c.amount, 0);
 
-  const totalCTC =
-    payslip?.totalCostToCompany ??
-    (payslip?.grossSalary ?? 0) + totalEmployerContr;
+  const empEsiTotal = applicableEmployerContributions
+    .filter((c) => c.name.toUpperCase().includes("ESI"))
+    .reduce((sum, c) => sum + c.amount, 0);
+
+  const informationalEmployerRows: { name: string; amount: number }[] = [];
+  if (empPfTotal > 0) {
+    informationalEmployerRows.push({
+      name: "Employer PF Contribution (informational — not deducted from net pay)",
+      amount: empPfTotal,
+    });
+  }
+  if (empEsiTotal > 0) {
+    informationalEmployerRows.push({
+      name: "Employer ESI Contribution (informational — not deducted from net pay)",
+      amount: empEsiTotal,
+    });
+  }
 
   const inWords =
     payslip?.netPayInWords ||
@@ -359,7 +401,7 @@ export function PayslipModal({
                         className="flex justify-between text-slate-700"
                       >
                         <span className="w-3/4 font-medium">
-                          {d.name.toUpperCase()}
+                          {formatDeductionLabel(d.name)}
                         </span>
                         <span className="w-1/4 text-right font-medium text-slate-900">
                           ₹{formatIndianCurrency(d.amount)}
@@ -383,6 +425,28 @@ export function PayslipModal({
                       <p className="text-slate-400 italic py-2 text-center">
                         No employee deductions applicable for this period.
                       </p>
+                    )}
+
+                    {/* Informational Employer Contributions */}
+                    {informationalEmployerRows.length > 0 && (
+                      <div className="pt-2 mt-2 border-t border-dashed border-slate-300 space-y-1">
+                        <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">
+                          Employer Contributions (Informational)
+                        </div>
+                        {informationalEmployerRows.map((er) => (
+                          <div
+                            key={er.name}
+                            className="flex justify-between text-slate-500 text-[11px]"
+                          >
+                            <span className="w-3/4 pr-1 leading-tight">
+                              {er.name}
+                            </span>
+                            <span className="w-1/4 text-right font-medium">
+                              ₹{formatIndianCurrency(er.amount)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -408,59 +472,6 @@ export function PayslipModal({
               <div className="text-xl font-bold text-emerald-700">
                 ₹{formatIndianCurrency(payslip.netSalary)}
               </div>
-            </div>
-
-            {/* Employer Statutory Contributions (Separate Section) */}
-            <div className="mt-4 border border-slate-300 rounded overflow-hidden">
-              <div className="bg-slate-100 px-3 py-2 border-b border-slate-300">
-                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
-                  Employer Statutory Contributions (Not Deducted from Employee
-                  Net Pay)
-                </h3>
-                <p className="text-[10px] text-slate-500">
-                  Statutory benefits contributed by employer directly to
-                  authorities; separate from employee salary.
-                </p>
-              </div>
-
-              {applicableEmployerContributions.length > 0 ? (
-                <div>
-                  <div className="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-                    {applicableEmployerContributions.map((c) => (
-                      <div
-                        key={c.name}
-                        className="border border-slate-200 p-2 rounded bg-slate-50/50"
-                      >
-                        <span className="text-slate-500 block text-[10px] font-medium">
-                          {c.name.toUpperCase()}
-                        </span>
-                        <span className="font-semibold text-slate-800">
-                          ₹{formatIndianCurrency(c.amount)}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="bg-slate-50 px-3 py-2 border-t border-slate-300 flex flex-col sm:flex-row justify-between items-center text-xs font-bold gap-2">
-                    <span className="text-slate-700">
-                      Total Employer Contribution:{" "}
-                      <span className="text-slate-900">
-                        ₹{formatIndianCurrency(totalEmployerContr)}
-                      </span>
-                    </span>
-                    <span className="text-slate-700">
-                      Total Cost to Company (CTC):{" "}
-                      <span className="text-emerald-800">
-                        ₹{formatIndianCurrency(totalCTC)}
-                      </span>
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <div className="p-3 text-center text-slate-500 text-xs italic bg-slate-50/50">
-                  No employer statutory contributions applicable for this
-                  employee profile.
-                </div>
-              )}
             </div>
 
             {/* System Generated Footer & Print Date */}

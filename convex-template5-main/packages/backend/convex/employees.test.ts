@@ -661,4 +661,150 @@ describe("Employee Banking & Statutory Master Data — Convex Workflow & RBAC Su
     expect(payslip.pfMemberId).toBe("MHBAN00123450000000123");
     expect(payslip.netSalary).toBe(72000);
   });
+
+  test("Phase 1: Admin can set and update isPfMember flag which synchronizes with employeeCompliance", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, admin } = await seedEmployeeTestWorkspace(t);
+    const asAdmin = t.withIdentity(as(admin));
+
+    // 1. Add employee with isPfMember: true
+    const empPfYesId = await asAdmin.mutation(api.employees.add, {
+      workspaceId: ws,
+      firstName: "Rohan",
+      lastName: "Sharma",
+      email: "rohan@indiapay.com",
+      isPfMember: true,
+      uan: "100904567812",
+      pfMemberId: "KNBLR00123450000000001",
+    });
+
+    const empPfYes = await asAdmin.query(api.employees.getById, {
+      workspaceId: ws,
+      employeeId: empPfYesId,
+    });
+    expect(empPfYes.isPfMember).toBe(true);
+
+    // Check compliance table
+    await t.run(async (ctx: MutationCtx) => {
+      const comp = await ctx.db
+        .query("employeeCompliance")
+        .withIndex("by_employee", (q) => q.eq("employeeId", empPfYesId))
+        .first();
+      expect(comp).toBeDefined();
+      expect(comp?.epfOptOut).toBe(false);
+    });
+
+    // 2. Add employee with isPfMember: false
+    const empPfNoId = await asAdmin.mutation(api.employees.add, {
+      workspaceId: ws,
+      firstName: "Sneha",
+      lastName: "Patel",
+      email: "sneha@indiapay.com",
+      isPfMember: false,
+    });
+
+    const empPfNo = await asAdmin.query(api.employees.getById, {
+      workspaceId: ws,
+      employeeId: empPfNoId,
+    });
+    expect(empPfNo.isPfMember).toBe(false);
+
+    await t.run(async (ctx: MutationCtx) => {
+      const comp = await ctx.db
+        .query("employeeCompliance")
+        .withIndex("by_employee", (q) => q.eq("employeeId", empPfNoId))
+        .first();
+      expect(comp).toBeDefined();
+      expect(comp?.epfOptOut).toBe(true);
+    });
+
+    // 3. Update employee: toggle isPfMember to false
+    await asAdmin.mutation(api.employees.update, {
+      workspaceId: ws,
+      employeeId: empPfYesId,
+      isPfMember: false,
+    });
+
+    const empUpdated = await asAdmin.query(api.employees.getById, {
+      workspaceId: ws,
+      employeeId: empPfYesId,
+    });
+    expect(empUpdated.isPfMember).toBe(false);
+
+    await t.run(async (ctx: MutationCtx) => {
+      const comp = await ctx.db
+        .query("employeeCompliance")
+        .withIndex("by_employee", (q) => q.eq("employeeId", empPfYesId))
+        .first();
+      expect(comp?.epfOptOut).toBe(true);
+    });
+  });
+
+  test("Admin can remove an employee and cascade delete associated records", async () => {
+    const t = convexTest(schema, modules);
+    const { ws, admin } = await seedEmployeeTestWorkspace(t);
+    const asAdmin = t.withIdentity(as(admin));
+
+    const empId = await asAdmin.mutation(api.employees.add, {
+      workspaceId: ws,
+      firstName: "Test",
+      lastName: "RemoveMe",
+      email: "removeme@example.com",
+    });
+
+    // Add a salary and attendance record for this employee
+    await t.run(async (ctx: MutationCtx) => {
+      await ctx.db.insert("salaries", {
+        workspaceId: ws,
+        employeeId: empId,
+        basicSalary: 40000,
+        allowances: [],
+        deductions: [],
+        grossSalary: 40000,
+        effectiveDate: Date.now(),
+        createdAt: Date.now(),
+      });
+      await ctx.db.insert("attendance", {
+        workspaceId: ws,
+        employeeId: empId,
+        date: "2026-10-01",
+        status: "present",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+    });
+
+    // Verify employee and salary exist
+    const beforeList = await asAdmin.query(api.employees.list, { workspaceId: ws });
+    expect(beforeList.some((e) => e._id === empId)).toBe(true);
+
+    // Call remove mutation
+    await asAdmin.mutation(api.employees.remove, {
+      workspaceId: ws,
+      employeeId: empId,
+    });
+
+    // Verify employee is completely removed
+    const afterList = await asAdmin.query(api.employees.list, { workspaceId: ws });
+    expect(afterList.some((e) => e._id === empId)).toBe(false);
+
+    // Verify cascaded records are deleted
+    await t.run(async (ctx: MutationCtx) => {
+      const emp = await ctx.db.get(empId);
+      expect(emp).toBeNull();
+
+      const sals = await ctx.db
+        .query("salaries")
+        .withIndex("by_employee", (q) => q.eq("employeeId", empId))
+        .collect();
+      expect(sals.length).toBe(0);
+
+      const atts = await ctx.db
+        .query("attendance")
+        .withIndex("by_employee", (q) => q.eq("employeeId", empId))
+        .collect();
+      expect(atts.length).toBe(0);
+    });
+  });
 });
+

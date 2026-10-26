@@ -4,7 +4,7 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { audit } from "./auditLog";
 import { bump } from "./counters";
-import { requireMember } from "./orgs";
+import { requireMember, requireRole } from "./orgs";
 
 /** Files module — workspace-scoped uploads backed by Convex file storage. */
 
@@ -106,7 +106,13 @@ export const remove = mutation({
     if (!userId) throw new Error("Not authenticated");
     const f = await ctx.db.get(fileId);
     if (!f) throw new Error("Not found");
-    await requireMember(ctx, userId, f.workspaceId);
+    // SECURITY: users may delete their own files; only workspace admins
+    // may delete another member's files.
+    if (f.userId === userId) {
+      await requireMember(ctx, userId, f.workspaceId);
+    } else {
+      await requireRole(ctx, userId, f.workspaceId, ["admin"]);
+    }
     await ctx.storage.delete(f.storageId);
     await ctx.db.delete(fileId);
     await audit(ctx, f.workspaceId, userId, "file.delete", { name: f.name });

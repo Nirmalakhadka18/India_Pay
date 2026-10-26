@@ -488,10 +488,11 @@ function ComplianceContent() {
             </div>
             <button
               type="button"
-              onClick={() => setIsTdsOpen(true)}
-              className="px-3.5 py-1.5 bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 rounded-md text-sm font-medium hover:opacity-90 inline-flex items-center gap-2 self-start sm:self-auto"
+              disabled
+              title="Quarterly TDS Module is skipped — TDS withholding is not currently required"
+              className="px-3.5 py-1.5 bg-zinc-400 text-white dark:bg-zinc-700 dark:text-zinc-400 rounded-md text-sm font-medium opacity-60 cursor-not-allowed inline-flex items-center gap-2 self-start sm:self-auto"
             >
-              Quarterly TDS Module (Form 138 / 24Q)
+              Quarterly TDS Module (Form 138 / 24Q) — Skipped
             </button>
           </div>
 

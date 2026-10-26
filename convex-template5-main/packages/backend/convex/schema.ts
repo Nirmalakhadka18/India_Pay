@@ -151,6 +151,7 @@ export default defineSchema({
     uan: v.optional(v.string()),
     esicIpNumber: v.optional(v.string()),
     pfMemberId: v.optional(v.string()),
+    isPfMember: v.optional(v.boolean()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })

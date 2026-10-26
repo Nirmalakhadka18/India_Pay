@@ -4,6 +4,23 @@ import { mutation, query } from "./_generated/server";
 import { requireMember, requireRole } from "./orgs";
 import { audit } from "./auditLog";
 
+/**
+ * Resolves whether a candidate salary record is newer than the current active one.
+ * Primary: higher effectiveDate.
+ * Tie-breaker (identical effectiveDate): higher createdAt / _creationTime (latest revision).
+ */
+export function isSalaryNewer(
+  candidate: { effectiveDate: number; createdAt?: number; _creationTime?: number },
+  current: { effectiveDate: number; createdAt?: number; _creationTime?: number },
+): boolean {
+  if (candidate.effectiveDate !== current.effectiveDate) {
+    return candidate.effectiveDate > current.effectiveDate;
+  }
+  const candidateCreated = candidate.createdAt ?? candidate._creationTime ?? 0;
+  const currentCreated = current.createdAt ?? current._creationTime ?? 0;
+  return candidateCreated >= currentCreated;
+}
+
 export const listByEmployee = query({
   args: {
     workspaceId: v.id("workspaces"),
@@ -27,11 +44,19 @@ export const listByEmployee = query({
       }
     }
 
-    return await ctx.db
+    const list = await ctx.db
       .query("salaries")
       .withIndex("by_employee_date", (q) => q.eq("employeeId", args.employeeId))
       .order("desc")
       .collect();
+
+    // Ensure deterministic sort if multiple revisions have identical effectiveDate
+    return list.sort(
+      (a, b) =>
+        b.effectiveDate - a.effectiveDate ||
+        (b.createdAt ?? b._creationTime ?? 0) -
+          (a.createdAt ?? a._creationTime ?? 0),
+    );
   },
 });
 
@@ -50,11 +75,11 @@ export const getCurrentSalaries = query({
       .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
 
-    // Group by employee and get latest
+    // Group by employee and get latest (resolving same-effectiveDate ties by creation time)
     const currentSalaries = new Map<string, typeof allSalaries[0]>();
     for (const salary of allSalaries) {
       const existing = currentSalaries.get(salary.employeeId);
-      if (!existing || salary.effectiveDate > existing.effectiveDate) {
+      if (!existing || isSalaryNewer(salary, existing)) {
         currentSalaries.set(salary.employeeId, salary);
       }
     }
@@ -66,6 +91,7 @@ export const add = mutation({
   args: {
     workspaceId: v.id("workspaces"),
     employeeId: v.id("employees"),
+    grossSalary: v.optional(v.number()),
     basicSalary: v.number(),
     allowances: v.array(v.object({ name: v.string(), amount: v.number() })),
     deductions: v.array(v.object({ name: v.string(), amount: v.number() })),
@@ -91,7 +117,20 @@ export const add = mutation({
     }
 
     const totalAllowances = args.allowances.reduce((sum, a) => sum + a.amount, 0);
-    const grossSalary = args.basicSalary + totalAllowances;
+    const calculatedGross = args.basicSalary + totalAllowances;
+
+    if (args.grossSalary !== undefined) {
+      if (args.grossSalary <= 0) {
+        throw new ConvexError("Monthly gross salary must be greater than zero");
+      }
+      if (Math.abs(args.grossSalary - calculatedGross) > 0.01) {
+        throw new ConvexError(
+          `Salary components total (₹${calculatedGross.toLocaleString("en-IN")}) does not reconcile with entered gross salary (₹${args.grossSalary.toLocaleString("en-IN")})`,
+        );
+      }
+    }
+
+    const grossSalary = args.grossSalary ?? calculatedGross;
 
     const salaryId = await ctx.db.insert("salaries", {
       workspaceId: args.workspaceId,

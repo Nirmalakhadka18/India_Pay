@@ -3,6 +3,7 @@ import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { requireMember, requireRole } from "./orgs";
 import { audit } from "./auditLog";
+import { isSalaryNewer } from "./salaries";
 
 const CALC_BASIS = v.union(
   v.literal("calendar_days"),
@@ -129,7 +130,7 @@ export const calculateLOP = query({
     const currentSalaries = new Map<string, typeof salaries[0]>();
     for (const s of salaries) {
       const existing = currentSalaries.get(s.employeeId);
-      if (!existing || s.effectiveDate > existing.effectiveDate) {
+      if (!existing || isSalaryNewer(s, existing)) {
         currentSalaries.set(s.employeeId, s);
       }
     }
