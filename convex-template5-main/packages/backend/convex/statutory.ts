@@ -39,6 +39,33 @@ export interface EmployeeInput {
   lastName: string;
   email: string;
   department?: string;
+  esicIpNumber?: string;
+  isPfMember?: boolean;
+  isEsiMember?: boolean;
+}
+
+export function isHraAllowance(name: string): boolean {
+  const n = name.trim().toLowerCase();
+  return (
+    n === "hra" ||
+    n === "house rent allowance" ||
+    n.includes("house rent") ||
+    n.startsWith("hra")
+  );
+}
+
+export function isSpecialAllowance(name: string): boolean {
+  const n = name.trim().toLowerCase();
+  return n === "special allowance" || n === "special";
+}
+
+export function isConveyanceAllowance(name: string): boolean {
+  const n = name.trim().toLowerCase();
+  return (
+    n === "conveyance" ||
+    n === "conveyance allowance" ||
+    n.includes("conveyance")
+  );
 }
 
 export interface EmployeeSalaryInput {
@@ -112,11 +139,22 @@ export function computeEmployeePayrollItem(
     (sum, d) => sum + d.amount,
     0,
   );
+  const earnedGross = Math.max(0, grossSalary - lopDeduction);
+  const daysWorked = Math.max(0, calcCtx.totalDaysInMonth - lopDays);
+
+  // ESI-compliant employee identification: ESI Member toggle, ESIC IP number, or period coverage
+  const isEsiCompliant =
+    emp.isEsiMember === true ||
+    Boolean(emp.esicIpNumber && emp.esicIpNumber.trim() !== "") ||
+    Boolean(empComp?.esiContributionPeriodCovered);
 
   // 2. Statutory EPF / EPS / EDLI / Admin calculations
-  // Statutory wage ceiling under EPF Act 1952 is ₹15,000/month (configurable per workspace)
-  const isEpfOptOut = empComp?.epfOptOut ?? false;
-  const isEpfEnabled = calcCtx.workspaceCompliance.epfEnabled && !isEpfOptOut;
+  // Employer-confirmed: General PF wage ceiling is ₹25,000
+  // For ESI-compliant employees, PF wage base = Basic + all applicable allowances (excluding HRA)
+  // For general employees, PF wage base = Basic
+  const isPfMember =
+    emp.isPfMember !== false && !(empComp?.epfOptOut ?? false);
+  const isEpfEnabled = calcCtx.workspaceCompliance.epfEnabled && isPfMember;
 
   let epfEmployee = 0;
   let epfEmployer = 0;
@@ -125,18 +163,34 @@ export function computeEmployeePayrollItem(
   let adminChargesEmployer = 0;
 
   if (isEpfEnabled) {
-    const wageCeiling = calcCtx.workspaceCompliance.epfWageCeiling ?? 15000;
+    let nominalPfWageBase = basicSalary;
+    if (isEsiCompliant) {
+      const nonHraAllowances = allowances
+        .filter((a) => !isHraAllowance(a.name))
+        .reduce((sum, a) => sum + Math.max(0, a.amount || 0), 0);
+      nominalPfWageBase = Math.max(0, basicSalary + nonHraAllowances);
+    }
+
+    // Prorate PF wage base for Loss of Pay (LOP)
+    const earnedPfWageBase =
+      calcCtx.totalDaysInMonth > 0 && lopDays > 0
+        ? Math.max(
+            0,
+            Math.round((nominalPfWageBase * daysWorked) / calcCtx.totalDaysInMonth),
+          )
+        : nominalPfWageBase;
+
+    const wageCeiling = calcCtx.workspaceCompliance.epfWageCeiling ?? 25000;
     const restrictToCeiling =
       calcCtx.workspaceCompliance.epfRestrictToCeiling ?? true;
     const voluntaryActualBasic = empComp?.epfOnActualBasic ?? false;
 
     // Eligible wage determination:
-    // If voluntary actual basic is elected (by employee or workspace), use full basicSalary;
-    // otherwise enforce statutory wage ceiling.
+    // If voluntary actual basic is elected, use full earned PF wage base; otherwise enforce ceiling.
     const eligibleWage =
       voluntaryActualBasic || !restrictToCeiling
-        ? basicSalary
-        : Math.min(basicSalary, wageCeiling);
+        ? earnedPfWageBase
+        : Math.min(earnedPfWageBase, wageCeiling);
 
     // Employee EPF: 12% of eligible wage
     epfEmployee = Math.round(eligibleWage * 0.12);
@@ -170,21 +224,36 @@ export function computeEmployeePayrollItem(
   }
 
   // 3. ESI calculation (Section 2(9), ESI Act, 1948)
+  // Employer confirmed: ESI wages = Basic + Special Allowance (excluding HRA and Conveyance)
   let esiEmployee = 0;
   let esiEmployer = 0;
   const esiCeiling = calcCtx.workspaceCompliance.esiWageCeiling ?? 21000;
   const isEsiContributionPeriodCovered =
     empComp?.esiContributionPeriodCovered ?? false;
 
-  const earnedGross = Math.max(0, grossSalary - lopDeduction);
+  const specialAllowanceAmount = allowances
+    .filter((a) => isSpecialAllowance(a.name))
+    .reduce((sum, a) => sum + Math.max(0, a.amount || 0), 0);
+  const nominalEsiWages = Math.max(0, basicSalary + specialAllowanceAmount);
 
-  if (
+  // Prorate ESI wages for Loss of Pay (LOP)
+  const earnedEsiWages =
+    calcCtx.totalDaysInMonth > 0 && lopDays > 0
+      ? Math.max(
+          0,
+          Math.round((nominalEsiWages * daysWorked) / calcCtx.totalDaysInMonth),
+        )
+      : nominalEsiWages;
+
+  const isEsiEligible =
     calcCtx.workspaceCompliance.esiEnabled &&
-    earnedGross > 0 &&
-    (grossSalary <= esiCeiling || isEsiContributionPeriodCovered)
-  ) {
-    esiEmployee = Math.ceil(earnedGross * 0.0075);
-    esiEmployer = Math.ceil(earnedGross * 0.0325);
+    earnedEsiWages > 0 &&
+    (isEsiCompliant || grossSalary <= esiCeiling) &&
+    (grossSalary <= esiCeiling || isEsiContributionPeriodCovered);
+
+  if (isEsiEligible) {
+    esiEmployee = Math.ceil(earnedEsiWages * 0.0075);
+    esiEmployer = Math.ceil(earnedEsiWages * 0.0325);
     if (grossSalary > esiCeiling && isEsiContributionPeriodCovered) {
       warnings.push(
         "ESI contribution applied under Section 2(9) proviso (wage crossed ₹21,000 mid contribution period).",
@@ -301,7 +370,7 @@ export function computeEmployeePayrollItem(
 
   const totalDeductions =
     lopDeduction + totalCustomDeductions + totalStatutoryDeductions;
-  const netSalary = Math.max(0, grossSalary - totalDeductions);
+  const netSalary = Math.max(0, Math.round(grossSalary - totalDeductions));
 
   return {
     employeeId: emp._id,

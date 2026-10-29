@@ -73,7 +73,7 @@ describe("ESI Statutory Calculations & Reference Validations (ESIC Act, 1948)", 
     // ₹20,999
     const itemBelow = computeEmployeePayrollItem(
       emp,
-      { basicSalary: 15000, allowances: [{ name: "DA", amount: 5999 }], grossSalary: 20999 },
+      { basicSalary: 15000, allowances: [{ name: "Special Allowance", amount: 5999 }], grossSalary: 20999 },
       [],
       undefined,
       baseCtx,
@@ -84,7 +84,7 @@ describe("ESI Statutory Calculations & Reference Validations (ESIC Act, 1948)", 
     // ₹21,000 exactly at ceiling
     const itemExact = computeEmployeePayrollItem(
       emp,
-      { basicSalary: 15000, allowances: [{ name: "DA", amount: 6000 }], grossSalary: 21000 },
+      { basicSalary: 15000, allowances: [{ name: "Special Allowance", amount: 6000 }], grossSalary: 21000 },
       [],
       undefined,
       baseCtx,
@@ -95,7 +95,7 @@ describe("ESI Statutory Calculations & Reference Validations (ESIC Act, 1948)", 
     // ₹21,001 above ceiling
     const itemAbove = computeEmployeePayrollItem(
       emp,
-      { basicSalary: 15000, allowances: [{ name: "DA", amount: 6001 }], grossSalary: 21001 },
+      { basicSalary: 15000, allowances: [{ name: "Special Allowance", amount: 6001 }], grossSalary: 21001 },
       [],
       undefined,
       baseCtx,
@@ -126,7 +126,7 @@ describe("ESI Statutory Calculations & Reference Validations (ESIC Act, 1948)", 
 
     const itemCrossed = computeEmployeePayrollItem(
       emp,
-      { basicSalary: 20000, allowances: [{ name: "DA", amount: 8000 }], grossSalary: 28000 },
+      { basicSalary: 20000, allowances: [{ name: "Special Allowance", amount: 8000 }], grossSalary: 28000 },
       [],
       { esiContributionPeriodCovered: true },
       baseCtx,
@@ -163,7 +163,7 @@ describe("ESI Statutory Calculations & Reference Validations (ESIC Act, 1948)", 
     const attendance = Array.from({ length: 10 }, () => ({ status: "absent" }));
     const itemLop = computeEmployeePayrollItem(
       emp,
-      { basicSalary: 12000, allowances: [{ name: "DA", amount: 6000 }], grossSalary: 18000 },
+      { basicSalary: 12000, allowances: [{ name: "Special Allowance", amount: 6000 }], grossSalary: 18000 },
       attendance,
       undefined,
       baseCtx,

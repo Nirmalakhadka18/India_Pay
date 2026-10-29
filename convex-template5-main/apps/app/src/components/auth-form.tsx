@@ -27,6 +27,7 @@ function Shell({
 }) {
   return (
     <form
+      action="#"
       className="flex w-72 flex-col gap-3"
       onSubmit={(e) => {
         e.preventDefault();

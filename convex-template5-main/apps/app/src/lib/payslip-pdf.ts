@@ -1,3 +1,12 @@
+import { VICTOR_CHASEX_LOGO_BASE64 } from "./victor-chasex-logo-base64";
+
+function getLogoBinaryString(): string {
+  if (typeof atob !== "undefined") {
+    return atob(VICTOR_CHASEX_LOGO_BASE64);
+  }
+  return Buffer.from(VICTOR_CHASEX_LOGO_BASE64, "base64").toString("binary");
+}
+
 export interface PayslipData {
   workspaceName: string;
   companyAddress?: string;
@@ -207,16 +216,25 @@ function formatPeriodMonth(period: string): string {
   return period;
 }
 
+export function formatPayslipAmount(val: number): string {
+  if (!Number.isFinite(val)) return "0";
+  if (Math.round(val) === val) {
+    return String(Math.round(val));
+  }
+  return val.toFixed(2);
+}
+
 /**
  * Generates a clean, standards-compliant PDF 1.4 binary document for an employee payslip.
  * Completely zero external dependencies, 100% vector-sharp across browsers and node.
- * Strictly adheres to greytHR layout standards and reference formatting.
+ * Strictly adheres to Victor Chasex Private Limited reference template.
  */
 export function generatePayslipPdfString(data: PayslipData): string {
   const pageWidth = 595.28; // A4 width in pt
   const pageHeight = 841.89; // A4 height in pt
   const margin = 36;
   const contentWidth = pageWidth - margin * 2; // 523.28 pt
+  const midX = margin + contentWidth / 2; // 297.64 pt
 
   const streamLines: string[] = [];
 
@@ -257,7 +275,7 @@ export function generatePayslipPdfString(data: PayslipData): string {
     y1: number,
     x2: number,
     y2: number,
-    strokeRgb: [number, number, number] = [0.2, 0.2, 0.2],
+    strokeRgb: [number, number, number] = [0.15, 0.15, 0.15],
     lineWidth = 0.75,
   ) => {
     streamLines.push("q");
@@ -269,18 +287,18 @@ export function generatePayslipPdfString(data: PayslipData): string {
     streamLines.push("Q");
   };
 
-  // Helper for text rendering
+  // Helper for text rendering with regular, bold, and italic support
   const drawText = (
     text: string,
     x: number,
     y: number,
-    fontSize = 9,
-    isBold = false,
+    fontSize = 8.5,
+    style: "regular" | "bold" | "italic" = "regular",
     colorRgb: [number, number, number] = [0.1, 0.1, 0.1],
     align: "left" | "right" | "center" = "left",
   ) => {
     const escaped = escapePdfText(text);
-    const font = isBold ? "/F2" : "/F1";
+    const font = style === "bold" ? "/F2" : style === "italic" ? "/F3" : "/F1";
 
     let renderX = x;
     if (align === "right") {
@@ -299,158 +317,7 @@ export function generatePayslipPdfString(data: PayslipData): string {
     streamLines.push("ET");
   };
 
-  let currentY = pageHeight - margin;
-
-  // 1. Header: Logo Badge & Company Details
-  const logoW = 120;
-  const logoH = 34;
-  const logoY = currentY - 40;
-
-  // Yellow logo badge matching reference
-  drawRect(
-    margin,
-    logoY,
-    logoW,
-    logoH,
-    [0.98, 0.86, 0.18],
-    [0.2, 0.2, 0.2],
-    0.75,
-  );
-  drawText(
-    "VICTOR CHASEX",
-    margin + 12,
-    logoY + 12,
-    11.5,
-    true,
-    [0.1, 0.1, 0.1],
-  );
-
-  // Company Name & Address
-  const companyCenterX = margin + logoW + (contentWidth - logoW) / 2;
-  const companyName = data.workspaceName
-    ? data.workspaceName.toUpperCase()
-    : "VICTOR CHASEX PRIVATE LIMITED";
-  drawText(
-    companyName,
-    companyCenterX,
-    currentY - 14,
-    11.5,
-    true,
-    [0.1, 0.1, 0.1],
-    "center",
-  );
-
-  const address =
-    data.companyAddress ||
-    "2ND AND 3RD FLOOR, SRI ESHWARI MANSION, 5TH MAIN, 6TH SECTOR, HSR LAYOUT, BENGALURU";
-  drawText(
-    address,
-    companyCenterX,
-    currentY - 26,
-    7.5,
-    false,
-    [0.25, 0.25, 0.25],
-    "center",
-  );
-
-  // Payslip Month Title
-  const periodStr = formatPeriodMonth(data.periodMonth);
-  const titleText = `Payslip for the month of ${periodStr}`;
-  drawText(
-    titleText,
-    margin + contentWidth / 2,
-    logoY - 16,
-    11,
-    true,
-    [0.1, 0.1, 0.1],
-    "center",
-  );
-
-  currentY = logoY - 28;
-
-  // 2. Employee Details Card (2-column bordered grid matching reference)
-  const empCardH = 94;
-  const empCardY = currentY - empCardH;
-  drawRect(
-    margin,
-    empCardY,
-    contentWidth,
-    empCardH,
-    [1, 1, 1],
-    [0.2, 0.2, 0.2],
-    0.75,
-  );
-
-  const colDividerX = margin + 260;
-  drawLine(colDividerX, empCardY, colDividerX, currentY, [0.2, 0.2, 0.2], 0.75);
-
-  const rowStep = 12.8;
-  const startRowY = currentY - 12;
-
-  // Left column items
-  const leftItems = [
-    { label: "Name:", value: data.employeeName || "—", bold: true },
-    {
-      label: "Joining Date:",
-      value: data.joiningDate || "01 Sep 2026",
-      bold: false,
-    },
-    { label: "Designation:", value: data.designation || "Staff", bold: false },
-    { label: "Department:", value: data.department || "General", bold: false },
-    { label: "Location:", value: data.location || "Bangalore", bold: false },
-    {
-      label: "Effective Work Days:",
-      value: String(
-        data.effectiveWorkDays ?? Math.max(0, 30 - (data.lopDays || 0)),
-      ),
-      bold: false,
-    },
-    { label: "LOP:", value: String(data.lopDays || 0), bold: false },
-  ];
-
-  for (let i = 0; i < leftItems.length; i++) {
-    const item = leftItems[i];
-    if (!item) continue;
-    const y = startRowY - i * rowStep;
-    drawText(item.label, margin + 8, y, 8, false, [0.35, 0.35, 0.35]);
-    drawText(item.value, margin + 110, y, 8, item.bold, [0.1, 0.1, 0.1]);
-  }
-
-  // Right column items
-  const maskedAcc =
-    data.maskedBankAccountNumber ||
-    (data.bankAccountNumber ? `••••${data.bankAccountNumber.slice(-4)}` : "—");
-
-  const rightItems = [
-    {
-      label: "Employee No:",
-      value: data.employeeNo || data.employeeId || "NH-OL-578",
-      bold: false,
-    },
-    { label: "Bank Name:", value: data.bankName || "—", bold: false },
-    { label: "Bank Account No:", value: maskedAcc, bold: false },
-    {
-      label: "PAN Number:",
-      value: data.pan || data.maskedPan || "—",
-      bold: false,
-    },
-    { label: "PF No:", value: data.pfMemberId || "—", bold: false },
-    { label: "PF UAN:", value: data.uan || data.maskedUan || "—", bold: false },
-    { label: "ESI IP No:", value: data.esicIpNumber || "—", bold: false },
-  ];
-
-  for (let i = 0; i < rightItems.length; i++) {
-    const item = rightItems[i];
-    if (!item) continue;
-    const y = startRowY - i * rowStep;
-    drawText(item.label, colDividerX + 8, y, 8, false, [0.35, 0.35, 0.35]);
-    drawText(item.value, colDividerX + 115, y, 8, item.bold, [0.1, 0.1, 0.1]);
-  }
-
-  currentY = empCardY - 8;
-
-  // 3. Two-Column Table: Earnings vs Deductions
-  // Build Earnings list
+  // 1. Prepare Earnings & Deductions Data
   const earningsList: { name: string; master: number; amount: number }[] = [
     {
       name: "BASIC",
@@ -468,15 +335,8 @@ export function generatePayslipPdfString(data: PayslipData): string {
     });
   }
 
-  // Build Deductions list (ONLY applicable deductions with amount > 0)
-  interface DeductionRowItem {
-    name: string;
-    amount: number;
-    isInformational?: boolean;
-  }
-  const deductionsList: DeductionRowItem[] = [];
-
-  // LOP deduction
+  // Deductions: only employee deductions present in the payroll record
+  const deductionsList: { name: string; amount: number }[] = [];
   if (data.lopDeduction > 0) {
     deductionsList.push({
       name: "LOSS OF PAY (LOP)",
@@ -484,11 +344,9 @@ export function generatePayslipPdfString(data: PayslipData): string {
     });
   }
 
-  // Statutory deductions
   const statutoryDeductions = Array.isArray(data.statutoryDeductions)
     ? data.statutoryDeductions
     : [];
-
   for (const s of statutoryDeductions) {
     if (s.amount > 0) {
       let displayName = s.name.toUpperCase();
@@ -513,7 +371,6 @@ export function generatePayslipPdfString(data: PayslipData): string {
     }
   }
 
-  // Custom deductions
   const customDeductions = Array.isArray(data.customDeductions)
     ? data.customDeductions
     : [];
@@ -526,278 +383,240 @@ export function generatePayslipPdfString(data: PayslipData): string {
     }
   }
 
-  // Informational Employer Contributions presented in the Deduction column/area
-  const empContributions = Array.isArray(data.employerContributions)
-    ? data.employerContributions.filter((c) => c.amount > 0)
-    : [];
-
-  const empPfTotal = empContributions
-    .filter((c) => !c.name.toUpperCase().includes("ESI"))
-    .reduce((sum, c) => sum + c.amount, 0);
-
-  const empEsiTotal = empContributions
-    .filter((c) => c.name.toUpperCase().includes("ESI"))
-    .reduce((sum, c) => sum + c.amount, 0);
-
-  if (empPfTotal > 0) {
-    deductionsList.push({
-      name: "Employer PF Contribution (informational — not deducted from net pay)",
-      amount: empPfTotal,
-      isInformational: true,
-    });
-  }
-  if (empEsiTotal > 0) {
-    deductionsList.push({
-      name: "Employer ESI Contribution (informational — not deducted from net pay)",
-      amount: empEsiTotal,
-      isInformational: true,
-    });
-  }
-
-  const rowCount = Math.max(earningsList.length, deductionsList.length, 5);
-  const tableHeaderH = 18;
-  const tableRowH = 14;
-  const tableFooterH = 18;
+  // Layout Height Calculations
+  const boxTopY = pageHeight - 52;
+  const headerH = 60;
+  const empH = 78;
+  const tableHeaderH = 15;
+  const rowCount = Math.max(earningsList.length, deductionsList.length, 3);
+  const tableRowH = 13;
+  const tableFooterH = 15;
   const tableH = tableHeaderH + rowCount * tableRowH + tableFooterH;
-  const tableY = currentY - tableH;
+  const netPayH = 30;
 
-  // Outer rectangle
+  const totalCardH = headerH + empH + tableH + netPayH;
+  const boxBottomY = boxTopY - totalCardH;
+
+  // Outer Border Box enclosing entire payslip
   drawRect(
     margin,
-    tableY,
+    boxBottomY,
     contentWidth,
-    tableH,
+    totalCardH,
     [1, 1, 1],
-    [0.2, 0.2, 0.2],
-    0.75,
+    [0.15, 0.15, 0.15],
+    0.8,
   );
 
-  // Vertical split between Earnings & Deductions
-  const midX = colDividerX;
-  drawLine(midX, tableY, midX, currentY, [0.2, 0.2, 0.2], 0.75);
+  // -------------------------------------------------------------
+  // 1. COMPANY HEADER
+  // -------------------------------------------------------------
+  const headerBottomY = boxTopY - headerH;
+  drawLine(margin, headerBottomY, margin + contentWidth, headerBottomY, [0.15, 0.15, 0.15], 0.75);
 
-  // Vertical line between Earnings Name, Master, Amount
-  const masterDividerX = margin + 175;
-  const amountDividerX = margin + 225;
-  drawLine(
-    masterDividerX,
-    tableY,
-    masterDividerX,
-    currentY,
-    [0.2, 0.2, 0.2],
-    0.5,
-  );
-  drawLine(
-    amountDividerX,
-    tableY,
-    amountDividerX,
-    currentY,
-    [0.2, 0.2, 0.2],
-    0.5,
+  // Yellow logo badge with official VICTOR CHASEX asset
+  const logoW = 105;
+  const logoH = 33.5;
+  const logoX = margin + 3.5;
+  const logoY = boxTopY - 46.5;
+
+  drawRect(
+    logoX,
+    logoY,
+    logoW,
+    logoH,
+    [1.0, 0.92, 0.15], // Bright reference yellow
+    undefined,
+    0,
   );
 
-  // Horizontal line below Header
-  const headerLineY = currentY - tableHeaderH;
-  drawLine(
-    margin,
-    headerLineY,
-    margin + contentWidth,
-    headerLineY,
-    [0.2, 0.2, 0.2],
-    0.75,
+  // Paint the official image asset
+  streamLines.push("q");
+  streamLines.push(
+    `${logoW.toFixed(2)} 0 0 ${logoH.toFixed(2)} ${logoX.toFixed(2)} ${logoY.toFixed(2)} cm`,
   );
+  streamLines.push("/Im1 Do");
+  streamLines.push("Q");
 
-  // Horizontal line above Footer totals
-  const footerLineY = tableY + tableFooterH;
-  drawLine(
-    margin,
-    footerLineY,
-    margin + contentWidth,
-    footerLineY,
-    [0.2, 0.2, 0.2],
-    0.75,
-  );
 
-  // Table Headers
-  const thY = currentY - 12;
-  drawText("Earnings", margin + 8, thY, 8.5, true, [0.1, 0.1, 0.1]);
+  // Centered Company Details in header area
+  const headerCenterX = margin + logoW + (contentWidth - logoW) / 2;
   drawText(
-    "Master",
-    masterDividerX + 45,
-    thY,
-    8.5,
-    true,
-    [0.1, 0.1, 0.1],
-    "right",
+    "Victor Chasex Private Limited",
+    headerCenterX,
+    boxTopY - 16,
+    11,
+    "bold",
+    [0.08, 0.08, 0.08],
+    "center",
   );
-  drawText("Amount", midX - 8, thY, 8.5, true, [0.1, 0.1, 0.1], "right");
 
-  drawText("Deductions", midX + 8, thY, 8.5, true, [0.1, 0.1, 0.1]);
+  const address =
+    "2ND AND 3RD FLOOR, L-149, SRI ESHWARI MANSION, 5TH MAIN, 6TH SECTOR, HSR LAYOUT, BENGALURU,";
   drawText(
-    "Amount",
-    margin + contentWidth - 8,
-    thY,
-    8.5,
-    true,
-    [0.1, 0.1, 0.1],
-    "right",
+    address,
+    headerCenterX,
+    boxTopY - 27.5,
+    6.6,
+    "regular",
+    [0.2, 0.2, 0.2],
+    "center",
   );
+
+  const periodStr = formatPeriodMonth(data.periodMonth);
+  const titleText = `Payslip for the month of  ${periodStr}`;
+  drawText(
+    titleText,
+    headerCenterX,
+    boxTopY - 45.5,
+    9.5,
+    "bold",
+    [0.08, 0.08, 0.08],
+    "center",
+  );
+
+  // -------------------------------------------------------------
+  // 2. EMPLOYEE DETAILS SECTION
+  // -------------------------------------------------------------
+  const empBottomY = headerBottomY - empH;
+  drawLine(margin, empBottomY, margin + contentWidth, empBottomY, [0.15, 0.15, 0.15], 0.75);
+
+  // Vertical line dividing left and right columns
+  drawLine(midX, empBottomY, midX, headerBottomY, [0.15, 0.15, 0.15], 0.75);
+
+  const empRowStep = 11.8;
+  const empStartY = headerBottomY - 11;
+
+  // Left column (6 items strictly matching reference)
+  const leftItems = [
+    { label: "Name:", value: data.employeeName || "—" },
+    { label: "Designation:", value: data.designation || "Staff" },
+    { label: "Department:", value: data.department || "General" },
+    { label: "Location:", value: data.location || "Bangalore" },
+    {
+      label: "Effective Work Days:",
+      value: String(
+        data.effectiveWorkDays ?? Math.max(0, 30 - (data.lopDays || 0)),
+      ),
+    },
+    { label: "LOP:", value: String(data.lopDays || 0) },
+  ];
+
+  for (let i = 0; i < leftItems.length; i++) {
+    const item = leftItems[i];
+    if (!item) continue;
+    const y = empStartY - i * empRowStep;
+    drawText(item.label, margin + 6, y, 7.5, "regular", [0.25, 0.25, 0.25]);
+    drawText(item.value, margin + 120, y, 7.5, "regular", [0.08, 0.08, 0.08]);
+  }
+
+  // Right column (6 items strictly matching reference)
+  const maskedAcc =
+    data.maskedBankAccountNumber ||
+    (data.bankAccountNumber ? `••••${data.bankAccountNumber.slice(-4)}` : "");
+
+  const rightItems = [
+    {
+      label: "Employee No:",
+      value: data.employeeNo || data.employeeId || "VC-OL-024",
+    },
+    { label: "Bank Name:", value: data.bankName || "" },
+    { label: "Bank Account No:", value: maskedAcc },
+    {
+      label: "PAN Number:",
+      value: data.pan || data.maskedPan || "",
+    },
+    { label: "PF No:", value: data.pfMemberId || "" },
+    { label: "PF UAN:", value: data.uan || data.maskedUan || "" },
+  ];
+
+  for (let i = 0; i < rightItems.length; i++) {
+    const item = rightItems[i];
+    if (!item) continue;
+    const y = empStartY - i * empRowStep;
+    drawText(item.label, midX + 6, y, 7.5, "regular", [0.25, 0.25, 0.25]);
+    drawText(item.value, midX + 120, y, 7.5, "regular", [0.08, 0.08, 0.08]);
+  }
+
+  // -------------------------------------------------------------
+  // 3. EARNINGS & DEDUCTIONS TABLE
+  // -------------------------------------------------------------
+  const tableHeaderBottomY = empBottomY - tableHeaderH;
+  drawLine(margin, tableHeaderBottomY, margin + contentWidth, tableHeaderBottomY, [0.15, 0.15, 0.15], 0.75);
+
+  const tableTotalsTopY = tableHeaderBottomY - rowCount * tableRowH;
+  drawLine(margin, tableTotalsTopY, margin + contentWidth, tableTotalsTopY, [0.15, 0.15, 0.15], 0.75);
+
+  const tableBottomY = tableTotalsTopY - tableFooterH;
+  drawLine(margin, tableBottomY, margin + contentWidth, tableBottomY, [0.15, 0.15, 0.15], 0.75);
+
+  // Center vertical divider splitting Earnings and Deductions all the way through totals
+  drawLine(midX, tableBottomY, midX, empBottomY, [0.15, 0.15, 0.15], 0.75);
+
+  // Table Column Coordinates
+  const masterX = margin + 185;
+  const earnAmountX = midX - 10;
+  const dedAmountX = margin + contentWidth - 10;
+
+  // Header Text
+  const thY = empBottomY - 10.5;
+  drawText("Earnings", margin + 8, thY, 8, "bold", [0.1, 0.1, 0.1]);
+  drawText("Master", masterX, thY, 8, "bold", [0.1, 0.1, 0.1], "right");
+  drawText("Amount", earnAmountX, thY, 8, "bold", [0.1, 0.1, 0.1], "right");
+
+  drawText("Deductions", midX + 8, thY, 8, "bold", [0.1, 0.1, 0.1]);
+  drawText("Amount", dedAmountX, thY, 8, "bold", [0.1, 0.1, 0.1], "right");
 
   // Earnings Rows
   for (let i = 0; i < earningsList.length; i++) {
     const item = earningsList[i];
     if (!item) continue;
-    const y = headerLineY - 11 - i * tableRowH;
-    drawText(item.name, margin + 8, y, 7.8, false, [0.2, 0.2, 0.2]);
-    drawText(
-      formatIndianCurrency(item.master),
-      masterDividerX + 45,
-      y,
-      7.8,
-      false,
-      [0.2, 0.2, 0.2],
-      "right",
-    );
-    drawText(
-      formatIndianCurrency(item.amount),
-      midX - 8,
-      y,
-      7.8,
-      false,
-      [0.1, 0.1, 0.1],
-      "right",
-    );
+    const y = tableHeaderBottomY - 9.5 - i * tableRowH;
+    drawText(item.name, margin + 8, y, 7.5, "regular", [0.15, 0.15, 0.15]);
+    drawText(formatPayslipAmount(item.master), masterX, y, 7.5, "regular", [0.15, 0.15, 0.15], "right");
+    drawText(formatPayslipAmount(item.amount), earnAmountX, y, 7.5, "regular", [0.08, 0.08, 0.08], "right");
   }
 
   // Deductions Rows
   for (let i = 0; i < deductionsList.length; i++) {
     const item = deductionsList[i];
     if (!item) continue;
-    const y = headerLineY - 11 - i * tableRowH;
-    const fontSize = item.isInformational ? 5.8 : 7.8;
-    const textColor: [number, number, number] = item.isInformational
-      ? [0.45, 0.45, 0.45]
-      : [0.2, 0.2, 0.2];
-    drawText(item.name, midX + 8, y, fontSize, false, textColor);
-    drawText(
-      formatIndianCurrency(item.amount),
-      margin + contentWidth - 8,
-      y,
-      fontSize,
-      false,
-      textColor,
-      "right",
-    );
+    const y = tableHeaderBottomY - 9.5 - i * tableRowH;
+    drawText(item.name, midX + 8, y, 7.5, "regular", [0.15, 0.15, 0.15]);
+    drawText(formatPayslipAmount(item.amount), dedAmountX, y, 7.5, "regular", [0.08, 0.08, 0.08], "right");
   }
 
   // Totals Row
-  const tfY = tableY + 5.5;
+  const totalsY = tableTotalsTopY - 10.5;
   const masterGross = data.masterGrossSalary ?? data.grossSalary;
-  drawText("Total Earnings", margin + 8, tfY, 8.5, true, [0.1, 0.1, 0.1]);
-  drawText(
-    formatIndianCurrency(masterGross),
-    masterDividerX + 45,
-    tfY,
-    8.5,
-    true,
-    [0.1, 0.1, 0.1],
-    "right",
-  );
-  drawText(
-    formatIndianCurrency(data.grossSalary),
-    midX - 8,
-    tfY,
-    8.5,
-    true,
-    [0.1, 0.1, 0.1],
-    "right",
-  );
+  drawText("Total Earnings", margin + 8, totalsY, 7.8, "bold", [0.08, 0.08, 0.08]);
+  drawText(formatPayslipAmount(masterGross), masterX, totalsY, 7.8, "bold", [0.08, 0.08, 0.08], "right");
+  drawText(formatPayslipAmount(data.grossSalary), earnAmountX, totalsY, 7.8, "bold", [0.08, 0.08, 0.08], "right");
 
-  drawText("Total Deductions", midX + 8, tfY, 8.5, true, [0.1, 0.1, 0.1]);
-  drawText(
-    formatIndianCurrency(data.totalDeductions),
-    margin + contentWidth - 8,
-    tfY,
-    8.5,
-    true,
-    [0.1, 0.1, 0.1],
-    "right",
-  );
+  drawText("Total Deductions", midX + 8, totalsY, 7.8, "bold", [0.08, 0.08, 0.08]);
+  drawText(formatPayslipAmount(data.totalDeductions), dedAmountX, totalsY, 7.8, "bold", [0.08, 0.08, 0.08], "right");
 
-  currentY = tableY;
-
-  // 4. Net Pay Row
-  const netPayH = 34;
-  const netPayY = currentY - netPayH;
-  drawRect(
-    margin,
-    netPayY,
-    contentWidth,
-    netPayH,
-    [0.98, 0.98, 0.98],
-    [0.2, 0.2, 0.2],
-    0.75,
-  );
-
-  drawText(
-    "Net Pay for the Month",
-    margin + 8,
-    netPayY + 19,
-    9.5,
-    true,
-    [0.1, 0.1, 0.1],
-  );
-  drawText(
-    formatIndianCurrency(data.netSalary),
-    midX - 8,
-    netPayY + 19,
-    10.5,
-    true,
-    [0.08, 0.45, 0.18],
-    "right",
-  );
+  // -------------------------------------------------------------
+  // 4. NET PAY SECTION
+  // -------------------------------------------------------------
+  const netPayLabelY = tableBottomY - 11;
+  drawText("Net Pay for the Month", margin + 8, netPayLabelY, 8.2, "bold", [0.08, 0.08, 0.08]);
+  drawText(formatPayslipAmount(data.netSalary), masterX + 38, netPayLabelY, 8.5, "bold", [0.08, 0.08, 0.08], "right");
 
   const inWords = data.netPayInWords || numberToIndianWords(data.netSalary);
-  drawText(
-    `(${inWords})`,
-    margin + 8,
-    netPayY + 7,
-    7.8,
-    false,
-    [0.25, 0.25, 0.25],
-  );
+  drawText(`(${inWords})`, margin + 8, tableBottomY - 22, 7.2, "italic", [0.25, 0.25, 0.25]);
 
-  currentY = netPayY - 8;
-
-  // 5. System Generated Footer & Print Date
-  drawLine(margin, 52, margin + contentWidth, 52, [0.3, 0.3, 0.3], 0.5);
+  // -------------------------------------------------------------
+  // 5. SYSTEM GENERATED NOTICE (BELOW OUTER BOX)
+  // -------------------------------------------------------------
   drawText(
     "This is a system generated payslip and does not require signature.",
     margin + contentWidth / 2,
-    38,
-    8,
-    false,
-    [0.35, 0.35, 0.35],
+    boxBottomY - 14,
+    7.5,
+    "regular",
+    [0.3, 0.3, 0.3],
     "center",
-  );
-
-  const printDateStr = data.printDate || "19 Oct 2026, 04:39 PM";
-  drawText(
-    `Print Date: ${printDateStr}`,
-    margin,
-    24,
-    7.5,
-    false,
-    [0.45, 0.45, 0.45],
-  );
-  drawText(
-    "IndiaPay Statutory Payroll System",
-    margin + contentWidth,
-    24,
-    7.5,
-    false,
-    [0.45, 0.45, 0.45],
-    "right",
   );
 
   // Assemble PDF 1.4 Object Hierarchy
@@ -833,6 +652,10 @@ endobj`);
     /Font <<
       /F1 4 0 R
       /F2 5 0 R
+      /F3 7 0 R
+    >>
+    /XObject <<
+      /Im1 8 0 R
     >>
   >>
   /Contents 6 0 R
@@ -855,6 +678,33 @@ endobj`);
   /Subtype /Type1
   /BaseFont /Helvetica-Bold
 >>
+endobj`);
+
+  // Object 7: Font Oblique / Italic (Helvetica-Oblique)
+  objects.push(`7 0 obj
+<<
+  /Type /Font
+  /Subtype /Type1
+  /BaseFont /Helvetica-Oblique
+>>
+endobj`);
+
+  // Object 8: Official VICTOR CHASEX Logo Image (JPEG)
+  const logoBytes = getLogoBinaryString();
+  objects.push(`8 0 obj
+<<
+  /Type /XObject
+  /Subtype /Image
+  /Width 661
+  /Height 211
+  /ColorSpace /DeviceRGB
+  /BitsPerComponent 8
+  /Filter /DCTDecode
+  /Length ${logoBytes.length}
+>>
+stream
+${logoBytes}
+endstream
 endobj`);
 
   // Object 6: Content Stream
@@ -905,7 +755,12 @@ ${startXref}
  */
 export function generatePayslipPdfBlob(data: PayslipData): Blob {
   const pdfString = generatePayslipPdfString(data);
-  return new Blob([pdfString], { type: "application/pdf" });
+  const len = pdfString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = pdfString.charCodeAt(i) & 0xff;
+  }
+  return new Blob([bytes.buffer], { type: "application/pdf" });
 }
 
 /**
@@ -913,14 +768,8 @@ export function generatePayslipPdfBlob(data: PayslipData): Blob {
  * Format: SalarySlip_<EmployeeID>_<YYYY-MM>.pdf
  */
 export function getPayslipPdfFileName(data: PayslipData): string {
-  const rawId =
-    data.employeeNo || data.employeeId || data.employeeName || "EMP";
-  const cleanId = rawId.replace(/[^a-zA-Z0-9_-]/g, "_");
-  const cleanPeriod = (data.periodMonth || "Period").replace(
-    /[^a-zA-Z0-9_-]/g,
-    "-",
-  );
-  return `SalarySlip_${cleanId}_${cleanPeriod}.pdf`;
+  const periodStr = formatPeriodMonth(data.periodMonth).replace(/\s+/g, "_");
+  return `Payslip_${periodStr || "Salary"}.pdf`;
 }
 
 /**

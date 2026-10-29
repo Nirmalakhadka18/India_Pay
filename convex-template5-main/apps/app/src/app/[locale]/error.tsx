@@ -22,6 +22,12 @@ export default function ErrorBoundary({
         An unexpected error occurred. You can try again, or head back to the
         dashboard.
       </p>
+      {error && (
+        <pre className="max-w-2xl text-left bg-destructive/10 text-destructive p-4 rounded text-xs overflow-auto font-mono max-h-60 border border-destructive/20">
+          {error.message || String(error)}
+          {error.stack && `\n\n${error.stack}`}
+        </pre>
+      )}
       <div className="flex gap-2">
         <Button onClick={() => reset()}>Try again</Button>
         <Button

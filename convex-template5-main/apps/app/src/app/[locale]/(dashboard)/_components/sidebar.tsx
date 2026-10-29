@@ -16,19 +16,21 @@ import {
   Briefcase,
   CalendarClock,
   CalendarDays,
+  ChevronDown,
+  ChevronUp,
   ClipboardCheck,
   FileText,
   GitFork,
   HelpCircle,
   Home,
   LayoutDashboard,
+  LayoutGrid,
   LogOut,
   Menu,
   Settings,
   ShieldCheck,
   Sparkles,
   User,
-  UserCircle,
   Users,
   Wallet,
   X,
@@ -39,26 +41,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { ThemeSwitcher } from "./theme-switcher";
 
-const ALL_NAV = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  {
-    href: "/engage",
-    label: "Engage",
-    icon: Sparkles,
-  },
-  {
-    href: "/my-portal",
-    label: "My Portal",
-    icon: UserCircle,
-    memberOnly: true,
-  },
-  { href: "/employees", label: "Employees", icon: Users, hrOnly: true },
-  { href: "/payroll", label: "Payroll", icon: Banknote, hrOnly: true },
-  { href: "/compliance", label: "Compliance", icon: ShieldCheck, hrOnly: true },
-  { href: "/reports", label: "Reports", icon: FileText, hrOnly: true },
-  { href: "/settings", label: "Settings", icon: Settings, hrOnly: true },
-];
-
 export function Sidebar() {
   const pathname = usePathname();
   const { signOut } = useAuthActions();
@@ -67,6 +49,12 @@ export function Sidebar() {
   const [open, setOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
+  const [expandedNav, setExpandedNav] = useState<Record<string, boolean>>({
+    "/worklife/kudos": true,
+    "/todo": true,
+    "/salary": false,
+    "/leave/apply": true,
+  });
 
   useEffect(() => {
     return setupBfcacheLogoutProtection();
@@ -127,21 +115,64 @@ export function Sidebar() {
     return [
       { href: "/", label: "Home", icon: Home },
       { href: "/engage", label: "Engage", icon: Sparkles },
-      { href: "/worklife", label: "My Worklife", icon: Briefcase },
-      { href: "/todo", label: "To Do", icon: ClipboardCheck },
-      { href: "/salary", label: "Salary", icon: Wallet },
-      { href: "/leave", label: "Leave", icon: CalendarDays },
-      { href: "/people", label: "People", icon: Users },
+      {
+        href: "/worklife/kudos",
+        label: "My Worklife",
+        icon: LayoutGrid,
+        subItems: [
+          { href: "/worklife/kudos", label: "Kudos" },
+          { href: "/worklife/feedback", label: "Feedback" },
+        ],
+      },
+      {
+        href: "/todo",
+        label: "To do",
+        icon: ClipboardCheck,
+        subItems: [{ href: "/todo", label: "Review" }],
+      },
+      {
+        href: "/salary",
+        label: "Salary",
+        icon: Wallet,
+        subItems: [
+          { href: "/salary", label: "Payslips" },
+          { href: "/salary/ytd-reports", label: "YTD Reports" },
+          { href: "/salary/it-statement", label: "IT Statement" },
+          { href: "/salary/it-declaration", label: "IT Declaration" },
+          { href: "/salary/loans-and-advances", label: "Loans and Advances" },
+          { href: "/salary/reimbursement", label: "Reimbursement" },
+          { href: "/salary/proof-of-investment", label: "Proof Of Investment" },
+          { href: "/salary/salary-revision", label: "Salary Revision" },
+        ],
+      },
+      {
+        href: "/leave/apply",
+        label: "Leave",
+        icon: CalendarDays,
+        subItems: [
+          { href: "/leave/apply", label: "Leave Apply" },
+          { href: "/leave/balances", label: "Leave Balances" },
+          { href: "/leave/calendar", label: "Leave Calendar" },
+          { href: "/leave/holiday-calendar", label: "Holiday Calendar" },
+        ],
+      },
       { href: "/documents", label: "Document Center", icon: FileText },
+      { href: "/people", label: "People", icon: Users },
       { href: "/helpdesk", label: "Helpdesk", icon: HelpCircle },
-      { href: "/delegates", label: "Workflow Delegates", icon: GitFork },
     ];
   }, [isHR]);
 
   const Body = (
     <div className="flex h-full w-60 flex-col border-r border-border bg-card">
       <div className="flex h-14 items-center gap-2 border-b border-border px-4">
-        <Logo width={26} height={26} />
+        <Link href="/" className="flex items-center">
+          <img
+            src="/victor-chasex-logo.jpg"
+            alt="VICTOR CHASEX"
+            className="h-8 max-h-8 w-auto object-contain rounded"
+            style={{ aspectRatio: "661 / 211" }}
+          />
+        </Link>
       </div>
 
       <div className="p-3 pb-2">
@@ -178,7 +209,7 @@ export function Sidebar() {
               Hi {myProfile?.firstName || user?.name || "Member"}
             </p>
             <Link
-              href="/worklife"
+              href="/my-portal"
               onClick={() => setOpen(false)}
               className="text-[11px] font-medium text-cyan-600 dark:text-cyan-400 hover:underline"
             >
@@ -190,8 +221,95 @@ export function Sidebar() {
 
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-1">
         {NAV.map((item) => {
-          const active = pathname === item.href;
+          const hasSub = "subItems" in item && Array.isArray(item.subItems);
           const Icon = item.icon;
+
+          if (hasSub) {
+            const isExpanded = expandedNav[item.href] ?? true;
+            const isParentActive =
+              (item.href === "/worklife/kudos" && pathname.includes("/worklife")) ||
+              (item.href === "/todo" && pathname.includes("/todo")) ||
+              (item.href === "/salary" && pathname.includes("/salary")) ||
+              (item.href.startsWith("/leave") && pathname.includes("/leave")) ||
+              pathname.startsWith(item.href);
+            return (
+              <div key={item.href} className="space-y-0.5">
+                <div
+                  className={`flex items-center justify-between rounded-md px-3 py-2 text-sm transition select-none ${
+                    isParentActive
+                      ? "font-semibold text-primary"
+                      : "text-primary/70 hover:bg-primary/5 hover:text-primary"
+                  }`}
+                >
+                  <Link
+                    href={item.href}
+                    onClick={() => {
+                      setExpandedNav((prev) => ({ ...prev, [item.href]: true }));
+                      setOpen(false);
+                    }}
+                    className="flex items-center gap-3 min-w-0 flex-1"
+                  >
+                    <Icon className="h-4 w-4 shrink-0" />
+                    <span className="truncate">{item.label}</span>
+                  </Link>
+                  <button
+                    type="button"
+                    aria-label={`Toggle ${item.label} submenu`}
+                    className="p-1 text-primary/50 hover:text-primary transition rounded"
+                    onClick={() =>
+                      setExpandedNav((prev) => ({
+                        ...prev,
+                        [item.href]: !isExpanded,
+                      }))
+                    }
+                  >
+                    {isExpanded ? (
+                      <ChevronUp className="h-3.5 w-3.5" />
+                    ) : (
+                      <ChevronDown className="h-3.5 w-3.5" />
+                    )}
+                  </button>
+                </div>
+
+                {isExpanded && (
+                  <div className="space-y-0.5 pl-7">
+                    {item.subItems?.map((sub) => {
+                      const isSubActive =
+                        sub.href === "/worklife/kudos"
+                          ? pathname.includes("/worklife/kudos") ||
+                            pathname === "/worklife" ||
+                            pathname.endsWith("/worklife")
+                          : sub.href === "/worklife/feedback"
+                          ? pathname.includes("/worklife/feedback")
+                          : sub.href === "/todo"
+                          ? pathname === "/todo" || pathname.startsWith("/todo")
+                          : sub.href === "/salary"
+                          ? pathname === "/salary" || pathname === "/salary/payslip"
+                          : sub.href === "/leave/apply"
+                          ? pathname === "/leave" || pathname === "/leave/apply"
+                          : pathname === sub.href;
+                      return (
+                        <Link
+                          key={sub.href}
+                          href={sub.href}
+                          onClick={() => setOpen(false)}
+                          className={`block rounded-md px-3 py-1.5 text-xs transition ${
+                            isSubActive
+                              ? "bg-[#E8F3FC] dark:bg-blue-950/40 text-[#0091FF] dark:text-blue-400 font-semibold"
+                              : "text-primary/70 hover:bg-primary/5 hover:text-primary"
+                          }`}
+                        >
+                          {sub.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          }
+
+          const active = pathname === item.href;
           return (
             <Link
               key={item.href}
@@ -271,7 +389,14 @@ export function Sidebar() {
         >
           <Menu className="h-5 w-5" />
         </button>
-        <Logo width={22} height={22} />
+        <Link href="/" className="flex items-center">
+          <img
+            src="/victor-chasex-logo.jpg"
+            alt="VICTOR CHASEX"
+            className="h-7 max-h-7 w-auto object-contain rounded"
+            style={{ aspectRatio: "661 / 211" }}
+          />
+        </Link>
       </div>
 
       <aside className="sticky top-0 hidden h-screen shrink-0 md:block">

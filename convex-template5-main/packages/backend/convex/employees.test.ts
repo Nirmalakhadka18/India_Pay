@@ -740,10 +740,11 @@ describe("Employee Banking & Statutory Master Data — Convex Workflow & RBAC Su
     });
   });
 
-  test("Admin can remove an employee and cascade delete associated records", async () => {
+  test("Admin can safely soft-remove an employee, preserving historical records and audit logs", async () => {
     const t = convexTest(schema, modules);
-    const { ws, admin } = await seedEmployeeTestWorkspace(t);
+    const { ws, admin, member1 } = await seedEmployeeTestWorkspace(t);
     const asAdmin = t.withIdentity(as(admin));
+    const asMember = t.withIdentity(as(member1));
 
     const empId = await asAdmin.mutation(api.employees.add, {
       workspaceId: ws,
@@ -774,36 +775,57 @@ describe("Employee Banking & Statutory Master Data — Convex Workflow & RBAC Su
       });
     });
 
-    // Verify employee and salary exist
+    // Verify employee is in directory before removal
     const beforeList = await asAdmin.query(api.employees.list, { workspaceId: ws });
     expect(beforeList.some((e) => e._id === empId)).toBe(true);
 
-    // Call remove mutation
+    // Non-admin cannot remove employee
+    await expect(
+      asMember.mutation(api.employees.remove, {
+        workspaceId: ws,
+        employeeId: empId,
+      }),
+    ).rejects.toThrow();
+
+    // Admin executes safe soft removal
     await asAdmin.mutation(api.employees.remove, {
       workspaceId: ws,
       employeeId: empId,
     });
 
-    // Verify employee is completely removed
+    // Verify employee is removed from directory listing
     const afterList = await asAdmin.query(api.employees.list, { workspaceId: ws });
     expect(afterList.some((e) => e._id === empId)).toBe(false);
 
-    // Verify cascaded records are deleted
+    // Verify database record has safe soft-removal flags and historical data is preserved
     await t.run(async (ctx: MutationCtx) => {
       const emp = await ctx.db.get(empId);
-      expect(emp).toBeNull();
+      expect(emp).not.toBeNull();
+      expect(emp?.isRemoved).toBe(true);
+      expect(emp?.status).toBe("inactive");
+      expect(typeof emp?.removedAt).toBe("number");
 
+      // Verify historical salary and attendance records are strictly preserved
       const sals = await ctx.db
         .query("salaries")
         .withIndex("by_employee", (q) => q.eq("employeeId", empId))
         .collect();
-      expect(sals.length).toBe(0);
+      expect(sals.length).toBe(1);
 
       const atts = await ctx.db
         .query("attendance")
         .withIndex("by_employee", (q) => q.eq("employeeId", empId))
         .collect();
-      expect(atts.length).toBe(0);
+      expect(atts.length).toBe(1);
+
+      // Verify audit log entry exists
+      const logs = await ctx.db
+        .query("auditLogs")
+        .withIndex("by_workspace", (q) => q.eq("workspaceId", ws))
+        .collect();
+      const removalLog = logs.find((l) => l.action === "employee.remove");
+      expect(removalLog).toBeDefined();
+      expect((removalLog?.meta as any)?.softRemoval).toBe(true);
     });
   });
 });

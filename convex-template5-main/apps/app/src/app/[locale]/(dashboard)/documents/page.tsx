@@ -1,282 +1,137 @@
-"use client";
+﻿"use client";
 
 import { useWorkspace } from "@/lib/useWorkspace";
 import { api } from "@v1/backend/convex/_generated/api";
-import { Button } from "@v1/ui/button";
 import { useQuery } from "convex/react";
-import {
-  AlertCircle,
-  Download,
-  ExternalLink,
-  FileCheck,
-  FileText,
-  FolderOpen,
-  Info,
-  Loader2,
-  Lock,
-  ShieldAlert,
-  ShieldCheck,
-} from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+
+function HeroBannerIllustration() {
+  return (
+    <svg viewBox="0 0 220 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full" aria-hidden="true">
+      <rect x="55" y="20" width="120" height="90" rx="4" fill="#E5E7EB" stroke="#D1D5DB" strokeWidth="1.5" />
+      <rect x="63" y="30" width="104" height="72" rx="2" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+      <polyline points="75,90 95,70 115,78 140,52 155,60" stroke="#6366F1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <line x1="75" y1="95" x2="160" y2="95" stroke="#D1D5DB" strokeWidth="1" />
+      <line x1="115" y1="110" x2="115" y2="130" stroke="#9CA3AF" strokeWidth="2" />
+      <line x1="100" y1="130" x2="130" y2="130" stroke="#9CA3AF" strokeWidth="2" />
+      <circle cx="42" cy="98" r="10" fill="#C7D2FE" stroke="#818CF8" strokeWidth="1.5" />
+      <path d="M30 138 Q42 123 54 138" stroke="#4338CA" strokeWidth="2" fill="#C7D2FE" />
+      <line x1="50" y1="110" x2="63" y2="93" stroke="#4338CA" strokeWidth="2" strokeLinecap="round" />
+      <line x1="38" y1="138" x2="34" y2="158" stroke="#4338CA" strokeWidth="2" strokeLinecap="round" />
+      <line x1="46" y1="138" x2="50" y2="158" stroke="#4338CA" strokeWidth="2" strokeLinecap="round" />
+      <ellipse cx="33" cy="159" rx="5" ry="2.5" fill="#1E1B4B" />
+      <ellipse cx="51" cy="159" rx="5" ry="2.5" fill="#1E1B4B" />
+      <circle cx="172" cy="22" r="3" fill="#E0E7FF" />
+      <circle cx="186" cy="38" r="2" fill="#C7D2FE" />
+      <circle cx="28" cy="68" r="2.5" fill="#E0E7FF" />
+    </svg>
+  );
+}
+
+function IconDocuments() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="4" y="2" width="14" height="18" rx="2" fill="#EEF2FF" stroke="#6366F1" strokeWidth="1.5" />
+      <rect x="8" y="6" width="12" height="18" rx="2" fill="#E0E7FF" stroke="#818CF8" strokeWidth="1.5" />
+      <line x1="11" y1="13" x2="20" y2="13" stroke="#6366F1" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="11" y1="17" x2="20" y2="17" stroke="#6366F1" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="11" y1="21" x2="16" y2="21" stroke="#6366F1" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function IconPayslips() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="5" y="3" width="18" height="22" rx="2" fill="#F0FDF4" stroke="#22C55E" strokeWidth="1.5" />
+      <line x1="9" y1="10" x2="19" y2="10" stroke="#22C55E" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="9" y1="14" x2="19" y2="14" stroke="#86EFAC" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="9" y1="18" x2="14" y2="18" stroke="#86EFAC" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function IconForm16() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="5" y="3" width="18" height="22" rx="2" fill="#FFF1F2" stroke="#F87171" strokeWidth="1.5" />
+      <text x="14" y="13.5" textAnchor="middle" fontSize="7" fill="#EF4444" fontWeight="bold">16</text>
+      <line x1="9" y1="17" x2="19" y2="17" stroke="#FCA5A5" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="9" y1="20" x2="19" y2="20" stroke="#FCA5A5" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="9" y1="23" x2="14" y2="23" stroke="#FCA5A5" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function IconPolicies() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="4" y="4" width="20" height="20" rx="2" fill="#F0FDFA" stroke="#14B8A6" strokeWidth="1.5" />
+      <path d="M8 14 L12 18 L20 10" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function IconForms() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="5" y="3" width="18" height="22" rx="2" fill="#FFFBEB" stroke="#F59E0B" strokeWidth="1.5" />
+      <rect x="8" y="8" width="12" height="2.5" rx="1" fill="#FDE68A" />
+      <rect x="8" y="13" width="12" height="2.5" rx="1" fill="#FDE68A" />
+      <rect x="8" y="18" width="8" height="2.5" rx="1" fill="#FDE68A" />
+    </svg>
+  );
+}
+
+const CATEGORIES = [
+  { id: "documents", label: "Documents", icon: <IconDocuments />, href: "/documents/list/documents" },
+  { id: "payslips", label: "Payslips", icon: <IconPayslips />, href: "/documents/list/payslips" },
+  { id: "form16", label: "Form 16", icon: <IconForm16 />, href: "/documents/list/form16" },
+  { id: "policies", label: "Company Policies", icon: <IconPolicies />, href: "/documents/list/policies" },
+  { id: "forms", label: "Forms", icon: <IconForms />, href: "/documents/list/forms" },
+] as const;
 
 export default function DocumentCenterPage() {
-  const { current: workspaceId, workspaces } = useWorkspace();
-  const scoped = workspaceId ? { workspaceId } : "skip";
-
-  const me = useQuery(api.employees.getMyProfile, scoped);
-  const payslips = useQuery(api.payroll.getMyPayslips, scoped);
-  const workspaceFiles = useQuery(api.files.list, scoped);
-
-  const [activeCategory, setActiveCategory] = useState<
-    "all" | "policy" | "tax" | "payslips"
-  >("all");
-
-  const currentRole = workspaces.find((w) => w._id === workspaceId)?.role;
-  const isAdmin = currentRole === "admin" || currentRole === "owner";
+  const { current: workspaceId } = useWorkspace();
 
   if (!workspaceId) {
-    return <div className="p-8 text-muted-foreground">Select a workspace.</div>;
+    return <div className="p-8 text-sm text-gray-400">Select a workspace.</div>;
   }
 
-  // Files uploaded in workspace storage
-  const uploadedDocs = workspaceFiles ?? [];
-  const policyDocs = uploadedDocs.filter((f) =>
-    f.name.toLowerCase().includes("policy") ||
-    f.name.toLowerCase().includes("handbook") ||
-    f.name.toLowerCase().includes("code") ||
-    f.name.toLowerCase().includes("guideline"),
-  );
-  const taxDocs = uploadedDocs.filter((f) =>
-    f.name.toLowerCase().includes("tax") ||
-    f.name.toLowerCase().includes("12bb") ||
-    f.name.toLowerCase().includes("tds") ||
-    f.name.toLowerCase().includes("form"),
-  );
-
   return (
-    <div className="flex h-full w-full bg-secondary px-4 py-6 md:px-8 dark:bg-black">
-      <div className="mx-auto w-full max-w-screen-xl space-y-6">
-        {/* Header */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-border/80 pb-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="h-5 w-1 rounded-full bg-teal-600" />
-              <h1 className="text-xl font-bold tracking-tight text-primary">
-                Document Center
-              </h1>
+    <div className="flex h-full w-full flex-col bg-gray-50 px-6 py-6 md:px-10">
+      <div className="flex items-center gap-2 mb-6">
+        <span className="inline-block rounded-sm shrink-0" style={{ width: 4, height: 22, background: "#F59E0B" }} />
+        <h1 className="text-xl font-semibold text-gray-800">Document Center</h1>
+      </div>
+
+      <div className="relative flex items-center justify-between rounded-lg border border-gray-200 bg-white px-8 py-6 mb-6 overflow-hidden" style={{ minHeight: 140 }}>
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-1">We&apos;ve got it sorted for you!</h2>
+          <p className="text-sm text-gray-500">All Documents are now in one place..</p>
+        </div>
+        <div className="absolute right-6 top-0 bottom-0 flex items-center pointer-events-none" style={{ width: 200 }}>
+          <HeroBannerIllustration />
+        </div>
+      </div>
+
+      <h3 className="text-sm font-semibold text-gray-700 mb-3">Documents</h3>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {CATEGORIES.map((cat) => (
+          <div
+            key={cat.id}
+            className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-4 hover:shadow-sm transition-shadow"
+          >
+            <div className="flex items-center gap-3">
+              {cat.icon}
+              <span className="text-sm font-medium text-gray-700">{cat.label}</span>
             </div>
-            <p className="text-xs text-primary/60 mt-1">
-              Authorized personal records, published payslips, and company HR policies.
-            </p>
+            <Link href={cat.href} className="text-sm font-medium text-blue-500 hover:text-blue-600 hover:underline whitespace-nowrap">
+              View All
+            </Link>
           </div>
-
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-500/10 px-3 py-1 text-xs font-semibold text-teal-600 dark:text-teal-400">
-              <ShieldCheck className="h-3.5 w-3.5" /> Secure Document Vault
-            </span>
-          </div>
-        </div>
-
-        {/* Filter Pills */}
-        <div className="flex items-center gap-2 border-b border-border pb-2 text-xs font-medium">
-          <button
-            type="button"
-            onClick={() => setActiveCategory("all")}
-            className={`rounded-md px-3 py-1.5 transition ${
-              activeCategory === "all"
-                ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                : "text-primary/70 hover:bg-muted"
-            }`}
-          >
-            All Documents
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveCategory("policy")}
-            className={`rounded-md px-3 py-1.5 transition ${
-              activeCategory === "policy"
-                ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                : "text-primary/70 hover:bg-muted"
-            }`}
-          >
-            HR Policies & Handbooks ({policyDocs.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveCategory("tax")}
-            className={`rounded-md px-3 py-1.5 transition ${
-              activeCategory === "tax"
-                ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                : "text-primary/70 hover:bg-muted"
-            }`}
-          >
-            Tax & Statutory Forms ({taxDocs.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveCategory("payslips")}
-            className={`rounded-md px-3 py-1.5 transition ${
-              activeCategory === "payslips"
-                ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                : "text-primary/70 hover:bg-muted"
-            }`}
-          >
-            Published Payslips ({payslips?.length ?? 0})
-          </button>
-        </div>
-
-        {/* Notice for unconfigured policy documents */}
-        {activeCategory !== "payslips" && uploadedDocs.length === 0 && (
-          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 text-xs text-primary/80 flex items-start gap-3">
-            <Info className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
-            <div className="space-y-1">
-              <p className="font-semibold text-primary">
-                Company Policy Documents Not Configured
-              </p>
-              <p className="text-primary/60">
-                Official employee handbook, POSH guidelines, and leave rule PDFs have not yet been uploaded for this workspace by the administrator. Once uploaded via workspace files, they will be directly downloadable here.
-              </p>
-              {isAdmin && (
-                <p className="text-[11px] text-cyan-600 pt-1 font-medium">
-                  Tip for Administrators: Upload policy PDFs under Files to make them accessible to all employees.
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Documents Table */}
-        <div className="rounded-lg border border-border bg-card overflow-hidden shadow-sm">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-muted/50 text-xs text-primary/60 uppercase">
-              <tr>
-                <th className="px-6 py-3 font-medium">Document Name</th>
-                <th className="px-6 py-3 font-medium">Category</th>
-                <th className="px-6 py-3 font-medium">Date</th>
-                <th className="px-6 py-3 font-medium">Status</th>
-                <th className="px-6 py-3 text-right font-medium">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/50">
-              {/* Workspace Uploaded Files */}
-              {activeCategory !== "payslips" &&
-                uploadedDocs
-                  .filter((doc) => {
-                    if (activeCategory === "all") return true;
-                    if (activeCategory === "policy") {
-                      return (
-                        doc.name.toLowerCase().includes("policy") ||
-                        doc.name.toLowerCase().includes("handbook") ||
-                        doc.name.toLowerCase().includes("code") ||
-                        doc.name.toLowerCase().includes("guideline")
-                      );
-                    }
-                    if (activeCategory === "tax") {
-                      return (
-                        doc.name.toLowerCase().includes("tax") ||
-                        doc.name.toLowerCase().includes("12bb") ||
-                        doc.name.toLowerCase().includes("tds")
-                      );
-                    }
-                    return true;
-                  })
-                  .map((doc) => (
-                    <tr key={doc._id} className="hover:bg-muted/30 transition">
-                      <td className="px-6 py-3.5 font-medium text-primary flex items-center gap-3">
-                        <FileText className="h-4 w-4 text-teal-600 shrink-0" />
-                        <div>
-                          <p className="text-xs font-semibold">{doc.name}</p>
-                          <p className="text-[10px] text-primary/50">
-                            {(doc.size / 1024).toFixed(1)} KB
-                          </p>
-                        </div>
-                      </td>
-                      <td className="px-6 py-3.5 text-xs text-primary/70 capitalize">
-                        {doc.name.toLowerCase().includes("tax")
-                          ? "Tax & Statutory"
-                          : "HR Policy"}
-                      </td>
-                      <td className="px-6 py-3.5 text-xs text-primary/60 font-mono">
-                        {new Date(doc.createdAt).toISOString().slice(0, 10)}
-                      </td>
-                      <td className="px-6 py-3.5 text-xs">
-                        <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
-                          Active
-                        </span>
-                      </td>
-                      <td className="px-6 py-3.5 text-right">
-                        {doc.url ? (
-                          <a
-                            href={doc.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            download={doc.name}
-                          >
-                            <Button variant="outline" size="sm" className="text-xs">
-                              <Download className="mr-1.5 h-3.5 w-3.5" /> Download
-                            </Button>
-                          </a>
-                        ) : (
-                          <span className="text-xs text-primary/40">Unavailable</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-
-              {/* Published Payslips listed in documents */}
-              {(activeCategory === "all" || activeCategory === "payslips") &&
-                payslips?.map((p) => (
-                  <tr key={p._id} className="hover:bg-muted/30 transition">
-                    <td className="px-6 py-3.5 font-medium text-primary flex items-center gap-3">
-                      <FileCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-                      <div>
-                        <p className="text-xs font-semibold">
-                          Salary Slip - {p.periodMonth} (
-                          {me?.firstName} {me?.lastName}).pdf
-                        </p>
-                        <p className="text-[10px] text-primary/50">
-                          Net Pay: ₹{p.netSalary.toLocaleString("en-IN")}
-                        </p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-3.5 text-xs text-primary/70">
-                      Payroll Payslip
-                    </td>
-                    <td className="px-6 py-3.5 text-xs text-primary/60 font-mono">
-                      {p.finalizedAt
-                        ? new Date(p.finalizedAt).toISOString().slice(0, 10)
-                        : "Processed"}
-                    </td>
-                    <td className="px-6 py-3.5 text-xs">
-                      <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
-                        Published
-                      </span>
-                    </td>
-                    <td className="px-6 py-3.5 text-right">
-                      <Link href="/salary">
-                        <Button variant="outline" size="sm" className="text-xs">
-                          <Download className="mr-1.5 h-3.5 w-3.5" /> View & Download
-                        </Button>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-
-              {/* Completely Empty State */}
-              {((activeCategory === "payslips" && (!payslips || payslips.length === 0)) ||
-                (activeCategory !== "payslips" &&
-                  uploadedDocs.length === 0 &&
-                  (!payslips || payslips.length === 0))) && (
-                <tr>
-                  <td colSpan={5} className="p-8 text-center text-xs text-primary/50">
-                    No documents available in this category.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        ))}
       </div>
     </div>
   );

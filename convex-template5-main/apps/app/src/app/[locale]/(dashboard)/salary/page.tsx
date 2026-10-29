@@ -1,456 +1,613 @@
 "use client";
 
-import { PayslipModal } from "@/components/payslip-modal";
+import { GreytHRIcon } from "@/components/greythr-icon";
+import {
+  type PayslipData,
+  downloadPayslipPdf,
+  formatIndianCurrency,
+  numberToIndianWords,
+} from "@/lib/payslip-pdf";
 import { useWorkspace } from "@/lib/useWorkspace";
 import { api } from "@v1/backend/convex/_generated/api";
 import type { Id } from "@v1/backend/convex/_generated/dataModel";
-import { Button } from "@v1/ui/button";
 import { useQuery } from "convex/react";
-import {
-  Banknote,
-  Building2,
-  Calendar,
-  CheckCircle2,
-  ChevronRight,
-  CreditCard,
-  Download,
-  Eye,
-  EyeOff,
-  FileText,
-  Info,
-  Loader2,
-  Percent,
-  Receipt,
-  ShieldCheck,
-  TrendingUp,
-  Wallet,
-} from "lucide-react";
-import { useState } from "react";
+import { Download, Loader2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
-export default function SalaryPage() {
+function formatPeriodMonth(period: string): string {
+  if (!period) return "";
+  const parts = period.split("-");
+  if (parts.length === 2) {
+    const year = parts[0];
+    const monthNum = Number.parseInt(parts[1] ?? "1", 10);
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const monthName = months[monthNum - 1] ?? "Period";
+    return `${monthName} ${year}`;
+  }
+  return period;
+}
+
+export default function PayslipsPage() {
   const { current: workspaceId } = useWorkspace();
   const scoped = workspaceId ? { workspaceId } : "skip";
 
   const me = useQuery(api.employees.getMyProfile, scoped);
-  const payslips = useQuery(api.payroll.getMyPayslips, scoped);
+  const myPayslips = useQuery(api.payroll.getMyPayslips, scoped);
 
-  const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
-  const [revealSensitive, setRevealSensitive] = useState(false);
-  const [activeTab, setActiveTab] = useState<
-    "payslips" | "structure" | "bank_tax"
-  >("payslips");
+  const [activeTab, setActiveTab] = useState<"payslip" | "reimb">("payslip");
+  const [selectedRunId, setSelectedRunId] = useState<string>("");
+  const [showEmpDetails, setShowEmpDetails] = useState<boolean>(true);
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
 
-  const payslipData = useQuery(
+  // Real finalized payslip runs for authenticated employee
+  const runs = useMemo(() => {
+    return myPayslips ?? [];
+  }, [myPayslips]);
+
+  const currentRun = useMemo(() => {
+    if (!runs.length) return null;
+    if (selectedRunId) {
+      return runs.find((r) => r.payrollRunId === selectedRunId) ?? runs[0];
+    }
+    return runs[0];
+  }, [runs, selectedRunId]);
+
+  // Query actual payslip details if a finalized run exists
+  const payslipDetail = useQuery(
     api.payroll.getPayslip,
-    workspaceId && selectedRunId && me
+    workspaceId && me && currentRun
       ? {
           workspaceId,
-          payrollRunId: selectedRunId as Id<"payrollRuns">,
-          employeeId: me._id,
+          payrollRunId: currentRun.payrollRunId as Id<"payrollRuns">,
+          employeeId: me._id as Id<"employees">,
         }
       : "skip",
   );
 
-  if (!workspaceId) {
-    return <div className="p-8 text-muted-foreground">Select a workspace.</div>;
-  }
+  const handleDownload = () => {
+    if (!currentRun) {
+      toast.error("Please select a finalized payroll period.");
+      return;
+    }
+    if (!payslipDetail) {
+      toast.error("Payslip details are not available for this period.");
+      return;
+    }
+    setIsDownloading(true);
+    try {
+      const data: PayslipData = {
+        workspaceName: payslipDetail.workspaceName,
+        companyAddress: payslipDetail.companyAddress,
+        location: payslipDetail.location,
+        periodMonth: currentRun.periodMonth,
+        startDate: payslipDetail.startDate,
+        endDate: payslipDetail.endDate,
+        paymentDate: currentRun.finalizedAt,
+        employeeName: payslipDetail.employeeName,
+        employeeNo: payslipDetail.employeeNo,
+        joiningDate: payslipDetail.joiningDate,
+        department: payslipDetail.department,
+        designation: payslipDetail.designation,
+        email: payslipDetail.email,
+        phone: payslipDetail.phone,
+        bankName: payslipDetail.bankName,
+        bankAccountNumber: payslipDetail.bankAccountNumber,
+        maskedBankAccountNumber: payslipDetail.maskedBankAccountNumber,
+        ifscCode: payslipDetail.ifscCode,
+        pan: payslipDetail.pan,
+        maskedPan: payslipDetail.maskedPan,
+        uan: payslipDetail.uan,
+        maskedUan: payslipDetail.maskedUan,
+        pfMemberId: payslipDetail.pfMemberId,
+        esicIpNumber: payslipDetail.esicIpNumber,
+        effectiveWorkDays: payslipDetail.effectiveWorkDays,
+        totalWorkingDays: payslipDetail.totalWorkingDays,
+        basicSalary: payslipDetail.basicSalary,
+        masterBasicSalary: payslipDetail.masterBasicSalary,
+        allowances: payslipDetail.allowances ?? [],
+        grossSalary: currentRun.grossSalary,
+        masterGrossSalary: payslipDetail.masterGrossSalary,
+        lopDays: payslipDetail.lopDays ?? 0,
+        lopDeduction: payslipDetail.lopDeduction ?? 0,
+        customDeductions: payslipDetail.customDeductions ?? [],
+        totalCustomDeductions: payslipDetail.totalCustomDeductions ?? 0,
+        statutoryDeductions: payslipDetail.statutoryDeductions ?? [],
+        totalStatutoryDeductions: payslipDetail.totalStatutoryDeductions ?? 0,
+        employerContributions: payslipDetail.employerContributions ?? [],
+        totalEmployerContributions: payslipDetail.totalEmployerContributions ?? 0,
+        totalDeductions: currentRun.totalDeductions,
+        netSalary: currentRun.netSalary,
+        netPayInWords: payslipDetail.netPayInWords,
+      };
+      downloadPayslipPdf(data);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
-  if (me === undefined) {
-    return (
-      <div className="flex h-64 w-full items-center justify-center text-primary/40">
-        <Loader2 className="h-6 w-6 animate-spin" />
-      </div>
-    );
-  }
+  // Deductions compilation
+  const deductionRows = useMemo(() => {
+    if (!payslipDetail) return [];
+    const rows: { name: string; amount: number }[] = [];
 
-  if (!me) {
-    return (
-      <div className="p-8 text-center text-sm text-primary/60">
-        No employee record linked to your user account.
-      </div>
-    );
-  }
+    if (payslipDetail.statutoryDeductions) {
+      for (const d of payslipDetail.statutoryDeductions) {
+        if (d.amount > 0) {
+          let name = d.name.toUpperCase();
+          if (name.includes("PROVIDENT") || name.includes("PF")) {
+            name = "PF";
+          } else if (name.includes("PROFESSIONAL") || name.includes("PT")) {
+            name = "PROF TAX";
+          }
+          rows.push({ name, amount: d.amount });
+        }
+      }
+    }
 
-  const latestSlip = payslips && payslips.length > 0 ? payslips[0] : null;
+    if (payslipDetail.customDeductions) {
+      for (const d of payslipDetail.customDeductions) {
+        if (d.amount > 0) {
+          rows.push({ name: d.name.toUpperCase(), amount: d.amount });
+        }
+      }
+    }
+
+    if (payslipDetail.lopDeduction && payslipDetail.lopDeduction > 0) {
+      rows.push({
+        name: `LOSS OF PAY (${payslipDetail.lopDays || 0} DAYS)`,
+        amount: payslipDetail.lopDeduction,
+      });
+    }
+
+    if (payslipDetail.employerContributions) {
+      for (const c of payslipDetail.employerContributions) {
+        if (c.amount > 0) {
+          rows.push({
+            name: c.name.toUpperCase().replace("CONTRIBUTION", "CON"),
+            amount: c.amount,
+          });
+        }
+      }
+    }
+
+    return rows;
+  }, [payslipDetail]);
+
+  const periodFormatted = currentRun
+    ? formatPeriodMonth(currentRun.periodMonth)
+    : "Sep 2026";
 
   return (
-    <div className="flex h-full w-full bg-secondary px-4 py-6 md:px-8 dark:bg-black">
-      <div className="mx-auto w-full max-w-screen-xl space-y-6">
-        {/* Header */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-border/80 pb-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="h-5 w-1 rounded-full bg-emerald-500" />
-              <h1 className="text-xl font-bold tracking-tight text-primary">
-                My Salary & Payslips
-              </h1>
-            </div>
-            <p className="text-xs text-primary/60 mt-1">
-              Access your published monthly payslips, statutory deductions (PF, ESI, PT, TDS), and payout bank details.
-            </p>
+    <div className="flex min-h-screen w-full flex-col bg-[#F9FAFB] dark:bg-black">
+      {/* Top Controls Area */}
+      <div className="border-b border-border/80 bg-card px-6 py-3.5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          {/* Left Heading */}
+          <div className="flex items-center gap-3">
+            <GreytHRIcon className="h-5 w-5 shrink-0" />
+            <h1 className="text-base font-semibold text-primary">Payslips</h1>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-              <ShieldCheck className="h-3.5 w-3.5" /> Confidential Employee Record
-            </span>
-          </div>
-        </div>
-
-        {/* Quick KPI Overview */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="rounded-lg border border-border bg-card p-5 shadow-sm space-y-1">
-            <p className="text-xs font-medium uppercase tracking-wider text-primary/50">
-              Latest Net Payout
-            </p>
-            <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">
-              {latestSlip
-                ? `₹${latestSlip.netSalary.toLocaleString("en-IN")}`
-                : "—"}
-            </p>
-            <p className="text-xs text-primary/50">
-              {latestSlip ? `Period: ${latestSlip.periodMonth}` : "No payslips published yet"}
-            </p>
-          </div>
-
-          <div className="rounded-lg border border-border bg-card p-5 shadow-sm space-y-1">
-            <p className="text-xs font-medium uppercase tracking-wider text-primary/50">
-              Published Payslips
-            </p>
-            <p className="text-2xl font-bold text-primary font-mono">
-              {payslips?.length ?? 0}
-            </p>
-            <p className="text-xs text-primary/50">Available for PDF download</p>
-          </div>
-
-          <div className="rounded-lg border border-border bg-card p-5 shadow-sm space-y-1">
-            <p className="text-xs font-medium uppercase tracking-wider text-primary/50">
-              Disbursement Method
-            </p>
-            <p className="text-lg font-bold text-primary">Direct Bank Transfer</p>
-            <p className="text-xs text-primary/50">
-              {me.bankName ? `${me.bankName}` : "Bank account configured"}
-            </p>
-          </div>
-        </div>
-
-        {/* Navigation Tabs */}
-        <div className="flex items-center gap-2 border-b border-border pb-2 text-xs font-medium">
-          <button
-            type="button"
-            onClick={() => setActiveTab("payslips")}
-            className={`rounded-md px-3 py-1.5 transition ${
-              activeTab === "payslips"
-                ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                : "text-primary/70 hover:bg-muted"
-            }`}
-          >
-            My Payslips
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("structure")}
-            className={`rounded-md px-3 py-1.5 transition ${
-              activeTab === "structure"
-                ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                : "text-primary/70 hover:bg-muted"
-            }`}
-          >
-            Salary Structure
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("bank_tax")}
-            className={`rounded-md px-3 py-1.5 transition ${
-              activeTab === "bank_tax"
-                ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                : "text-primary/70 hover:bg-muted"
-            }`}
-          >
-            Bank & Statutory Tax IDs
-          </button>
-        </div>
-
-        {/* ── TAB 1: PAYSLIPS LIST ─────────────────────────────────────────── */}
-        {activeTab === "payslips" && (
-          <div className="rounded-lg border border-border bg-card overflow-hidden shadow-sm">
-            <div className="border-b border-border px-6 py-4 flex items-center justify-between">
-              <div>
-                <h2 className="text-base font-semibold text-primary">
-                  Monthly Payslips
-                </h2>
-                <p className="text-xs text-primary/60">
-                  Select a payroll period to view the salary break-up or download a PDF payslip.
-                </p>
-              </div>
-            </div>
-
-            {payslips === undefined ? (
-              <div className="flex h-48 items-center justify-center text-primary/40">
-                <Loader2 className="h-6 w-6 animate-spin" />
-              </div>
-            ) : payslips.length === 0 ? (
-              <div className="p-12 text-center text-sm text-primary/50">
-                No finalized payslips available yet. Once your workspace administrator processes the payroll run, your payslips will appear here.
-              </div>
-            ) : (
-              <table className="w-full text-left text-sm">
-                <thead className="bg-muted/50 text-xs text-primary/60 uppercase">
-                  <tr>
-                    <th className="px-6 py-3 font-medium">Payroll Period</th>
-                    <th className="px-6 py-3 font-medium">Published Date</th>
-                    <th className="px-6 py-3 font-medium text-emerald-600">
-                      Net Pay
-                    </th>
-                    <th className="px-6 py-3 font-medium">Disbursement</th>
-                    <th className="px-6 py-3 text-right font-medium">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border/50">
-                  {payslips.map((p) => (
-                    <tr key={p._id} className="hover:bg-muted/30 transition">
-                      <td className="px-6 py-3 font-semibold text-primary">
-                        {p.periodMonth}
-                      </td>
-                      <td className="px-6 py-3 text-xs text-primary/60">
-                        {p.finalizedAt
-                          ? new Date(p.finalizedAt).toLocaleDateString("en-IN", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            })
-                          : "Published"}
-                      </td>
-                      <td className="px-6 py-3 font-mono font-semibold text-emerald-600 dark:text-emerald-400">
-                        ₹{p.netSalary.toLocaleString("en-IN")}
-                      </td>
-                      <td className="px-6 py-3 text-xs">
-                        <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
-                          Processed
-                        </span>
-                      </td>
-                      <td className="px-6 py-3 text-right">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setSelectedRunId(p.payrollRunId)}
-                          className="text-xs"
-                        >
-                          View & Download PDF <ChevronRight className="ml-1 h-3.5 w-3.5" />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-        )}
-
-        {/* ── TAB 2: SALARY STRUCTURE BREAKDOWN ────────────────────────────── */}
-        {activeTab === "structure" && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Earnings Breakdown */}
-              <div className="rounded-lg border border-border bg-card p-6 shadow-sm space-y-4">
-                <div className="flex items-center gap-2 border-b border-border pb-3">
-                  <TrendingUp className="h-5 w-5 text-emerald-500" />
-                  <h3 className="font-semibold text-primary">
-                    Monthly Earnings Structure
-                  </h3>
-                </div>
-                <div className="space-y-3 text-xs">
-                  <div className="flex justify-between py-1 border-b border-border/40">
-                    <span className="text-primary/70">Basic Salary</span>
-                    <span className="font-mono font-semibold text-primary">
-                      {"basicSalary" in me && typeof (me as Record<string, unknown>).basicSalary === "number"
-                        ? Number((me as Record<string, unknown>).basicSalary).toLocaleString("en-IN")
-                        : "Configured in payroll"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-border/40">
-                    <span className="text-primary/70">House Rent Allowance (HRA)</span>
-                    <span className="font-mono font-semibold text-primary">
-                      40% - 50% of Basic
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-border/40">
-                    <span className="text-primary/70">Special Allowance</span>
-                    <span className="font-mono font-semibold text-primary">
-                      Flexible component
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-border/40">
-                    <span className="text-primary/70">Conveyance Allowance</span>
-                    <span className="font-mono font-semibold text-primary">
-                      Statutory standard
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Deductions Breakdown */}
-              <div className="rounded-lg border border-border bg-card p-6 shadow-sm space-y-4">
-                <div className="flex items-center gap-2 border-b border-border pb-3">
-                  <Receipt className="h-5 w-5 text-amber-500" />
-                  <h3 className="font-semibold text-primary">
-                    Statutory Deductions Compliance
-                  </h3>
-                </div>
-                <div className="space-y-3 text-xs">
-                  <div className="flex justify-between py-1 border-b border-border/40">
-                    <div>
-                      <p className="font-semibold text-primary">Employees&apos; Provident Fund (EPF)</p>
-                      <p className="text-[10px] text-primary/50">12% on Basic (statutory ceiling ₹15,000)</p>
-                    </div>
-                    <span className="font-mono font-semibold text-primary">Applicable</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-border/40">
-                    <div>
-                      <p className="font-semibold text-primary">Employee State Insurance (ESIC)</p>
-                      <p className="text-[10px] text-primary/50">0.75% (for gross &le; ₹21,000/mo)</p>
-                    </div>
-                    <span className="font-mono font-semibold text-primary">Applicable</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-border/40">
-                    <div>
-                      <p className="font-semibold text-primary">Professional Tax (PT)</p>
-                      <p className="text-[10px] text-primary/50">State statutory slabs (e.g. Karnataka ₹200)</p>
-                    </div>
-                    <span className="font-mono font-semibold text-primary">Applicable</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-border/40">
-                    <div>
-                      <p className="font-semibold text-primary">Income Tax TDS (Section 192)</p>
-                      <p className="text-[10px] text-primary/50">New / Old Tax Regime</p>
-                    </div>
-                    <span className="font-mono font-semibold text-primary">Computed monthly</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── TAB 3: BANK & STATUTORY DETAILS ─────────────────────────────── */}
-        {activeTab === "bank_tax" && (
-          <div className="rounded-lg border border-border bg-card p-6 shadow-sm space-y-6">
-            <div className="flex items-center justify-between border-b border-border pb-4">
-              <div>
-                <h3 className="text-base font-semibold text-primary">
-                  Payout Banking & Statutory Master Data
-                </h3>
-                <p className="text-xs text-primary/60">
-                  Credentials used for salary disbursements and income tax / PF filings.
-                </p>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setRevealSensitive((v) => !v)}
-                className="gap-1.5 text-xs"
+          {/* Center Tabs */}
+          <div className="flex justify-center">
+            <div className="inline-flex rounded-md shadow-2xs">
+              <button
+                type="button"
+                onClick={() => setActiveTab("payslip")}
+                className={`rounded-l-md px-6 py-1.5 text-xs font-semibold transition ${
+                  activeTab === "payslip"
+                    ? "bg-[#0091FF] text-white shadow-xs"
+                    : "border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 dark:border-border dark:bg-card dark:text-gray-300"
+                }`}
               >
-                {revealSensitive ? (
-                  <>
-                    <EyeOff className="h-3.5 w-3.5" /> Mask Sensitive
-                  </>
-                ) : (
-                  <>
-                    <Eye className="h-3.5 w-3.5" /> Reveal Sensitive
-                  </>
-                )}
-              </Button>
+                Payslip
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("reimb")}
+                className={`rounded-r-md border border-l-0 border-gray-200 px-6 py-1.5 text-xs font-semibold transition dark:border-border ${
+                  activeTab === "reimb"
+                    ? "border-[#0091FF] bg-[#0091FF] text-white shadow-xs"
+                    : "bg-white text-gray-600 hover:bg-gray-50 dark:bg-card dark:text-gray-300"
+                }`}
+              >
+                Reimb. Payslip
+              </button>
+            </div>
+          </div>
+
+          {/* Right Download & Period Dropdown matching user screenshot */}
+          <div className="flex flex-wrap items-center gap-2.5 self-end sm:self-auto">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-700 dark:text-gray-300">
+              <span className="text-[11px] uppercase tracking-wider text-gray-500">SELECT PERIOD:</span>
+              <select
+                value={currentRun?.payrollRunId ?? ""}
+                onChange={(e) => setSelectedRunId(e.target.value)}
+                className="h-8 rounded border border-gray-300 bg-white px-2.5 py-1 text-xs font-semibold text-gray-800 shadow-2xs focus:outline-none focus:ring-1 focus:ring-[#0091FF] dark:border-border dark:bg-card dark:text-gray-200"
+              >
+                {runs.map((r) => (
+                  <option key={r._id} value={r.payrollRunId}>
+                    {r.periodMonth} (Finalized)
+                  </option>
+                ))}
+                {!runs.length && <option value="">No released payroll</option>}
+              </select>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-              {/* Direct Payout Banking */}
-              <div className="space-y-4">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-primary/60 flex items-center gap-1.5">
-                  <Building2 className="h-3.5 w-3.5 text-cyan-600" /> Direct Payout Banking
-                </h4>
-                <div className="space-y-3 text-xs">
-                  <div>
-                    <p className="text-primary/50">Account Holder Name</p>
-                    <p className="font-semibold text-primary text-sm mt-0.5">
-                      {me.bankAccountHolderName || `${me.firstName} ${me.lastName}`}
-                    </p>
+            <button
+              type="button"
+              onClick={handleDownload}
+              disabled={isDownloading || !currentRun || !payslipDetail}
+              title="Download Payslip"
+              className="flex h-8 items-center gap-1.5 rounded border border-gray-300 bg-white px-3 text-xs font-medium text-gray-700 shadow-2xs transition hover:bg-gray-50 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-border dark:bg-card dark:text-gray-200"
+            >
+              {isDownloading ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Download className="h-3.5 w-3.5 text-gray-600 dark:text-gray-300" />
+              )}
+              <span>{isDownloading ? "Downloading…" : "Download Payslip"}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col p-6 md:p-8">
+        {!workspaceId ? (
+          <div className="flex min-h-[400px] items-center justify-center">
+            <Loader2 className="h-6 w-6 animate-spin text-[#0091FF]" />
+          </div>
+        ) : activeTab === "payslip" && runs.length > 0 && currentRun && payslipDetail ? (
+          <div className="flex w-full flex-col gap-6">
+            {/* Victor Chasex Payslip Header Card */}
+            <div className="flex w-full flex-col sm:flex-row items-center justify-between gap-4 rounded-md border border-gray-200 bg-white p-4 shadow-2xs dark:border-border dark:bg-card">
+              <div className="flex items-center gap-4">
+                <img
+                  src="/victor-chasex-logo.jpg"
+                  alt="VICTOR CHASEX"
+                  className="h-9 w-auto rounded object-contain shadow-2xs"
+                />
+                <div>
+                  <h2 className="text-sm font-bold text-gray-900 dark:text-white">
+                    Victor Chasex Private Limited
+                  </h2>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                    2ND AND 3RD FLOOR, L-149, SRI ESHWARI MANSION, 5TH MAIN, 6TH SECTOR, HSR LAYOUT, BENGALURU,
+                  </p>
+                </div>
+              </div>
+              <div className="text-right sm:self-center">
+                <span className="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                  Payslip for the month of {periodFormatted}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex w-full flex-col items-start gap-6 lg:flex-row">
+              {/* Left 62%: Side-by-Side Earnings and Deductions */}
+              <div className="flex w-full flex-col items-stretch gap-4 md:flex-row lg:w-[62%]">
+                {/* Earnings Table */}
+                <div className="flex flex-1 flex-col overflow-hidden rounded-md border border-gray-200 bg-white shadow-2xs dark:border-border dark:bg-card">
+                  {/* Table Header */}
+                  <div className="flex items-center justify-between border-b border-gray-200 bg-[#E9F5FD] px-4 py-2.5 dark:border-border dark:bg-sky-950/40">
+                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+                    Earnings
+                  </span>
+                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+                    Amount in (₹)
+                  </span>
+                </div>
+
+                {/* Rows */}
+                <div className="flex flex-1 flex-col">
+                  {/* Basic */}
+                  <div className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5 text-xs text-gray-700 dark:border-border/60 dark:text-gray-300">
+                    <span>BASIC</span>
+                    <span className="font-medium text-gray-900 dark:text-white">
+                      {(payslipDetail.basicSalary ?? 0).toLocaleString("en-IN", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
                   </div>
-                  <div>
-                    <p className="text-primary/50">Bank Name & Branch</p>
-                    <p className="font-medium text-primary mt-0.5">
-                      {me.bankName || "—"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-primary/50">Account Number</p>
-                    <p className="font-mono font-medium text-primary mt-0.5">
-                      {me.bankAccountNumber
-                        ? revealSensitive
-                          ? me.bankAccountNumber
-                          : me.maskedBankAccountNumber || me.bankAccountNumber
-                        : "Not configured"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-primary/50">IFSC Code</p>
-                    <p className="font-mono font-medium text-primary mt-0.5">
-                      {me.ifscCode || "—"}
-                    </p>
-                  </div>
+
+                  {/* Allowances */}
+                  {payslipDetail.allowances?.map((a) => (
+                    <div
+                      key={a.name}
+                      className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5 text-xs text-gray-700 dark:border-border/60 dark:text-gray-300"
+                    >
+                      <span>{a.name.toUpperCase()}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {a.amount.toLocaleString("en-IN", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Total Row */}
+                <div className="mt-auto flex items-center justify-between border-t border-gray-200 bg-gray-50/70 px-4 py-2.5 text-xs font-bold text-gray-900 dark:border-border dark:bg-muted/40 dark:text-white">
+                  <span>Total</span>
+                  <span>
+                    {(currentRun.grossSalary ?? 0).toLocaleString("en-IN", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
                 </div>
               </div>
 
-              {/* Statutory Tax IDs */}
-              <div className="space-y-4">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-primary/60 flex items-center gap-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> Statutory Identification
-                </h4>
-                <div className="space-y-3 text-xs">
-                  <div>
-                    <p className="text-primary/50">Permanent Account Number (PAN)</p>
-                    <p className="font-mono font-medium text-primary mt-0.5">
-                      {me.pan
-                        ? revealSensitive
-                          ? me.pan
-                          : me.maskedPan || me.pan
-                        : "Not configured"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-primary/50">Universal Account Number (UAN)</p>
-                    <p className="font-mono font-medium text-primary mt-0.5">
-                      {me.uan
-                        ? revealSensitive
-                          ? me.uan
-                          : me.maskedUan || me.uan
-                        : "Not configured"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-primary/50">ESIC IP Number</p>
-                    <p className="font-mono font-medium text-primary mt-0.5">
-                      {me.esicIpNumber || "—"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-primary/50">PF Member ID</p>
-                    <p className="font-mono font-medium text-primary mt-0.5">
-                      {me.pfMemberId || "—"}
-                    </p>
-                  </div>
+              {/* Deductions Table */}
+              <div className="flex flex-1 flex-col overflow-hidden rounded-md border border-gray-200 bg-white shadow-2xs dark:border-border dark:bg-card">
+                {/* Table Header */}
+                <div className="flex items-center justify-between border-b border-gray-200 bg-[#E9F5FD] px-4 py-2.5 dark:border-border dark:bg-sky-950/40">
+                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+                    Deductions
+                  </span>
+                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+                    Amount in (₹)
+                  </span>
                 </div>
+
+                {/* Rows */}
+                <div className="flex flex-1 flex-col">
+                  {deductionRows.map((d, idx) => (
+                    <div
+                      key={`${d.name}-${idx}`}
+                      className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5 text-xs text-gray-700 dark:border-border/60 dark:text-gray-300"
+                    >
+                      <span>{d.name}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {d.amount.toLocaleString("en-IN", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Total Row */}
+                <div className="mt-auto flex items-center justify-between border-t border-gray-200 bg-gray-50/70 px-4 py-2.5 text-xs font-bold text-gray-900 dark:border-border dark:bg-muted/40 dark:text-white">
+                  <span>Total</span>
+                  <span>
+                    {(currentRun.totalDeductions ?? 0).toLocaleString("en-IN", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right 38%: Employee Details Card + Net Pay Card */}
+            <div className="flex w-full flex-col gap-4 lg:w-[38%]">
+              {/* Employee Details Card (Cream background) */}
+              <div className="rounded-md border border-[#FFF9C4] bg-[#FFFDE7] p-4 shadow-2xs dark:border-amber-900/30 dark:bg-amber-950/20">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+                    Employee details
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowEmpDetails(!showEmpDetails)}
+                    className="cursor-pointer text-xs font-semibold text-[#0091FF] hover:underline focus:outline-none"
+                  >
+                    {showEmpDetails ? "Hide" : "Show"}
+                  </button>
+                </div>
+
+                {showEmpDetails && (
+                  <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2.5 border-t border-amber-200/60 pt-3 dark:border-amber-800/40">
+                    {/* Column 1 */}
+                    <div>
+                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                        Name
+                      </span>
+                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                        {payslipDetail.employeeName}
+                      </span>
+
+                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                        Designation
+                      </span>
+                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                        {payslipDetail.designation}
+                      </span>
+
+                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                        Department
+                      </span>
+                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                        {payslipDetail.department}
+                      </span>
+
+                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                        Location
+                      </span>
+                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                        {payslipDetail.location || "Bangalore"}
+                      </span>
+
+                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                        Effective Work Days
+                      </span>
+                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                        {payslipDetail.effectiveWorkDays ?? 30}
+                      </span>
+
+                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                        LOP
+                      </span>
+                      <span className="block text-xs font-medium text-gray-800 dark:text-gray-200">
+                        {(payslipDetail.lopDays ?? 0).toFixed(2)}
+                      </span>
+                    </div>
+
+                    {/* Column 2 */}
+                    <div>
+                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                        Employee No
+                      </span>
+                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                        {payslipDetail.employeeNo}
+                      </span>
+
+                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                        Bank Name
+                      </span>
+                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                        {payslipDetail.bankName || "State Bank of India"}
+                      </span>
+
+                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                        Bank Account No
+                      </span>
+                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                        {payslipDetail.maskedBankAccountNumber ||
+                          (payslipDetail.bankAccountNumber
+                            ? `••••${payslipDetail.bankAccountNumber.slice(-4)}`
+                            : "—")}
+                      </span>
+
+                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                        PAN Number
+                      </span>
+                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                        {payslipDetail.maskedPan || payslipDetail.pan || "—"}
+                      </span>
+
+                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                        PF No
+                      </span>
+                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                        {payslipDetail.pfMemberId || "—"}
+                      </span>
+
+                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                        PF UAN
+                      </span>
+                      <span className="block text-xs font-medium text-gray-800 dark:text-gray-200">
+                        {payslipDetail.maskedUan || payslipDetail.uan || "—"}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Net Pay Card */}
+              <div className="rounded-md border border-gray-200 bg-white p-4 shadow-2xs dark:border-border dark:bg-card">
+                <span className="block text-xs font-medium text-gray-500 dark:text-gray-400">
+                  Net Pay for {periodFormatted}
+                </span>
+                <span className="mt-1 block text-2xl font-bold tracking-tight text-[#16A34A]">
+                  ₹
+                  {(currentRun.netSalary ?? 0).toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </span>
+                <span className="mt-1 block text-[11px] italic leading-snug text-gray-500 dark:text-gray-400">
+                  {payslipDetail.netPayInWords ||
+                    numberToIndianWords(currentRun.netSalary)}
+                </span>
               </div>
             </div>
           </div>
+        </div>
+        ) : activeTab === "reimb" ? (
+          /* Reimbursement Payslip Empty State */
+          <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-gray-200 bg-white p-10 text-center shadow-2xs dark:border-border dark:bg-card">
+            <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-[#0091FF] dark:bg-blue-950/40">
+              <GreytHRIcon className="h-8 w-8" />
+            </div>
+            <h3 className="text-sm font-semibold text-gray-800 dark:text-white">
+              No Reimbursement Payslips Found
+            </h3>
+            <p className="mt-1 max-w-sm text-xs text-muted-foreground">
+              Reimbursement payslips will show up here once claims for {periodFormatted} are approved and released.
+            </p>
+          </div>
+        ) : (
+          /* General Empty State for Payslip */
+          <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-gray-200 bg-white p-10 text-center shadow-2xs dark:border-border dark:bg-card">
+            <div className="relative mb-3 flex items-center justify-center">
+              <svg
+                width="200"
+                height="130"
+                viewBox="0 0 240 160"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="select-none"
+                aria-hidden="true"
+              >
+                <g transform="translate(60, 20)">
+                  <rect
+                    x="0"
+                    y="0"
+                    width="80"
+                    height="70"
+                    rx="6"
+                    fill="#FFFFFF"
+                    stroke="#CBD5E1"
+                    strokeWidth="2.5"
+                  />
+                  <rect x="6" y="6" width="68" height="58" rx="3" fill="#F8FAFC" />
+                  <circle cx="40" cy="30" r="11" fill="#E2E8F0" />
+                  <path
+                    d="M24 54C24 46 31 43 40 43C49 43 56 46 56 54"
+                    fill="#E2E8F0"
+                  />
+                </g>
+                <g transform="translate(100, 35)">
+                  <rect
+                    x="0"
+                    y="0"
+                    width="80"
+                    height="85"
+                    rx="6"
+                    fill="#FFFFFF"
+                    stroke="#CBD5E1"
+                    strokeWidth="2.5"
+                  />
+                  <path d="M0 24H80" stroke="#E2E8F0" strokeWidth="2" />
+                  <rect x="0" y="0" width="80" height="24" rx="6" fill="#0091FF" />
+                  <circle cx="20" cy="12" r="3" fill="#FFFFFF" />
+                  <circle cx="60" cy="12" r="3" fill="#FFFFFF" />
+                  <rect x="14" y="38" width="52" height="6" rx="2" fill="#E2E8F0" />
+                  <rect x="14" y="52" width="40" height="6" rx="2" fill="#F1F5F9" />
+                  <rect x="14" y="66" width="48" height="6" rx="2" fill="#F1F5F9" />
+                </g>
+              </svg>
+            </div>
+            <p className="max-w-md text-xs font-medium text-gray-600 dark:text-gray-300">
+              Uh oh! Your Payslip will show up here after the release of Payroll.
+            </p>
+          </div>
         )}
 
-        {/* Payslip PDF Modal */}
-        <PayslipModal
-          open={Boolean(selectedRunId)}
-          onOpenChange={(open) => !open && setSelectedRunId(null)}
-          payslip={payslipData}
-          isLoading={selectedRunId !== null && !payslipData}
-        />
+        {/* Footer */}
+        <div className="mt-auto pt-10 pb-4 text-center text-[11px] text-muted-foreground">
+          main-2544 | Privacy Policy | Terms Of Service
+        </div>
       </div>
     </div>
   );

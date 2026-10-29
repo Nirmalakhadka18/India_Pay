@@ -1,27 +1,34 @@
+import type * as React from "react";
 import { cn } from "../utils";
 
-interface LogoProps {
-  width?: number;
-  height?: number;
+interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
+  width?: number | string;
+  height?: number | string;
   className?: string;
-  [key: string]: unknown | undefined;
+  imgClassName?: string;
+  alt?: string;
 }
 
-export function Logo({ width, height, className, ...args }: LogoProps) {
+export function Logo({
+  width,
+  height,
+  className,
+  imgClassName,
+  alt = "VICTOR CHASEX",
+  ...args
+}: LogoProps) {
   return (
-    <div className={cn(`flex items-center gap-2 font-semibold ${className}`)}>
-      <svg
-        {...args}
-        width={width ?? 24}
-        height={height ?? 24}
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        className="text-primary"
-      >
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
-      </svg>
-      <span className="tracking-tight text-primary">IndiaPay</span>
+    <div className={cn("flex items-center", className)} {...args}>
+      <img
+        src="/victor-chasex-logo.jpg"
+        alt={alt}
+        className={cn("h-8 max-h-8 w-auto object-contain rounded", imgClassName)}
+        style={{
+          aspectRatio: "661 / 211",
+          ...(height ? { maxHeight: typeof height === "number" ? `${height}px` : height } : {}),
+        }}
+      />
     </div>
   );
 }
+

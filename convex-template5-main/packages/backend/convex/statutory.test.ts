@@ -180,10 +180,11 @@ describe("Statutory ESI Calculation", () => {
     const esiEmployee = item.statutoryDeductions.find((d) => d.name.startsWith("ESI"))?.amount;
     const esiEmployer = item.employerContributions.find((c) => c.name.startsWith("Employer ESI"))?.amount;
 
-    // 0.75% of 18000 = 135
-    expect(esiEmployee).toBe(135);
-    // 3.25% of 18000 = 585
-    expect(esiEmployer).toBe(585);
+    // Under employer-confirmed rule, HRA is excluded from ESI wages: ESI Wages = Basic (₹12,000)
+    // 0.75% of 12000 = 90
+    expect(esiEmployee).toBe(90);
+    // 3.25% of 12000 = 390
+    expect(esiEmployer).toBe(390);
   });
 
   test("Gross exactly at statutory threshold (₹21,000)", () => {

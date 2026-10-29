@@ -887,7 +887,7 @@ function EmployeesContent() {
                               className="text-destructive focus:text-destructive cursor-pointer"
                             >
                               <Trash2 className="mr-2 h-4 w-4" />
-                              Remove
+                              Remove Employee
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -918,7 +918,7 @@ function EmployeesContent() {
                 </span>
                 {deleteTarget?.designation ? ` (${deleteTarget.designation})` : ""}?
                 <br /><br />
-                This will permanently delete this employee from the directory along with their salary records and attendance entries.
+                This will remove the employee from the active directory. All historical payroll records, payslips, salary history, and audit logs will be safely preserved for compliance.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="gap-2 sm:gap-0 pt-4">

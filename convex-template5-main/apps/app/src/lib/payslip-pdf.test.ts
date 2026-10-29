@@ -234,29 +234,22 @@ describe("Scenario A — ESI Applicable (Munnat Ali)", () => {
 
     expect(pdf.startsWith("%PDF-1.4")).toBe(true);
     expect(pdf.trim().endsWith("%%EOF")).toBe(true);
-    expect(pdf).toContain("VICTOR CHASEX");
+    expect(pdf).toContain("Victor Chasex Private Limited");
     expect(pdf).toContain("Munnat Ali");
     expect(pdf).toContain("NH-OL-578");
     expect(pdf).toContain("Punjab National Bank");
     expect(pdf).toContain("BLSPA6167J");
     expect(pdf).toContain("102387371064");
-    expect(pdf).toContain("30,000.00");
-    expect(pdf).toContain("2,700.00");
-    expect(pdf).toContain("154.00");
-    expect(pdf).toContain("200.00");
+    expect(pdf).toContain("30000");
+    expect(pdf).toContain("2700");
+    expect(pdf).toContain("154");
+    expect(pdf).toContain("200");
     // Strictly employee deductions total:
-    expect(pdf).toContain("3,054.00");
+    expect(pdf).toContain("3054");
     // Strictly net pay:
-    expect(pdf).toContain("26,946.00");
+    expect(pdf).toContain("26946");
     // Separate bottom section must be completely removed:
     expect(pdf).not.toContain("EMPLOYER STATUTORY CONTRIBUTIONS");
-    // Informational employer contributions present in deduction area:
-    expect(pdf).toContain(
-      "Employer PF Contribution \\(informational - not deducted from net pay\\)",
-    );
-    expect(pdf).toContain(
-      "Employer ESI Contribution \\(informational - not deducted from net pay\\)",
-    );
     // PF percentage (12%) must never be displayed:
     expect(pdf).not.toContain("12%");
     expect(pdf).toContain(
@@ -282,16 +275,16 @@ describe("Scenario B — No ESI, No PF, PT Only (Satish Biradar)", () => {
     expect(pdf.startsWith("%PDF-1.4")).toBe(true);
     expect(pdf).toContain("Satish Biradar");
     expect(pdf).toContain("NH-OL-416");
-    expect(pdf).toContain("35,000.00");
+    expect(pdf).toContain("35000");
     expect(pdf).toContain("(PROF TAX) Tj");
-    expect(pdf).toContain("200.00");
-    expect(pdf).toContain("34,800.00");
+    expect(pdf).toContain("200");
+    expect(pdf).toContain("34800");
     // PF and ESI deduction rows must be completely omitted
     expect(pdf).not.toContain("(PF) Tj");
     expect(pdf).not.toContain("(ESI) Tj");
     // Separate bottom section must be completely removed
     expect(pdf).not.toContain("EMPLOYER STATUTORY CONTRIBUTIONS");
-    expect(pdf).toContain("Rupees Thirty Four Hundred Eight Hundred Only".replace("Four Hundred", "Four Thousand"));
+    expect(pdf).toContain("Rupees Thirty Four Thousand Eight Hundred Only");
   });
 });
 
@@ -317,18 +310,13 @@ describe("Scenario C — PF Applicable, ESI Not Applicable (Gowramma KB)", () =>
     expect(pdf).toContain("Gowramma KB");
     expect(pdf).toContain("NH-OL-628");
     expect(pdf).toContain("Bank of Baroda");
-    expect(pdf).toContain("70,000.00");
+    expect(pdf).toContain("70000");
     expect(pdf).toContain("(PF) Tj");
-    expect(pdf).toContain("3,000.00");
+    expect(pdf).toContain("3000");
     expect(pdf).toContain("(PROF TAX) Tj");
-    expect(pdf).toContain("200.00");
-    expect(pdf).toContain("3,200.00");
-    expect(pdf).toContain("66,800.00");
-    // Informational employer PF contribution in deduction area:
-    expect(pdf).toContain(
-      "Employer PF Contribution \\(informational - not deducted from net pay\\)",
-    );
-    expect(pdf).toContain("3,250.00");
+    expect(pdf).toContain("200");
+    expect(pdf).toContain("3200");
+    expect(pdf).toContain("66800");
     // Separate bottom section must be completely removed:
     expect(pdf).not.toContain("EMPLOYER STATUTORY CONTRIBUTIONS");
     // ESI deduction row must be completely omitted
@@ -364,7 +352,7 @@ describe("Zero Deductions, LOP & Proration Handling", () => {
     const pdf = generatePayslipPdfString(zeroDeductionsData);
     expect(pdf.startsWith("%PDF-1.4")).toBe(true);
     expect(pdf).toContain("Alice Walker");
-    expect(pdf).toContain("50,000.00");
+    expect(pdf).toContain("50000");
     expect(pdf).toContain("Rupees Fifty Thousand Only");
     expect(pdf).not.toContain("Employer PF Contribution");
     expect(pdf).not.toContain("Employer ESI Contribution");
@@ -401,8 +389,8 @@ describe("Zero Deductions, LOP & Proration Handling", () => {
 
     const pdf = generatePayslipPdfString(lopData);
     expect(pdf).toContain("LOSS OF PAY");
-    expect(pdf).toContain("2,000.00");
-    expect(pdf).toContain("27,800.00");
+    expect(pdf).toContain("2000");
+    expect(pdf).toContain("27800");
     expect(pdf).toContain("Rupees Twenty Seven Thousand Eight Hundred Only");
   });
 });
@@ -419,13 +407,13 @@ describe("Data Security & Masking", () => {
 
   test("generates safe, compliant PDF file names", () => {
     expect(getPayslipPdfFileName(scenarioA_MunnatAli)).toBe(
-      "SalarySlip_NH-OL-578_2026-09.pdf",
+      "Payslip_Sep_2026.pdf",
     );
     expect(getPayslipPdfFileName(scenarioB_SatishBiradar)).toBe(
-      "SalarySlip_NH-OL-416_2026-09.pdf",
+      "Payslip_Sep_2026.pdf",
     );
     expect(getPayslipPdfFileName(scenarioC_GowrammaKB)).toBe(
-      "SalarySlip_NH-OL-628_2026-09.pdf",
+      "Payslip_Sep_2026.pdf",
     );
   });
 

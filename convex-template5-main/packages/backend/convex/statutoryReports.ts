@@ -230,15 +230,23 @@ export const getEsiReportData = query({
       const isPeriodCovered = empComp?.esiContributionPeriodCovered ?? false;
       const isUnderThreshold = earnedGross > 0 && earnedGross <= (compliance?.esiWageCeiling ?? 21000);
 
-      if (hasEsiDeduction || (compliance?.esiEnabled && (isUnderThreshold || isPeriodCovered))) {
-        const eeShare = esiDed ? esiDed.amount : Math.ceil(earnedGross * 0.0075);
-        // Employer contribution: read from payroll item if available, otherwise statutory 3.25%
-        const erShare = esiEmployerContrib ? esiEmployerContrib.amount : Math.ceil(earnedGross * 0.0325);
-        const total = eeShare + erShare;
+      // ESI wages: Basic + Special Allowance (excluding HRA and Conveyance, prorated for LOP)
+      const specialAllowanceAmount = (item.allowances ?? [])
+        .filter((a) => a.name.trim().toLowerCase() === "special allowance" || a.name.trim().toLowerCase() === "special")
+        .reduce((sum, a) => sum + Math.max(0, a.amount || 0), 0);
+      const nominalEsiWages = Math.max(0, item.basicSalary + specialAllowanceAmount);
+      const lopDays = item.lopDays || 0;
+      const daysWorked = Math.max(0, totalDaysInMonth - lopDays);
+      const earnedEsiWages =
+        totalDaysInMonth > 0 && lopDays > 0
+          ? Math.max(0, Math.round((nominalEsiWages * daysWorked) / totalDaysInMonth))
+          : nominalEsiWages;
 
-        // Days worked
-        const lopDays = item.lopDays || 0;
-        const daysWorked = Math.max(0, totalDaysInMonth - lopDays);
+      if (hasEsiDeduction || (compliance?.esiEnabled && (isUnderThreshold || isPeriodCovered))) {
+        const eeShare = esiDed ? esiDed.amount : Math.ceil(earnedEsiWages * 0.0075);
+        // Employer contribution: read from payroll item if available, otherwise statutory 3.25%
+        const erShare = esiEmployerContrib ? esiEmployerContrib.amount : Math.ceil(earnedEsiWages * 0.0325);
+        const total = eeShare + erShare;
 
         // Employee Number
         const empCode = emp.pfMemberId || `NH-OL-${570 + slNo}`;
@@ -260,7 +268,7 @@ export const getEsiReportData = query({
           joiningDate: joinDateStr,
           leavingDate: "",
           daysWorked,
-          esiGross: earnedGross,
+          esiGross: earnedEsiWages,
           employeeContribution: eeShare,
           employerContribution: erShare,
           totalContribution: total,
@@ -453,7 +461,7 @@ export const getPfReportData = query({
       const earnedGross = Math.max(0, Math.round(item.grossSalary - (item.lopDeduction || 0)));
       const voluntaryActualBasic = empComp?.epfOnActualBasic ?? false;
       const restrictToCeiling = compliance?.epfRestrictToCeiling ?? true;
-      const wageCeiling = compliance?.epfWageCeiling ?? 15000;
+      const wageCeiling = compliance?.epfWageCeiling ?? 25000;
 
       let epfWages = 0;
       let epsWages = 0;

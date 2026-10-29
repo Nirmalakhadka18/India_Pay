@@ -73,11 +73,19 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     setCurrent(id);
   };
 
+  const effectiveCurrent = current ?? (
+    workspaces && workspaces.length > 0
+      ? (typeof window !== "undefined" && window.localStorage.getItem("ws")
+          ? workspaces.find((w) => w._id === window.localStorage.getItem("ws"))?._id ?? workspaces[0]?._id ?? null
+          : workspaces[0]?._id ?? null)
+      : null
+  );
+
   return (
     <WorkspaceCtx.Provider
       value={{
         workspaces: isAuthenticated ? workspaces ?? [] : [],
-        current,
+        current: effectiveCurrent,
         select,
         isLoading: authLoading || (isAuthenticated && workspaces === undefined),
       }}

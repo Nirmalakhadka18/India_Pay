@@ -401,3 +401,177 @@ export const sendKudos = mutation({
     return id;
   },
 });
+
+// ── Feed Posts ───────────────────────────────────────────────────────────────
+
+export const listPosts = query({
+  args: { workspaceId: v.id("workspaces") },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError("Not authenticated");
+    await requireMember(ctx, userId, args.workspaceId);
+
+    return await ctx.db
+      .query("posts")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .order("desc")
+      .collect();
+  },
+});
+
+export const createPost = mutation({
+  args: {
+    workspaceId: v.id("workspaces"),
+    content: v.string(),
+    title: v.optional(v.string()),
+    group: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError("Not authenticated");
+    await requireMember(ctx, userId, args.workspaceId);
+
+    if (!args.content.trim()) {
+      throw new ConvexError("Post content cannot be empty.");
+    }
+
+    const user = await ctx.db.get(userId);
+    const authorName = user?.name || user?.email || "Team Member";
+
+    const employee = await ctx.db
+      .query("employees")
+      .withIndex("by_workspace_user", (q) =>
+        q.eq("workspaceId", args.workspaceId).eq("userId", userId),
+      )
+      .first();
+
+    const now = Date.now();
+    const id = await ctx.db.insert("posts", {
+      workspaceId: args.workspaceId,
+      title: args.title?.trim() || undefined,
+      content: args.content.trim(),
+      group: args.group || "General",
+      authorId: userId,
+      authorName,
+      authorEmployeeId: employee?._id,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    await audit(ctx, args.workspaceId, userId, "post.create", {
+      postId: id,
+    });
+
+    return id;
+  },
+});
+
+// ── Reactions & Comments ─────────────────────────────────────────────────────
+
+export const toggleReaction = mutation({
+  args: {
+    workspaceId: v.id("workspaces"),
+    activityId: v.string(),
+    activityType: v.string(),
+    reactionType: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError("Not authenticated");
+    await requireMember(ctx, userId, args.workspaceId);
+
+    const existing = await ctx.db
+      .query("reactions")
+      .withIndex("by_activity_user", (q) =>
+        q.eq("activityId", args.activityId).eq("userId", userId),
+      )
+      .first();
+
+    if (existing) {
+      await ctx.db.delete(existing._id);
+      return { action: "removed" };
+    }
+
+    await ctx.db.insert("reactions", {
+      workspaceId: args.workspaceId,
+      activityId: args.activityId,
+      activityType: args.activityType,
+      userId,
+      reactionType: args.reactionType || "like",
+      createdAt: Date.now(),
+    });
+    return { action: "added" };
+  },
+});
+
+export const addComment = mutation({
+  args: {
+    workspaceId: v.id("workspaces"),
+    activityId: v.string(),
+    activityType: v.string(),
+    content: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError("Not authenticated");
+    await requireMember(ctx, userId, args.workspaceId);
+
+    if (!args.content.trim()) {
+      throw new ConvexError("Comment cannot be empty.");
+    }
+
+    const user = await ctx.db.get(userId);
+    const userName = user?.name || user?.email || "Team Member";
+
+    const id = await ctx.db.insert("comments", {
+      workspaceId: args.workspaceId,
+      activityId: args.activityId,
+      activityType: args.activityType,
+      userId,
+      userName,
+      content: args.content.trim(),
+      createdAt: Date.now(),
+    });
+
+    return id;
+  },
+});
+
+export const listReactions = query({
+  args: {
+    workspaceId: v.id("workspaces"),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError("Not authenticated");
+    await requireMember(ctx, userId, args.workspaceId);
+
+    const reactions = await ctx.db
+      .query("reactions")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .collect();
+
+    return reactions.map((r) => ({
+      ...r,
+      isMine: r.userId === userId,
+    }));
+  },
+});
+
+export const listComments = query({
+  args: {
+    workspaceId: v.id("workspaces"),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError("Not authenticated");
+    await requireMember(ctx, userId, args.workspaceId);
+
+    return await ctx.db
+      .query("comments")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .order("asc")
+      .collect();
+  },
+});
+

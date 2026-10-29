@@ -186,9 +186,11 @@ export const list = query({
     }
 
     const records = await q.order("desc").collect();
-    return records.map((emp) =>
-      redactEmployeeSensitiveData(emp, isPrivileged, emp.userId === userId),
-    );
+    return records
+      .filter((emp) => !emp.isRemoved)
+      .map((emp) =>
+        redactEmployeeSensitiveData(emp, isPrivileged, emp.userId === userId),
+      );
   },
 });
 
@@ -243,6 +245,7 @@ export const add = mutation({
     esicIpNumber: v.optional(v.string()),
     pfMemberId: v.optional(v.string()),
     isPfMember: v.optional(v.boolean()),
+    isEsiMember: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -257,7 +260,7 @@ export const add = mutation({
       .filter((q) => q.eq(q.field("workspaceId"), args.workspaceId))
       .first();
 
-    if (existing) {
+    if (existing && !existing.isRemoved) {
       throw new ConvexError(
         "An employee with this email already exists in this workspace",
       );
@@ -304,6 +307,12 @@ export const add = mutation({
       esicIpNumber,
       pfMemberId,
       isPfMember: args.isPfMember !== undefined ? args.isPfMember : true,
+      isEsiMember:
+        args.isEsiMember !== undefined
+          ? args.isEsiMember
+          : esicIpNumber
+            ? true
+            : undefined,
       createdAt: now,
       updatedAt: now,
     });
@@ -364,6 +373,7 @@ export const update = mutation({
     esicIpNumber: v.optional(v.string()),
     pfMemberId: v.optional(v.string()),
     isPfMember: v.optional(v.boolean()),
+    isEsiMember: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -408,6 +418,10 @@ export const update = mutation({
           updatedAt: Date.now(),
         });
       }
+    }
+
+    if (updates.isEsiMember !== undefined) {
+      finalUpdates.isEsiMember = updates.isEsiMember;
     }
 
     if (updates.firstName !== undefined) {
@@ -539,119 +553,28 @@ export const remove = mutation({
       throw new ConvexError("Employee not found");
     }
 
-    // Cascade delete all associated records to ensure no orphaned documents
-    const salaries = await ctx.db
-      .query("salaries")
-      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
-      .collect();
-    for (const s of salaries) {
-      await ctx.db.delete(s._id);
+    if (employee.isRemoved) {
+      return; // Already removed
     }
 
-    const attendances = await ctx.db
-      .query("attendance")
-      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
-      .collect();
-    for (const a of attendances) {
-      await ctx.db.delete(a._id);
-    }
-
-    const leaves = await ctx.db
-      .query("leaveRequests")
-      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
-      .collect();
-    for (const l of leaves) {
-      await ctx.db.delete(l._id);
-    }
-
-    const compliances = await ctx.db
-      .query("employeeCompliance")
-      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
-      .collect();
-    for (const c of compliances) {
-      await ctx.db.delete(c._id);
-    }
-
-    const taxDecs = await ctx.db
-      .query("taxDeclarations")
-      .withIndex("by_employee_fy", (q) => q.eq("employeeId", args.employeeId))
-      .collect();
-    for (const t of taxDecs) {
-      await ctx.db.delete(t._id);
-    }
-
-    const tickets = await ctx.db
-      .query("helpdeskTickets")
-      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
-      .collect();
-    for (const t of tickets) {
-      await ctx.db.delete(t._id);
-    }
-
-    const resignations = await ctx.db
-      .query("resignations")
-      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
-      .collect();
-    for (const r of resignations) {
-      await ctx.db.delete(r._id);
-    }
-
-    const compOffs = await ctx.db
-      .query("compOffRequests")
-      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
-      .collect();
-    for (const c of compOffs) {
-      await ctx.db.delete(c._id);
-    }
-
-    const delegates = await ctx.db
-      .query("workflowDelegates")
-      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
-      .collect();
-    for (const d of delegates) {
-      await ctx.db.delete(d._id);
-    }
-
-    const asDelegates = await ctx.db
-      .query("workflowDelegates")
-      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
-      .filter((q) => q.eq(q.field("delegateEmployeeId"), args.employeeId))
-      .collect();
-    for (const d of asDelegates) {
-      await ctx.db.delete(d._id);
-    }
-
-    const payrollItems = await ctx.db
-      .query("payrollItems")
-      .withIndex("by_employee", (q) => q.eq("employeeId", args.employeeId))
-      .collect();
-    for (const p of payrollItems) {
-      await ctx.db.delete(p._id);
-    }
-
-    const kudosReceived = await ctx.db
-      .query("kudos")
-      .withIndex("by_receiver", (q) => q.eq("receiverEmployeeId", args.employeeId))
-      .collect();
-    for (const k of kudosReceived) {
-      await ctx.db.delete(k._id);
-    }
-
-    const kudosSent = await ctx.db
-      .query("kudos")
-      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
-      .filter((q) => q.eq(q.field("senderEmployeeId"), args.employeeId))
-      .collect();
-    for (const k of kudosSent) {
-      await ctx.db.delete(k._id);
-    }
-
-    await ctx.db.delete(args.employeeId);
+    // Safe soft removal:
+    // Mark the employee as inactive and removed from the active directory.
+    // Crucially, historical records (payroll items, payslips, salaries, attendance, statutory filings)
+    // are strictly preserved and remain intact for statutory compliance and audit oversight.
+    const now = Date.now();
+    await ctx.db.patch(args.employeeId, {
+      status: "inactive",
+      isRemoved: true,
+      removedAt: now,
+      updatedAt: now,
+    });
 
     await audit(ctx, args.workspaceId, userId, "employee.remove", {
       employeeId: args.employeeId,
       name: `${employee.firstName} ${employee.lastName}`,
       email: employee.email,
+      softRemoval: true,
+      removedAt: now,
     });
   },
 });

@@ -268,4 +268,62 @@ describe("Engage Community & Recognition Suite", () => {
     expect(wall[0].receiverName).toBe("Bob Designer");
     expect(wall[0].badge).toBe("Going the Extra Mile");
   });
+
+  test("Posts, Reactions & Comments: Full interaction workflow", async () => {
+    const { t, member1Id, member2Id, workspaceId } = await setupEngageEnv();
+
+    // Member 1 creates a post
+    const postId = await t
+      .withIdentity(as(member1Id))
+      .mutation(api.engage.createPost, {
+        workspaceId,
+        content: "Excited to launch our new product features this quarter!",
+        title: "Product Launch Q4",
+        group: "Engineering",
+      });
+    expect(postId).toBeDefined();
+
+    // List posts
+    const posts = await t
+      .withIdentity(as(member2Id))
+      .query(api.engage.listPosts, { workspaceId });
+    expect(posts.length).toBe(1);
+    expect(posts[0].content).toContain("Excited to launch");
+
+    // Member 2 toggles reaction
+    const reactRes = await t
+      .withIdentity(as(member2Id))
+      .mutation(api.engage.toggleReaction, {
+        workspaceId,
+        activityId: postId,
+        activityType: "post",
+        reactionType: "like",
+      });
+    expect(reactRes.action).toBe("added");
+
+    // Check reactions
+    let reactions = await t
+      .withIdentity(as(member2Id))
+      .query(api.engage.listReactions, { workspaceId });
+    expect(reactions.length).toBe(1);
+    expect(reactions[0].isMine).toBe(true);
+
+    // Member 2 adds a comment
+    const commentId = await t
+      .withIdentity(as(member2Id))
+      .mutation(api.engage.addComment, {
+        workspaceId,
+        activityId: postId,
+        activityType: "post",
+        content: "Great work team! Looking forward to it.",
+      });
+    expect(commentId).toBeDefined();
+
+    // Check comments
+    const comments = await t
+      .withIdentity(as(member1Id))
+      .query(api.engage.listComments, { workspaceId });
+    expect(comments.length).toBe(1);
+    expect(comments[0].content).toBe("Great work team! Looking forward to it.");
+  });
 });

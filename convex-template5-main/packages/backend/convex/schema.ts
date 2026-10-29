@@ -152,6 +152,9 @@ export default defineSchema({
     esicIpNumber: v.optional(v.string()),
     pfMemberId: v.optional(v.string()),
     isPfMember: v.optional(v.boolean()),
+    isEsiMember: v.optional(v.boolean()),
+    isRemoved: v.optional(v.boolean()),
+    removedAt: v.optional(v.number()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })
@@ -560,6 +563,38 @@ export default defineSchema({
     .index("by_employee", ["employeeId"])
     .index("by_workspace_status", ["workspaceId", "status"]),
 
+  // Attendance Regularization Requests
+  attendanceRegularizations: defineTable({
+    workspaceId: v.id("workspaces"),
+    employeeId: v.id("employees"),
+    date: v.string(), // "YYYY-MM-DD"
+    requestedStatus: v.union(
+      v.literal("present"),
+      v.literal("absent"),
+      v.literal("half_day"),
+      v.literal("paid_leave"),
+      v.literal("unpaid_leave"),
+    ),
+    checkInTime: v.optional(v.string()), // "HH:MM"
+    checkOutTime: v.optional(v.string()), // "HH:MM"
+    reason: v.string(),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("approved"),
+      v.literal("rejected"),
+      v.literal("cancelled"),
+    ),
+    reviewedBy: v.optional(v.id("users")),
+    reviewRemarks: v.optional(v.string()),
+    reviewedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_status", ["workspaceId", "status"])
+    .index("by_employee", ["employeeId"])
+    .index("by_employee_date", ["employeeId", "date"]),
+
   // Workflow Delegation Settings
   workflowDelegates: defineTable({
     workspaceId: v.id("workspaces"),
@@ -660,4 +695,45 @@ export default defineSchema({
   })
     .index("by_workspace", ["workspaceId"])
     .index("by_receiver", ["receiverEmployeeId"]),
+
+  // Engage — Feed Posts
+  posts: defineTable({
+    workspaceId: v.id("workspaces"),
+    title: v.optional(v.string()),
+    content: v.string(),
+    group: v.optional(v.string()), // "Events", "General", "Engineering", "HR"
+    authorId: v.id("users"),
+    authorName: v.string(),
+    authorEmployeeId: v.optional(v.id("employees")),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_created", ["workspaceId", "createdAt"]),
+
+  // Engage — Activity Reactions
+  reactions: defineTable({
+    workspaceId: v.id("workspaces"),
+    activityId: v.string(),
+    activityType: v.string(), // "post", "kudos", "announcement", "poll", "celebration"
+    userId: v.id("users"),
+    reactionType: v.string(), // "like", "heart", "clap", "celebrate"
+    createdAt: v.number(),
+  })
+    .index("by_activity", ["activityId"])
+    .index("by_activity_user", ["activityId", "userId"])
+    .index("by_workspace", ["workspaceId"]),
+
+  // Engage — Activity Comments
+  comments: defineTable({
+    workspaceId: v.id("workspaces"),
+    activityId: v.string(),
+    activityType: v.string(),
+    userId: v.id("users"),
+    userName: v.string(),
+    content: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_activity", ["activityId"])
+    .index("by_workspace", ["workspaceId"]),
 });

@@ -20,7 +20,7 @@ export const getWorkspaceCompliance = query({
 
     return {
       epfEnabled: false,
-      epfWageCeiling: 15000,
+      epfWageCeiling: 25000,
       epfRestrictToCeiling: true,
       epsEnabled: true,
       epsWageCeiling: 15000,
@@ -137,7 +137,7 @@ export const updateWorkspaceCompliance = mutation({
     const now = Date.now();
     const payload = {
       epfEnabled: args.epfEnabled,
-      epfWageCeiling: args.epfWageCeiling ?? 15000,
+      epfWageCeiling: args.epfWageCeiling ?? 25000,
       epfRestrictToCeiling: args.epfRestrictToCeiling ?? true,
       epsEnabled: args.epsEnabled ?? true,
       epsWageCeiling: args.epsWageCeiling ?? 15000,
