@@ -1,5 +1,6 @@
 "use client";
 
+import { AIPayrollAssistant } from "@/components/ai-payroll-assistant";
 import { PayslipModal } from "@/components/payslip-modal";
 import { RoleGuard } from "@/components/role-guard";
 import { useWorkspace } from "@/lib/useWorkspace";
@@ -938,6 +939,30 @@ function PayrollContent() {
           isLoading={payslipEmployeeId !== null && !payslipData}
         />
       </div>
+
+      {/* ✨ AI Payroll Assistant — floating chat powered by Gemini */}
+      {preview && (
+        <AIPayrollAssistant
+          payrollContext={{
+            periodMonth,
+            totalEmployees: preview.totalEmployees,
+            totalGrossSalary: preview.totalGrossSalary,
+            totalNetSalary: preview.totalNetSalary,
+            totalLopDeduction: preview.totalLopDeduction ?? 0,
+            totalStatutoryDeductions: preview.totalStatutoryDeductions ?? 0,
+            employees: preview.items?.map((item) => ({
+              employeeName: item.employeeName,
+              department: item.department,
+              grossSalary: item.grossSalary,
+              netSalary: item.netSalary,
+              lopDeduction: item.lopDeduction,
+              lopDays: item.lopDays,
+              totalCustomDeductions: item.totalCustomDeductions,
+              hasSalaryStructure: item.hasSalaryStructure,
+            })),
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -116,3 +116,17 @@ declare module "bun:test" {
 
   export function setSystemTime(now?: number | Date): void;
 }
+
+declare module "vitest" {
+  export * from "bun:test";
+  export const vi: {
+    fn: typeof import("bun:test").fn;
+    spyOn: typeof import("bun:test").spyOn;
+    mock: typeof import("bun:test").mock;
+    setSystemTime: typeof import("bun:test").setSystemTime;
+    stubGlobal?: (name: string, val: any) => void;
+    unstubAllGlobals?: () => void;
+    resetAllMocks?: () => void;
+    clearAllMocks?: () => void;
+  };
+}
