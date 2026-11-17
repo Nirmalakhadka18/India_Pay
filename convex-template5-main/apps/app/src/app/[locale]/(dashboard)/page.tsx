@@ -1,6 +1,6 @@
 "use client";
 
-import { GreytAdminDashboard } from "./_components/greyt-admin-dashboard";
+import { GreytHRAdminDashboard } from "./_components/greyt-admin-dashboard";
 import { PayslipModal } from "@/components/payslip-modal";
 import { downloadPayslipPdf } from "@/lib/payslip-pdf";
 import { useWorkspace } from "@/lib/useWorkspace";
@@ -87,7 +87,7 @@ function Stat({
 // ── Role 2: Admin Dashboard (Full Access) ────────────────────────────────────
 
 function AdminDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
-  return <GreytAdminDashboard workspaceId={workspaceId} />;
+  return <GreytHRAdminDashboard workspaceId={workspaceId} />;
 }
 
 // ── greytHR Visual Reference Vector Illustrations ───────────────────────────
