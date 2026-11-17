@@ -104,11 +104,55 @@ export function Sidebar() {
     if (isHR) {
       return [
         { href: "/", label: "Dashboard", icon: LayoutDashboard },
+        {
+          href: "/employees",
+          label: "Employees",
+          icon: Users,
+          subItems: [
+            { href: "/employees", label: "Directory & Profiles" },
+            { href: "/employees?action=add", label: "Onboard Employee" },
+            { href: "/people", label: "Organization Tree" },
+          ],
+        },
+        {
+          href: "/payroll",
+          label: "Payroll",
+          icon: Banknote,
+          subItems: [
+            { href: "/payroll", label: "Payroll Processing" },
+            { href: "/salaries", label: "Salary Structures" },
+            { href: "/salary", label: "Payslip Viewer" },
+          ],
+        },
+        {
+          href: "/attendance",
+          label: "Attendance & Leaves",
+          icon: CalendarClock,
+          subItems: [
+            { href: "/attendance", label: "Attendance Muster" },
+            { href: "/attendance?tab=leaves", label: "Leave Approvals" },
+            { href: "/leave/holiday-calendar", label: "Holiday Calendar" },
+          ],
+        },
+        {
+          href: "/compliance",
+          label: "Statutory & Tax",
+          icon: ShieldCheck,
+          subItems: [
+            { href: "/compliance", label: "PF / ESI / PT / LWF" },
+            { href: "/compliance#tax-regime", label: "Form 138 TDS" },
+          ],
+        },
+        {
+          href: "/reports",
+          label: "Reports Gallery",
+          icon: FileText,
+          subItems: [
+            { href: "/reports", label: "Statutory & Bank MIS" },
+            { href: "/documents", label: "Document Repository" },
+          ],
+        },
         { href: "/engage", label: "Engage", icon: Sparkles },
-        { href: "/employees", label: "Employees", icon: Users },
-        { href: "/payroll", label: "Payroll", icon: Banknote },
-        { href: "/compliance", label: "Compliance", icon: ShieldCheck },
-        { href: "/reports", label: "Reports", icon: FileText },
         { href: "/settings", label: "Settings", icon: Settings },
       ];
     }
