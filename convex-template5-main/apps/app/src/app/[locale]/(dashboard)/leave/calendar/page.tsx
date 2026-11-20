@@ -1,5 +1,6 @@
 "use client";
 
+import { GreytHRIcon } from "@/components/greythr-icon";
 import { useWorkspace } from "@/lib/useWorkspace";
 import { api } from "@v1/backend/convex/_generated/api";
 import { useQuery } from "convex/react";
@@ -12,7 +13,6 @@ import {
   User,
 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { GreytHRIcon } from "@/components/greythr-icon";
 
 // greytHR Empty State Illustration for Leave Transactions (Monitor + Calendar)
 function GreytHREmptyTransactions() {
@@ -58,9 +58,30 @@ function GreytHREmptyTransactions() {
           strokeWidth="1.5"
           fill="none"
         />
-        <line x1="42" y1="36" x2="82" y2="36" stroke="currentColor" strokeWidth="1.5" />
-        <line x1="52" y1="24" x2="52" y2="28" stroke="currentColor" strokeWidth="2" />
-        <line x1="72" y1="24" x2="72" y2="28" stroke="currentColor" strokeWidth="2" />
+        <line
+          x1="42"
+          y1="36"
+          x2="82"
+          y2="36"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+        <line
+          x1="52"
+          y1="24"
+          x2="52"
+          y2="28"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
+        <line
+          x1="72"
+          y1="24"
+          x2="72"
+          y2="28"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
         {/* User Card inside Monitor */}
         <rect
           x="88"
@@ -72,10 +93,28 @@ function GreytHREmptyTransactions() {
           strokeWidth="1.5"
           fill="none"
         />
-        <line x1="94" y1="46" x2="118" y2="46" stroke="currentColor" strokeWidth="1.5" />
-        <line x1="94" y1="52" x2="112" y2="52" stroke="currentColor" strokeWidth="1.5" />
+        <line
+          x1="94"
+          y1="46"
+          x2="118"
+          y2="46"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+        <line
+          x1="94"
+          y1="52"
+          x2="112"
+          y2="52"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
         {/* Floating cross & checkmark */}
-        <path d="M20 30L24 34M24 30L20 34" stroke="currentColor" strokeWidth="1" />
+        <path
+          d="M20 30L24 34M24 30L20 34"
+          stroke="currentColor"
+          strokeWidth="1"
+        />
         <circle cx="140" cy="45" r="2" fill="currentColor" opacity="0.6" />
         <circle cx="25" cy="65" r="2" fill="currentColor" opacity="0.6" />
       </svg>
@@ -100,8 +139,18 @@ export default function LeaveCalendarPage() {
   const allEmployees = useQuery(api.employees.list, scoped);
 
   const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December",
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   const handlePrevMonth = () => {
@@ -154,7 +203,8 @@ export default function LeaveCalendarPage() {
     }
 
     // Succeeding month days to fill 35 or 42 cells
-    const remaining = 35 - days.length > 0 ? 35 - days.length : 42 - days.length;
+    const remaining =
+      35 - days.length > 0 ? 35 - days.length : 42 - days.length;
     for (let d = 1; d <= remaining; d++) {
       const m = viewMonth === 11 ? 1 : viewMonth + 2;
       const y = viewMonth === 11 ? viewYear + 1 : viewYear;
@@ -179,9 +229,12 @@ export default function LeaveCalendarPage() {
     }
     // Ensure October 2026 reference holidays from screenshot are present
     if (viewYear === 2026 && viewMonth === 9) {
-      if (!map.has("2026-10-02")) map.set("2026-10-02", { name: "Gandhi Jayanti", type: "gazetted" });
-      if (!map.has("2026-10-20")) map.set("2026-10-20", { name: "Mahanavami", type: "gazetted" });
-      if (!map.has("2026-10-21")) map.set("2026-10-21", { name: "Dussehra", type: "gazetted" });
+      if (!map.has("2026-10-02"))
+        map.set("2026-10-02", { name: "Gandhi Jayanti", type: "gazetted" });
+      if (!map.has("2026-10-20"))
+        map.set("2026-10-20", { name: "Mahanavami", type: "gazetted" });
+      if (!map.has("2026-10-21"))
+        map.set("2026-10-21", { name: "Dussehra", type: "gazetted" });
     }
     return map;
   }, [holidays, viewYear, viewMonth]);
@@ -220,7 +273,9 @@ export default function LeaveCalendarPage() {
 
         {/* Filter Bar */}
         <div className="flex items-center gap-2 max-w-xs">
-          <label className="text-xs text-slate-500 font-medium">Filter Type</label>
+          <label className="text-xs text-slate-500 font-medium">
+            Filter Type
+          </label>
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value as "me" | "team")}
@@ -387,11 +442,16 @@ export default function LeaveCalendarPage() {
               ) : (
                 <div className="divide-y divide-slate-100 dark:divide-slate-800 py-2">
                   {leavesOnSelectedDate.map((l) => (
-                    <div key={l._id} className="grid grid-cols-3 items-center py-2 text-xs">
+                    <div
+                      key={l._id}
+                      className="grid grid-cols-3 items-center py-2 text-xs"
+                    >
                       <div className="font-medium text-slate-700 dark:text-slate-300 truncate">
                         Employee
                       </div>
-                      <div className="text-center text-slate-500">{l.daysCount}</div>
+                      <div className="text-center text-slate-500">
+                        {l.daysCount}
+                      </div>
                       <div className="text-right text-[11px] text-slate-500">
                         {l.startDate}
                       </div>

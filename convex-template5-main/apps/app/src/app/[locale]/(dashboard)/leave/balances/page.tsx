@@ -1,12 +1,12 @@
 "use client";
 
+import { GreytHRIcon } from "@/components/greythr-icon";
 import { useWorkspace } from "@/lib/useWorkspace";
 import { api } from "@v1/backend/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { Download, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { GreytHRIcon } from "@/components/greythr-icon";
 
 export default function LeaveBalancesPage() {
   const { current: workspaceId } = useWorkspace();
@@ -33,9 +33,13 @@ export default function LeaveBalancesPage() {
   const lopConsumed = balances?.lop?.consumed ?? 0;
 
   const casualProgressPct =
-    casualGranted > 0 ? Math.min(100, Math.round((casualConsumed / casualGranted) * 100)) : 0;
+    casualGranted > 0
+      ? Math.min(100, Math.round((casualConsumed / casualGranted) * 100))
+      : 0;
   const sickProgressPct =
-    sickGranted > 0 ? Math.min(100, Math.round((sickConsumed / sickGranted) * 100)) : 0;
+    sickGranted > 0
+      ? Math.min(100, Math.round((sickConsumed / sickGranted) * 100))
+      : 0;
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F17] px-6 py-6 flex flex-col justify-between">
@@ -91,7 +95,9 @@ export default function LeaveBalancesPage() {
 
               <div className="my-6 text-center">
                 <div className="text-3xl font-semibold text-slate-800 dark:text-slate-100">
-                  {casualBalance < 10 && casualBalance >= 0 ? `0${casualBalance}` : casualBalance}
+                  {casualBalance < 10 && casualBalance >= 0
+                    ? `0${casualBalance}`
+                    : casualBalance}
                 </div>
                 <div className="text-xs text-slate-400 mt-0.5">Balance</div>
                 <button
@@ -210,19 +216,29 @@ export default function LeaveBalancesPage() {
                 <div className="flex justify-between py-1 border-b border-slate-50 dark:border-slate-800">
                   <span className="text-slate-500">Granted Quota:</span>
                   <span className="font-semibold text-emerald-600">
-                    +{detailsModalType === "Casual Leave" ? casualGranted : sickGranted}
+                    +
+                    {detailsModalType === "Casual Leave"
+                      ? casualGranted
+                      : sickGranted}
                   </span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-50 dark:border-slate-800">
                   <span className="text-slate-500">Availed / Consumed:</span>
                   <span className="font-semibold text-rose-600">
-                    -{detailsModalType === "Casual Leave" ? casualConsumed : sickConsumed}
+                    -
+                    {detailsModalType === "Casual Leave"
+                      ? casualConsumed
+                      : sickConsumed}
                   </span>
                 </div>
                 <div className="flex justify-between py-1.5 pt-2 border-t border-slate-200 dark:border-slate-700">
-                  <span className="font-medium text-slate-700 dark:text-slate-300">Closing Balance:</span>
+                  <span className="font-medium text-slate-700 dark:text-slate-300">
+                    Closing Balance:
+                  </span>
                   <span className="font-bold text-[#0091FF]">
-                    {detailsModalType === "Casual Leave" ? casualBalance : sickBalance}
+                    {detailsModalType === "Casual Leave"
+                      ? casualBalance
+                      : sickBalance}
                   </span>
                 </div>
               </div>

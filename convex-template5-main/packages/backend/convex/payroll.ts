@@ -12,6 +12,8 @@ import {
   getDaysInMonth,
 } from "./statutory";
 import { numberToIndianWords } from "./statutoryReports";
+import { calculateEmployeeLoanDeductions } from "./payrollLoanHelper";
+import { calculateEmployeeReimbursements } from "./payrollReimbursementHelper";
 
 export { getDaysInMonth, type CalculationContext, computeEmployeePayrollItem };
 
@@ -115,19 +117,66 @@ export const calculatePreview = query({
       empComplianceMap.set(ec.employeeId, ec);
     }
 
-    // Build calculation items per employee
+    // Retrieve active loans and existing repayments for this period
+    const activeLoans = await ctx.db
+      .query("loans")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .filter((q) => q.eq(q.field("status"), "ACTIVE"))
+      .collect();
+
+    const existingRepaymentsForPeriod = await ctx.db
+      .query("loanRepayments")
+      .withIndex("by_workspace_month", (q) =>
+        q.eq("workspaceId", args.workspaceId).eq("repaymentMonth", args.periodMonth)
+      )
+      .filter((q) => q.eq(q.field("deductionStatus"), "PROCESSED"))
+      .collect();
+
+    const processedLoanIds = new Set(existingRepaymentsForPeriod.map((r) => r.loanId));
+
+    // Retrieve approved reimbursements eligible for payout in this payroll period
+    const approvedReimbursements = await ctx.db
+      .query("reimbursementClaims")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .filter((q) => q.eq(q.field("status"), "APPROVED"))
+      .collect();
+
+    // Build calculation items per employee with loan EMI deductions & reimbursements
     const items = employees.map((emp) => {
       const salary = currentSalaries.get(emp._id);
       const empAttendance = periodAttendance.filter(
         (a) => a.employeeId === emp._id,
       );
       const empComp = empComplianceMap.get(emp._id);
-      return computeEmployeePayrollItem(emp, salary, empAttendance, empComp, {
+      const baseItem = computeEmployeePayrollItem(emp, salary, empAttendance, empComp, {
         totalDaysInMonth,
         month,
         lopSettings,
         workspaceCompliance,
       });
+
+      const loanSummary = calculateEmployeeLoanDeductions(
+        emp._id,
+        baseItem.netSalary,
+        activeLoans,
+        processedLoanIds
+      );
+
+      const reimbSummary = calculateEmployeeReimbursements(
+        emp._id,
+        approvedReimbursements
+      );
+
+      return {
+        ...baseItem,
+        loanDeductions: loanSummary.loanDeductions,
+        totalLoanDeductions: loanSummary.totalLoanDeduction,
+        reimbursementItems: reimbSummary.reimbursementItems,
+        totalReimbursements: reimbSummary.totalReimbursement,
+        totalDeductions: baseItem.totalDeductions + loanSummary.totalLoanDeduction,
+        netSalary: loanSummary.adjustedNetSalary + reimbSummary.totalReimbursement,
+        warnings: [...baseItem.warnings, ...loanSummary.warnings],
+      };
     });
 
     const totalGrossSalary = items.reduce((sum, i) => sum + i.grossSalary, 0);
@@ -293,18 +342,64 @@ export const createRun = mutation({
 
     const now = Date.now();
 
+    // Retrieve active loans and existing repayments for this period
+    const activeLoans = await ctx.db
+      .query("loans")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .filter((q) => q.eq(q.field("status"), "ACTIVE"))
+      .collect();
+
+    const existingRepaymentsForPeriod = await ctx.db
+      .query("loanRepayments")
+      .withIndex("by_workspace_month", (q) =>
+        q.eq("workspaceId", args.workspaceId).eq("repaymentMonth", args.periodMonth)
+      )
+      .filter((q) => q.eq(q.field("deductionStatus"), "PROCESSED"))
+      .collect();
+
+    const processedLoanIds = new Set(existingRepaymentsForPeriod.map((r) => r.loanId));
+
+    const approvedReimbursements = await ctx.db
+      .query("reimbursementClaims")
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", args.workspaceId))
+      .filter((q) => q.eq(q.field("status"), "APPROVED"))
+      .collect();
+
     const calculatedItems = employees.map((emp) => {
       const salary = currentSalaries.get(emp._id);
       const empAttendance = periodAttendance.filter(
         (a) => a.employeeId === emp._id,
       );
       const empComp = empComplianceMap.get(emp._id);
-      return computeEmployeePayrollItem(emp, salary, empAttendance, empComp, {
+      const baseItem = computeEmployeePayrollItem(emp, salary, empAttendance, empComp, {
         totalDaysInMonth,
         month,
         lopSettings,
         workspaceCompliance,
       });
+
+      const loanSummary = calculateEmployeeLoanDeductions(
+        emp._id,
+        baseItem.netSalary,
+        activeLoans,
+        processedLoanIds
+      );
+
+      const reimbSummary = calculateEmployeeReimbursements(
+        emp._id,
+        approvedReimbursements
+      );
+
+      return {
+        ...baseItem,
+        loanDeductions: loanSummary.loanDeductions,
+        totalLoanDeductions: loanSummary.totalLoanDeduction,
+        reimbursementItems: reimbSummary.reimbursementItems,
+        totalReimbursements: reimbSummary.totalReimbursement,
+        totalDeductions: baseItem.totalDeductions + loanSummary.totalLoanDeduction,
+        netSalary: loanSummary.adjustedNetSalary + reimbSummary.totalReimbursement,
+        warnings: [...baseItem.warnings, ...loanSummary.warnings],
+      };
     });
 
     const totalGrossSalary = calculatedItems.reduce(
@@ -374,6 +469,10 @@ export const createRun = mutation({
         netSalary: item.netSalary,
         hasSalaryStructure: item.hasSalaryStructure,
         warnings: item.warnings,
+        loanDeductions: item.loanDeductions,
+        totalLoanDeductions: item.totalLoanDeductions,
+        reimbursementItems: item.reimbursementItems,
+        totalReimbursements: item.totalReimbursements,
         createdAt: now,
       });
     }
@@ -790,6 +889,103 @@ export const finalizeRun = mutation({
       finalizedBy: userId,
       finalizedAt: now,
     });
+
+    // Process and commit all loan repayments associated with this finalized run
+    const payrollItems = await ctx.db
+      .query("payrollItems")
+      .withIndex("by_run", (q) => q.eq("payrollRunId", run._id))
+      .collect();
+
+    for (const item of payrollItems) {
+      if (item.loanDeductions && item.loanDeductions.length > 0) {
+        for (const loanDed of item.loanDeductions) {
+          const loan = await ctx.db.get(loanDed.loanId);
+          if (!loan || loan.status !== "ACTIVE") continue;
+
+          // Check if already created for this loan + run
+          const existingRep = await ctx.db
+            .query("loanRepayments")
+            .withIndex("by_loan", (q) => q.eq("loanId", loanDed.loanId))
+            .filter((q) => q.eq(q.field("payrollRunId"), run._id))
+            .first();
+
+          if (existingRep) continue;
+
+          const allReps = await ctx.db
+            .query("loanRepayments")
+            .withIndex("by_loan", (q) => q.eq("loanId", loanDed.loanId))
+            .collect();
+
+          const installmentNumber = allReps.length + 1;
+          const isBounced = loanDed.isBounced;
+          const newOutstanding = loanDed.outstandingAfter;
+          const isClosed = newOutstanding <= 0;
+
+          await ctx.db.insert("loanRepayments", {
+            workspaceId: args.workspaceId,
+            loanId: loanDed.loanId,
+            employeeId: item.employeeId,
+            repaymentMonth: run.periodMonth,
+            installmentNumber,
+            principalPaid: loanDed.principalComponent,
+            interestPaid: loanDed.interestComponent,
+            totalDeducted: loanDed.deductedAmount,
+            outstandingBalanceAfter: newOutstanding,
+            repaymentType: "PAYROLL_DEDUCTION",
+            payrollRunId: run._id,
+            deductionStatus: isBounced ? "BOUNCED" : "PROCESSED",
+            notes: isBounced
+              ? "Zero net salary available; installment bounced"
+              : loanDed.isPartial
+              ? "Partial deduction applied due to salary constraint"
+              : "Standard payroll EMI deduction",
+            paidAt: isBounced ? undefined : now,
+            createdAt: now,
+          });
+
+          if (!isBounced) {
+            await ctx.db.patch(loan._id, {
+              outstandingPrincipal: newOutstanding,
+              totalRepaid: loan.totalRepaid + loanDed.principalComponent,
+              status: isClosed ? "CLOSED" : "ACTIVE",
+              closedAt: isClosed ? now : undefined,
+              closedBy: isClosed ? userId : undefined,
+              closureReason: isClosed ? "Settled via finalized payroll run" : undefined,
+              updatedAt: now,
+            });
+          }
+        }
+      }
+    }
+
+    // Settle all reimbursements associated with this finalized run
+    for (const item of payrollItems) {
+      if (item.reimbursementItems && item.reimbursementItems.length > 0) {
+        for (const reimb of item.reimbursementItems) {
+          const claim = await ctx.db.get(reimb.claimId);
+          if (!claim || claim.status !== "APPROVED") continue;
+
+          await ctx.db.patch(claim._id, {
+            status: "SETTLED",
+            settledInPayrollMonth: run.periodMonth,
+            settledInPayrollRunId: run._id,
+            settledAt: now,
+            updatedAt: now,
+          });
+
+          await ctx.db.insert("reimbursementAuditLogs", {
+            workspaceId: args.workspaceId,
+            claimId: claim._id,
+            action: "SETTLED_IN_PAYROLL",
+            actorUserId: userId,
+            fromStatus: "APPROVED",
+            toStatus: "SETTLED",
+            notes: `Settled in payroll run ${run.periodMonth} (Run ID: ${run._id})`,
+            timestamp: now,
+          });
+        }
+      }
+    }
 
     await audit(ctx, args.workspaceId, userId, "payroll.finalize", {
       payrollRunId: run._id,

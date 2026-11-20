@@ -23,7 +23,9 @@ export default function ItDeclarationPage() {
               <path d="M0 0H16V20L8 15L0 20V0Z" fill="#F59E0B" />
             </svg>
           </div>
-          <h1 className="text-base font-semibold text-primary">IT Declaration</h1>
+          <h1 className="text-base font-semibold text-primary">
+            IT Declaration
+          </h1>
         </div>
 
         {/* Upper Right Action: My Tax Planner */}
@@ -32,7 +34,9 @@ export default function ItDeclarationPage() {
             type="button"
             onClick={() => {
               // Informative notification matching greytHR locked behavior
-              alert("Declaration window is currently closed. Please wait for the admin notification.");
+              alert(
+                "Declaration window is currently closed. Please wait for the admin notification.",
+              );
             }}
             className="rounded-md bg-[#0091FF] px-4 py-1.5 text-xs font-semibold text-white shadow-xs transition hover:bg-blue-600"
           >
@@ -57,20 +61,92 @@ export default function ItDeclarationPage() {
               aria-hidden="true"
             >
               <g transform="translate(85, 20)">
-                <rect x="0" y="0" width="70" height="96" rx="8" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="2.5" />
-                <text x="14" y="44" fontFamily="sans-serif" fontSize="26" fontWeight="bold" fill="#CBD5E1">
+                <rect
+                  x="0"
+                  y="0"
+                  width="70"
+                  height="96"
+                  rx="8"
+                  fill="#FFFFFF"
+                  stroke="#CBD5E1"
+                  strokeWidth="2.5"
+                />
+                <text
+                  x="14"
+                  y="44"
+                  fontFamily="sans-serif"
+                  fontSize="26"
+                  fontWeight="bold"
+                  fill="#CBD5E1"
+                >
                   %
                 </text>
-                <line x1="42" y1="28" x2="56" y2="28" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
-                <line x1="42" y1="36" x2="56" y2="36" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
-                <line x1="14" y1="58" x2="56" y2="58" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
-                <line x1="14" y1="68" x2="56" y2="68" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
-                <line x1="14" y1="78" x2="44" y2="78" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
+                <line
+                  x1="42"
+                  y1="28"
+                  x2="56"
+                  y2="28"
+                  stroke="#CBD5E1"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <line
+                  x1="42"
+                  y1="36"
+                  x2="56"
+                  y2="36"
+                  stroke="#CBD5E1"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <line
+                  x1="14"
+                  y1="58"
+                  x2="56"
+                  y2="58"
+                  stroke="#CBD5E1"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <line
+                  x1="14"
+                  y1="68"
+                  x2="56"
+                  y2="68"
+                  stroke="#CBD5E1"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <line
+                  x1="14"
+                  y1="78"
+                  x2="44"
+                  y2="78"
+                  stroke="#CBD5E1"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
               </g>
               <circle cx="50" cy="98" r="5" fill="#E2E8F0" />
               <circle cx="60" cy="85" r="3" fill="#E2E8F0" />
-              <line x1="55" y1="45" x2="65" y2="45" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
-              <line x1="175" y1="65" x2="185" y2="65" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
+              <line
+                x1="55"
+                y1="45"
+                x2="65"
+                y2="45"
+                stroke="#CBD5E1"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <line
+                x1="175"
+                y1="65"
+                x2="185"
+                y2="65"
+                stroke="#CBD5E1"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
             </svg>
 
             {/* Exact greytHR IT Declaration Wording */}

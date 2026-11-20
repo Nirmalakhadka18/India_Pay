@@ -1,0 +1,1263 @@
+
+  
+  <div ng-hide="!userPlanUpgradeDoLogoutInProgress" class="ng-hide">
+    <div style="display: flex; flex-direction: column; justify-content: center; margin-top: 150px; align-items: center;">
+      <div class="row" style="display: flex; flex-direction: row; justify-content: center;">
+        <div class="plan-change-success-thumbsup"></div>
+      </div>
+      <div class="row" style="display: flex; flex-direction: row; justify-content: center;">
+        <div style="display: flex; flex-direction: column; justify-content: center; margin-top: 30px; align-items: center;">
+          <div style="padding: 10px; font-size: x-large; font-weight: bold;" ng-hide="subscribedPlan == 'Starter'" class="">
+            Hurray! Your request for upgrade to <span bind-html-compile="subscribedPlan"></span> Plan has been submitted successfully
+          </div>
+          <div style="padding: 10px; font-size: x-large; font-weight: bold;" ng-hide="subscribedPlan != 'Starter'" class="ng-hide">
+            Hurray! You have signed up for our <span bind-html-compile="subscribedPlan"></span> Plan successfully
+          </div>
+          <div style="padding: 10px; font-size: large;" class="muted" ng-hide="subscribedPlan == 'Starter'">
+            We'll get in touch with you within 24 hours to process your request
+          </div>
+          <div style="padding: 10px; font-size: large;" class="bold muted">
+            You'll be signed out in a moment
+          </div>
+          <br>
+        </div>
+      </div>
+      <div class="row" style="display: flex; flex-direction: row; justify-content: center;">
+        <div class="plan-change-success-footer"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay ng-hide" ng-show="showClearDemoOverlay &amp;&amp; !userPlanUpgradeDoLogoutInProgress"></div>
+  <div class="clear-demo-loader ng-hide" ng-show="showClearDemoOverlay &amp;&amp; !userPlanUpgradeDoLogoutInProgress">
+    <div class="inner">
+      <i class="icon-refresh icon-spin"></i> Clearing Demo Data...
+    </div>
+  </div>
+  
+  
+  <div ng-hide="userPlanUpgradeDoLogoutInProgress" class=""><style>
+.custom-modal {
+	display: none;
+	position: fixed;
+	padding-top: 100px;
+	left: 0;
+	top: -15px;
+	z-index: 99999;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background: linear-gradient(0deg, rgba(23, 30, 37, 0.5), rgba(23, 30, 37, 0.5)), rgba(237, 237, 237, 0.1);
+	backdrop-filter: blur(10px); 
+	justify-content: center;
+}
+
+.custom-modal-content {
+	background-color: white;
+    outline: 1px solid #5A6A7C;
+    width: 100%;
+    max-width: 1024px;
+    border-radius: 10px;
+    height: fit-content;
+    overflow: auto;
+}
+
+.custom-modal-header {
+	display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-bottom: 1px solid #E4E9F0;
+}
+
+.custom-modal-body{
+    height: fit-content;
+    overflow: auto;
+    padding: 24px 16px;
+}
+
+.custom-modal-body .action-items-loading{
+	width: 100%;
+    height: 427px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.custom-modal-body .action-items-wrapper{
+	overflow: clip auto;
+    margin-top: 24px;
+    height: 303px;
+    padding: 2px;
+}
+.custom-modal-body .action-items-wrapper::-webkit-scrollbar{
+	width: 8px;
+}
+.custom-modal-body .action-items-wrapper::-webkit-scrollbar-thumb{
+	background-color: #C8D3DE;
+	border-radius: 12px;
+}
+
+.custom-modal-body .action-items-wrapper::-webkit-scrollbar-thumb:hover{
+	background-color: #A3B3C8;
+}
+
+.custom-modal-body .modal-action-search{
+    width: 100%;
+    height: 40px;
+    padding: 8px 8px 8px 36px;
+    border-radius: 24px;
+    outline: none;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.custom-modal-body .modal-action-search:hover, .custom-modal-body .modal-action-search:focus-visible{
+	border-color: #3E5ECC;
+}
+
+.custom-modal-body .action-filter-container{
+	display: flex;
+	gap: 0.5rem;
+	padding-left: 1px;
+}
+
+.custom-modal-body .action-search-container{
+	position: relative;
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.custom-modal-body .no-my-favourites, .custom-modal-body .no-results-found{
+	height: 322px;
+	display: grid;
+	align-content: center;
+	justify-content: center;
+	text-align: center;
+	gap: 0.5rem;
+}
+
+.custom-modal-body .action-items-container{
+	display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.custom-modal-body .action-items-container .top-container .star{
+    display: flex;
+    justify-content: flex-end;
+}
+.custom-modal-body .action-items-container .top-container .star .tooltip .tooltip-inner{
+	background-color: rgba(23, 30, 37, 0.75);
+}
+.custom-modal-body .action-items-container .top-container .star .tooltip .tooltip-arrow{
+	border-top-color: rgba(23, 30, 37, 0.75);
+}
+.close-block {
+	width: 20px;
+	height: 20px;
+	border: 1px solid #5A6A7C;
+	border-radius: 50%;
+}
+
+.close-btn {
+	display: flex;
+	justify-content: center;
+	float: none;
+}
+
+.action-list h4{
+	border-bottom: unset;
+}
+.tab-container{
+	padding-bottom: 10px;
+}
+input{
+	padding: 15px 30px 15px 15px;
+	border-radius: 20px;
+	width: 191px;
+	border: 1px solid #C8D3DE;
+}
+.search:hover {
+	border: 1px solid #394657;
+}
+.search:focus
+{
+    border: 1px solid #3E5ECC;
+    outline: none;
+}
+.empty-state{
+	color: #aaaaaa;
+    font-size: 12px;
+}
+.find-help-btn {
+	height: 35px;
+	font-size: 14px !important;
+	padding: 6px 40px !important;
+	background: #EDF3FF !important;
+	border: 1px solid #C8D3DE !important;
+	color: #3E5ECC !important;
+}
+.find-help-btn:hover {
+	border: 1px solid #3E5ECC !important;
+}
+.find-help-btn:active, .find-help-btn:focus {
+	color: #FFFFFF !important;
+	background: #3E5ECC !important;
+	border: 1px solid #3E5ECC !important;
+}
+.month-selector-btn {
+	height: 35px;
+	font-size: 14px !important;
+	padding-left: 10px !important;
+}
+</style>
+
+
+
+
+<div class="custom-modal" ng-style="{ display:isPopupOpened == true ? 'flex' : 'none' }" style="display: none;">
+	<div class="custom-modal-content">
+		<div class="custom-modal-header">
+			<div class="newgen-title-small newgen-text-secondary-600">Search</div>
+			<div class="newgen-icon-cross cursor-pointer" ng-click="closeModal()"></div>
+		</div>
+		<div class="custom-modal-body">
+			<div class="action-items-loading" ng-show="actionItemsLoading">
+				<div class="newgen-image-cloud-loading"></div>
+			</div>
+
+			<div ng-show="!actionItemsLoading" class="ng-hide">
+				<div class="action-search-container">
+					<i class="icon icon-search es-icon-search" style="color: #ccc; position: absolute; left: 13px; top: 12px; width: 17px;"></i>
+					<input class="modal-action-search ng-pristine ng-valid" type="text" ng-model="searchedText" ng-change="search()" placeholder="Search here">
+				</div>
+
+				<div class="action-filter-container">
+					<div class="newgen-chip-container newgen-body-medium newgen-text-secondary-400 selected newgen-label-large newgen-text-secondary-600" ng-class="{'selected newgen-label-large newgen-text-secondary-600': selectedFilter==filterType.all}" ng-click="onActionFilterClick(filterType.all)">
+						<i class="newgen-icon-check"></i> All
+					</div>
+					<div class="newgen-chip-container newgen-body-medium newgen-text-secondary-400" ng-class="{'selected newgen-label-large newgen-text-secondary-600': selectedFilter==filterType.myFavourites}" ng-click="onActionFilterClick(filterType.myFavourites)">
+						<i class="newgen-icon-check"></i> My Favourites
+					</div>
+					<!-- ngRepeat: module in modules -->
+				</div>
+
+				<!-- ngIf: !actionItemList.length --><div class="no-results-found ng-scope" ng-if="!actionItemList.length" style="gap: 0;">
+					<div class="newgen-image-empty-screen" style="width: 100%; height: 146px;"></div>
+					<div class="newgen-body-medium">No results found!</div>
+				</div><!-- end ngIf: !actionItemList.length -->
+				<!-- ngIf: actionItemList.length -->
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+  
+  <div class="ajax-message-wrapper">
+    <div id="ajax-messages" style="right: 5px;">
+      <div class="row">
+        <div class="span7">
+          <div class="alert">
+            <a class="close icon icon-remove gts-link"></a>
+            <div class="message-content"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div ng-class="{'fixed-top': _pageScrolled}" ng-hide="userPlanUpgradeDoLogoutInProgress" class="fixed-top">
+    
+    <div class="content">   
+   
+      <div ng-controller="PayrollRouteCtrl" class="ng-scope" bootstrap-tour="steps">
+        <div class="inner-content" ng-class="{'full': gtHideSideBar}">
+          <div class="app-content" data-device-width="large">
+
+            <div class="main-content">
+              <div id="main" ng-show="tab == 'main'" class="tab-pane" style="min-height: 5rem">
+                <div class="overlay ng-hide" ng-show="_loading &gt; 0"></div>
+                <div class="loader ng-hide" ng-show="_loading &gt; 0">
+                  <div class="inner">
+                    <i class="icon-refresh icon-spin"></i> Loading...
+                  </div>
+                </div>
+                <!-- ui-view-anchor --><div ui-view="main" class=""><!-- ui-view-anchor --><div id="app-container" ui-view="" class="app-container ng-scope"><!-- ui-view-anchor --><div ui-view="" class="ng-scope"><style class="ng-scope">
+.disableActivity {
+	text-decoration: line-through;
+}
+
+a {
+	cursor: pointer
+}
+
+.tblbtngroups th,.tblbtngroups td {
+	border-top: medium none;
+	vertical-align: middle;
+	padding: 0 8px 25px;
+}
+
+.m-container {
+    height: 500px;
+	margin: 0;
+}
+.create-payroll-container {
+   height: 390px;
+   margin: 0;
+}
+.overview-container {
+padding: 20px;
+background-color: #f7f7f7;
+}
+h2 {
+ color: #394657;
+}
+.secondary {
+color: #5A6A7C;
+}
+.icon-color {
+color: #3E5ECC;
+}
+.mt5 {
+ margin-top: 25px;
+}
+.ptl1 {
+padding-left: 10px;
+}
+.ptlr3 {
+ padding: 0 15px;
+}
+.border-right {
+ border-right: 1px solid #F7F7F7;
+}
+.form-horizontal.popup-form label {
+  text-align: left;
+ }
+.card-container {
+ margin: 0;
+ background-color: #f7f7f7;
+}
+
+.card-box {
+  height: 200px;
+  padding: 15px 0;
+  border-radius: 6px;
+  background-color: #ffffff;
+  margin:25px 0;
+}
+
+.card-header {
+ color: #5A6A7C;
+ margin: 0 0 15px;
+ padding: 0 15px;
+}
+.card-footer {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   margin-top: 15px;
+   color: #3E5ECC;
+   font-size: 12px;
+ }
+.card-info{
+font-size: 16px;
+color: #3E5ECC;
+}
+.card-subinfo {
+  font-weight: 400;
+  color: #5A6A7C;
+  font-size: 12px;
+  margin-top:0;
+}
+.card-empty-state {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   height: 120px;
+   padding: 15px;
+}
+.card-empty-state-info {
+  font-weight: 400;
+  color: #7f8fa4;
+  font-size: 14px;
+}
+.secondary-info {
+color: #394657;
+padding-left: 5px;
+}
+
+.primary-info {
+ font-size: 16px;
+ color: #394657;
+ font-weight: 600;
+}
+table.borderless td,table.borderless th{
+     border: none !important;
+}
+
+.table.borderless {
+ margin-bottom: 0;
+}
+
+.emp-details {
+ border-radius: 8px;
+ border: 1px solid #f7f7f7;
+ height: 75px;
+ padding: 15px;
+ margin-top: 20px;
+ margin-bottom: 30px;
+}
+
+.positive {
+ background-color: #edfaed;
+}
+
+.negative {
+ background-color: #fcf0f0;
+}
+
+.neutral {
+  background-color: #fff7eb;
+}
+
+.payout-link {
+ color: #3E5ECC;
+ font-weight: 600;
+}
+.mt2 {
+margin-top: 20px;
+}
+.m-actions {
+   margin-top: 85px;
+}
+.create-payroll-btn {
+margin-top: 30px;
+margin-bottom: 10px;
+}
+.mt0{
+margin-top: 0;
+}
+.mb0{
+ margin-bottom: 0;
+}
+.mtbh{
+margin-top: 0;
+margin-bottom: 5px;
+ }
+.pt2 {
+ padding: 20px;
+}
+.ptlrb2 {
+padding: 0 20px 20px;
+}
+
+.ptlr2 {
+padding: 0 20px;
+}
+.modal-header {
+border-bottom: none;
+}
+.emp-info-modal-header {
+border-bottom: 1px solid #E4E9F0;
+}
+.emp-info-modal-footer {
+ text-align: right;
+}
+.emp-info-modal-footer .btn {
+ border-radius: 20px;
+ padding: 6px 28px;
+ min-width: 100px;
+ font-weight: 400;
+ box-shadow: none;
+ text-shadow: none;
+ background-image: none;
+}
+.emp-info-modal-footer .btn + .btn {
+ margin-left: 12px;
+}
+.emp-info-modal-footer .btn.emp-info-btn-cancel,
+.emp-info-modal-footer .btn.emp-info-btn-cancel:hover,
+.emp-info-modal-footer .btn.emp-info-btn-cancel:focus {
+ border: 1px solid #3E5ECC;
+ color: #3E5ECC;
+ background: #fff;
+ background-color: #fff;
+}
+.emp-info-modal-footer .btn.emp-info-btn-confirm,
+.emp-info-modal-footer .btn.emp-info-btn-confirm:hover,
+.emp-info-modal-footer .btn.emp-info-btn-confirm:focus {
+ border: 1px solid #3E5ECC;
+ color: #fff;
+ background: #3E5ECC;
+ background-color: #3E5ECC;
+}
+.emp-info-modal-footer .btn.emp-info-btn-confirm:hover {
+ background-color: #2E4AA3;
+ border-color: #2E4AA3;
+ color: #fff;
+}
+.modal-footer {
+ background-color: #fff;
+ border-top:none;
+}
+#month-name .badge {
+  position: absolute;
+  background-color: red;
+  color: white;
+  padding: 0 6px;
+  border-radius: 6px;
+  font-size: 10px;
+}
+
+.payroll-budget-notification {
+    border-style: solid;
+  	border-width: 1px;
+  	border-color: #F5C573;
+ 	background-color:#FFF7EB;
+ }
+ .budget-notification {
+ 	margin:10px;
+ 	font-size:14px;
+ }
+ 
+ .budget-link {
+  color: #3E5ECC;
+ }
+  table.borderless td,table.borderless th{
+     border: none !important;
+     padding: 10px;
+}
+
+</style>
+<div class="section-heading">
+	<!-- ngIf: printMode -->
+	<div class="row-fluid"> 
+	    <div class="span12 page-header" data-help-id="help.payroll.main.overview">
+	    	<div class="page-help no-print" ng-show="!enableWhiteLabelling &amp;&amp; pageHelp &amp;&amp; isOpen"> 
+		     	<div class="pull-right page-help-hide" ng-click="toggleHelp()">Hide Help</div> 
+		     	<div id="sectionHelp" class="intention- sectionHelp"><p>The <strong>Overview </strong>page gives you a summary of the current month's payroll. All data that you view and activities you perform, such as Locking or Unlocking the Payroll Inputs, Payroll, and IT Statement, are for the current month's payroll.&nbsp;Once done, all data you view and the activities you perform are specific to that chosen payroll month. You can also view details related to the Net Payout Amount for the chosen payroll month.</p>
+
+<p>Explore the Payroll overview page with&nbsp;<a href="https://admin-help.greythr.com/admin/answers/122448525" target="_blank">Help-Doc</a>, <a href="https://www.youtube.com/watch?v=BvWds_XM5a4" target="_blank">How-to Videos </a>and<a href="https://greythr.freshdesk.com/support/search/solutions?term=Payroll+overview" target="_blank"> FAQ</a>s.</p>
+</div>
+		    </div>
+	    	<!-- ngIf: pageHelp && !isOpen -->
+	    	<div class="right-block">
+		    	<section-heading-app-rtblock></section-heading-app-rtblock>
+		    </div> 
+	    </div>
+	</div>
+</div>
+<div ng-hide="showAddFirstPayroll" class="overview-container ng-scope">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="months-outer" ng-hide="showProgessBar">
+				<div class="month-nav month-chevron"><i class="icon-chevron-left inactive" ng-click="showPrevYear()" ng-class="{inactive: currentYear &lt;= firstYear}"></i></div>
+				<!-- ngRepeat: mon in payrollMonth --><div ng-repeat="mon in payrollMonth" id="month_71" class="month-nav months ng-scope locked" ng-click="populateMonthDetail($index)" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }"="">
+					<div id="month-name">
+					    <!-- ngIf: mon.locked --><span ng-if="mon.locked" class="ng-scope"><i class="icon-lock" style="padding-right: 5px;"></i></span><!-- end ngIf: mon.locked -->
+						<span class="ng-binding">Apr</span>
+						<!-- ngIf: mon.id == 0 -->
+						
+					</div>
+					<div>
+					<span class="years ng-binding locked" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }",=""> 2026</span>
+					</div>
+				</div><!-- end ngRepeat: mon in payrollMonth --><div ng-repeat="mon in payrollMonth" id="month_72" class="month-nav months ng-scope locked" ng-click="populateMonthDetail($index)" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }"="">
+					<div id="month-name">
+					    <!-- ngIf: mon.locked --><span ng-if="mon.locked" class="ng-scope"><i class="icon-lock" style="padding-right: 5px;"></i></span><!-- end ngIf: mon.locked -->
+						<span class="ng-binding">May</span>
+						<!-- ngIf: mon.id == 0 -->
+						
+					</div>
+					<div>
+					<span class="years ng-binding locked" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }",=""> 2026</span>
+					</div>
+				</div><!-- end ngRepeat: mon in payrollMonth --><div ng-repeat="mon in payrollMonth" id="month_73" class="month-nav months ng-scope locked" ng-click="populateMonthDetail($index)" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }"="">
+					<div id="month-name">
+					    <!-- ngIf: mon.locked --><span ng-if="mon.locked" class="ng-scope"><i class="icon-lock" style="padding-right: 5px;"></i></span><!-- end ngIf: mon.locked -->
+						<span class="ng-binding">Jun</span>
+						<!-- ngIf: mon.id == 0 -->
+						
+					</div>
+					<div>
+					<span class="years ng-binding locked" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }",=""> 2026</span>
+					</div>
+				</div><!-- end ngRepeat: mon in payrollMonth --><div ng-repeat="mon in payrollMonth" id="month_74" class="month-nav months ng-scope locked" ng-click="populateMonthDetail($index)" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }"="">
+					<div id="month-name">
+					    <!-- ngIf: mon.locked --><span ng-if="mon.locked" class="ng-scope"><i class="icon-lock" style="padding-right: 5px;"></i></span><!-- end ngIf: mon.locked -->
+						<span class="ng-binding">Jul</span>
+						<!-- ngIf: mon.id == 0 -->
+						
+					</div>
+					<div>
+					<span class="years ng-binding locked" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }",=""> 2026</span>
+					</div>
+				</div><!-- end ngRepeat: mon in payrollMonth --><div ng-repeat="mon in payrollMonth" id="month_75" class="month-nav months ng-scope locked" ng-click="populateMonthDetail($index)" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }"="">
+					<div id="month-name">
+					    <!-- ngIf: mon.locked --><span ng-if="mon.locked" class="ng-scope"><i class="icon-lock" style="padding-right: 5px;"></i></span><!-- end ngIf: mon.locked -->
+						<span class="ng-binding">Aug</span>
+						<!-- ngIf: mon.id == 0 -->
+						
+					</div>
+					<div>
+					<span class="years ng-binding locked" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }",=""> 2026</span>
+					</div>
+				</div><!-- end ngRepeat: mon in payrollMonth --><div ng-repeat="mon in payrollMonth" id="month_76" class="month-nav months ng-scope locked" ng-click="populateMonthDetail($index)" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }"="">
+					<div id="month-name">
+					    <!-- ngIf: mon.locked --><span ng-if="mon.locked" class="ng-scope"><i class="icon-lock" style="padding-right: 5px;"></i></span><!-- end ngIf: mon.locked -->
+						<span class="ng-binding">Sep</span>
+						<!-- ngIf: mon.id == 0 -->
+						
+					</div>
+					<div>
+					<span class="years ng-binding locked" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }",=""> 2026</span>
+					</div>
+				</div><!-- end ngRepeat: mon in payrollMonth --><div ng-repeat="mon in payrollMonth" id="month_77" class="month-nav months ng-scope locked" ng-click="populateMonthDetail($index)" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }"="">
+					<div id="month-name">
+					    <!-- ngIf: mon.locked --><span ng-if="mon.locked" class="ng-scope"><i class="icon-lock" style="padding-right: 5px;"></i></span><!-- end ngIf: mon.locked -->
+						<span class="ng-binding">Oct</span>
+						<!-- ngIf: mon.id == 0 -->
+						
+					</div>
+					<div>
+					<span class="years ng-binding locked" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }",=""> 2026</span>
+					</div>
+				</div><!-- end ngRepeat: mon in payrollMonth --><div ng-repeat="mon in payrollMonth" id="month_78" class="month-nav months ng-scope current unlocked" ng-click="populateMonthDetail($index)" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }"="">
+					<div id="month-name">
+					    <!-- ngIf: mon.locked -->
+						<span class="ng-binding">Nov</span>
+						<!-- ngIf: mon.id == 0 -->
+						
+					</div>
+					<div>
+					<span class="years ng-binding current unlocked" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }",=""> 2026</span>
+					</div>
+				</div><!-- end ngRepeat: mon in payrollMonth --><div ng-repeat="mon in payrollMonth" id="month_0" class="month-nav months ng-scope new-payroll unlocked" ng-click="populateMonthDetail($index)" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }"="">
+					<div id="month-name">
+					    <!-- ngIf: mon.locked -->
+						<span class="ng-binding">Dec</span>
+						<!-- ngIf: mon.id == 0 --><span ng-if="mon.id == 0" class="badge ng-scope">New</span><!-- end ngIf: mon.id == 0 -->
+						
+					</div>
+					<div>
+					<span class="years ng-binding new-payroll unlocked" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }",=""> 2026</span>
+					</div>
+				</div><!-- end ngRepeat: mon in payrollMonth --><div ng-repeat="mon in payrollMonth" id="month_-1" class="month-nav months ng-scope blank unlocked" ng-click="populateMonthDetail($index)" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }"="">
+					<div id="month-name">
+					    <!-- ngIf: mon.locked -->
+						<span class="ng-binding">Jan</span>
+						<!-- ngIf: mon.id == 0 -->
+						
+					</div>
+					<div>
+					<span class="years ng-binding blank unlocked" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }",=""> 2027</span>
+					</div>
+				</div><!-- end ngRepeat: mon in payrollMonth --><div ng-repeat="mon in payrollMonth" id="month_-2" class="month-nav months ng-scope unlocked" ng-click="populateMonthDetail($index)" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }"="">
+					<div id="month-name">
+					    <!-- ngIf: mon.locked -->
+						<span class="ng-binding">Feb</span>
+						<!-- ngIf: mon.id == 0 -->
+						
+					</div>
+					<div>
+					<span class="years ng-binding unlocked" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }",=""> 2027</span>
+					</div>
+				</div><!-- end ngRepeat: mon in payrollMonth --><div ng-repeat="mon in payrollMonth" id="month_-3" class="month-nav months ng-scope last unlocked" ng-click="populateMonthDetail($index)" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }"="">
+					<div id="month-name">
+					    <!-- ngIf: mon.locked -->
+						<span class="ng-binding">Mar</span>
+						<!-- ngIf: mon.id == 0 -->
+						
+					</div>
+					<div>
+					<span class="years ng-binding last unlocked" ng-class="{'current':mon.id == currentPayrollId, 'new-payroll':mon.id == 0, 'blank': mon.id == -1, 'last': $last, 'unlocked': !mon.locked, 'locked': mon.locked}" }",=""> 2027</span>
+					</div>
+				</div><!-- end ngRepeat: mon in payrollMonth -->
+				<div class="month-nav month-chevron"><i class="icon-chevron-right inactive" ng-click="showNextYear()" ng-class="{inactive: currentYear == lastYear}"></i></div>
+			</div>
+		</div>
+	</div>
+	<!-- ngIf: showPFNotification -->
+	<!-- ngIf: showBudgetNotification && isIndiaPayroll -->
+	<!-- ngIf: showPfWageLimitOverviewBanner && isIndiaPayroll && pfWageLimitOverviewMessage --><div ng-if="showPfWageLimitOverviewBanner &amp;&amp; isIndiaPayroll &amp;&amp; pfWageLimitOverviewMessage" class="ng-scope">
+		<div class="row-fluid payroll-budget-notification">
+			<div class="span12">
+				<table class="borderless budget-notification">
+					<tbody><tr>
+						<td class="center td-4">
+							<i class="icon-info-sign" style="font-size:20px; color:#F2B13F;"></i>
+						</td>
+						<td class="center td-80" style="text-align:left;">
+							<!-- ngIf: pfWageLimitOverviewMessage === 'apply' -->
+							<!-- ngIf: pfWageLimitOverviewMessage === 'effective' --><span ng-if="pfWageLimitOverviewMessage === 'effective'" class="ng-scope ng-binding">
+								PF wage ceiling limit revision is effective from September 2026 Payroll.
+								To modify, please <a style="cursor:pointer;" ng-click="goToPayrollProcessLogPage()">click here</a>.
+							</span><!-- end ngIf: pfWageLimitOverviewMessage === 'effective' -->
+						</td>
+						<td class="center td-15">
+
+						</td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+	</div><!-- end ngIf: showPfWageLimitOverviewBanner && isIndiaPayroll && pfWageLimitOverviewMessage -->
+	<div class="row-fluid">
+		<div class="span12 m-container-outer">		
+			<div class="m-container">
+					<!-- ngRepeat: m in month --><div ng-repeat="m in month" class="m-content ng-scope months-right" ng-class="{'months-left': dir == 0, 'months-right': dir == 1}" style="">
+						
+						<div class="row-fluid header">
+							<div class="span6 pt2" ng-class="{'pt2': m.id&gt;0, 'ptlr2':m.id&lt;=0}">
+								<h4 ng-class="{'mtbh': m.id&gt;0}" class="mtbh"> <!-- ngIf: m.locked --><span class="ng-binding">November&nbsp;2026</span>
+								<span style="cursor: pointer;padding-left:10px;" class="small" ng-show="m.id == lastPayrollId   &amp;&amp; !showProgessBar &amp;&amp; !accessRights.doNotAllowToDeletePayroll" ng-click="deleteAction(m)"><i class="icon-trash icon-color icon-small"></i></span>
+								</h4>
+								<em class="small secondary ng-binding" ng-hide="loading || m.id &lt;= 0">Cutoff from 01 Nov 2026 to 30 Nov 2026  <span style="cursor:pointer;padding-left:10px;" title="Edit" ng-click="editPayrollInfo(m)"><i class="icon-pencil icon-color"></i></span></em>
+							</div>
+							<div class="span6 pt2" ng-class="{'pt2': m.id&gt;0}">							
+								<div class="header-right pull-right">
+									<div ng-show="!loading &amp;&amp; showProgessBar" class="ng-hide">
+										<p class="small ng-binding">Contacting server please wait...&nbsp;</p>
+										<div class="progress">
+											<div class="bar ng-isolate-scope" ng-style="barStyle" percentage="progressBarStatus.percent" style="width: 0%;"></div>
+										</div>
+						 				<div class="center" style="margin-top: -40px;">
+										<strong class="ng-binding">0 %</strong>
+									</div>
+								</div>
+								<span id="payrollProcess" ng-show="!isProcessAllDisabled &amp;&amp; processedDate &amp;&amp; !loading &amp;&amp; !showProgessBar &amp;&amp; m.id != 0 &amp;&amp; m.id == browsepayrollId" data-toggle="tooltip" data-placement="top" data-original-title="Payroll Processed on  04 Nov 2026" gt-tooltip="" class=""> <i class="icon-info-sign icon-color icon-large" style="margin-right: 10px;"></i></span>
+								<span data-toggle="tooltip" data-placement="left" data-original-title="" gt-tooltip="">
+									<button class="btn btn-primary" ng-hide=" isProcessAllDisabled || loading || showProgessBar || m.id == 0 || (m.id != browsepayrollId)" ng-click="processPayroll(m.id)" ng-disabled="m.locked || isRegularPayrollProcessDisabled()">Process Payroll</button>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div ng-show="loading" class="ng-hide">
+						Loading...
+					</div>
+						
+                    	  
+					<div class="new-month ng-hide" ng-show="!loading &amp;&amp; m.id == 0">
+					    <div class="create-payroll-empty-state">
+					    <div class="create-payroll"></div>
+					    </div>
+					    <div class="form-horizontal" ng-show="isIndiaPayroll">
+					   
+							<div>
+								<input type="checkbox" name="autoLockITDecl" ng-model="createActivities.autoLockITDecl" ng-checked="createActivities.autoLockITDecl" style="margin-right: 10px;" class="ng-pristine ng-valid"><span style="color:black;" class="ng-binding">Enable autolock IT Declaration on 5th day of the  <span><a style="cursor:pointer;color:#3E5ECC;" ng-click="openAutoLockForm()">Edit</a></span></span>
+							</div>
+							
+						<div class="mt2">
+							<input type="checkbox" name="releaseITDecl" ng-model="createActivities.releaseITDecl" ng-checked="createActivities.releaseITDecl" style="margin-right: 10px;" class="ng-pristine ng-valid"> Release I.T. Declaration for <!-- ngIf: isStartMonth --><!-- ngIf: !isStartMonth --><span ng-if="!isStartMonth" class="ng-scope">employees without declaration. <a style="cursor:pointer;color:#3E5ECC;" ng-click="goToITDeclPage()" class="ng-binding">(33 Employees)</a></span><!-- end ngIf: !isStartMonth -->							
+						</div>
+						</div>
+					    <button class="btn btn-primary create-payroll-btn ng-binding" ng-click="createPayrollPopup(m)" ng-disabled="IspayrollCreating">Create Nov 2026 Payroll</button>
+					</div>
+					<div class="new-month ng-hide" ng-show="!loading &amp;&amp; isBackdatedPlaceholder(m)">
+					    <div class="create-payroll-empty-state">
+					    <div class="create-payroll"></div>
+					    </div>
+					    <button class="btn btn-primary create-payroll-btn ng-binding" ng-click="createBackdatedPayroll(m)" ng-disabled="m.creatingBackdatedPayroll || IspayrollCreating">Create Nov 2026 Payroll</button>
+					</div>
+					<div class="new-month ng-hide" ng-show="!loading &amp;&amp; m.id &lt; 0 &amp;&amp; !isBackdatedPlaceholder(m)">
+					    <div class="create-payroll-empty-state">
+					    <div class="future-payroll"></div>
+					    </div>
+					     <div><i class="icon-exclamation-sign icon-lg" style="color:#FFAA5E; margin-right:5px;"></i> Sorry, previous month has not been created</div>
+					</div>
+				
+				<div ng-show="!loading &amp;&amp; negativeCostEmpListPopup" class="ng-hide">
+					
+				</div>
+				<div class="row-fluid mt5 ptlrb2" ng-hide="loading || m.id &lt;= 0">
+						<!-- ngIf: !hidePayoutSection --><div class="span4 border-right ng-scope" ng-if="!hidePayoutSection">
+							<div>
+							    <div><h3 class="mt0">Payout Details</h3></div>
+							    <div class="mt2">								
+								<div class="primary-info"> <span class="color-bulletin" style="background-color: #FCD2CA"></span><span style="padding-left: 5px;" class="ng-binding">₹19,33,496.00</span></div>
+								<div class="card-subinfo" style="padding-left: 15px;">Net Pay</div>
+								</div>
+								<div style="width:300px;height:150px;"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+    <canvas id="doughnut" class="chart chart-doughnut ng-isolate-scope chartjs-render-monitor" chart-data="data" chart-labels="labels" chart-colors="colors" style="width: 300px; height: 150px; display: block;" width="375" height="187"></canvas>	
+	</div>
+								<table class="table borderless">
+								<tbody><tr>
+								 <td>						
+									<div>
+								      <span class="color-box" style="background-color: #a6b7f7"></span>
+								      <span class="secondary-info ng-binding">₹20,89,498.00</span>
+								   </div>
+								   <div class="card-subinfo ptl1">Gross Pay</div>
+								   </td>
+								   <td>
+									  <div>
+								        <span class="color-box" style="background-color: #71dbe3"></span>
+								        <span class="secondary-info ng-binding">₹1,56,002.00</span>
+								       </div>
+								       <div class="card-subinfo ptl1">Deductions</div>
+									</td>
+								</tr>
+								
+								<tr>
+									<td>
+									  <div>
+								        <span class="color-box" style="background-color: #37C0D3"></span>
+								        <span class="secondary-info ng-binding">30</span>
+								       </div>
+								       <div class="card-subinfo ptl1">Work Days</div>
+									</td>
+								</tr>
+							</tbody></table>
+						
+							</div>
+						</div><!-- end ngIf: !hidePayoutSection -->
+						<!-- ngIf: !hidePayoutSection --><div class="span3 border-right ng-scope" style="margin-left: 0;padding:0 20px;" ng-if="!hidePayoutSection">
+							
+							    <div><h3 class="mt0">Employee Details</h3></div>
+							    <div class="emp-details positive" ng-class="{'positive': m.salaryInfo.diff &gt; 0, 'negative': m.salaryInfo.diff &lt; 0, 'neutral': m.salaryInfo.diff == 0}">							    
+								  <div class="primary-info ng-binding">33</div>
+								  <div class="card-subinfo">Total Employees</div>								  
+								  <div class="card-subinfo"><span ng-show="m.salaryInfo.diff &gt; 0" style="color:#48A84D;margin-right: 5px;" class="ng-binding">+1</span><span ng-show="m.salaryInfo.diff &lt; 0" style="color:#F05454" class="ng-binding ng-hide">1</span><span ng-show="m.salaryInfo.diff != 0" class=""> vs previous month</span></div>
+							    </div>	
+							    <table class="table borderless">
+								<tbody><tr>
+								<td>
+								   <div>
+								      <span class="color-box" style="background-color: #a6b7f7"></span>
+								      <span class="secondary-info ng-binding">01</span>
+								   </div>
+								   <div class="card-subinfo ptl1">Addition</div>		
+								   </td>
+								   <td>
+								   <div>
+								      <span class="color-box" style="background-color: #fcd2ca"></span>
+								      <span class="secondary-info ng-binding">00</span>
+								   </div>
+								   <div class="card-subinfo ptl1">Settlements</div>									    									
+								   </td>							
+								</tr>
+								<tr>
+								   <td>
+								    <div>
+								      <span class="color-box" style="background-color: #8bdece"></span>
+								      <span class="secondary-info ng-binding">00</span>
+								    </div>
+								    <div class="card-subinfo ptl1">Exclusion</div>
+								   </td>																	
+								</tr>
+								<tr>
+								  <td>
+								    <div>
+								      <span class="color-box" style="background-color: #e2bbed"></span>
+								      <span class="secondary-info ng-binding">00</span>
+								    </div>
+								    <div class="card-subinfo ptl1">Separation</div>
+								  </td> 									 								   									
+								</tr>														
+							</tbody></table>
+													
+							
+						</div><!-- end ngIf: !hidePayoutSection -->
+						<!-- ngIf: hidePayoutSection -->
+					 <div class="span4">
+					    <div class="m-actions">
+							<table class="table tblbtngroups">
+								<tbody><tr class="mt5" ng-hide="loading || showProgessBar || !accessRights.payroll_properties">
+									<td class="secondary">Payroll Inputs</td>
+									<td><div class="btn-group">
+											<button class="btn btn-small" ng-disabled="!m.employeesLocked" ng-click="lockPayrollInputs(m)" disabled="disabled">Unlock</button>
+											<button class="btn btn-small" ng-disabled="m.employeesLocked" ng-click="payrollInputLockActivities.lockClicked = true">Lock</button>
+	
+										</div> 
+										<br> <em class="small ng-binding ng-hide" ng-show="m.employeesLocked &amp;&amp; !m.locked">Lock On
+											 <span style="cursor: pointer;" ng-show="m.employeesLocked &amp;&amp; !m.locked" title="Edit" ng-click="editPayrollInputsLock(m)" class="ng-hide"><i class="icon-pencil"></i></span>
+									</em></td>
+								</tr>
+								
+								<tr class="mt5" ng-hide="loading || showProgessBar || !accessRights.payroll_properties || !accessRights.payroll_essModule">
+									<td class="secondary">Employee View Release</td>
+									<td><div class="btn-group">
+										<button class="btn btn-small" ng-disabled="m.salaryInfo.isReleased || isReleased" ng-click="releasePayroll(m)">Release</button>
+										<button class="btn btn-small" ng-disabled="!m.salaryInfo.isReleased" ng-click="releasePayroll(m)" disabled="disabled">Hold</button>
+									</div>
+								</td></tr>
+								<tr class="mt5" ng-hide="loading || showProgessBar || !accessRights.payroll_properties || !accessRights.payroll_overview_update_empinfo">
+									<td class="secondary">Update Payslips With Revised Employee Information</td>
+									<td>
+										<a style="cursor:pointer;font-weight:bold;color:#3b62cc;" ng-click="checkAndUpdateEmpInfo(m)">Update</a>
+									</td>
+								</tr>
+								<tr class="mt5" ng-hide="loading || showProgessBar || !accessRights.payroll_properties || !accessRights.payroll_hasIncomeTax || !isIndiaPayroll">
+									<td class="secondary">IT Statement Employee View</td>
+									<td><div class="btn-group">
+											<button class="btn btn-small" ng-disabled="m.salaryInfo.isITstatementReleased" ng-click="updateIncomeTax(m)">Release</button>
+											<button class="btn btn-small" ng-disabled="!m.salaryInfo.isITstatementReleased" ng-click="holdIncomeTaxUpdate(m)" disabled="disabled">Hold</button>
+										</div> 
+									</td>
+								</tr>
+								<tr class="mt5" ng-hide="loading || showProgessBar || !accessRights.payroll_properties">
+									<td class="secondary">Payroll</td>
+									<td><div class="btn-group">
+										<button class="btn btn-small" ng-disabled="!m.locked" ng-click="getNonShortListEmps(m)" disabled="disabled">Unlock</button>
+										<button class="btn btn-small" ng-disabled="m.locked" ng-click="lockActivities.lockClicked = true">Lock</button>
+									</div>
+								</td>
+								</tr>
+							</tbody></table>
+						</div>
+					</div>
+				</div>
+
+					
+					
+					
+					<div class="row-fluid" ng-hide="loading || m.id &lt;= 0">
+						
+					<div ng-show="iTReleaseInProgress" class="ng-hide">
+						<div class="payroll-process-blockui"></div>
+						<div class="payroll-process-blockMsg">
+							<div class="barholder" style="margin-top: 0px; padding: 20px;">
+								<h5>Please wait...</h5>
+								<div class="progress progress-striped active">
+								  <div class="bar" style="width: 100%;"></div>
+								</div>								
+							</div>
+						</div>						
+					</div>
+				</div>
+		</div><!-- end ngRepeat: m in month -->
+	</div>
+	<div class="row-fluid card-container" ng-hide="currentPayrollId &lt;= 0 ">
+		<div class="span4">
+		    
+			<div class="card-box">
+				<h4 class="card-header">Negative Salary<span ng-hide="negatvieEmpSalary.length == 0" class="ng-binding ng-hide">&nbsp;(0)</span></h4>
+				<ul class="unstyled mb0 ng-hide" ng-hide="negatvieEmpSalary.length == 0">
+					<!-- ngRepeat: nes in negatvieEmpSalary | limitTo: negativeItemsLimit() -->
+					<li><a class="card-footer ng-binding ng-hide" ng-show="negativeHasMoreItemsToShow()" ng-click="negativeSalaryPopup = true">+-2&nbsp;more </a></li>
+					
+				</ul>
+				 <div class="card-empty-state" ng-show="negatvieEmpSalary.length == 0">
+				   <div class="card-empty-state-info">No Records</div>
+				</div> 
+			</div>
+			
+			<div class="card-box">
+				<h4 class="card-header">Hold Salary Payout<span ng-hide="holdSalaries.length == 0" class="ng-binding ng-hide">&nbsp;(0)</span></h4>
+				<ul class="unstyled mb0 ng-hide" ng-hide="holdSalaries.length == 0">
+					<!-- ngRepeat: hs in holdSalaries | limitTo: holdItemsLimit() --><a class="employee-content-name" ng-click="gotoParamPage(hs.cid,'payroll.payout.holdsalaryview')">		
+					</a><li><a class="employee-content-name" ng-click="gotoParamPage(hs.cid,'payroll.payout.holdsalaryview')"></a><a class="card-footer ng-binding ng-hide" ng-show="holdHasMoreItemsToShow()" ng-click="gotoParamPage(0,'payroll.payout.holdsalaryview')">+-2&nbsp;more</a></li>	
+					
+				</ul>
+				<div class="card-empty-state" ng-show="holdSalaries.length == 0">
+				  <div class="card-empty-state-info">No Records</div>
+				</div>
+			</div>	
+		</div>
+		<div class="span4">
+		<div class="card-box">
+				<h4 class="card-header">Stop Salary Processing<span ng-hide="stopPaymentEmployees.length == 0" class="ng-binding ng-hide">&nbsp;(0)</span></h4>
+				<ul class="unstyled mb0 ng-hide" ng-hide="stopPaymentEmployees.length == 0">
+					<!-- ngRepeat: sp in stopPaymentEmployees | limitTo: stopItemsLimit() -->		
+					<li><a class="card-footer ng-binding ng-hide" ng-show="stopHasMoreItemsToShow()" ng-click="gotoParamPage(0,'payroll.payrollinputs.stopPaymentView')">+-2&nbsp;more</a></li>	
+					
+				</ul>
+				<div class="card-empty-state" ng-show="stopPaymentEmployees.length == 0">
+				  <div class="card-empty-state-info">No Records</div>
+				</div>
+			</div>
+			
+			<div ng-show="isIndiaPayroll" class="card-box">
+			<h4 class="card-header">Payout Pending</h4>
+				<div ng-show="pendingBankTransfers() || pendingCashTransfer &gt; 0 || pendingChequeTransfer &gt; 0" class="">
+				<!-- ngRepeat: bt in pendingBTList --><div ng-repeat="bt in pendingBTList" class="ng-scope">
+				<div class="ptlr3" ng-show="bt.count &gt; 0">
+				<div class="card-info">
+                     <a class="payout-link ng-binding" ng-click="gotoPayoutPage('', 'payroll.payout.bankTransferList')">31</a>									
+				 </div>
+				 <div class="card-subinfo ng-binding">
+				 Bank Transfer(Net Pay)
+				 </div>
+                </div>
+				</div><!-- end ngRepeat: bt in pendingBTList -->
+				<div class="ptlr3" ng-show="pendingCashTransfer.count &gt; 0">
+				 <div class="card-info">
+				  <a class="payout-link ng-binding" ng-click="gotoPayoutPage(pendingCashTransfer.payType, 'payroll.payout.cash-payment-tracker')">2</a>
+				 </div> 
+				 <div class="card-subinfo">
+				 Cash
+				 </div>
+			  </div>
+			  
+				<div class="ptlr3 ng-hide" ng-show="pendingChequeTransfer.count &gt; 0">
+				<div class="card-info">
+                    <a class="payout-link ng-binding" ng-click="gotoPayoutPage(pendingChequeTransfer.payType, 'payroll.payout.cash-payment-tracker')">
+						0 </a>				
+				 </div>
+				 <div class="card-subinfo">
+				 Cheque
+				 </div>
+					
+				</div>
+			</div>
+		        <div class="card-empty-state ng-hide" ng-hide="pendingBankTransfers() || pendingCashTransfer &gt; 0 || pendingChequeTransfer &gt; 0">
+				  <div class="card-empty-state-info">No Records</div>
+				</div>
+				</div>
+		</div>
+		<div class="span4">
+			<div ng-show="hasAccessToSettlementEmployee" class="card-box">
+				<h4 class="card-header">Settled Employees<span ng-hide="settlementList.length == 0" class="ng-binding ng-hide">(0)</span></h4>
+				<ul class="unstyled mb0 ng-hide" ng-hide="settlementList.length == 0">
+					<!-- ngRepeat: nes in settlementList | limitTo: settledItemsLimit() -->
+					<li><a class="card-footer ng-binding ng-hide" ng-show="settledHasMoreItemsToShow()" ng-click="gotoParamPage(0,'payroll.payrollinputs.finalsettlement')">+-2&nbsp;more</a></li>					
+				</ul>
+				<div class="card-empty-state" ng-show="settlementList.length == 0">
+				  <div class="card-empty-state-info">No Records</div>
+				</div>
+			</div>
+			
+
+			
+						
+			<div ng-show="isIndiaPayroll" class="card-box">
+			  <h4 class="card-header">Locations Without PT State</h4>
+			   <div class="ptlr3 ng-hide" ng-show="unMappedPTLocation &gt; 0">				
+				<div class="card-info">
+						 <a class="payout-link ng-binding" ng-click="gotoPTLocationPage()">0</a>
+				</div> 
+				<div class="card-subinfo">
+				  Locations
+				</div>
+				</div>
+				<div class="card-empty-state" ng-hide="unMappedPTLocation &gt; 0 &amp;&amp; isIndiaPayroll">
+				  <div class="card-empty-state-info">No Records</div>
+				</div>
+			</div>
+		</div>	
+	</div>
+</div>
+    </div>
+</div>
+<div ng-show="showAddFirstPayroll" class="ng-scope ng-hide">
+	<table class="table table-bordered w-75 pull-left">
+		<tbody><tr>
+			<td colspan="3"><h2>No Payrolls Available. Please add a new payroll.</h2></td>
+		</tr>
+		<tr>
+			<td class="td-25">
+				Month:&nbsp;&nbsp;
+				<select name="month" ng-model="veryNewPayrollId" ui-select2="" class="input-medium ng-pristine ng-valid" style="display: none;">
+					<option value="1">January</option>
+					<option value="2">February</option>
+					<option value="3" selected="true">March</option>
+					<option value="4">April</option>
+					<option value="5">May</option>
+					<option value="6">June</option>
+					<option value="7">July</option>
+					<option value="8">August</option>
+					<option value="9">September</option>
+					<option value="10">October</option>
+					<option value="11">November</option>
+					<option value="12">December</option>
+				</select><div class="select2-container input-medium ng-pristine ng-valid">    <a href="javascript:void(0)" class="select2-choice">   <span>March</span><abbr class="select2-search-choice-close" style="display:none;"></abbr>   <div><b></b></div></a>    <div class="select2-drop select2-offscreen">   <div class="select2-search">       <input type="text" autocomplete="off" class="select2-input" tabindex="0">   </div>   <ul class="select2-results" style="">   </ul></div></div>
+			</td>
+			<td class="td-25">
+				Year:&nbsp;&nbsp;
+				<select name="year" ng-model="newCurrentYear" ui-select2="" class="input-medium ng-valid ng-pristine" style="display: none;">
+					<option value=""></option>
+					<!-- ngRepeat: tempYear in tempYearList --><option ng-repeat="tempYear in tempYearList" value="2026" class="ng-scope ng-binding">2026</option><!-- end ngRepeat: tempYear in tempYearList --><option ng-repeat="tempYear in tempYearList" value="2025" class="ng-scope ng-binding">2025</option><!-- end ngRepeat: tempYear in tempYearList -->
+				</select><div class="select2-container input-medium ng-pristine ng-valid">    <a href="javascript:void(0)" class="select2-choice">   <span></span><abbr class="select2-search-choice-close" style="display:none;"></abbr>   <div><b></b></div></a>    <div class="select2-drop select2-offscreen">   <div class="select2-search">       <input type="text" autocomplete="off" class="select2-input" tabindex="0">   </div>   <ul class="select2-results" style="">   </ul></div></div>
+			</td>
+			<td class="center">
+				<button class="btn btn-primary" ng-click="addFirstpayroll()">Add Payroll</button>
+			</td>
+		</tr>
+	</tbody></table>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div ng-show="!loading &amp;&amp; negativeSalaryPopup" class="ng-scope ng-hide">
+					
+				</div>
+<div ng-show="uiBlocker" style="bottom: 0;left: 0;position: fixed;right: 0;top: 50px; z-index: 1;" class="ng-scope ng-hide">
+	<div class="payroll-process-blockui"></div>
+	<div class="payroll-process-blockMsg">
+		<div class="barholder" style="margin-top: 0px; padding: 5px;">
+			<div class="pull-right">
+				<i class="icon-remove icon-2x clickable ng-hide" ng-show="isCompleted" ng-click="hide()"></i>
+			</div>
+			<div class="center"><h3>Downloading Report. Please wait...</h3></div>
+			<div class="center">
+				<li id="gts-ajax-loading" ng-show="!isCompleted" class=""></li>
+				<h5 class="ng-binding"></h5>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div ng-show="itReleaseUIBlock" class="salary-process ng-scope ng-hide">
+	<div class="payroll-process-blockui">
+		<div class="payroll-process-blockMsg" style="height: 250px">
+			<div class="barholder" style="margin-top: 0px; padding: 5px;">
+				<div class="pull-right">
+					<i class="icon-remove icon-2x clickable ng-hide" ng-show="isCompleted" ng-click="hide()"></i>
+				</div>
+				<div class="left"><h3>Releasing IT Statement</h3></div>
+				<div class="create-payroll-empty-state">
+				  <div class="payroll-process"></div>
+				</div>
+			<!-- ngIf: progressBarStatus.employeeCount >0 -->
+			<!-- ngIf: progressBarStatus.employeeCount == undefined || progressBarStatus.employeeCount <=0 --><div class="center ng-scope" style="text-align: left" ng-if="progressBarStatus.employeeCount == undefined || progressBarStatus.employeeCount &lt;=0">
+				<h5>Creating batches please wait...</h5>
+			</div><!-- end ngIf: progressBarStatus.employeeCount == undefined || progressBarStatus.employeeCount <=0 -->
+			<!-- ngIf: progressBarStatus.employeeCount >0 -->
+				
+			</div>
+		</div>
+	</div>
+ </div>
+ 
+ <div ng-show="enablePayrollReleaseUIBlocker" class="salary-process ng-scope ng-hide">
+ <div class="payroll-process-blockui">
+ <div class="payroll-process-blockMsg" style="height: 250px">
+		<div class="barholder" style="margin-top: 0px; padding: 5px;">
+		    <div class="pull-right">
+				</div>
+			<div class="left">
+				<h3>Release Payroll</h3>
+			</div>
+			<div class="create-payroll-empty-state">
+				  <div class="payroll-process"></div>
+				</div>
+			
+			<!-- ngIf: progressBarStatus.employeeCount >0 -->
+			<!-- ngIf: progressBarStatus.employeeCount == undefined || progressBarStatus.employeeCount <=0 --><div class="center ng-scope" style="text-align: left" ng-if="progressBarStatus.employeeCount == undefined || progressBarStatus.employeeCount &lt;=0">
+				<h5>Releasing payroll please wait...</h5>
+			</div><!-- end ngIf: progressBarStatus.employeeCount == undefined || progressBarStatus.employeeCount <=0 -->
+			<!-- ngIf: progressBarStatus.employeeCount >0 -->
+			
+		</div>
+	</div>
+ </div>
+ </div>
+ 
+ <div ng-show="payrollLockUIBlock" class="salary-process ng-scope ng-hide">
+	<div class="payroll-process-blockui">
+		<div class="payroll-process-blockMsg" style="height: 250px">
+			<div class="barholder" style="margin-top: 0px; padding: 5px;">
+				<div class="pull-right">
+					<i class="icon-remove icon-2x clickable ng-hide" ng-show="isCompleted" ng-click="hide()"></i>
+				</div>
+				<div class="left"><h3 class="ng-binding"></h3></div>
+				<div class="create-payroll-empty-state">
+				  <div class="payroll-process"></div>
+				</div>
+				<div class="center">
+				<h5 class="ng-binding">.Please wait..</h5>
+			</div>
+				
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+<div ng-show="payrollInputsLockUIBlock" class="salary-process ng-scope ng-hide">
+	<div class="payroll-process-blockui">
+		<div class="payroll-process-blockMsg" style="height: 250px">
+			<div class="barholder" style="margin-top: 0px; padding: 5px;">
+				<div class="pull-right">
+					<i class="icon-remove icon-2x clickable ng-hide" ng-show="isCompleted" ng-click="hide()"></i>
+				</div>
+				<div class="left">
+					<h3 class="ng-binding"></h3>
+				</div>
+				<div class="create-payroll-empty-state">
+					<div class="payroll-process"></div>
+				</div>
+				<div class="center">
+					<h5 class="ng-binding">.Please wait..</h5>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<div ng-show="payrollCreateUIBlock" class="salary-process ng-scope ng-hide">
+	<div class="payroll-process-blockui">
+		<div class="payroll-process-blockMsg" style="height: 250px">
+			<div class="barholder" style="margin-top: 0px; padding: 5px;">
+				<div class="pull-right">
+					<i class="icon-remove icon-2x clickable ng-hide" ng-show="isCompleted" ng-click="hide()"></i>
+				</div>
+				<div class="left"><h3>Create Payroll</h3></div>
+				<div class="create-payroll-empty-state">
+				  <div class="payroll-process"></div>
+				</div>
+				<div class="center">
+				<h5>Creating Payroll.Please wait..</h5>
+			</div>
+				
+			</div>
+		</div>
+	</div>
+	</div>
+ 
+ 
+</div></div></div>
+              </div>
+
+              <div id="actions" ng-show="tab == 'actions'" class="tab-pane inner-col ng-hide">
+                <!-- ui-view-anchor --><div ui-view="actions" class=""><div class="ng-scope" ng-controller="ActionNavCtrl">
+	<!-- ngIf: modules.length > 0 -->
+
+</div>	</div>
+              </div>
+
+              <div id="activityLog" ng-show="tab == 'activity'" class="tab-pane inner-col ng-hide">
+                <!-- ui-view-anchor --><div ui-view="activity" class=""><div class="ng-scope">
+	<div class="row-fluid">
+		<div class="span8">
+			<div class="inner-col">
+				<h3>Activity Stream</h3>
+				<div class="activity-stream">
+					<!-- ngRepeat: log in activityLog -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+	</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

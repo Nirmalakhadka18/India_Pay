@@ -1,0 +1,836 @@
+{
+  "General": [
+    {
+      "title": "General",
+      "state": "settings.general",
+      "url": "/general"
+    },
+    {
+      "title": "Company Settings",
+      "state": "settings.general.company-info",
+      "url": "/company-info"
+    },
+    {
+      "title": "NGA PEX Settings",
+      "state": "settings.general.ngapex-preferences",
+      "url": "/ngapex-preferences"
+    },
+    {
+      "title": "General Options",
+      "state": "settings.general.general-preferences",
+      "url": "/general-preferences"
+    },
+    {
+      "title": "Sequence Number",
+      "state": "settings.general.sequence-no",
+      "url": "/sequence-no-config"
+    },
+    {
+      "title": "WPS Options",
+      "state": "settings.general.wps-preferences",
+      "url": "/wps-preferences"
+    },
+    {
+      "title": "Password Options",
+      "state": "settings.general.user-preferences",
+      "url": "/user-preferences"
+    },
+    {
+      "title": "List of Values",
+      "state": "settings.general.lov",
+      "url": "/lov"
+    },
+    {
+      "title": "Add/Edit Establishment",
+      "state": "settings.general.addEst",
+      "url": "/add-est/:editid"
+    },
+    {
+      "title": "General",
+      "state": "settings.general.addEst.estGen",
+      "url": "/est-gen"
+    },
+    {
+      "title": "Address ",
+      "state": "settings.general.addEst.estAddr",
+      "url": "/est-addr"
+    },
+    {
+      "title": "Bank Branch",
+      "state": "settings.general.bank-branch",
+      "url": "/bank-branch"
+    },
+    {
+      "title": "Add/Edit Principal Employer",
+      "state": "settings.general.addPrincEmp",
+      "url": "/add-princ-emp/:editid"
+    },
+    {
+      "title": "Address ",
+      "state": "settings.general.addPrincEmp.princEmpAddr",
+      "url": "/princ-emp-addr"
+    },
+    {
+      "title": "General",
+      "state": "settings.general.addPrincEmp.princEmpGen",
+      "url": "/princ-emp-gen"
+    },
+    {
+      "title": "Add/Edit Company",
+      "state": "settings.general.addcompany",
+      "url": "/add-company/:editid"
+    },
+    {
+      "title": "Address ",
+      "state": "settings.general.addcompany.address",
+      "url": "/address"
+    },
+    {
+      "title": "General",
+      "state": "settings.general.addcompany.gen",
+      "url": "/gen"
+    },
+    {
+      "title": "Company Particulars   ",
+      "state": "settings.general.companydetails",
+      "url": "/company-detail-types"
+    },
+    {
+      "title": "Establishment",
+      "state": "settings.general.companydetails.est",
+      "url": "/est"
+    },
+    {
+      "title": "Company",
+      "state": "settings.general.companydetails.comp",
+      "url": "/comp"
+    },
+    {
+      "title": "Principal Employer",
+      "state": "settings.general.companydetails.princemp",
+      "url": "/princ-emp"
+    },
+    {
+      "title": "Contract",
+      "state": "settings.general.companydetails.contract",
+      "url": "/contract"
+    },
+    {
+      "title": "Company Bank Details",
+      "state": "settings.general.company-bank",
+      "url": "/company-bank"
+    },
+    {
+      "title": "Add/Edit Contract",
+      "state": "settings.general.addContract",
+      "url": "/add-contract/:editid"
+    },
+    {
+      "title": "General",
+      "state": "settings.general.addContract.contractGen",
+      "url": "/contract-gen"
+    },
+    {
+      "title": "Address ",
+      "state": "settings.general.addContract.contractAddr",
+      "url": "/contract-addr"
+    },
+    {
+      "title": "States",
+      "state": "settings.general.state",
+      "url": "/state"
+    },
+    {
+      "title": "Multi Company Info",
+      "state": "settings.general.multi-company-info",
+      "url": "/multi-company-info"
+    },
+    {
+      "title": "Currency Mapping",
+      "state": "settings.general.currency-mapping",
+      "url": "/currency-mapping"
+    },
+    {
+      "title": "v2.menu.settings.edit-sequence-no-config",
+      "state": "settings.general.sequence-no-edit",
+      "url": "/sequence-no-config/:id"
+    },
+    {
+      "title": "Service Provider",
+      "state": "settings.general.service-provider",
+      "url": "/service-provider"
+    }
+  ],
+  "Employee": [
+    {
+      "title": "Employee",
+      "state": "settings.employee",
+      "url": "/employee"
+    },
+    {
+      "title": "Employee No Series",
+      "state": "settings.employee.emp-no-series",
+      "url": "/emp-no-series"
+    },
+    {
+      "title": "Employee Options",
+      "state": "settings.employee.employee-preferences",
+      "url": "/employee-preferences"
+    },
+    {
+      "title": "Category Group",
+      "state": "settings.employee.transitiongroup",
+      "url": "/transition-group"
+    },
+    {
+      "title": "Employee Position",
+      "state": "settings.employee.employeecategories",
+      "url": "/employee-categories"
+    },
+    {
+      "title": "Edit Employee No Series",
+      "state": "settings.employee.emp-no-series-edit",
+      "url": "/emp-no-series/:id"
+    },
+    {
+      "title": "Leaving Reason",
+      "state": "settings.employee.leavingreason",
+      "url": "/leaving-reason"
+    },
+    {
+      "title": "Asset  Group Settings",
+      "state": "settings.employee.asset-group-settings",
+      "url": "/asset-group-settings"
+    },
+    {
+      "title": "Employee Directory Config",
+      "state": "settings.employee.dirconfig",
+      "url": "/employee-directory-config"
+    }
+  ],
+  "Payroll": [
+    {
+      "title": "Payroll",
+      "state": "settings.payroll",
+      "url": "/payroll"
+    },
+    {
+      "title": "Employee Location",
+      "state": "settings.payroll.statutoryedit",
+      "url": "/statutory-edit/:id"
+    },
+    {
+      "title": "Edit Agent",
+      "state": "settings.payroll.edit-agent",
+      "url": "/agent-list/:id"
+    },
+    {
+      "title": "Add/Edit Forex Rate",
+      "state": "settings.payroll.forex-rate-edit",
+      "url": "/forex-rate-edit/:id"
+    },
+    {
+      "title": "FBP Policy Setup",
+      "state": "settings.payroll.fbp-setup",
+      "url": "/fbp-setup/:id"
+    },
+    {
+      "title": "Add New Lookup Table",
+      "state": "settings.payroll.lookup",
+      "url": "/lookup"
+    },
+    {
+      "title": "Edit Field",
+      "state": "settings.payroll.field",
+      "url": "/lookup/field/:id"
+    },
+    {
+      "title": "Edit Slab",
+      "state": "settings.payroll.slab",
+      "url": "/v2/payroll-config/config/lookup/slab/:id"
+    },
+    {
+      "title": "Payroll Preferences",
+      "state": "settings.payroll.payroll-preferences",
+      "url": "/payroll-preferences"
+    },
+    {
+      "title": "LWF Contributions",
+      "state": "settings.payroll.labour-welfare-fund",
+      "url": "/labour-welfare-fund"
+    },
+    {
+      "title": "Reimbursement Reviewer",
+      "state": "settings.payroll.reimb-reviewer",
+      "url": "/reimb-reviewer"
+    },
+    {
+      "title": "Lookup Tables",
+      "state": "settings.payroll.lookup-list",
+      "url": "/lookup-list"
+    },
+    {
+      "title": "PF, PT, ESI & LWF Filing Location",
+      "state": "settings.payroll.statutory",
+      "url": "/statutory"
+    },
+    {
+      "title": "FBP Policy",
+      "state": "settings.payroll.fbp-policy",
+      "url": "/fpb-policy"
+    },
+    {
+      "title": "Category Based Cutoff",
+      "state": "settings.payroll.payroll-cutoff-days",
+      "url": "/payroll-cutoff-days"
+    },
+    {
+      "title": "JV Template",
+      "state": "settings.payroll.jvtemplate",
+      "url": "/jvtemplate"
+    },
+    {
+      "title": "Profession Tax Slabs",
+      "state": "settings.payroll.ptslab",
+      "url": "/ptslab"
+    },
+    {
+      "title": "Configure Forex Rate ",
+      "state": "settings.payroll.forex-rate",
+      "url": "/forex-rate"
+    },
+    {
+      "title": "Profession Tax Location",
+      "state": "settings.payroll.ptlocation",
+      "url": "/ptlocation/:id"
+    },
+    {
+      "title": "JV Template",
+      "state": "settings.payroll.jv-template",
+      "url": "^/v2/settings/template/:id"
+    },
+    {
+      "title": "JV Item Mapping",
+      "state": "settings.payroll.jv-template.jvmapping",
+      "url": "/jvmapping"
+    },
+    {
+      "title": "JV Item",
+      "state": "settings.payroll.jv-template.jvitem",
+      "url": "/jvitem"
+    },
+    {
+      "title": "Group JV",
+      "state": "settings.payroll.jv-template.jvgrouping",
+      "url": "/jvgrouping"
+    },
+    {
+      "title": "Add/Edit Jv Template",
+      "state": "settings.payroll.jv-template.add-jvtemplate",
+      "url": "/add-template"
+    },
+    {
+      "title": "JV Category Map",
+      "state": "settings.payroll.jvcategorymap",
+      "url": "/jvcategorymap"
+    },
+    {
+      "title": "Agent List",
+      "state": "settings.payroll.agent-list",
+      "url": "/agent-list"
+    },
+    {
+      "title": "Processing Sequence",
+      "state": "settings.payroll.processingsequence",
+      "url": "/processingsequence"
+    },
+    {
+      "title": "Salary External Code",
+      "state": "settings.payroll.salary-mapping-code",
+      "url": "/salary-mapping-code"
+    }
+  ],
+  "Income Tax": [
+    {
+      "title": "Income Tax",
+      "state": "settings.income-tax",
+      "url": "/income-tax"
+    },
+    {
+      "title": "Income Tax Preferences",
+      "state": "settings.income-tax.incometax-preferences",
+      "url": "/v2/payroll_config/settings/incometax-preferences"
+    },
+    {
+      "title": "Tax Slab",
+      "state": "settings.income-tax.tax-slab",
+      "url": "/tax-slab"
+    },
+    {
+      "title": "Form 16 Options",
+      "state": "settings.income-tax.form16Option",
+      "url": "/form16-settings"
+    },
+    {
+      "title": "Form24Q",
+      "state": "settings.income-tax.form24Q",
+      "url": "/form24Q-settings/:year"
+    },
+    {
+      "title": "IT Section-Max Limit",
+      "state": "settings.income-tax.it-section-max-limit",
+      "url": "/it-section-max-limit"
+    },
+    {
+      "title": "Form 12BA Mapping",
+      "state": "settings.income-tax.form12ba-mapping",
+      "url": "/form12ba-mapping"
+    },
+    {
+      "title": "menu.payroll.exemption_group_Map",
+      "state": "settings.income-tax.exemption-group-map",
+      "url": "/exemption-group-map"
+    },
+    {
+      "title": "Projection Map",
+      "state": "settings.income-tax.projection-map",
+      "url": "/projection-map"
+    },
+    {
+      "title": "IT Declaration",
+      "state": "settings.income-tax.it-declaration-master",
+      "url": "/it-declaration-master"
+    },
+    {
+      "title": "Advanced Settings",
+      "state": "settings.income-tax.it-options",
+      "url": "/it-options"
+    }
+  ],
+  "Leave": [
+    {
+      "title": "Leave",
+      "state": "settings.leave",
+      "url": "/leave"
+    },
+    {
+      "title": "Edit Leave Policy",
+      "state": "settings.leave.policy-edit-5",
+      "url": "/policy/:policyId/5"
+    },
+    {
+      "title": "Edit Leave Policy",
+      "state": "settings.leave.policy-edit-7",
+      "url": "/policy/:policyId/7"
+    },
+    {
+      "title": "Edit Leave Policy",
+      "state": "settings.leave.policy-edit-1",
+      "url": "/policy/:policyId/1"
+    },
+    {
+      "title": "Edit Leave Policy",
+      "state": "settings.leave.policy-edit-8",
+      "url": "/policy/:policyId/8"
+    },
+    {
+      "title": "Edit Leave Policy",
+      "state": "settings.leave.policy-edit-6",
+      "url": "/policy/:policyId/6"
+    },
+    {
+      "title": "Edit Leave Policy",
+      "state": "settings.leave.policy-edit-9",
+      "url": "/policy/:policyId/9"
+    },
+    {
+      "title": "Edit Leave Scheme",
+      "state": "settings.leave.scheme-edit",
+      "url": "/scheme/:id"
+    },
+    {
+      "title": "Edit Weekend Policy",
+      "state": "settings.leave.weekend-policy-edit",
+      "url": "/weekend-policy/:id/1"
+    },
+    {
+      "title": "Edit Leave Policy",
+      "state": "settings.leave.policy-edit-4",
+      "url": "/policy/:policyId/4"
+    },
+    {
+      "title": "Add/Edit Event Handler Tasks",
+      "state": "settings.leave.mail-edit",
+      "url": "/event-mail/:id"
+    },
+    {
+      "title": "Edit Leave Policy",
+      "state": "settings.leave.policy-edit-3",
+      "url": "/policy/:policyId/3"
+    },
+    {
+      "title": "Edit Leave Policy",
+      "state": "settings.leave.policy-edit-2",
+      "url": "/policy/:policyId/:grantBasedOnWorkdays/2"
+    },
+    {
+      "title": "Leave Options",
+      "state": "settings.leave.leaveOptions",
+      "url": "/leave-options"
+    },
+    {
+      "title": "Lock Year Settings",
+      "state": "settings.leave.leaveOptions.lockyearsettings",
+      "url": "/lock-year-settings"
+    },
+    {
+      "title": "Leave Options",
+      "state": "settings.leave.leaveOptions.leavepreferences",
+      "url": "/leave.leaveOptions.leavepreferences"
+    },
+    {
+      "title": "Leave Settlement Settings",
+      "state": "settings.leave.leavesettlement-preferences",
+      "url": "/leavesettlement-preferences"
+    },
+    {
+      "title": "Leave Type",
+      "state": "settings.leave.leavetype",
+      "url": "/type"
+    },
+    {
+      "title": "Leave Rules",
+      "state": "settings.leave.policy",
+      "url": "/policy"
+    },
+    {
+      "title": "Weekend Policy",
+      "state": "settings.leave.weekend-policy",
+      "url": "/weekend-policy"
+    }
+  ],
+  "Integrations": [
+    {
+      "title": "Miscellaneous",
+      "state": "settings.integrations",
+      "url": "/integrations"
+    },
+    {
+      "title": "Add/Edit Event Notification",
+      "state": "settings.integrations.outgoing-webhooks-edit",
+      "url": "/outgoing-webhooks/:id/edit"
+    }
+  ],
+  "More": [
+    {
+      "title": "Letter",
+      "state": "settings.letter",
+      "url": "/letter"
+    },
+    {
+      "title": "Letter Options",
+      "state": "settings.letter.letter-options",
+      "url": "/preferences"
+    },
+    {
+      "title": "Letter Authorized Signatory",
+      "state": "settings.letter.signatory",
+      "url": "/signatory"
+    },
+    {
+      "title": "Leave Scheme",
+      "state": "settings.leave.scheme",
+      "url": "/scheme"
+    },
+    {
+      "title": "Leave Event Reminder",
+      "state": "settings.leave.mail",
+      "url": "/event-mail"
+    },
+    {
+      "title": "Leave Reason",
+      "state": "settings.leave.reason",
+      "url": "/leave-reason"
+    },
+    {
+      "title": "Leave Add Reason",
+      "state": "settings.leave.addreason",
+      "url": "/leave-add-reason/:id"
+    },
+    {
+      "title": "Claims",
+      "state": "settings.claims",
+      "url": "/claims"
+    },
+    {
+      "title": "Claim Templates",
+      "state": "settings.claims.template-edit",
+      "url": "/template-edit/:id"
+    },
+    {
+      "title": "Claim Templates",
+      "state": "settings.claims.templateitem",
+      "url": "/template-item/:template/:id"
+    },
+    {
+      "title": "Edit Claim Item ",
+      "state": "settings.claims.item-edit",
+      "url": "/claim-item-edit/:id"
+    },
+    {
+      "title": "Claim Items",
+      "state": "settings.claims.item",
+      "url": "/claim-item"
+    },
+    {
+      "title": "Claim Templates",
+      "state": "settings.claims.template",
+      "url": "/template"
+    },
+    {
+      "title": "Claims Options",
+      "state": "settings.claims.claims-preferences",
+      "url": "/claims-preferences"
+    },
+    {
+      "title": "Claims Group Custom Fields",
+      "state": "settings.claims.custom-fieldslov",
+      "url": "/v2/claims/customfield/custom-fieldslov"
+    },
+    {
+      "title": "Attendance",
+      "state": "settings.attendance",
+      "url": "/attendance"
+    },
+    {
+      "title": "Add/Edit Shift Rotation Policy",
+      "state": "settings.attendance.shift-rotation-policy-edit",
+      "url": "/v2/attendance/settings/shift-rotation-policy-edit/:id"
+    },
+    {
+      "title": "Edit Attendance Policy",
+      "state": "settings.attendance.policy-edit-2",
+      "url": "/policy/:policyId/2"
+    },
+    {
+      "title": "v2.attendance.menu.shift.edit.title",
+      "state": "settings.attendance.shift-edit",
+      "url": "/shift/:id"
+    },
+    {
+      "title": "Shift Rotation Plan",
+      "state": "settings.attendance.production-plan-edit",
+      "url": "/v2/attendance/settings/production-plan-edit/:id/:updateplanweekday"
+    },
+    {
+      "title": "v2.attendance.menu.settings.attendanceSchemeEdit",
+      "state": "settings.attendance.scheme-edit",
+      "url": "/att-scheme/:id"
+    },
+    {
+      "title": "Edit Attendance Policy",
+      "state": "settings.attendance.policy-edit-1",
+      "url": "/policy/:policyId/1"
+    },
+    {
+      "title": "Edit Attendance Policy",
+      "state": "settings.attendance.policy-edit-3",
+      "url": "/policy/:policyId/3"
+    },
+    {
+      "title": "v2.attendance.menu.admin.officeLocator",
+      "state": "settings.attendance.officeLocator",
+      "url": "/office-locator"
+    },
+    {
+      "title": "Setup Guide",
+      "state": "settings.attendance.gpsSetupGuide",
+      "url": "/gps-setup-guide"
+    },
+    {
+      "title": "Add/Edit Absent Marking Criteria",
+      "state": "settings.attendance.addabsentmarkingcriteria",
+      "url": "/addabsentmarkingcriteria/:id"
+    },
+    {
+      "title": "Attendance Options",
+      "state": "settings.attendance.attendance-preferences",
+      "url": "/attendance-preferences"
+    },
+    {
+      "title": "Shift",
+      "state": "settings.attendance.config-shift",
+      "url": "/v2/attendance/settings/config-shift"
+    },
+    {
+      "title": "Shift Rotation Plan",
+      "state": "settings.attendance.production-plan",
+      "url": "/v2/attendance/settings/production-plan"
+    },
+    {
+      "title": "Shift",
+      "state": "settings.attendance.shift",
+      "url": "/shift"
+    },
+    {
+      "title": "Absent Marking Criteria",
+      "state": "settings.attendance.absentmarkingcriteria",
+      "url": "/absentmarkingcriteria"
+    },
+    {
+      "title": "Shift Rotation Policy",
+      "state": "settings.attendance.shift-rotation-policy",
+      "url": "/v2/attendance/settings/shift-rotation-policy"
+    },
+    {
+      "title": "Attendance Policy",
+      "state": "settings.attendance.policy",
+      "url": "/attendance-policy"
+    },
+    {
+      "title": "Attendance Scheme",
+      "state": "settings.attendance.scheme",
+      "url": "/att-scheme"
+    },
+    {
+      "title": "Help Desk",
+      "state": "settings.helpdesk",
+      "url": "/helpdesk"
+    },
+    {
+      "title": "Help Desk Options",
+      "state": "settings.helpdesk.helpdesk-preferences",
+      "url": "/helpdesk-preferences"
+    },
+    {
+      "title": "Edit Help Desk Category",
+      "state": "settings.helpdesk.edit-ticket-category-lov",
+      "url": "/ticket-category-lov/:id"
+    },
+    {
+      "title": "v2.menu.troubleticket.addEdit_reviewers",
+      "state": "settings.helpdesk.edit-reviewers",
+      "url": "/reviewer/:id"
+    },
+    {
+      "title": "Help Desk Category",
+      "state": "settings.helpdesk.ticket-category-lov",
+      "url": "/ticket-category-lov"
+    },
+    {
+      "title": "Help Desk Reviewers",
+      "state": "settings.helpdesk.reviewers",
+      "url": "/reviewers"
+    },
+    {
+      "title": "Miscellaneous",
+      "state": "settings.advanced",
+      "url": "/advanced"
+    },
+    {
+      "title": "Premium",
+      "state": "settings.advanced.planchange",
+      "url": "/plan-change"
+    },
+    {
+      "title": "Freemium",
+      "state": "settings.advanced.freemium",
+      "url": "/freemium"
+    },
+    {
+      "title": "Feeds Group",
+      "state": "settings.advanced.feeds-group",
+      "url": "/feeds-group"
+    },
+    {
+      "title": "v2.social.feedsEditGroup.menu.title",
+      "state": "settings.advanced.feeds-edit-group",
+      "url": "/feeds-edit-group/:id"
+    },
+    {
+      "title": "Add/Edit Mail Event Handler",
+      "state": "settings.advanced.mail-edit",
+      "url": "/mail/:id"
+    },
+    {
+      "title": "Add/Edit Mail Template",
+      "state": "settings.advanced.edit-mail-template",
+      "url": "/mail-template/:id"
+    },
+    {
+      "title": "Edit Application message",
+      "state": "settings.advanced.edit-app-message",
+      "url": "/app-message/:id"
+    },
+    {
+      "title": "Add/Edit Event Notification",
+      "state": "settings.advanced.event-listeners-edit",
+      "url": "/event-listeners/:id"
+    },
+    {
+      "title": "Page Static Content",
+      "state": "settings.advanced.metadata",
+      "url": "/metadata"
+    },
+    {
+      "title": "Email Alias",
+      "state": "settings.advanced.email-alias",
+      "url": "/email-alias"
+    },
+    {
+      "title": "Access Tokens",
+      "state": "settings.advanced.access-tokens",
+      "url": "/access-tokens"
+    },
+    {
+      "title": "Advanced Options",
+      "state": "settings.advanced.advanced-options",
+      "url": "/advanced-options"
+    },
+    {
+      "title": "Application Messages",
+      "state": "settings.advanced.app-messages",
+      "url": "/app-messages"
+    },
+    {
+      "title": "Custom Templates",
+      "state": "settings.advanced.custom-template",
+      "url": "/custom-template"
+    },
+    {
+      "title": "Mail Event Handlers",
+      "state": "settings.advanced.mail",
+      "url": "/mail"
+    },
+    {
+      "title": "Event Notification",
+      "state": "settings.advanced.event-listeners",
+      "url": "/event-listeners"
+    },
+    {
+      "title": "Mail Template List",
+      "state": "settings.advanced.mail-templates",
+      "url": "/mail-templates"
+    },
+    {
+      "title": "Action Keywords",
+      "state": "settings.advanced.action-keywords",
+      "url": "/action-keywords"
+    },
+    {
+      "title": "Page Layouts",
+      "state": "settings.advanced.ess-templates",
+      "url": "/ess-templates"
+    },
+    {
+      "title": "Report Options",
+      "state": "settings.advanced.report-options",
+      "url": "/report-options"
+    },
+    {
+      "title": "Event Notification",
+      "state": "settings.integrations.outgoing-webhooks",
+      "url": "/outgoing-webhooks"
+    }
+  ]
+}

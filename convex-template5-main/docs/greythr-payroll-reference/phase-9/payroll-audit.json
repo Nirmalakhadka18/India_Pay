@@ -1,0 +1,273 @@
+{
+  "bannerText": "",
+  "months": [
+    {
+      "text": "Apr\n2026",
+      "className": "month-nav months ng-scope locked"
+    },
+    {
+      "text": "May\n2026",
+      "className": "month-nav months ng-scope locked"
+    },
+    {
+      "text": "Jun\n2026",
+      "className": "month-nav months ng-scope locked"
+    },
+    {
+      "text": "Jul\n2026",
+      "className": "month-nav months ng-scope locked"
+    },
+    {
+      "text": "Aug\n2026",
+      "className": "month-nav months ng-scope locked"
+    },
+    {
+      "text": "Sep\n2026",
+      "className": "month-nav months ng-scope locked"
+    },
+    {
+      "text": "Oct\n2026",
+      "className": "month-nav months ng-scope locked"
+    },
+    {
+      "text": "Nov\n2026",
+      "className": "month-nav months ng-scope current unlocked"
+    },
+    {
+      "text": "Dec\nNew\n2026",
+      "className": "month-nav months ng-scope new-payroll unlocked"
+    },
+    {
+      "text": "Jan\n2027",
+      "className": "month-nav months ng-scope blank unlocked"
+    },
+    {
+      "text": "Feb\n2027",
+      "className": "month-nav months ng-scope unlocked"
+    },
+    {
+      "text": "Mar\n2027",
+      "className": "month-nav months ng-scope last unlocked"
+    },
+    {
+      "text": "Create Nov 2026 Payroll",
+      "className": "new-month ng-hide"
+    }
+  ],
+  "headings": [
+    {
+      "tag": "DIV",
+      "text": "Search",
+      "className": "custom-modal-header"
+    },
+    {
+      "tag": "DIV",
+      "text": "Search",
+      "className": "newgen-title-small newgen-text-secondary-600"
+    },
+    {
+      "tag": "DIV",
+      "text": "November 2026 \nCutoff from 01 Nov 2026 to 30 Nov 2026 \n Process Payroll",
+      "className": "row-fluid header"
+    },
+    {
+      "tag": "H4",
+      "text": "November 2026",
+      "className": "mtbh"
+    },
+    {
+      "tag": "DIV",
+      "text": "Process Payroll",
+      "className": "header-right pull-right"
+    },
+    {
+      "tag": "H3",
+      "text": "Payout Details",
+      "className": "mt0"
+    },
+    {
+      "tag": "H3",
+      "text": "Employee Details",
+      "className": "mt0"
+    },
+    {
+      "tag": "H5",
+      "text": "Please wait...",
+      "className": ""
+    },
+    {
+      "tag": "H4",
+      "text": "Negative Salary",
+      "className": "card-header"
+    },
+    {
+      "tag": "H4",
+      "text": "Hold Salary Payout",
+      "className": "card-header"
+    },
+    {
+      "tag": "H4",
+      "text": "Stop Salary Processing",
+      "className": "card-header"
+    },
+    {
+      "tag": "H4",
+      "text": "Payout Pending",
+      "className": "card-header"
+    },
+    {
+      "tag": "H4",
+      "text": "Settled Employees",
+      "className": "card-header"
+    },
+    {
+      "tag": "H4",
+      "text": "Locations Without PT State",
+      "className": "card-header"
+    },
+    {
+      "tag": "H2",
+      "text": "No Payrolls Available. Please add a new payroll.",
+      "className": ""
+    },
+    {
+      "tag": "H3",
+      "text": "Downloading Report. Please wait...",
+      "className": ""
+    },
+    {
+      "tag": "H3",
+      "text": "Releasing IT Statement",
+      "className": ""
+    },
+    {
+      "tag": "H5",
+      "text": "Creating batches please wait...",
+      "className": ""
+    },
+    {
+      "tag": "H3",
+      "text": "Release Payroll",
+      "className": ""
+    },
+    {
+      "tag": "H5",
+      "text": "Releasing payroll please wait...",
+      "className": ""
+    },
+    {
+      "tag": "H5",
+      "text": ".Please wait..",
+      "className": "ng-binding"
+    },
+    {
+      "tag": "H5",
+      "text": ".Please wait..",
+      "className": "ng-binding"
+    },
+    {
+      "tag": "H3",
+      "text": "Create Payroll",
+      "className": ""
+    },
+    {
+      "tag": "H5",
+      "text": "Creating Payroll.Please wait..",
+      "className": ""
+    },
+    {
+      "tag": "H3",
+      "text": "Activity Stream",
+      "className": ""
+    }
+  ],
+  "buttons": [
+    {
+      "tag": "BUTTON",
+      "text": "Process Payroll",
+      "className": "btn btn-primary"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Create Nov 2026 Payroll",
+      "className": "btn btn-primary create-payroll-btn ng-binding"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Create Nov 2026 Payroll",
+      "className": "btn btn-primary create-payroll-btn ng-binding"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Unlock",
+      "className": "btn btn-small"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Lock",
+      "className": "btn btn-small"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Release",
+      "className": "btn btn-small"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Hold",
+      "className": "btn btn-small"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Release",
+      "className": "btn btn-small"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Hold",
+      "className": "btn btn-small"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Unlock",
+      "className": "btn btn-small"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Lock",
+      "className": "btn btn-small"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Add Payroll",
+      "className": "btn btn-primary"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "OK",
+      "className": "btn "
+    },
+    {
+      "tag": "BUTTON",
+      "text": "OK",
+      "className": "btn "
+    },
+    {
+      "tag": "BUTTON",
+      "text": "OK",
+      "className": "btn "
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Confirm",
+      "className": "btn btn-primary"
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Cancel",
+      "className": "btn "
+    }
+  ],
+  "whatsNew": [],
+  "hasMoreBtn": false
+}

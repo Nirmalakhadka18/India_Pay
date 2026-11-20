@@ -1,0 +1,236 @@
+{
+  "lov": {
+    "options": [
+      {
+        "value": "default",
+        "text": "Please Select"
+      },
+      {
+        "value": "G_EMPLOYEE_BLOODGROUP",
+        "text": "Blood Group"
+      },
+      {
+        "value": "G_EMPLOYEE_FEEDBACK",
+        "text": "Leaving Feedback"
+      },
+      {
+        "value": "G_EMPLOYEE_PFLEAVINGREASON",
+        "text": "PF Leaving Reason"
+      },
+      {
+        "value": "G_EMPLOYEE_PFSCHEME",
+        "text": "PF Scheme"
+      },
+      {
+        "value": "G_EMPLOYEE_QUALDESCRIPTION",
+        "text": "Qualification"
+      },
+      {
+        "value": "G_EMPLOYEE_QUALAREA",
+        "text": "Qualification Area"
+      },
+      {
+        "value": "G_EMPLOYEE_QUALLEVEL",
+        "text": "Qualification Level"
+      },
+      {
+        "value": "G_TRANSCHANGEREASON",
+        "text": "Category Change Reason"
+      },
+      {
+        "value": "G_BANK_TYPE",
+        "text": "Bank"
+      },
+      {
+        "value": "G_GENERAL_BANKACCTYPE",
+        "text": "Bank Account Type"
+      },
+      {
+        "value": "G_BULLETIN_CATEGORY",
+        "text": "Bulletin Category"
+      },
+      {
+        "value": "G_ECONFIRMATION_REASON",
+        "text": "Confirmation Reason"
+      },
+      {
+        "value": "G_GENERAL_COUNTRY",
+        "text": "Country"
+      },
+      {
+        "value": "G_CURRENCY",
+        "text": "Currency"
+      },
+      {
+        "value": "G_EMPLOYEEDOC_CATEGORY",
+        "text": "Emp Doc Category"
+      },
+      {
+        "value": "G_EMPLOYEE_RESIGNATION",
+        "text": "Employee Resignation Reason"
+      },
+      {
+        "value": "G_STATUS",
+        "text": "Employee Status"
+      },
+      {
+        "value": "G_FORMS_CATEGORY",
+        "text": "Forms Category"
+      },
+      {
+        "value": "G_EMPLOYEE_EXIT_REASONS",
+        "text": "InVoluntary Reasons"
+      },
+      {
+        "value": "G_MARITAL_STATUS",
+        "text": "Marital Status"
+      },
+      {
+        "value": "G_NATIONALITY",
+        "text": "Nationality"
+      },
+      {
+        "value": "G_PASSPORT_TYPE",
+        "text": "Passport Type"
+      },
+      {
+        "value": "G_PROJECT",
+        "text": "Project"
+      },
+      {
+        "value": "G_RELATION",
+        "text": "Relation"
+      },
+      {
+        "value": "G_RELIGION",
+        "text": "Religion"
+      },
+      {
+        "value": "G_RESIDENTIAL_STATUS",
+        "text": "Residential Status"
+      },
+      {
+        "value": "G_VACCINATION_REASONS",
+        "text": "Vaccination Reason"
+      },
+      {
+        "value": "G_VISA_TYPE",
+        "text": "Visa Type"
+      },
+      {
+        "value": "G_TBLHOLDSALARYREASON",
+        "text": "Hold Salary Payout Reason"
+      },
+      {
+        "value": "G_OTHER_INCOMES",
+        "text": "Other Incomes"
+      },
+      {
+        "value": "G_TBLRELEASESALARYREASON",
+        "text": "Release Salary Reason"
+      }
+    ],
+    "headers": [],
+    "rowsCount": 0,
+    "rows": []
+  },
+  "bankBranch": {
+    "options": [],
+    "headers": [],
+    "helpText": "\n            \n            \n          "
+  },
+  "companyBank": {
+    "options": [],
+    "headers": [],
+    "rowsCount": 0,
+    "rows": []
+  },
+  "state": {
+    "headers": [],
+    "rowsCount": 0,
+    "rows": [],
+    "content": "Hide Help\n\nThe States page enables you to manage the list of all states of a country that you select from the drop-down.\n\nExplore greytHR by Help-Doc, watching How-to Videos and FAQ.\n\nCountry: Select  \n \nDescription\n \nCode\n \n \n \n \n  \nSave"
+  },
+  "empNoSeries": {
+    "headers": [],
+    "rowsCount": 0,
+    "rows": [],
+    "buttons": [
+      "",
+      "Add New",
+      "",
+      "",
+      "",
+      "",
+      "Cancel",
+      "Save",
+      "OK",
+      "OK",
+      "OK",
+      "Confirm",
+      "Cancel"
+    ],
+    "content": "Hide Help\n\nThe Employee No Series page enables you to set up and manage the employee number series that are used to generate employee numbers. When a new employee is added to the application, a new employee number is generated based on the series set up here. \n\nExplore the Employee No. Series page with Help-Doc and FAQ.  \n\nAdd New\n \nSeries Name\n \nCurrent Serial\n \nFormat\n \nActions\n \nDisable\n \nManual Entry\n \n0\n \n0\n \n \n \nPermanent Employees\n \n1\n \n0001\n \n \n \nTemporary Employees\n \n1\n \nT0001\n \n \nCancel Save"
+  },
+  "transitionGroup": {
+    "options": [
+      {
+        "value": "eim-profile-category",
+        "text": "EIM Profile Category"
+      },
+      {
+        "value": "ess-filter-category",
+        "text": "Ess Filter Category"
+      },
+      {
+        "value": "general-employee-category",
+        "text": "General Employee Category"
+      },
+      {
+        "value": "leave-review-page-category",
+        "text": "Leave Review Page"
+      },
+      {
+        "value": "paygroup-emp-category",
+        "text": "Pay Group Employee Category"
+      },
+      {
+        "value": "payrun-emp-category",
+        "text": "Pay Run Employee Category"
+      },
+      {
+        "value": "salary-revision-workflow",
+        "text": "Salary Revision Workflow"
+      },
+      {
+        "value": "apply-ot-behalf",
+        "text": "Apply OT"
+      },
+      {
+        "value": "att-mass-override-emp-info",
+        "text": "Attendance Shift/Status Mass override Employee Categories"
+      },
+      {
+        "value": "auto-grant-ot-comp-off",
+        "text": "Auto Grant OT/ Comp-Off"
+      },
+      {
+        "value": "leave-calendar-filter",
+        "text": "Leave Calendar Filter Categories"
+      },
+      {
+        "value": "mark-att-emp-behalf",
+        "text": "Mark Attendance On Behalf"
+      },
+      {
+        "value": "admin-salary-revision",
+        "text": "Salary Related Category"
+      },
+      {
+        "value": "att-whoisin-emp-info",
+        "text": "Attendance Who Is In Employee Categories"
+      }
+    ],
+    "content": "Hide Help\n\nThroughout the application, there are many screens where one or more employee categories are used.\nThese categories may be for filtering or for displaying related employee information.\nFrom here, you can configure which employee categories to display for the various screens.\n\nExplore the Category Group page with help doc.\n\nScreen\nEIM Profile Category\nEIM Profile Category group\n\n\n\n\nAvailable Categories\n\n\nSelected Categories\nCost Center\nDivision\nGrade\n1:\nDesignation\n: \n2:\nLocation\n: \n3:\nDepartment\n: \nMaxLimit - 2"
+  }
+}

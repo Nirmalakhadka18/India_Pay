@@ -219,49 +219,35 @@ export function Sidebar() {
         </Link>
       </div>
 
-      <div className="p-3 pb-2">
-        <span className="mb-1 block text-[10px] uppercase tracking-wide text-primary/40">
-          Workspace
-        </span>
-        <select
-          value={current ?? ""}
-          onChange={(e) => select(e.target.value as Id<"workspaces">)}
-          className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
-          disabled={workspaces.length === 0}
-        >
-          {workspaces.length === 0 && (
-            <option value="">
-              {wsLoading ? "Loading workspaces…" : "No workspace available"}
-            </option>
-          )}
-          {workspaces.map((w) => (
-            <option key={w._id} value={w._id}>
-              {w.name} ({w.role})
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Member Profile Card from Screenshots ("Hi Javeria - View My Info") */}
-      {!isHR && (
-        <div className="mx-3 mb-2 flex items-center gap-2.5 rounded-lg border border-border/80 bg-muted/40 p-2.5 shadow-sm">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <User className="h-4 w-4" />
+      {/* greytHR Profile & Info Section (Matching exact screenshot) */}
+      <div className="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-zinc-800">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-900 text-white dark:bg-zinc-800">
+            <User className="h-5 w-5" />
           </div>
           <div className="min-w-0">
-            <p className="truncate text-xs font-semibold text-primary">
-              Hi {myProfile?.firstName || user?.name || "Member"}
+            <p className="truncate text-xs font-semibold text-slate-800 dark:text-zinc-200">
+              Hi {myProfile?.firstName || user?.name || "Nirmala"}
             </p>
             <Link
               href="/my-portal"
               onClick={() => setOpen(false)}
-              className="text-[11px] font-medium text-cyan-600 dark:text-cyan-400 hover:underline"
+              className="text-[11px] font-medium text-blue-600 hover:underline dark:text-blue-400 block"
             >
               View My Info
             </Link>
           </div>
         </div>
-      )}
+
+        {/* Small settings icon as seen in screenshot */}
+        <Link
+          href="/settings"
+          title="Profile Settings"
+          className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300 transition"
+        >
+          <Settings className="h-4 w-4" />
+        </Link>
+      </div>
 
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-1">
         {NAV.map((item) => {
@@ -271,7 +257,8 @@ export function Sidebar() {
           if (hasSub) {
             const isExpanded = expandedNav[item.href] ?? true;
             const isParentActive =
-              (item.href === "/worklife/kudos" && pathname.includes("/worklife")) ||
+              (item.href === "/worklife/kudos" &&
+                pathname.includes("/worklife")) ||
               (item.href === "/todo" && pathname.includes("/todo")) ||
               (item.href === "/salary" && pathname.includes("/salary")) ||
               (item.href.startsWith("/leave") && pathname.includes("/leave")) ||
@@ -288,7 +275,10 @@ export function Sidebar() {
                   <Link
                     href={item.href}
                     onClick={() => {
-                      setExpandedNav((prev) => ({ ...prev, [item.href]: true }));
+                      setExpandedNav((prev) => ({
+                        ...prev,
+                        [item.href]: true,
+                      }));
                       setOpen(false);
                     }}
                     className="flex items-center gap-3 min-w-0 flex-1"
@@ -324,14 +314,17 @@ export function Sidebar() {
                             pathname === "/worklife" ||
                             pathname.endsWith("/worklife")
                           : sub.href === "/worklife/feedback"
-                          ? pathname.includes("/worklife/feedback")
-                          : sub.href === "/todo"
-                          ? pathname === "/todo" || pathname.startsWith("/todo")
-                          : sub.href === "/salary"
-                          ? pathname === "/salary" || pathname === "/salary/payslip"
-                          : sub.href === "/leave/apply"
-                          ? pathname === "/leave" || pathname === "/leave/apply"
-                          : pathname === sub.href;
+                            ? pathname.includes("/worklife/feedback")
+                            : sub.href === "/todo"
+                              ? pathname === "/todo" ||
+                                pathname.startsWith("/todo")
+                              : sub.href === "/salary"
+                                ? pathname === "/salary" ||
+                                  pathname === "/salary/payslip"
+                                : sub.href === "/leave/apply"
+                                  ? pathname === "/leave" ||
+                                    pathname === "/leave/apply"
+                                  : pathname === sub.href;
                       return (
                         <Link
                           key={sub.href}
@@ -422,6 +415,11 @@ export function Sidebar() {
       </div>
     </div>
   );
+
+  // In greytHR Admin Shell, there is NO permanent left sidebar for HR/Admin users
+  if (isHR) {
+    return null;
+  }
 
   return (
     <>

@@ -128,7 +128,8 @@ export default function PayslipsPage() {
         statutoryDeductions: payslipDetail.statutoryDeductions ?? [],
         totalStatutoryDeductions: payslipDetail.totalStatutoryDeductions ?? 0,
         employerContributions: payslipDetail.employerContributions ?? [],
-        totalEmployerContributions: payslipDetail.totalEmployerContributions ?? 0,
+        totalEmployerContributions:
+          payslipDetail.totalEmployerContributions ?? 0,
         totalDeductions: currentRun.totalDeductions,
         netSalary: currentRun.netSalary,
         netPayInWords: payslipDetail.netPayInWords,
@@ -233,7 +234,9 @@ export default function PayslipsPage() {
           {/* Right Download & Period Dropdown matching user screenshot */}
           <div className="flex flex-wrap items-center gap-2.5 self-end sm:self-auto">
             <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-700 dark:text-gray-300">
-              <span className="text-[11px] uppercase tracking-wider text-gray-500">SELECT PERIOD:</span>
+              <span className="text-[11px] uppercase tracking-wider text-gray-500">
+                SELECT PERIOD:
+              </span>
               <select
                 value={currentRun?.payrollRunId ?? ""}
                 onChange={(e) => setSelectedRunId(e.target.value)}
@@ -272,7 +275,10 @@ export default function PayslipsPage() {
           <div className="flex min-h-[400px] items-center justify-center">
             <Loader2 className="h-6 w-6 animate-spin text-[#0091FF]" />
           </div>
-        ) : activeTab === "payslip" && runs.length > 0 && currentRun && payslipDetail ? (
+        ) : activeTab === "payslip" &&
+          runs.length > 0 &&
+          currentRun &&
+          payslipDetail ? (
           <div className="flex w-full flex-col gap-6">
             {/* Victor Chasex Payslip Header Card */}
             <div className="flex w-full flex-col sm:flex-row items-center justify-between gap-4 rounded-md border border-gray-200 bg-white p-4 shadow-2xs dark:border-border dark:bg-card">
@@ -287,7 +293,8 @@ export default function PayslipsPage() {
                     Victor Chasex Private Limited
                   </h2>
                   <p className="text-[11px] text-gray-500 dark:text-gray-400">
-                    2ND AND 3RD FLOOR, L-149, SRI ESHWARI MANSION, 5TH MAIN, 6TH SECTOR, HSR LAYOUT, BENGALURU,
+                    2ND AND 3RD FLOOR, L-149, SRI ESHWARI MANSION, 5TH MAIN, 6TH
+                    SECTOR, HSR LAYOUT, BENGALURU,
                   </p>
                 </div>
               </div>
@@ -305,234 +312,240 @@ export default function PayslipsPage() {
                 <div className="flex flex-1 flex-col overflow-hidden rounded-md border border-gray-200 bg-white shadow-2xs dark:border-border dark:bg-card">
                   {/* Table Header */}
                   <div className="flex items-center justify-between border-b border-gray-200 bg-[#E9F5FD] px-4 py-2.5 dark:border-border dark:bg-sky-950/40">
-                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
-                    Earnings
-                  </span>
-                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
-                    Amount in (₹)
-                  </span>
-                </div>
+                    <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+                      Earnings
+                    </span>
+                    <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+                      Amount in (₹)
+                    </span>
+                  </div>
 
-                {/* Rows */}
-                <div className="flex flex-1 flex-col">
-                  {/* Basic */}
-                  <div className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5 text-xs text-gray-700 dark:border-border/60 dark:text-gray-300">
-                    <span>BASIC</span>
-                    <span className="font-medium text-gray-900 dark:text-white">
-                      {(payslipDetail.basicSalary ?? 0).toLocaleString("en-IN", {
+                  {/* Rows */}
+                  <div className="flex flex-1 flex-col">
+                    {/* Basic */}
+                    <div className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5 text-xs text-gray-700 dark:border-border/60 dark:text-gray-300">
+                      <span>BASIC</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {(payslipDetail.basicSalary ?? 0).toLocaleString(
+                          "en-IN",
+                          {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          },
+                        )}
+                      </span>
+                    </div>
+
+                    {/* Allowances */}
+                    {payslipDetail.allowances?.map((a) => (
+                      <div
+                        key={a.name}
+                        className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5 text-xs text-gray-700 dark:border-border/60 dark:text-gray-300"
+                      >
+                        <span>{a.name.toUpperCase()}</span>
+                        <span className="font-medium text-gray-900 dark:text-white">
+                          {a.amount.toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Total Row */}
+                  <div className="mt-auto flex items-center justify-between border-t border-gray-200 bg-gray-50/70 px-4 py-2.5 text-xs font-bold text-gray-900 dark:border-border dark:bg-muted/40 dark:text-white">
+                    <span>Total</span>
+                    <span>
+                      {(currentRun.grossSalary ?? 0).toLocaleString("en-IN", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
                     </span>
                   </div>
-
-                  {/* Allowances */}
-                  {payslipDetail.allowances?.map((a) => (
-                    <div
-                      key={a.name}
-                      className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5 text-xs text-gray-700 dark:border-border/60 dark:text-gray-300"
-                    >
-                      <span>{a.name.toUpperCase()}</span>
-                      <span className="font-medium text-gray-900 dark:text-white">
-                        {a.amount.toLocaleString("en-IN", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </span>
-                    </div>
-                  ))}
                 </div>
 
-                {/* Total Row */}
-                <div className="mt-auto flex items-center justify-between border-t border-gray-200 bg-gray-50/70 px-4 py-2.5 text-xs font-bold text-gray-900 dark:border-border dark:bg-muted/40 dark:text-white">
-                  <span>Total</span>
-                  <span>
-                    {(currentRun.grossSalary ?? 0).toLocaleString("en-IN", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </span>
-                </div>
-              </div>
-
-              {/* Deductions Table */}
-              <div className="flex flex-1 flex-col overflow-hidden rounded-md border border-gray-200 bg-white shadow-2xs dark:border-border dark:bg-card">
-                {/* Table Header */}
-                <div className="flex items-center justify-between border-b border-gray-200 bg-[#E9F5FD] px-4 py-2.5 dark:border-border dark:bg-sky-950/40">
-                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
-                    Deductions
-                  </span>
-                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
-                    Amount in (₹)
-                  </span>
-                </div>
-
-                {/* Rows */}
-                <div className="flex flex-1 flex-col">
-                  {deductionRows.map((d, idx) => (
-                    <div
-                      key={`${d.name}-${idx}`}
-                      className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5 text-xs text-gray-700 dark:border-border/60 dark:text-gray-300"
-                    >
-                      <span>{d.name}</span>
-                      <span className="font-medium text-gray-900 dark:text-white">
-                        {d.amount.toLocaleString("en-IN", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Total Row */}
-                <div className="mt-auto flex items-center justify-between border-t border-gray-200 bg-gray-50/70 px-4 py-2.5 text-xs font-bold text-gray-900 dark:border-border dark:bg-muted/40 dark:text-white">
-                  <span>Total</span>
-                  <span>
-                    {(currentRun.totalDeductions ?? 0).toLocaleString("en-IN", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right 38%: Employee Details Card + Net Pay Card */}
-            <div className="flex w-full flex-col gap-4 lg:w-[38%]">
-              {/* Employee Details Card (Cream background) */}
-              <div className="rounded-md border border-[#FFF9C4] bg-[#FFFDE7] p-4 shadow-2xs dark:border-amber-900/30 dark:bg-amber-950/20">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
-                    Employee details
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setShowEmpDetails(!showEmpDetails)}
-                    className="cursor-pointer text-xs font-semibold text-[#0091FF] hover:underline focus:outline-none"
-                  >
-                    {showEmpDetails ? "Hide" : "Show"}
-                  </button>
-                </div>
-
-                {showEmpDetails && (
-                  <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2.5 border-t border-amber-200/60 pt-3 dark:border-amber-800/40">
-                    {/* Column 1 */}
-                    <div>
-                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
-                        Name
-                      </span>
-                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
-                        {payslipDetail.employeeName}
-                      </span>
-
-                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
-                        Designation
-                      </span>
-                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
-                        {payslipDetail.designation}
-                      </span>
-
-                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
-                        Department
-                      </span>
-                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
-                        {payslipDetail.department}
-                      </span>
-
-                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
-                        Location
-                      </span>
-                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
-                        {payslipDetail.location || "Bangalore"}
-                      </span>
-
-                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
-                        Effective Work Days
-                      </span>
-                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
-                        {payslipDetail.effectiveWorkDays ?? 30}
-                      </span>
-
-                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
-                        LOP
-                      </span>
-                      <span className="block text-xs font-medium text-gray-800 dark:text-gray-200">
-                        {(payslipDetail.lopDays ?? 0).toFixed(2)}
-                      </span>
-                    </div>
-
-                    {/* Column 2 */}
-                    <div>
-                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
-                        Employee No
-                      </span>
-                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
-                        {payslipDetail.employeeNo}
-                      </span>
-
-                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
-                        Bank Name
-                      </span>
-                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
-                        {payslipDetail.bankName || "State Bank of India"}
-                      </span>
-
-                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
-                        Bank Account No
-                      </span>
-                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
-                        {payslipDetail.maskedBankAccountNumber ||
-                          (payslipDetail.bankAccountNumber
-                            ? `••••${payslipDetail.bankAccountNumber.slice(-4)}`
-                            : "—")}
-                      </span>
-
-                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
-                        PAN Number
-                      </span>
-                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
-                        {payslipDetail.maskedPan || payslipDetail.pan || "—"}
-                      </span>
-
-                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
-                        PF No
-                      </span>
-                      <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
-                        {payslipDetail.pfMemberId || "—"}
-                      </span>
-
-                      <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
-                        PF UAN
-                      </span>
-                      <span className="block text-xs font-medium text-gray-800 dark:text-gray-200">
-                        {payslipDetail.maskedUan || payslipDetail.uan || "—"}
-                      </span>
-                    </div>
+                {/* Deductions Table */}
+                <div className="flex flex-1 flex-col overflow-hidden rounded-md border border-gray-200 bg-white shadow-2xs dark:border-border dark:bg-card">
+                  {/* Table Header */}
+                  <div className="flex items-center justify-between border-b border-gray-200 bg-[#E9F5FD] px-4 py-2.5 dark:border-border dark:bg-sky-950/40">
+                    <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+                      Deductions
+                    </span>
+                    <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+                      Amount in (₹)
+                    </span>
                   </div>
-                )}
+
+                  {/* Rows */}
+                  <div className="flex flex-1 flex-col">
+                    {deductionRows.map((d, idx) => (
+                      <div
+                        key={`${d.name}-${idx}`}
+                        className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5 text-xs text-gray-700 dark:border-border/60 dark:text-gray-300"
+                      >
+                        <span>{d.name}</span>
+                        <span className="font-medium text-gray-900 dark:text-white">
+                          {d.amount.toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Total Row */}
+                  <div className="mt-auto flex items-center justify-between border-t border-gray-200 bg-gray-50/70 px-4 py-2.5 text-xs font-bold text-gray-900 dark:border-border dark:bg-muted/40 dark:text-white">
+                    <span>Total</span>
+                    <span>
+                      {(currentRun.totalDeductions ?? 0).toLocaleString(
+                        "en-IN",
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        },
+                      )}
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              {/* Net Pay Card */}
-              <div className="rounded-md border border-gray-200 bg-white p-4 shadow-2xs dark:border-border dark:bg-card">
-                <span className="block text-xs font-medium text-gray-500 dark:text-gray-400">
-                  Net Pay for {periodFormatted}
-                </span>
-                <span className="mt-1 block text-2xl font-bold tracking-tight text-[#16A34A]">
-                  ₹
-                  {(currentRun.netSalary ?? 0).toLocaleString("en-IN", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </span>
-                <span className="mt-1 block text-[11px] italic leading-snug text-gray-500 dark:text-gray-400">
-                  {payslipDetail.netPayInWords ||
-                    numberToIndianWords(currentRun.netSalary)}
-                </span>
+              {/* Right 38%: Employee Details Card + Net Pay Card */}
+              <div className="flex w-full flex-col gap-4 lg:w-[38%]">
+                {/* Employee Details Card (Cream background) */}
+                <div className="rounded-md border border-[#FFF9C4] bg-[#FFFDE7] p-4 shadow-2xs dark:border-amber-900/30 dark:bg-amber-950/20">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+                      Employee details
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setShowEmpDetails(!showEmpDetails)}
+                      className="cursor-pointer text-xs font-semibold text-[#0091FF] hover:underline focus:outline-none"
+                    >
+                      {showEmpDetails ? "Hide" : "Show"}
+                    </button>
+                  </div>
+
+                  {showEmpDetails && (
+                    <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2.5 border-t border-amber-200/60 pt-3 dark:border-amber-800/40">
+                      {/* Column 1 */}
+                      <div>
+                        <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                          Name
+                        </span>
+                        <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                          {payslipDetail.employeeName}
+                        </span>
+
+                        <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                          Designation
+                        </span>
+                        <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                          {payslipDetail.designation}
+                        </span>
+
+                        <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                          Department
+                        </span>
+                        <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                          {payslipDetail.department}
+                        </span>
+
+                        <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                          Location
+                        </span>
+                        <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                          {payslipDetail.location || "Bangalore"}
+                        </span>
+
+                        <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                          Effective Work Days
+                        </span>
+                        <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                          {payslipDetail.effectiveWorkDays ?? 30}
+                        </span>
+
+                        <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                          LOP
+                        </span>
+                        <span className="block text-xs font-medium text-gray-800 dark:text-gray-200">
+                          {(payslipDetail.lopDays ?? 0).toFixed(2)}
+                        </span>
+                      </div>
+
+                      {/* Column 2 */}
+                      <div>
+                        <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                          Employee No
+                        </span>
+                        <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                          {payslipDetail.employeeNo}
+                        </span>
+
+                        <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                          Bank Name
+                        </span>
+                        <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                          {payslipDetail.bankName || "State Bank of India"}
+                        </span>
+
+                        <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                          Bank Account No
+                        </span>
+                        <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                          {payslipDetail.maskedBankAccountNumber ||
+                            (payslipDetail.bankAccountNumber
+                              ? `••••${payslipDetail.bankAccountNumber.slice(-4)}`
+                              : "—")}
+                        </span>
+
+                        <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                          PAN Number
+                        </span>
+                        <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                          {payslipDetail.maskedPan || payslipDetail.pan || "—"}
+                        </span>
+
+                        <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                          PF No
+                        </span>
+                        <span className="mb-2 block text-xs font-medium text-gray-800 dark:text-gray-200">
+                          {payslipDetail.pfMemberId || "—"}
+                        </span>
+
+                        <span className="block text-[11px] font-normal text-gray-400 dark:text-gray-400">
+                          PF UAN
+                        </span>
+                        <span className="block text-xs font-medium text-gray-800 dark:text-gray-200">
+                          {payslipDetail.maskedUan || payslipDetail.uan || "—"}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Net Pay Card */}
+                <div className="rounded-md border border-gray-200 bg-white p-4 shadow-2xs dark:border-border dark:bg-card">
+                  <span className="block text-xs font-medium text-gray-500 dark:text-gray-400">
+                    Net Pay for {periodFormatted}
+                  </span>
+                  <span className="mt-1 block text-2xl font-bold tracking-tight text-[#16A34A]">
+                    ₹
+                    {(currentRun.netSalary ?? 0).toLocaleString("en-IN", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                  <span className="mt-1 block text-[11px] italic leading-snug text-gray-500 dark:text-gray-400">
+                    {payslipDetail.netPayInWords ||
+                      numberToIndianWords(currentRun.netSalary)}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
         ) : activeTab === "reimb" ? (
           /* Reimbursement Payslip Empty State */
           <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-gray-200 bg-white p-10 text-center shadow-2xs dark:border-border dark:bg-card">
@@ -543,7 +556,8 @@ export default function PayslipsPage() {
               No Reimbursement Payslips Found
             </h3>
             <p className="mt-1 max-w-sm text-xs text-muted-foreground">
-              Reimbursement payslips will show up here once claims for {periodFormatted} are approved and released.
+              Reimbursement payslips will show up here once claims for{" "}
+              {periodFormatted} are approved and released.
             </p>
           </div>
         ) : (
@@ -570,7 +584,14 @@ export default function PayslipsPage() {
                     stroke="#CBD5E1"
                     strokeWidth="2.5"
                   />
-                  <rect x="6" y="6" width="68" height="58" rx="3" fill="#F8FAFC" />
+                  <rect
+                    x="6"
+                    y="6"
+                    width="68"
+                    height="58"
+                    rx="3"
+                    fill="#F8FAFC"
+                  />
                   <circle cx="40" cy="30" r="11" fill="#E2E8F0" />
                   <path
                     d="M24 54C24 46 31 43 40 43C49 43 56 46 56 54"
@@ -589,17 +610,46 @@ export default function PayslipsPage() {
                     strokeWidth="2.5"
                   />
                   <path d="M0 24H80" stroke="#E2E8F0" strokeWidth="2" />
-                  <rect x="0" y="0" width="80" height="24" rx="6" fill="#0091FF" />
+                  <rect
+                    x="0"
+                    y="0"
+                    width="80"
+                    height="24"
+                    rx="6"
+                    fill="#0091FF"
+                  />
                   <circle cx="20" cy="12" r="3" fill="#FFFFFF" />
                   <circle cx="60" cy="12" r="3" fill="#FFFFFF" />
-                  <rect x="14" y="38" width="52" height="6" rx="2" fill="#E2E8F0" />
-                  <rect x="14" y="52" width="40" height="6" rx="2" fill="#F1F5F9" />
-                  <rect x="14" y="66" width="48" height="6" rx="2" fill="#F1F5F9" />
+                  <rect
+                    x="14"
+                    y="38"
+                    width="52"
+                    height="6"
+                    rx="2"
+                    fill="#E2E8F0"
+                  />
+                  <rect
+                    x="14"
+                    y="52"
+                    width="40"
+                    height="6"
+                    rx="2"
+                    fill="#F1F5F9"
+                  />
+                  <rect
+                    x="14"
+                    y="66"
+                    width="48"
+                    height="6"
+                    rx="2"
+                    fill="#F1F5F9"
+                  />
                 </g>
               </svg>
             </div>
             <p className="max-w-md text-xs font-medium text-gray-600 dark:text-gray-300">
-              Uh oh! Your Payslip will show up here after the release of Payroll.
+              Uh oh! Your Payslip will show up here after the release of
+              Payroll.
             </p>
           </div>
         )}

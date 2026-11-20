@@ -27,7 +27,9 @@ export default function ProofOfInvestmentPage() {
               <path d="M0 0H16V20L8 15L0 20V0Z" fill="#F59E0B" />
             </svg>
           </div>
-          <h1 className="text-base font-semibold text-primary">Proof Of Investment</h1>
+          <h1 className="text-base font-semibold text-primary">
+            Proof Of Investment
+          </h1>
         </div>
       </div>
 
@@ -67,7 +69,9 @@ export default function ProofOfInvestmentPage() {
 
           {isNoticeExpanded && (
             <div className="border-t border-amber-200/60 px-4 py-2.5 text-xs text-amber-800/90 dark:border-amber-900/30 dark:text-amber-300/80">
-              The Proof of Investment (POI) submission window for this financial year is not released by the administrator. Submission will open once authorized by HR.
+              The Proof of Investment (POI) submission window for this financial
+              year is not released by the administrator. Submission will open
+              once authorized by HR.
             </div>
           )}
         </div>
@@ -93,20 +97,83 @@ export default function ProofOfInvestmentPage() {
                   stroke="#CBD5E1"
                   strokeWidth="2.5"
                 />
-                <path d="M60 0V25H85" fill="#F8FAFC" stroke="#CBD5E1" strokeWidth="2.5" />
-                <line x1="20" y1="35" x2="65" y2="35" stroke="#E2E8F0" strokeWidth="2.5" strokeLinecap="round" />
-                <line x1="20" y1="48" x2="70" y2="48" stroke="#E2E8F0" strokeWidth="2.5" strokeLinecap="round" />
-                <line x1="20" y1="61" x2="50" y2="61" stroke="#E2E8F0" strokeWidth="2.5" strokeLinecap="round" />
+                <path
+                  d="M60 0V25H85"
+                  fill="#F8FAFC"
+                  stroke="#CBD5E1"
+                  strokeWidth="2.5"
+                />
+                <line
+                  x1="20"
+                  y1="35"
+                  x2="65"
+                  y2="35"
+                  stroke="#E2E8F0"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
+                <line
+                  x1="20"
+                  y1="48"
+                  x2="70"
+                  y2="48"
+                  stroke="#E2E8F0"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
+                <line
+                  x1="20"
+                  y1="61"
+                  x2="50"
+                  y2="61"
+                  stroke="#E2E8F0"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
 
                 {/* Shield / Lock indicator */}
-                <circle cx="70" cy="70" r="16" fill="#F8FAFC" stroke="#94A3B8" strokeWidth="2" />
-                <rect x="64" y="66" width="12" height="10" rx="1.5" fill="#94A3B8" />
-                <path d="M67 66V62C67 60.3 68.3 59 70 59C71.7 59 73 60.3 73 62V66" stroke="#94A3B8" strokeWidth="1.5" />
+                <circle
+                  cx="70"
+                  cy="70"
+                  r="16"
+                  fill="#F8FAFC"
+                  stroke="#94A3B8"
+                  strokeWidth="2"
+                />
+                <rect
+                  x="64"
+                  y="66"
+                  width="12"
+                  height="10"
+                  rx="1.5"
+                  fill="#94A3B8"
+                />
+                <path
+                  d="M67 66V62C67 60.3 68.3 59 70 59C71.7 59 73 60.3 73 62V66"
+                  stroke="#94A3B8"
+                  strokeWidth="1.5"
+                />
               </g>
               <circle cx="50" cy="85" r="5" fill="#E2E8F0" />
               <circle cx="190" cy="45" r="4" fill="#E2E8F0" />
-              <line x1="185" y1="95" x2="195" y2="95" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
-              <line x1="190" y1="90" x2="190" y2="100" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
+              <line
+                x1="185"
+                y1="95"
+                x2="195"
+                y2="95"
+                stroke="#CBD5E1"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <line
+                x1="190"
+                y1="90"
+                x2="190"
+                y2="100"
+                stroke="#CBD5E1"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
             </svg>
 
             {/* Exact greytHR wording */}
@@ -114,7 +181,8 @@ export default function ProofOfInvestmentPage() {
               POI window is not yet released
             </h3>
             <p className="mt-1 max-w-sm text-xs text-gray-400 dark:text-gray-500">
-              The investment proof declaration window has not been opened by HR. Please check back when notified.
+              The investment proof declaration window has not been opened by HR.
+              Please check back when notified.
             </p>
           </div>
         </div>

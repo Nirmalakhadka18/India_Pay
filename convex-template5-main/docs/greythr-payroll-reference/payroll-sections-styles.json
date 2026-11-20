@@ -1,0 +1,73 @@
+{
+  "banner": {
+    "sel": ".alert, [class*=\"alert\"], [class*=\"help\"]",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "bg": "rgb(252, 248, 227)",
+    "color": "rgb(192, 152, 83)",
+    "font": "14px / 24px \"Open Sans\", sans-serif",
+    "padding": "8px 35px 8px 14px",
+    "margin": "0px 0px 20px",
+    "border": "0.8px solid rgb(251, 238, 213)",
+    "borderRadius": "4px",
+    "boxShadow": "none"
+  },
+  "monthSlider": {
+    "sel": "[class*=\"month\"], [class*=\"slider\"], [class*=\"timeline\"]",
+    "rect": {
+      "x": 30,
+      "y": -618.2000122070312,
+      "w": 1454.4000244140625,
+      "h": 95
+    },
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(59, 68, 82)",
+    "font": "14px / 24px \"Open Sans\", sans-serif",
+    "padding": "10px 0px",
+    "margin": "0px",
+    "border": "0px none rgb(59, 68, 82)",
+    "borderRadius": "0px",
+    "boxShadow": "none"
+  },
+  "blueStrip": null,
+  "payoutCard": {
+    "sel": "[class*=\"payout\"]",
+    "rect": {
+      "x": 542.2250366210938,
+      "y": 377.5,
+      "w": 18.30000114440918,
+      "h": 21.600000381469727
+    },
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(62, 94, 204)",
+    "font": "600 16px / 24px \"Open Sans\", sans-serif",
+    "padding": "0px",
+    "margin": "0px",
+    "border": "0px none rgb(62, 94, 204)",
+    "borderRadius": "0px",
+    "boxShadow": "none"
+  },
+  "employeeCard": null,
+  "actionsList": {
+    "sel": "[class*=\"payroll-inputs\"], [class*=\"actions\"]",
+    "rect": {
+      "x": 882.8500366210938,
+      "y": -254,
+      "w": 459.9375,
+      "h": 299.3999938964844
+    },
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(59, 68, 82)",
+    "font": "14px / 24px \"Open Sans\", sans-serif",
+    "padding": "0px",
+    "margin": "85px 0px 0px",
+    "border": "0px none rgb(59, 68, 82)",
+    "borderRadius": "0px",
+    "boxShadow": "none"
+  },
+  "lowerGridCard": null
+}

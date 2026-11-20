@@ -1,0 +1,766 @@
+{
+  "windowScrollY": 500,
+  "docHeight": 1694,
+  "cards": [
+    {
+      "tag": "DIV",
+      "id": "cougar-container",
+      "className": "gt-payroll ng-scope ng-isolate-scope",
+      "rect": {
+        "x": 0,
+        "y": -366,
+        "w": 1514.4000244140625,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(59, 68, 82)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": "Hide Help\n\nThe Overview page gives you a summary of the current month's payroll. All data that you view and activities you perform, such as Locking or Unlocking the Payroll Inputs, Payroll, and IT Statement, are for the current month's payroll. Once done, all data you view and the activities you perform are specific to that chosen payroll month. You can also view details related to the Net Payout Amount for the chosen payroll month.\n\nExplore the Payroll overview page with Help-Doc, How-to Videos and FAQs.\n\n \n Apr\n2026\n May\n2026\n Jun\n2026\n Jul\n2026\n Aug\n2026\n Sep\n2026\n Oct\n2026\nNov\n2026\nDec\nNew\n2026\nJan\n2027\nFeb\n2027\nMar\n2027\n \n\tPF wage ceiling limit revision is effective from September 2026 Payroll. To modify, please click here.\t\nNovember 2026 \nCutoff from 01 Nov 2026 to 30 Nov 2026 \n Process Payroll\nPayout Details\n₹19,33,496.00\nNet Pay\n ₹20,89,498.00\nGross Pay\n\t\n ₹1,56,002.00\nDeductions\n\n\n 30\nWork Days\nEmployee Details\n33\nTotal Employees\n+1 vs previous month\n 01\nAddition\n\t\n 00\nSettlements\n\n\n 00\nExclusion\n\n\n 00\nSeparation\nPayroll Inputs\tUnlock Lock\n\nEmployee View Release\tRelease Hold\nUpdate Payslips With Revised Employee Information\tUpdate\nIT Statement Employee View\tRelease Hold\nPayroll\tUnlock Lock\nNegative Salary\nNo Records\nHold Salary Payout\nNo Records\nStop Salary Processing\nNo Records\nPayout Pending\n31\nBank Transfer(Net Pay)\n2\nCash\nSettled Employees\nNo Records\nLocations Without PT State\nNo Records"
+    },
+    {
+      "tag": "DIV",
+      "id": "month_0",
+      "className": "month-nav months ng-scope new-payroll unlocked",
+      "rect": {
+        "x": 975.3500366210938,
+        "y": -137,
+        "w": 109.07500457763672,
+        "h": 75
+      },
+      "bg": "rgb(255, 255, 255)",
+      "color": "rgb(165, 167, 171)",
+      "font": "14px / 24px \"Open Sans Semibold\"",
+      "border": "0px none rgb(165, 167, 171)",
+      "borderRadius": "0px",
+      "padding": "10px 0px",
+      "margin": "0px",
+      "text": "Dec\nNew\n2026"
+    },
+    {
+      "tag": "SPAN",
+      "id": "",
+      "className": "years ng-binding new-payroll unlocked",
+      "rect": {
+        "x": 1016.1875,
+        "y": -103.20000457763672,
+        "w": 27.399999618530273,
+        "h": 21
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(163, 179, 200)",
+      "font": "12px / 24px \"Open Sans Semibold\"",
+      "border": "0px none rgb(163, 179, 200)",
+      "borderRadius": "0px",
+      "padding": "5px 0px 0px",
+      "margin": "0px",
+      "text": "2026"
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "row-fluid payroll-budget-notification",
+      "rect": {
+        "x": 30,
+        "y": -52,
+        "w": 1456,
+        "h": 65.5999984741211
+      },
+      "bg": "rgb(255, 247, 235)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0.8px solid rgb(245, 197, 115)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": "PF wage ceiling limit revision is effective from September 2026 Payroll. To modify, please click here."
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "create-payroll-empty-state",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(59, 68, 82)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "create-payroll",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(59, 68, 82)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "30px 0px",
+      "text": ""
+    },
+    {
+      "tag": "BUTTON",
+      "id": "",
+      "className": "btn btn-primary create-payroll-btn ng-binding",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgb(62, 94, 204)",
+      "color": "rgb(255, 255, 255)",
+      "font": "14px / 32px \"Open Sans\", sans-serif",
+      "border": "0.8px solid rgb(62, 94, 204)",
+      "borderRadius": "6px",
+      "padding": "0px 16px",
+      "margin": "30px 0px 10px",
+      "text": "Create Nov 2026 Payroll"
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "create-payroll-empty-state",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(59, 68, 82)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "create-payroll",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(59, 68, 82)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "30px 0px",
+      "text": ""
+    },
+    {
+      "tag": "BUTTON",
+      "id": "",
+      "className": "btn btn-primary create-payroll-btn ng-binding",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgb(62, 94, 204)",
+      "color": "rgb(255, 255, 255)",
+      "font": "14px / 32px \"Open Sans\", sans-serif",
+      "border": "0.8px solid rgb(62, 94, 204)",
+      "borderRadius": "6px",
+      "padding": "0px 16px",
+      "margin": "30px 0px 10px",
+      "text": "Create Nov 2026 Payroll"
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "create-payroll-empty-state",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(59, 68, 82)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "future-payroll",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(59, 68, 82)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "30px 0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process-blockui",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(200, 200, 200, 0.5)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(59, 68, 82)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process-blockMsg",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgb(232, 246, 252)",
+      "color": "rgb(58, 135, 173)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0.8px solid rgb(170, 170, 170)",
+      "borderRadius": "5px",
+      "padding": "10px",
+      "margin": "0px auto",
+      "text": "Please wait..."
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "className": "payout-link ng-binding",
+      "rect": {
+        "x": 542.2250366210938,
+        "y": 848.7000122070312,
+        "w": 18.30000114440918,
+        "h": 21.600000381469727
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(62, 94, 204)",
+      "font": "600 16px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(62, 94, 204)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": "31"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "className": "payout-link ng-binding",
+      "rect": {
+        "x": 542.2250366210938,
+        "y": 896.7000122070312,
+        "w": 9.15000057220459,
+        "h": 21.600000381469727
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(62, 94, 204)",
+      "font": "600 16px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(62, 94, 204)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": "2"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "className": "payout-link ng-binding",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(62, 94, 204)",
+      "font": "600 16px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(62, 94, 204)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": "0"
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "className": "payout-link ng-binding",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(62, 94, 204)",
+      "font": "600 16px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(62, 94, 204)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": "0"
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process-blockui",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(200, 200, 200, 0.5)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(59, 68, 82)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process-blockMsg",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgb(232, 246, 252)",
+      "color": "rgb(58, 135, 173)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0.8px solid rgb(170, 170, 170)",
+      "borderRadius": "5px",
+      "padding": "10px",
+      "margin": "0px auto",
+      "text": "Downloading Report. Please wait..."
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process-blockui",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(200, 200, 200, 0.5)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(59, 68, 82)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": "Releasing IT Statement\n\t\t\t\t\n\t\t\t\t  \n\t\t\t\t\n\t\t\t\n\t\t\t\n\t\t\t\tCreating batches please wait..."
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process-blockMsg",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgb(255, 255, 255)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0.8px solid rgb(170, 170, 170)",
+      "borderRadius": "4px",
+      "padding": "10px",
+      "margin": "0px auto",
+      "text": "Releasing IT Statement\n\t\t\t\t\n\t\t\t\t  \n\t\t\t\t\n\t\t\t\n\t\t\t\n\t\t\t\tCreating batches please wait..."
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "create-payroll-empty-state",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(90, 106, 124)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(90, 106, 124)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process-blockui",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(200, 200, 200, 0.5)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(59, 68, 82)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": "Release Payroll\n\t\t\t\n\t\t\t\n\t\t\t\t  \n\t\t\t\t\n\t\t\t\n\t\t\t\n\t\t\t\n\t\t\t\tReleasing payroll please wait..."
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process-blockMsg",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgb(255, 255, 255)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0.8px solid rgb(170, 170, 170)",
+      "borderRadius": "4px",
+      "padding": "10px",
+      "margin": "0px auto",
+      "text": "Release Payroll\n\t\t\t\n\t\t\t\n\t\t\t\t  \n\t\t\t\t\n\t\t\t\n\t\t\t\n\t\t\t\n\t\t\t\tReleasing payroll please wait..."
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "create-payroll-empty-state",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(90, 106, 124)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(90, 106, 124)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process-blockui",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(200, 200, 200, 0.5)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(59, 68, 82)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ".Please wait.."
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process-blockMsg",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgb(255, 255, 255)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0.8px solid rgb(170, 170, 170)",
+      "borderRadius": "4px",
+      "padding": "10px",
+      "margin": "0px auto",
+      "text": ".Please wait.."
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "create-payroll-empty-state",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(90, 106, 124)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(90, 106, 124)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process-blockui",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(200, 200, 200, 0.5)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(59, 68, 82)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ".Please wait.."
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process-blockMsg",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgb(255, 255, 255)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0.8px solid rgb(170, 170, 170)",
+      "borderRadius": "4px",
+      "padding": "10px",
+      "margin": "0px auto",
+      "text": ".Please wait.."
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "create-payroll-empty-state",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(90, 106, 124)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(90, 106, 124)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process-blockui",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(200, 200, 200, 0.5)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(59, 68, 82)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": "Create Payroll\n\t\t\t\t\n\t\t\t\t  \n\t\t\t\t\n\t\t\t\t\n\t\t\t\tCreating Payroll.Please wait.."
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process-blockMsg",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgb(255, 255, 255)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0.8px solid rgb(170, 170, 170)",
+      "borderRadius": "4px",
+      "padding": "10px",
+      "margin": "0px auto",
+      "text": "Create Payroll\n\t\t\t\t\n\t\t\t\t  \n\t\t\t\t\n\t\t\t\t\n\t\t\t\tCreating Payroll.Please wait.."
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "create-payroll-empty-state",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(90, 106, 124)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "className": "payroll-process",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(90, 106, 124)",
+      "font": "14px / 24px \"Open Sans\", sans-serif",
+      "border": "0px none rgb(90, 106, 124)",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "margin": "0px",
+      "text": ""
+    }
+  ]
+}

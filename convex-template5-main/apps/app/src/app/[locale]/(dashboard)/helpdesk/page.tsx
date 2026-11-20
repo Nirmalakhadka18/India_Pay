@@ -113,15 +113,20 @@ export default function HelpdeskPage() {
   // Filter tickets into Active vs Closed
   const activeTickets = useMemo(() => {
     if (!tickets) return [];
-    return tickets.filter((t) => t.status === "open" || t.status === "in_progress");
+    return tickets.filter(
+      (t) => t.status === "open" || t.status === "in_progress",
+    );
   }, [tickets]);
 
   const closedTickets = useMemo(() => {
     if (!tickets) return [];
-    return tickets.filter((t) => t.status === "resolved" || t.status === "closed");
+    return tickets.filter(
+      (t) => t.status === "resolved" || t.status === "closed",
+    );
   }, [tickets]);
 
-  const currentDisplayTickets = activeTab === "active" ? activeTickets : closedTickets;
+  const currentDisplayTickets =
+    activeTab === "active" ? activeTickets : closedTickets;
 
   // Modal Actions
   const handleOpenModal = () => {
@@ -212,19 +217,26 @@ export default function HelpdeskPage() {
   type HelpdeskCategory = (typeof HELPDESK_CATEGORIES)[number];
 
   // Map display category to backend enum
-  const CATEGORY_TO_BACKEND: Record<string, "payroll" | "leaves" | "attendance" | "benefits" | "general"> = {
+  const CATEGORY_TO_BACKEND: Record<
+    string,
+    "payroll" | "leaves" | "attendance" | "benefits" | "general"
+  > = {
     "Employee Information": "general",
     "Income Tax": "payroll",
-    "Loans": "benefits",
-    "Others": "general",
-    "Payslip": "payroll",
+    Loans: "benefits",
+    Others: "general",
+    Payslip: "payroll",
   };
 
   // Selected Ticket for Details Modal
   const [selectedTicket, setSelectedTicket] = useState<TicketItem | null>(null);
   const [newComment, setNewComment] = useState("");
-  const [ticketComments, setTicketComments] = useState<Record<string, { author: string; text: string; time: string }[]>>({});
-  const [withdrawingTicketId, setWithdrawingTicketId] = useState<string | null>(null);
+  const [ticketComments, setTicketComments] = useState<
+    Record<string, { author: string; text: string; time: string }[]>
+  >({});
+  const [withdrawingTicketId, setWithdrawingTicketId] = useState<string | null>(
+    null,
+  );
 
   const getTicketDisplayCategory = (t: TicketItem) => {
     const desc = t.description || "";
@@ -247,7 +259,10 @@ export default function HelpdeskPage() {
     const commentObj = {
       author,
       text: newComment.trim(),
-      time: new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }),
+      time: new Date().toLocaleTimeString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     };
     setTicketComments((prev) => ({
       ...prev,
@@ -301,7 +316,9 @@ export default function HelpdeskPage() {
         const uploadUrl = await generateUploadUrl({ workspaceId });
         const res = await fetch(uploadUrl, {
           method: "POST",
-          headers: { "Content-Type": attachedFile.type || "application/octet-stream" },
+          headers: {
+            "Content-Type": attachedFile.type || "application/octet-stream",
+          },
           body: attachedFile,
         });
         if (!res.ok) throw new Error("File upload failed");
@@ -337,7 +354,9 @@ export default function HelpdeskPage() {
         setSuccessTicketNumber(null);
       }, 8000);
     } catch (err) {
-      setFormError((err as Error).message || "Failed to create helpdesk request.");
+      setFormError(
+        (err as Error).message || "Failed to create helpdesk request.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -483,7 +502,14 @@ export default function HelpdeskPage() {
                 />
 
                 {/* Desk/Table baseline shadow */}
-                <rect x="25" y="130" width="150" height="3" rx="1.5" fill="#E2E8F0" />
+                <rect
+                  x="25"
+                  y="130"
+                  width="150"
+                  height="3"
+                  rx="1.5"
+                  fill="#E2E8F0"
+                />
 
                 {/* Laptop / Computer Monitor */}
                 <rect
@@ -496,7 +522,14 @@ export default function HelpdeskPage() {
                   strokeWidth="2"
                   fill="#F8FAFC"
                 />
-                <rect x="62" y="52" width="76" height="51" rx="2" fill="#FFFFFF" />
+                <rect
+                  x="62"
+                  y="52"
+                  width="76"
+                  height="51"
+                  rx="2"
+                  fill="#FFFFFF"
+                />
 
                 {/* Chat Bubble on Laptop */}
                 <rect
@@ -540,7 +573,14 @@ export default function HelpdeskPage() {
                   strokeWidth="1.5"
                   fill="#E2E8F0"
                 />
-                <rect x="75" y="120" width="50" height="3" rx="1.5" fill="#94A3B8" />
+                <rect
+                  x="75"
+                  y="120"
+                  width="50"
+                  height="3"
+                  rx="1.5"
+                  fill="#94A3B8"
+                />
 
                 {/* Calendar with X beside laptop */}
                 <rect
@@ -553,7 +593,14 @@ export default function HelpdeskPage() {
                   strokeWidth="1.5"
                   fill="#FFFFFF"
                 />
-                <rect x="40" y="75" width="34" height="8" rx="2" fill="#CBD5E1" />
+                <rect
+                  x="40"
+                  y="75"
+                  width="34"
+                  height="8"
+                  rx="2"
+                  fill="#CBD5E1"
+                />
                 <circle cx="47" cy="72" r="1.5" fill="#94A3B8" />
                 <circle cx="67" cy="72" r="1.5" fill="#94A3B8" />
                 <circle
@@ -780,8 +827,8 @@ export default function HelpdeskPage() {
                     />
                   </label>
                   <span className="text-[11px] text-slate-400 font-normal">
-                    File Types: pdf ,xls ,xlsx ,doc ,docx ,txt ,ppt ,pptx ,gif ,jpg
-                    ,jpeg ,png
+                    File Types: pdf ,xls ,xlsx ,doc ,docx ,txt ,ppt ,pptx ,gif
+                    ,jpg ,jpeg ,png
                   </span>
                 </div>
 
@@ -884,7 +931,11 @@ export default function HelpdeskPage() {
                       value={priority}
                       onChange={(e) =>
                         setPriority(
-                          e.target.value as "low" | "medium" | "high" | "urgent",
+                          e.target.value as
+                            | "low"
+                            | "medium"
+                            | "high"
+                            | "urgent",
                         )
                       }
                       className="w-full rounded border border-slate-300 bg-white pl-6 pr-3 py-1.5 text-xs font-medium text-slate-700 focus:outline-none focus:border-blue-500 appearance-none cursor-pointer"
@@ -986,7 +1037,17 @@ export default function HelpdeskPage() {
                     {selectedTicket.subject}
                   </h3>
                   <p className="text-[11px] text-slate-400 mt-0.5">
-                    Created on {new Date(selectedTicket.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                    Created on{" "}
+                    {new Date(selectedTicket.createdAt).toLocaleDateString(
+                      "en-IN",
+                      {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      },
+                    )}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -1036,21 +1097,39 @@ export default function HelpdeskPage() {
                 <div className="relative pl-6 space-y-3 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
                   <div className="relative">
                     <div className="absolute -left-6 top-1 h-3 w-3 rounded-full bg-[#0091FF] border-2 border-white ring-2 ring-[#0091FF]/20" />
-                    <p className="font-medium text-slate-800">Request Submitted</p>
+                    <p className="font-medium text-slate-800">
+                      Request Submitted
+                    </p>
                     <p className="text-[11px] text-slate-400">
-                      {new Date(selectedTicket.createdAt).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                      {new Date(selectedTicket.createdAt).toLocaleString(
+                        "en-IN",
+                        {
+                          day: "numeric",
+                          month: "short",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        },
+                      )}
                     </p>
                   </div>
                   <div className="relative">
                     <div className="absolute -left-6 top-1 h-3 w-3 rounded-full bg-slate-400 border-2 border-white ring-2 ring-slate-200" />
-                    <p className="font-medium text-slate-800">Assigned to HR Administrator ({assigneeName})</p>
-                    <p className="text-[11px] text-slate-400">Under review by HR team</p>
+                    <p className="font-medium text-slate-800">
+                      Assigned to HR Administrator ({assigneeName})
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      Under review by HR team
+                    </p>
                   </div>
                   {selectedTicket.status === "closed" && (
                     <div className="relative">
                       <div className="absolute -left-6 top-1 h-3 w-3 rounded-full bg-emerald-500 border-2 border-white ring-2 ring-emerald-200" />
-                      <p className="font-medium text-slate-800">Request Withdrawn / Resolved</p>
-                      <p className="text-[11px] text-slate-400">Ticket has been closed</p>
+                      <p className="font-medium text-slate-800">
+                        Request Withdrawn / Resolved
+                      </p>
+                      <p className="text-[11px] text-slate-400">
+                        Ticket has been closed
+                      </p>
                     </div>
                   )}
                 </div>
@@ -1064,17 +1143,28 @@ export default function HelpdeskPage() {
 
                 <div className="space-y-2 max-h-40 overflow-y-auto">
                   {(ticketComments[selectedTicket._id] || []).length === 0 ? (
-                    <p className="text-[11px] text-slate-400 italic">No comments yet. Type below to reply.</p>
+                    <p className="text-[11px] text-slate-400 italic">
+                      No comments yet. Type below to reply.
+                    </p>
                   ) : (
-                    (ticketComments[String(selectedTicket._id)] || []).map((c, i) => (
-                      <div key={`${c.author}-${c.time}-${i}`} className="rounded bg-slate-50 border border-slate-200/70 p-2.5">
-                        <div className="flex items-center justify-between text-[11px] font-medium text-slate-700">
-                          <span>{c.author}</span>
-                          <span className="text-slate-400 text-[10px]">{c.time}</span>
+                    (ticketComments[String(selectedTicket._id)] || []).map(
+                      (c, i) => (
+                        <div
+                          key={`${c.author}-${c.time}-${i}`}
+                          className="rounded bg-slate-50 border border-slate-200/70 p-2.5"
+                        >
+                          <div className="flex items-center justify-between text-[11px] font-medium text-slate-700">
+                            <span>{c.author}</span>
+                            <span className="text-slate-400 text-[10px]">
+                              {c.time}
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-800 mt-1">
+                            {c.text}
+                          </p>
                         </div>
-                        <p className="text-xs text-slate-800 mt-1">{c.text}</p>
-                      </div>
-                    ))
+                      ),
+                    )
                   )}
                 </div>
 
@@ -1115,7 +1205,9 @@ export default function HelpdeskPage() {
                     disabled={withdrawingTicketId === selectedTicket._id}
                     className="text-xs text-red-600 hover:text-red-700 font-medium hover:underline disabled:opacity-50 cursor-pointer"
                   >
-                    {withdrawingTicketId === selectedTicket._id ? "Withdrawing..." : "Withdraw Request"}
+                    {withdrawingTicketId === selectedTicket._id
+                      ? "Withdrawing..."
+                      : "Withdraw Request"}
                   </button>
                 )}
               </div>

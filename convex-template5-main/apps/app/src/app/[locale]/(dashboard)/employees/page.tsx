@@ -64,7 +64,9 @@ function EmployeesContent() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<Doc<"employees"> | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Doc<"employees"> | null>(
+    null,
+  );
   const [isDeleting, setIsDeleting] = useState(false);
   const [editingEmployee, setEditingEmployee] =
     useState<Doc<"employees"> | null>(null);
@@ -141,9 +143,9 @@ function EmployeesContent() {
         bankAccountNumber: bankAccountNumber.trim() || undefined,
         ifscCode: ifscCode.trim() || undefined,
         pan: pan.trim() || undefined,
-        uan: isPfMember ? (uan.trim() || undefined) : undefined,
+        uan: isPfMember ? uan.trim() || undefined : undefined,
         esicIpNumber: esicIpNumber.trim() || undefined,
-        pfMemberId: isPfMember ? (pfMemberId.trim() || undefined) : undefined,
+        pfMemberId: isPfMember ? pfMemberId.trim() || undefined : undefined,
         isPfMember,
       });
       toast.success("Employee added successfully. Opening Salary Setup...");
@@ -162,7 +164,9 @@ function EmployeesContent() {
     setIsDeleting(true);
     try {
       await removeEmployee({ workspaceId, employeeId: deleteTarget._id });
-      toast.success(`Removed ${deleteTarget.firstName} ${deleteTarget.lastName}`);
+      toast.success(
+        `Removed ${deleteTarget.firstName} ${deleteTarget.lastName}`,
+      );
       setDeleteTarget(null);
     } catch (error: unknown) {
       toast.error((error as Error).message || "Failed to remove employee");
@@ -211,9 +215,9 @@ function EmployeesContent() {
         bankAccountNumber: bankAccountNumber.trim(),
         ifscCode: ifscCode.trim(),
         pan: pan.trim(),
-        uan: isPfMember ? (uan.trim() || undefined) : undefined,
+        uan: isPfMember ? uan.trim() || undefined : undefined,
         esicIpNumber: esicIpNumber.trim(),
-        pfMemberId: isPfMember ? (pfMemberId.trim() || undefined) : undefined,
+        pfMemberId: isPfMember ? pfMemberId.trim() || undefined : undefined,
         isPfMember,
       });
       toast.success("Employee master records updated successfully");
@@ -403,7 +407,9 @@ function EmployeesContent() {
                         PF Member (Provident Fund) *
                       </label>
                       <span className="text-[11px] font-medium text-muted-foreground">
-                        {isPfMember ? "Enrolled in EPF (12%)" : "Excluded from EPF (PT only)"}
+                        {isPfMember
+                          ? "Enrolled in EPF (12%)"
+                          : "Excluded from EPF (PT only)"}
                       </span>
                     </div>
                     <div className="flex items-center gap-6 pt-1">
@@ -430,7 +436,9 @@ function EmployeesContent() {
                     </div>
                     {!isPfMember && (
                       <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-1">
-                        Employee will be excluded from Provident Fund deductions. Professional Tax (PT) will continue to apply per state rules.
+                        Employee will be excluded from Provident Fund
+                        deductions. Professional Tax (PT) will continue to apply
+                        per state rules.
                       </p>
                     )}
                   </div>
@@ -625,7 +633,9 @@ function EmployeesContent() {
                         PF Member (Provident Fund) *
                       </label>
                       <span className="text-[11px] font-medium text-muted-foreground">
-                        {isPfMember ? "Enrolled in EPF (12%)" : "Excluded from EPF (PT only)"}
+                        {isPfMember
+                          ? "Enrolled in EPF (12%)"
+                          : "Excluded from EPF (PT only)"}
                       </span>
                     </div>
                     <div className="flex items-center gap-6 pt-1">
@@ -652,7 +662,9 @@ function EmployeesContent() {
                     </div>
                     {!isPfMember && (
                       <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-1">
-                        Employee will be excluded from Provident Fund deductions. Professional Tax (PT) will continue to apply per state rules.
+                        Employee will be excluded from Provident Fund
+                        deductions. Professional Tax (PT) will continue to apply
+                        per state rules.
                       </p>
                     )}
                   </div>
@@ -871,7 +883,9 @@ function EmployeesContent() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem
-                              onClick={() => router.push(`/salaries?employeeId=${emp._id}`)}
+                              onClick={() =>
+                                router.push(`/salaries?employeeId=${emp._id}`)
+                              }
                             >
                               <IndianRupee className="mr-2 h-4 w-4" />
                               Configure Salary
@@ -916,9 +930,15 @@ function EmployeesContent() {
                 <span className="font-semibold text-primary">
                   {deleteTarget?.firstName} {deleteTarget?.lastName}
                 </span>
-                {deleteTarget?.designation ? ` (${deleteTarget.designation})` : ""}?
-                <br /><br />
-                This will remove the employee from the active directory. All historical payroll records, payslips, salary history, and audit logs will be safely preserved for compliance.
+                {deleteTarget?.designation
+                  ? ` (${deleteTarget.designation})`
+                  : ""}
+                ?
+                <br />
+                <br />
+                This will remove the employee from the active directory. All
+                historical payroll records, payslips, salary history, and audit
+                logs will be safely preserved for compliance.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="gap-2 sm:gap-0 pt-4">

@@ -1,0 +1,2318 @@
+{
+  "metadata": {
+    "auditTimestamp": "2026-11-19T11:45:00+05:30",
+    "totalDiscoveredReports": 192,
+    "totalCategories": 27,
+    "counts": {
+      "UI ONLY": 67,
+      "VERIFIED": 64,
+      "PARTIAL": 61
+    }
+  },
+  "reports": [
+    {
+      "id": "payroll_jv_reimbursements",
+      "displayName": "Payroll JV - Reimbursements",
+      "category": "Payroll Payout",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "payment_register",
+      "displayName": "Payment Register",
+      "category": "Payroll Payout",
+      "status": "VERIFIED",
+      "details": "Real salary data mapped from DB with basic, gross, deductions, EPF/ESI/PT, net pay and masked bank IFSC/account details.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "payroll_transfer_reconciliation_payment_type_wise",
+      "displayName": "Payroll Transfer Reconciliation (Payment Type-Wise)",
+      "category": "Payroll Payout",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "bank_transfer_advise",
+      "displayName": "Bank Transfer Advise",
+      "category": "Payroll Payout",
+      "status": "VERIFIED",
+      "details": "Real salary data mapped from DB with basic, gross, deductions, EPF/ESI/PT, net pay and masked bank IFSC/account details.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "bank_transfer_statement",
+      "displayName": "Bank Transfer Statement",
+      "category": "Payroll Payout",
+      "status": "VERIFIED",
+      "details": "Real salary data mapped from DB with basic, gross, deductions, EPF/ESI/PT, net pay and masked bank IFSC/account details.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "payroll_jv",
+      "displayName": "Payroll JV",
+      "category": "Payroll Payout",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "other_payroll_transfer_statements",
+      "displayName": "Other Payroll Transfer Statements",
+      "category": "Payroll Payout",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "payroll_transfer_summaries",
+      "displayName": "Payroll Transfer Summaries",
+      "category": "Payroll Payout",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "salary_bill_register",
+      "displayName": "Salary Bill Register",
+      "category": "Payroll Payout",
+      "status": "VERIFIED",
+      "details": "Real salary data mapped from DB with basic, gross, deductions, EPF/ESI/PT, net pay and masked bank IFSC/account details.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "salary_register",
+      "displayName": "Salary Register",
+      "category": "Payroll Payout",
+      "status": "VERIFIED",
+      "details": "Real salary data mapped from DB with basic, gross, deductions, EPF/ESI/PT, net pay and masked bank IFSC/account details.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "salary_register_cash",
+      "displayName": "Salary Register (Cash)",
+      "category": "Payroll Payout",
+      "status": "VERIFIED",
+      "details": "Real salary data mapped from DB with basic, gross, deductions, EPF/ESI/PT, net pay and masked bank IFSC/account details.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "salary_statement_monthly",
+      "displayName": "Salary Statement - Monthly",
+      "category": "Payroll Payout",
+      "status": "VERIFIED",
+      "details": "Real salary data mapped from DB with basic, gross, deductions, EPF/ESI/PT, net pay and masked bank IFSC/account details.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "duplicate_report",
+      "displayName": "Duplicate Report",
+      "category": "Payroll Control",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "hold_release_salary_report",
+      "displayName": "Hold-Release Salary Report",
+      "category": "Payroll Control",
+      "status": "VERIFIED",
+      "details": "Real salary data mapped from DB with basic, gross, deductions, EPF/ESI/PT, net pay and masked bank IFSC/account details.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "employee_reconciliation_report",
+      "displayName": "Employee Reconciliation Report",
+      "category": "Payroll Control",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "negative_cost_report",
+      "displayName": "Negative Cost Report",
+      "category": "Payroll Control",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "payroll_reconciliation_consolidated",
+      "displayName": "Payroll Reconciliation-Consolidated",
+      "category": "Payroll Control",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "payroll_reconciliation",
+      "displayName": "Payroll Reconciliation",
+      "category": "Payroll Control",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "esi_form_1_declaration_form",
+      "displayName": "ESI Form 1 Declaration Form",
+      "category": "ESI - EMPLOYEES' STATE INSURANCE FUND",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_11_accident_book",
+      "displayName": "Form 11 Accident Book",
+      "category": "ESI - EMPLOYEES' STATE INSURANCE FUND",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "esi_arrear_report",
+      "displayName": "ESI Arrear Report",
+      "category": "ESI - EMPLOYEES' STATE INSURANCE FUND",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "esi_challan_report",
+      "displayName": "ESI - Challan Report",
+      "category": "ESI - EMPLOYEES' STATE INSURANCE FUND",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "esi_monthly_report_upload_format",
+      "displayName": "ESI Monthly Report Upload Format",
+      "category": "ESI - EMPLOYEES' STATE INSURANCE FUND",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "esi_monthly_statement",
+      "displayName": "ESI - Monthly Statement",
+      "category": "ESI - EMPLOYEES' STATE INSURANCE FUND",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "esi_monthly_summary_report",
+      "displayName": "ESI - Monthly Summary Report",
+      "category": "ESI - EMPLOYEES' STATE INSURANCE FUND",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "esi_form_6_half_yearly_statement",
+      "displayName": "ESI - Form 6 - Half Yearly Statement",
+      "category": "ESI - EMPLOYEES' STATE INSURANCE FUND",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "esi_form_7_half_yearly_statement",
+      "displayName": "ESI - Form 7 - Half Yearly Statement",
+      "category": "ESI - EMPLOYEES' STATE INSURANCE FUND",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "epf_form_11_declaration_form",
+      "displayName": "EPF Form 11 - Declaration Form",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "epf_form_2",
+      "displayName": "EPF Form 2",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_aadhaar_details_of_members_annexure_i",
+      "displayName": "PF - AADHAAR DETAILS OF MEMBERS (ANNEXURE - I)",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_combined_challan_report",
+      "displayName": "PF - Combined Challan Report",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_combined_challan_report_v1",
+      "displayName": "PF - Combined Challan Report V1",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_form_10c_employee_pension_scheme",
+      "displayName": "PF - Form 10C - Employee Pension Scheme",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_form_10_consolidated_statement_of_members_leaving_pf",
+      "displayName": "PF - Form 10 - Consolidated statement of members leaving PF",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_form_12a_pf_monthly_statement_of_consolidation_paid",
+      "displayName": "PF - Form 12A - PF Monthly Statement of Consolidation paid",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_form_12a_pf_monthly_statement_of_consolidation_paid_v1",
+      "displayName": "PF - Form 12A - PF Monthly Statement of Consolidation paid V1",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_form_19_employee_pf_claim_form",
+      "displayName": "PF - Form 19 - Employee PF Claim Form",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_19_pf_composite_claim_form_aadhar",
+      "displayName": "Form 19 - PF Composite Claim form ( Aadhar )",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_form_3a",
+      "displayName": "PF - Form 3A",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_form_5_consolidated_statement_of_members_joining_pf",
+      "displayName": "PF - Form 5 - Consolidated statement of members joining PF",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_form_6a_consolidated_statement_for_contribution_card",
+      "displayName": "PF - Form 6A - Consolidated Statement For Contribution Card",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_form_r1_monthly_return_for_employees",
+      "displayName": "PF - Form R1 - Monthly Return for Employees",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_form_r1_monthly_return_for_employees_v1",
+      "displayName": "PF - Form R1 - Monthly Return for Employees V1",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "nps_contribution_report",
+      "displayName": "NPS Contribution Report",
+      "category": "PF - Provident Fund",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_wage_ceiling_increase_analysis_report",
+      "displayName": "PF Wage Ceiling Increase - Analysis Report",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_and_pension_contribution",
+      "displayName": "PF And Pension Contribution",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_arrear_report",
+      "displayName": "PF Arrear Report",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_monthly_statement",
+      "displayName": "PF - Monthly Statement",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_monthly_statementv1",
+      "displayName": "PF - Monthly StatementV1",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_summary_report",
+      "displayName": "PF - Summary Report",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_summary_report_v1",
+      "displayName": "PF - Summary Report V1",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "pf_ecr_format",
+      "displayName": "PF - ECR Format",
+      "category": "PF - Provident Fund",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "statement_of_international_workers_iw_1_with_cover_letter",
+      "displayName": "Statement of International Workers (IW) - 1 with cover letter",
+      "category": "PF - Provident Fund",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "profession_tax_monthly_statement_any_state",
+      "displayName": "Profession Tax Monthly Statement (Any State)",
+      "category": "PT - Profession Tax",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_5_profession_tax_annual_return_karnataka",
+      "displayName": "FORM 5 - Profession Tax Annual Return - Karnataka",
+      "category": "PT - Profession Tax",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_5a_profession_tax_monthly_statement_karnataka",
+      "displayName": "FORM 5A - Profession Tax Monthly Statement - Karnataka",
+      "category": "PT - Profession Tax",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "attrition_report",
+      "displayName": "Attrition Report",
+      "category": "Workforce Attrition Reports",
+      "status": "VERIFIED",
+      "details": "Aggregates live leaveRequests from workspace (approved, pending, annual quota, remaining balance).",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "monthly_tds_challan",
+      "displayName": "Monthly TDS Challan",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "income_tax_statement_consolidated",
+      "displayName": "Income Tax Statement - Consolidated",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "income_tax_worksheet",
+      "displayName": "Income Tax Worksheet",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "annual_tax_report",
+      "displayName": "Annual Tax Report",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_12bb_it_savings",
+      "displayName": "Form 12BB - IT Savings",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "income_tax_form_16a",
+      "displayName": "Income Tax - Form 16A",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "income_tax_monthly_statement",
+      "displayName": "Income Tax - Monthly Statement",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "income_tax_statement",
+      "displayName": "Income Tax Statement",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "it_landlord_details",
+      "displayName": "IT Landlord Details",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "it_savings_chapter6_report",
+      "displayName": "IT Savings Chapter6 Report",
+      "category": "Income Tax",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "it_savings_other_reports",
+      "displayName": "IT Savings Other Reports",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "it_savings_previous_employement_report",
+      "displayName": "IT Savings Previous Employement Report",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "it_savings_reports",
+      "displayName": "IT Savings Reports",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "monthly_tds_challan_report_tds_bank_payment_file",
+      "displayName": "Monthly TDS challan report - TDS Bank Payment File",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "proof_of_investment_declaration",
+      "displayName": "Proof Of Investment Declaration",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "income_tax_liability_report",
+      "displayName": "Income Tax Liability Report",
+      "category": "Income Tax",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "reimbursement_balance_report",
+      "displayName": "Reimbursement Balance Report",
+      "category": "Reimbursement",
+      "status": "PARTIAL",
+      "details": "Generates employee-level summary; dedicated claims/loan disbursement tables not yet modeled in schema.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "reimbursement_claim_report",
+      "displayName": "Reimbursement Claim Report",
+      "category": "Reimbursement",
+      "status": "PARTIAL",
+      "details": "Generates employee-level summary; dedicated claims/loan disbursement tables not yet modeled in schema.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "detailed_reimbursement_summary_report",
+      "displayName": "Detailed Reimbursement Summary Report",
+      "category": "Reimbursement",
+      "status": "PARTIAL",
+      "details": "Generates employee-level summary; dedicated claims/loan disbursement tables not yet modeled in schema.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "reimbursement_overall_entitlement_summary_report",
+      "displayName": "Reimbursement Overall Entitlement Summary Report",
+      "category": "Reimbursement",
+      "status": "PARTIAL",
+      "details": "Generates employee-level summary; dedicated claims/loan disbursement tables not yet modeled in schema.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "reimbursement_summary_report",
+      "displayName": "Reimbursement Summary Report",
+      "category": "Reimbursement",
+      "status": "PARTIAL",
+      "details": "Generates employee-level summary; dedicated claims/loan disbursement tables not yet modeled in schema.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "reimbursement_transaction_report",
+      "displayName": "Reimbursement Transaction Report",
+      "category": "Reimbursement",
+      "status": "PARTIAL",
+      "details": "Generates employee-level summary; dedicated claims/loan disbursement tables not yet modeled in schema.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "reimbursement_ytd_report",
+      "displayName": "Reimbursement YTD Report",
+      "category": "Reimbursement",
+      "status": "PARTIAL",
+      "details": "Generates employee-level summary; dedicated claims/loan disbursement tables not yet modeled in schema.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "loan_balance_report",
+      "displayName": "Loan Balance Report",
+      "category": "Loan",
+      "status": "PARTIAL",
+      "details": "Generates employee-level summary; dedicated claims/loan disbursement tables not yet modeled in schema.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "loan_summary_report",
+      "displayName": "Loan Summary Report",
+      "category": "Loan",
+      "status": "PARTIAL",
+      "details": "Generates employee-level summary; dedicated claims/loan disbursement tables not yet modeled in schema.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "loan_transaction_report",
+      "displayName": "Loan Transaction Report",
+      "category": "Loan",
+      "status": "PARTIAL",
+      "details": "Generates employee-level summary; dedicated claims/loan disbursement tables not yet modeled in schema.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "loan_details_report",
+      "displayName": "Loan Details Report",
+      "category": "Loan",
+      "status": "PARTIAL",
+      "details": "Generates employee-level summary; dedicated claims/loan disbursement tables not yet modeled in schema.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "claim_bank_transfer_statement",
+      "displayName": "Claim bank transfer statement",
+      "category": "Claims",
+      "status": "VERIFIED",
+      "details": "Real salary data mapped from DB with basic, gross, deductions, EPF/ESI/PT, net pay and masked bank IFSC/account details.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "lop_reversal_report",
+      "displayName": "LOP Reversal Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "arrear_report",
+      "displayName": "Arrear Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "compensation_item_statement_monthly",
+      "displayName": "Compensation Item Statement - Monthly",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "compensation_item_statement_consolidated",
+      "displayName": "Compensation Item Statement - Consolidated",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "reimbursement_duplicate_bills_report",
+      "displayName": "Reimbursement Duplicate bills Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "employee_bio_data",
+      "displayName": "Employee Bio data",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "employee_filter_configuration_report",
+      "displayName": "Employee Filter Configuration Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "employee_master_information_report",
+      "displayName": "Employee Master information Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "excel_import_log_report",
+      "displayName": "Excel Import Log Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "exit_interview_checklist",
+      "displayName": "Exit Interview Checklist",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_12b",
+      "displayName": "FORM 12B",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_25_gratuity_nomination_form",
+      "displayName": "Form 25 - Gratuity Nomination Form",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "salary_input_history",
+      "displayName": "Salary Input History",
+      "category": "MIS Reports",
+      "status": "VERIFIED",
+      "details": "Real salary data mapped from DB with basic, gross, deductions, EPF/ESI/PT, net pay and masked bank IFSC/account details.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "implementation_verification_report",
+      "displayName": "Implementation Verification Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "monthly_change_tracking_report_for_employee_info_updates",
+      "displayName": "Monthly Change Tracking Report for Employee Info Updates",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "overrides_report_employeewise",
+      "displayName": "Overrides Report (EmployeeWise)",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "overrides_report_itemwise",
+      "displayName": "Overrides Report (ItemWise)",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "payroll_anomalies_report",
+      "displayName": "Payroll Anomalies Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "resettlement_report",
+      "displayName": "ReSettlement Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "reversal_transaction_report",
+      "displayName": "Reversal transaction Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "salary_revision_history",
+      "displayName": "Salary Revision History",
+      "category": "MIS Reports",
+      "status": "VERIFIED",
+      "details": "Real salary data mapped from DB with basic, gross, deductions, EPF/ESI/PT, net pay and masked bank IFSC/account details.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "salary_structure_report",
+      "displayName": "Salary Structure Report",
+      "category": "MIS Reports",
+      "status": "VERIFIED",
+      "details": "Real salary data mapped from DB with basic, gross, deductions, EPF/ESI/PT, net pay and masked bank IFSC/account details.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "settlement_report",
+      "displayName": "Settlement Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "user_activity_log_report",
+      "displayName": "User Activity Log Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "ytd_statement",
+      "displayName": "YTD Statement",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "ytd_statement_consolidated_report",
+      "displayName": "YTD Statement Consolidated Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "ytd_summary_report",
+      "displayName": "YTD Summary Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "ctc_breakup_report",
+      "displayName": "CTC Breakup Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "it_declaration_revoked_employee_list",
+      "displayName": "IT declaration revoked employee list",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "bonus_statement",
+      "displayName": "Bonus Statement",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "lic_statement",
+      "displayName": "LIC Statement",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "nomination_details_report",
+      "displayName": "Nomination Details Report",
+      "category": "MIS Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "salary_payout_reconciliation_report",
+      "displayName": "Salary Payout Reconciliation Report",
+      "category": "MIS Reports",
+      "status": "VERIFIED",
+      "details": "Real salary data mapped from DB with basic, gross, deductions, EPF/ESI/PT, net pay and masked bank IFSC/account details.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "salary_summary_report",
+      "displayName": "Salary Summary Report",
+      "category": "MIS Reports",
+      "status": "VERIFIED",
+      "details": "Real salary data mapped from DB with basic, gross, deductions, EPF/ESI/PT, net pay and masked bank IFSC/account details.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "leave_availed_report",
+      "displayName": "Leave Availed Report",
+      "category": "Leave",
+      "status": "VERIFIED",
+      "details": "Aggregates live leaveRequests from workspace (approved, pending, annual quota, remaining balance).",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "leave_backdated_report",
+      "displayName": "Leave Backdated Report",
+      "category": "Leave",
+      "status": "VERIFIED",
+      "details": "Aggregates live leaveRequests from workspace (approved, pending, annual quota, remaining balance).",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "leave_balance_as_on_a_day",
+      "displayName": "Leave Balance As On A Day",
+      "category": "Leave",
+      "status": "VERIFIED",
+      "details": "Aggregates live leaveRequests from workspace (approved, pending, annual quota, remaining balance).",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "day_wise_leave_transaction_report",
+      "displayName": "Day Wise Leave Transaction Report",
+      "category": "Leave",
+      "status": "VERIFIED",
+      "details": "Aggregates live leaveRequests from workspace (approved, pending, annual quota, remaining balance).",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "leave_encashment_report",
+      "displayName": "Leave Encashment Report",
+      "category": "Leave",
+      "status": "VERIFIED",
+      "details": "Aggregates live leaveRequests from workspace (approved, pending, annual quota, remaining balance).",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "negative_leave_balance",
+      "displayName": "Negative Leave Balance",
+      "category": "Leave",
+      "status": "VERIFIED",
+      "details": "Aggregates live leaveRequests from workspace (approved, pending, annual quota, remaining balance).",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "leave_summary_report",
+      "displayName": "Leave Summary Report",
+      "category": "Leave",
+      "status": "VERIFIED",
+      "details": "Aggregates live leaveRequests from workspace (approved, pending, annual quota, remaining balance).",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "leave_transaction_report",
+      "displayName": "Leave Transaction Report",
+      "category": "Leave",
+      "status": "VERIFIED",
+      "details": "Aggregates live leaveRequests from workspace (approved, pending, annual quota, remaining balance).",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "year_wise_summary_report",
+      "displayName": "Year Wise Summary Report",
+      "category": "Leave",
+      "status": "UI ONLY",
+      "details": "Catalog entry present in gallery navigation; generates generic employee master export.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "response_time_report_help_desk_ticket",
+      "displayName": "Response Time Report (Help Desk Ticket)",
+      "category": "Help Desk",
+      "status": "PARTIAL",
+      "details": "Generates employee-level summary; dedicated claims/loan disbursement tables not yet modeled in schema.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "help_desk_tickets_report",
+      "displayName": "Help Desk Tickets Report",
+      "category": "Help Desk",
+      "status": "PARTIAL",
+      "details": "Generates employee-level summary; dedicated claims/loan disbursement tables not yet modeled in schema.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_b_register_of_fines_and_unpaid_accumulations_labour_welfare_fund_act_karnataka",
+      "displayName": "Form B - Register Of Fines And Unpaid Accumulations - Labour Welfare Fund Act - Karnataka",
+      "category": "Labour Welfare Fund Act - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_d_statement_of_employer_s_and_employee_s_contribution_labour_welfare_fund_act_karnataka",
+      "displayName": "FORM D - Statement of Employer's and Employee's Contribution - Labour Welfare Fund Act - Karnataka",
+      "category": "Labour Welfare Fund Act - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_ii_register_of_deductions_for_absence_from_duty_or_for_damage_or_loss_caused_to_the_employee_by_the_neglect_or_default_of_the_employed_persons_minimum_wages_rules_karnataka",
+      "displayName": "Form II - Register of deductions for absence from duty or for damage or loss caused to the employee by the neglect or default of the employed persons - Minimum Wages Rules - Karnataka",
+      "category": "Minimum Wages Rules - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_iv_overtime_time_register_minimum_wages_rules_karnataka",
+      "displayName": "Form IV - Overtime Time Register - Minimum Wages Rules - Karnataka",
+      "category": "Minimum Wages Rules - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_i_register_of_fines_minimum_wages_rules_karnataka",
+      "displayName": "Form I - Register of Fines - Minimum Wages Rules - Karnataka",
+      "category": "Minimum Wages Rules - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_vii_muster_roll_minimum_wages_rules_karnataka",
+      "displayName": "Form VII - Muster Roll - Minimum Wages Rules - Karnataka",
+      "category": "Minimum Wages Rules - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_vi_wage_slip_minimum_wages_rules_karnataka",
+      "displayName": "Form VI - Wage slip - Minimum Wages Rules - Karnataka",
+      "category": "Minimum Wages Rules - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_v_register_of_wages_minimum_wages_rules_karnataka",
+      "displayName": "Form V - Register of wages - Minimum Wages Rules - Karnataka",
+      "category": "Minimum Wages Rules - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_iii_annual_return_minimum_wages_rules_karnataka",
+      "displayName": "Form III - Annual Return - Minimum Wages Rules - Karnataka",
+      "category": "Minimum Wages Rules - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_9_overtime_register_factories_act_karnataka",
+      "displayName": "Form 9 - Overtime Register - Factories Act - Karnataka",
+      "category": "Factories Act - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_20_combined_annual_return_factories_act_karnataka",
+      "displayName": "Form 20 - Combined annual return - Factories Act - Karnataka",
+      "category": "Factories Act - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_11_register_of_adult_workers_factories_act_karnataka",
+      "displayName": "Form 11 - Register of Adult workers - Factories Act - Karnataka",
+      "category": "Factories Act - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_14_register_of_leave_with_wages_factories_act_karnataka",
+      "displayName": "Form 14 - Register of leave with wages - Factories Act - Karnataka",
+      "category": "Factories Act - Karnataka",
+      "status": "VERIFIED",
+      "details": "Aggregates live leaveRequests from workspace (approved, pending, annual quota, remaining balance).",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_15_leave_book_factories_act_karnataka",
+      "displayName": "Form 15 - Leave book - Factories Act - Karnataka",
+      "category": "Factories Act - Karnataka",
+      "status": "VERIFIED",
+      "details": "Aggregates live leaveRequests from workspace (approved, pending, annual quota, remaining balance).",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_21_half_yearly_return_factories_act_karnataka",
+      "displayName": "Form 21 - Half Yearly Return - Factories Act - Karnataka",
+      "category": "Factories Act - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_22_muster_roll_cum_wage_register_factories_act_karnataka",
+      "displayName": "Form 22 - Muster Roll cum Wage register - Factories Act - Karnataka",
+      "category": "Factories Act - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_a_muster_roll_nil_register_maternity_benefit_act_central",
+      "displayName": "Form A - Muster Roll - ( NIL Register ) - Maternity Benefit Act - Central",
+      "category": "Maternity Benefit Act - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_xiii_register_of_workmen_employed_by_contractor_clra_act_rules_central",
+      "displayName": "Form XIII - Register of Workmen Employed by Contractor - CLRA Act & Rules - Central",
+      "category": "CLRA Act & Rules - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_xii_register_of_contractors_clra_act_rules_central",
+      "displayName": "Form XII - Register of contractors - CLRA Act & Rules - Central",
+      "category": "CLRA Act & Rules - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_xiv_employment_card_clra_act_rules_central",
+      "displayName": "Form XIV - Employment Card - CLRA Act & Rules - Central",
+      "category": "CLRA Act & Rules - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_xix_wages_slip_clra_rules_central",
+      "displayName": "Form XIX - Wages Slip - CLRA Rules - Central",
+      "category": "CLRA Act & Rules - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_xvii_register_of_wages_clra_act_rules_central",
+      "displayName": "Form XVII - Register of Wages - CLRA Act & Rules - Central",
+      "category": "CLRA Act & Rules - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_xvi_muster_roll_clra_act_rules_central",
+      "displayName": "Form XVI - Muster Roll - CLRA Act & Rules - Central",
+      "category": "CLRA Act & Rules - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_xv_service_certificate_clra_act_rules_central",
+      "displayName": "Form XV - Service Certificate - CLRA Act & Rules - Central",
+      "category": "CLRA Act & Rules - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_xx_register_of_deductions_for_damage_or_loss_clra_act_rules_central",
+      "displayName": "Form XX - Register of Deductions for Damage or Loss - CLRA Act & Rules - Central",
+      "category": "CLRA Act & Rules - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_xxi_register_of_fines_clra_act_rules_central",
+      "displayName": "Form XXI - Register of Fines - CLRA Act & Rules - Central",
+      "category": "CLRA Act & Rules - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_xxii_register_of_advances_clra_act_rules_central",
+      "displayName": "Form XXII - Register of Advances - CLRA Act & Rules - Central",
+      "category": "CLRA Act & Rules - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_xxiii_register_of_overtime_clra_act_rules_central",
+      "displayName": "Form XXIII - Register of Overtime - CLRA Act & Rules - Central",
+      "category": "CLRA Act & Rules - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_c_bonus_paid_to_employees_payment_of_bonus_act_central",
+      "displayName": "Form C - Bonus Paid To Employees - Payment of Bonus Act - Central",
+      "category": "Payment of Bonus Act - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_d_annual_return_bonus_paid_to_employees_payment_of_bonus_act_central",
+      "displayName": "Form D - Annual Return bonus paid to employees - Payment of Bonus Act - Central",
+      "category": "Payment of Bonus Act - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_d_register_to_be_maintained_by_the_employer_equal_remuneration_act_central",
+      "displayName": "Form D - Register To Be Maintained By The Employer - Equal Remuneration Act - Central",
+      "category": "Equal Remuneration Act - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_35_form_of_notice_book_workmen_s_compensation_act_central",
+      "displayName": "Form 35 - Form of Notice Book - Workmen's Compensation Act - Central",
+      "category": "Workmen's Compensation Act",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_a_employee_register_ease_of_compliance_central",
+      "displayName": "Form A - Employee Register - Ease of Compliance - Central",
+      "category": "Ease of Compliance - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_b_wage_register_ease_of_compliance_central",
+      "displayName": "Form B - Wage Register - Ease of Compliance - Central",
+      "category": "Ease of Compliance - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_c_register_of_loan_recoveries_ease_of_compliance_central",
+      "displayName": "Form C - Register of Loan/Recoveries - Ease of Compliance - Central",
+      "category": "Ease of Compliance - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_d_attendance_register_ease_of_compliance_central",
+      "displayName": "Form D - Attendance Register - Ease of Compliance - Central",
+      "category": "Ease of Compliance - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_u_combined_annual_return_shops_est_act_karnataka",
+      "displayName": "Form U - Combined annual return - Shops & Est. Act - Karnataka",
+      "category": "Shops & Est Act - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_q_appointment_order_shops_est_act_karnataka",
+      "displayName": "Form Q - Appointment Order - Shops & Est. Act - Karnataka",
+      "category": "Shops & Est Act - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_t_combined_muster_roll_cum_register_of_wages_shops_est_act_karnataka",
+      "displayName": "Form T - Combined Muster Roll cum Register of Wages - Shops & Est. Act - Karnataka",
+      "category": "Shops & Est Act - Karnataka",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_r_request_for_exemption_for_employing_women_in_night_shift_shops_est_act_karnataka",
+      "displayName": "Form R - Request for exemption for employing women in night shift - Shops & Est. Act - Karnataka",
+      "category": "Shops & Est Act - Karnataka",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_f_register_of_leave_with_wages_shops_est_act_karnataka",
+      "displayName": "Form F - Register of Leave with wages - Shops & Est. Act - Karnataka",
+      "category": "Shops & Est Act - Karnataka",
+      "status": "VERIFIED",
+      "details": "Aggregates live leaveRequests from workspace (approved, pending, annual quota, remaining balance).",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_h_leave_with_wages_book_shops_est_act_karnataka",
+      "displayName": "Form H - Leave with wages book - Shops & Est. Act - Karnataka",
+      "category": "Shops & Est Act - Karnataka",
+      "status": "VERIFIED",
+      "details": "Aggregates live leaveRequests from workspace (approved, pending, annual quota, remaining balance).",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_a_statement_of_contributions_to_labour_welfare_fund_tamil_nadu",
+      "displayName": "Form A Statement of Contributions to Labour Welfare Fund Tamil Nadu",
+      "category": "Tamil Nadu Labour Welfare Fund Act, 1972",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_10_overtime_muster_roll_for_persons_on_exempted_work_month_ending_himachal_pradesh",
+      "displayName": "Form 10 - Overtime muster-roll for persons on exempted work month ending(Himachal Pradesh)",
+      "category": "Labour Reports",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_10_overtime_muster_roll_for_persons_on_exempted_work_month_ending_uttar_pradesh",
+      "displayName": "Form 10 - Overtime muster-roll for persons on exempted work month ending (Uttar Pradesh)",
+      "category": "Labour Reports",
+      "status": "VERIFIED",
+      "details": "Calculates statutory contributions (EPF 12%, EPS 8.33%, EDLI 0.5%, ESI 0.75%, PT), UAN and PAN masking.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_16_register_of_leave_with_wages_rajasthan",
+      "displayName": "Form 16 - Register of Leave with Wages - Rajasthan",
+      "category": "Labour Reports",
+      "status": "VERIFIED",
+      "details": "Aggregates live leaveRequests from workspace (approved, pending, annual quota, remaining balance).",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_25_muster_roll_and_register_of_compensatory_holiday_tamilnadu",
+      "displayName": "Form 25 - Muster roll and register of compensatory Holiday(Tamilnadu)",
+      "category": "Labour Reports",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_28_muster_roll_gujarat",
+      "displayName": "Form 28 - Muster Roll - Gujarat",
+      "category": "Labour Reports",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_v_wages_slip_haryana",
+      "displayName": "Form V - Wages Slip - Haryana",
+      "category": "Labour Reports",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_no_xxix_register_of_advances_deductions_for_damages_or_loss_and_fines",
+      "displayName": "Form No XXIX Register of Advances Deductions for Damages or Loss and Fines",
+      "category": "Labour Reports",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_i_register_of_wages_overtime_fine_and_deduction_for_damage_and_loss",
+      "displayName": "Form I Register of Wages Overtime Fine and Deduction for damage and Loss",
+      "category": "Labour Reports",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_xxviii_wage_slip",
+      "displayName": "Form XXVIII - Wage slip",
+      "category": "Labour Reports",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_x_identity_card",
+      "displayName": "Form X Identity Card",
+      "category": "Labour Reports",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_vi_contract_labour_regulation_abolition_central_rules",
+      "displayName": "Form VI Contract Labour (Regulation & Abolition) Central Rules",
+      "category": "Labour Reports",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_xxvi_register_of_employment_of_contract_labour",
+      "displayName": "Form XXVI Register Of Employment Of Contract Labour",
+      "category": "Labour Reports",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_ii_muster_roll_cum_wage_register",
+      "displayName": "Form II - Muster Roll Cum Wage Register",
+      "category": "Labour Reports",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_vi_wage_slip_karnataka_minimum_wages_rules",
+      "displayName": "Form VI - Wage Slip - Karnataka Minimum Wages Rules",
+      "category": "Labour Reports",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "form_f_nomination_payment_of_gratuity_act_central",
+      "displayName": "Form F - Nomination - Payment of Gratuity Act - Central",
+      "category": "Payment of Gratuity Act - Central",
+      "status": "UI ONLY",
+      "details": "Appears in gallery and modal opens with state parameters, but statutory register specific layout/form generation is pending.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "anniversary_report",
+      "displayName": "Anniversary Report",
+      "category": "HR Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "employee_family_details",
+      "displayName": "Employee Family Details",
+      "category": "HR Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "transitionwise_head_count_report",
+      "displayName": "Transitionwise Head Count Report",
+      "category": "HR Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    },
+    {
+      "id": "user_access_rights_report",
+      "displayName": "User Access Rights Report",
+      "category": "HR Reports",
+      "status": "PARTIAL",
+      "details": "Opens report modal and generates workspace employee demographic records, but report-specific custom formulas are generic fallback.",
+      "supportedExports": [
+        "PDF",
+        "XLSX",
+        "CSV"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,5 @@
 "use client";
 
-import { GreytHRAdminDashboard } from "./_components/greyt-admin-dashboard";
 import { PayslipModal } from "@/components/payslip-modal";
 import { downloadPayslipPdf } from "@/lib/payslip-pdf";
 import { useWorkspace } from "@/lib/useWorkspace";
@@ -44,6 +43,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { GreytHRAdminDashboard } from "./_components/greyt-admin-dashboard";
 
 // ── Shared Stat Card ─────────────────────────────────────────────────────────
 
@@ -92,37 +92,178 @@ function AdminDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
 
 // ── greytHR Visual Reference Vector Illustrations ───────────────────────────
 
-function WelcomeScenicIllustration({ className = "w-72 h-32" }: { className?: string }) {
+function WelcomeScenicIllustration({
+  className = "w-72 h-32",
+}: { className?: string }) {
   return (
-    <svg viewBox="0 0 400 160" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <svg
+      viewBox="0 0 400 160"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
       <circle cx="295" cy="70" r="30" fill="#F87171" fillOpacity="0.85" />
-      <line x1="295" y1="28" x2="295" y2="18" stroke="#F87171" strokeWidth="2" strokeLinecap="round" />
-      <line x1="327" y1="38" x2="335" y2="30" stroke="#F87171" strokeWidth="2" strokeLinecap="round" />
-      <line x1="339" y1="70" x2="349" y2="70" stroke="#F87171" strokeWidth="2" strokeLinecap="round" />
-      <line x1="263" y1="38" x2="255" y2="30" stroke="#F87171" strokeWidth="2" strokeLinecap="round" />
-      <line x1="251" y1="70" x2="241" y2="70" stroke="#F87171" strokeWidth="2" strokeLinecap="round" />
-      <path d="M120 120 L180 85 L230 110 L280 80 L350 125 L390 105 L400 115" stroke="#334155" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M160 120 L210 95 L250 115 L320 85 L380 120" stroke="#64748B" strokeWidth="1" strokeDasharray="3 3" fill="none" />
-      <path d="M280 80 Q340 50 395 35 L400 125 L350 125 Z" fill="#FCA5A5" fillOpacity="0.4" stroke="#DC2626" strokeWidth="1.5" />
-      <path d="M100 145 C180 140 240 125 310 108 C350 98 380 92 400 90" stroke="#1E293B" strokeWidth="2" strokeLinecap="round" />
-      <path d="M110 158 C190 152 260 138 320 120 C360 110 390 102 400 100" stroke="#1E293B" strokeWidth="2" strokeLinecap="round" />
-      <path d="M160 148 C180 146 200 142 220 138" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" />
-      <path d="M250 132 C265 128 280 125 295 121" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" />
-      <path d="M315 117 C330 114 345 111 355 108" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" />
+      <line
+        x1="295"
+        y1="28"
+        x2="295"
+        y2="18"
+        stroke="#F87171"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <line
+        x1="327"
+        y1="38"
+        x2="335"
+        y2="30"
+        stroke="#F87171"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <line
+        x1="339"
+        y1="70"
+        x2="349"
+        y2="70"
+        stroke="#F87171"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <line
+        x1="263"
+        y1="38"
+        x2="255"
+        y2="30"
+        stroke="#F87171"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <line
+        x1="251"
+        y1="70"
+        x2="241"
+        y2="70"
+        stroke="#F87171"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M120 120 L180 85 L230 110 L280 80 L350 125 L390 105 L400 115"
+        stroke="#334155"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path
+        d="M160 120 L210 95 L250 115 L320 85 L380 120"
+        stroke="#64748B"
+        strokeWidth="1"
+        strokeDasharray="3 3"
+        fill="none"
+      />
+      <path
+        d="M280 80 Q340 50 395 35 L400 125 L350 125 Z"
+        fill="#FCA5A5"
+        fillOpacity="0.4"
+        stroke="#DC2626"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M100 145 C180 140 240 125 310 108 C350 98 380 92 400 90"
+        stroke="#1E293B"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M110 158 C190 152 260 138 320 120 C360 110 390 102 400 100"
+        stroke="#1E293B"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M160 148 C180 146 200 142 220 138"
+        stroke="#3B82F6"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M250 132 C265 128 280 125 295 121"
+        stroke="#3B82F6"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M315 117 C330 114 345 111 355 108"
+        stroke="#3B82F6"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
       <g transform="translate(325, 68) scale(0.65)">
-        <rect x="0" y="10" width="55" height="40" rx="6" fill="#FFFFFF" stroke="#0F172A" strokeWidth="2.5" />
-        <rect x="4" y="14" width="22" height="14" rx="2" fill="#E2E8F0" stroke="#0F172A" strokeWidth="1.5" />
-        <rect x="29" y="14" width="22" height="14" rx="2" fill="#E2E8F0" stroke="#0F172A" strokeWidth="1.5" />
+        <rect
+          x="0"
+          y="10"
+          width="55"
+          height="40"
+          rx="6"
+          fill="#FFFFFF"
+          stroke="#0F172A"
+          strokeWidth="2.5"
+        />
+        <rect
+          x="4"
+          y="14"
+          width="22"
+          height="14"
+          rx="2"
+          fill="#E2E8F0"
+          stroke="#0F172A"
+          strokeWidth="1.5"
+        />
+        <rect
+          x="29"
+          y="14"
+          width="22"
+          height="14"
+          rx="2"
+          fill="#E2E8F0"
+          stroke="#0F172A"
+          strokeWidth="1.5"
+        />
         <path d="M0 32 L55 32" stroke="#EF4444" strokeWidth="3" />
         <circle cx="12" cy="50" r="7" fill="#1E293B" />
         <circle cx="12" cy="50" r="3" fill="#94A3B8" />
         <circle cx="43" cy="50" r="7" fill="#1E293B" />
         <circle cx="43" cy="50" r="3" fill="#94A3B8" />
-        <path d="M-2 36 L2 36" stroke="#F59E0B" strokeWidth="3" strokeLinecap="round" />
+        <path
+          d="M-2 36 L2 36"
+          stroke="#F59E0B"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
       </g>
-      <path d="M190 40 Q195 35 200 40 Q205 35 210 40" stroke="#475569" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-      <path d="M225 30 Q228 26 232 30 Q235 26 238 30" stroke="#475569" strokeWidth="1.2" fill="none" strokeLinecap="round" />
-      <path d="M170 55 Q173 52 176 55 Q179 52 182 55" stroke="#475569" strokeWidth="1" fill="none" strokeLinecap="round" />
+      <path
+        d="M190 40 Q195 35 200 40 Q205 35 210 40"
+        stroke="#475569"
+        strokeWidth="1.5"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M225 30 Q228 26 232 30 Q235 26 238 30"
+        stroke="#475569"
+        strokeWidth="1.2"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M170 55 Q173 52 176 55 Q179 52 182 55"
+        stroke="#475569"
+        strokeWidth="1"
+        fill="none"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -130,19 +271,106 @@ function WelcomeScenicIllustration({ className = "w-72 h-32" }: { className?: st
 function ReviewClipboardIllustration() {
   return (
     <svg viewBox="0 0 100 100" fill="none" className="w-16 h-16 mx-auto">
-      <rect x="25" y="20" width="50" height="65" rx="5" fill="#F8FAFC" stroke="#64748B" strokeWidth="2" />
-      <path d="M38 18 H62 V24 H38 Z" fill="#94A3B8" stroke="#475569" strokeWidth="2" />
-      <rect x="42" y="14" width="16" height="7" rx="3.5" fill="#CBD5E1" stroke="#475569" strokeWidth="1.5" />
-      <line x1="34" y1="36" x2="66" y2="36" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
-      <line x1="34" y1="48" x2="66" y2="48" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
-      <line x1="34" y1="60" x2="66" y2="60" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
-      <path d="M30 36 L33 39 L38 33" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M30 48 L33 51 L38 45" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M30 60 L33 63 L38 57" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <rect
+        x="25"
+        y="20"
+        width="50"
+        height="65"
+        rx="5"
+        fill="#F8FAFC"
+        stroke="#64748B"
+        strokeWidth="2"
+      />
+      <path
+        d="M38 18 H62 V24 H38 Z"
+        fill="#94A3B8"
+        stroke="#475569"
+        strokeWidth="2"
+      />
+      <rect
+        x="42"
+        y="14"
+        width="16"
+        height="7"
+        rx="3.5"
+        fill="#CBD5E1"
+        stroke="#475569"
+        strokeWidth="1.5"
+      />
+      <line
+        x1="34"
+        y1="36"
+        x2="66"
+        y2="36"
+        stroke="#CBD5E1"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <line
+        x1="34"
+        y1="48"
+        x2="66"
+        y2="48"
+        stroke="#CBD5E1"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <line
+        x1="34"
+        y1="60"
+        x2="66"
+        y2="60"
+        stroke="#CBD5E1"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M30 36 L33 39 L38 33"
+        stroke="#10B981"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M30 48 L33 51 L38 45"
+        stroke="#10B981"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M30 60 L33 63 L38 57"
+        stroke="#10B981"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
       <g transform="translate(68, 50) rotate(-35)">
-        <polygon points="0,0 8,0 4,8" fill="#F59E0B" stroke="#B45309" strokeWidth="1" />
-        <rect x="0" y="-30" width="8" height="30" fill="#EF4444" stroke="#B91C1C" strokeWidth="1" />
-        <rect x="0" y="-36" width="8" height="6" rx="1" fill="#CBD5E1" stroke="#64748B" strokeWidth="1" />
+        <polygon
+          points="0,0 8,0 4,8"
+          fill="#F59E0B"
+          stroke="#B45309"
+          strokeWidth="1"
+        />
+        <rect
+          x="0"
+          y="-30"
+          width="8"
+          height="30"
+          fill="#EF4444"
+          stroke="#B91C1C"
+          strokeWidth="1"
+        />
+        <rect
+          x="0"
+          y="-36"
+          width="8"
+          height="6"
+          rx="1"
+          fill="#CBD5E1"
+          stroke="#64748B"
+          strokeWidth="1"
+        />
       </g>
     </svg>
   );
@@ -151,8 +379,26 @@ function ReviewClipboardIllustration() {
 function PayslipEmptyIllustration() {
   return (
     <svg viewBox="0 0 120 120" fill="none" className="w-20 h-20 mx-auto">
-      <rect x="35" y="20" width="45" height="65" rx="6" fill="#F8FAFC" stroke="#0F172A" strokeWidth="2" />
-      <rect x="41" y="26" width="33" height="14" rx="2" fill="#2DD4BF" stroke="#0F172A" strokeWidth="1.5" />
+      <rect
+        x="35"
+        y="20"
+        width="45"
+        height="65"
+        rx="6"
+        fill="#F8FAFC"
+        stroke="#0F172A"
+        strokeWidth="2"
+      />
+      <rect
+        x="41"
+        y="26"
+        width="33"
+        height="14"
+        rx="2"
+        fill="#2DD4BF"
+        stroke="#0F172A"
+        strokeWidth="1.5"
+      />
       <circle cx="46" cy="48" r="2.5" fill="#94A3B8" />
       <circle cx="57.5" cy="48" r="2.5" fill="#94A3B8" />
       <circle cx="69" cy="48" r="2.5" fill="#94A3B8" />
@@ -162,10 +408,41 @@ function PayslipEmptyIllustration() {
       <circle cx="46" cy="68" r="2.5" fill="#94A3B8" />
       <circle cx="57.5" cy="68" r="2.5" fill="#94A3B8" />
       <circle cx="69" cy="68" r="2.5" fill="#94A3B8" />
-      <circle cx="60" cy="78" r="18" fill="#F87171" stroke="#0F172A" strokeWidth="2" />
-      <line x1="48" y1="91" x2="32" y2="107" stroke="#0F172A" strokeWidth="4" strokeLinecap="round" />
-      <circle cx="90" cy="88" r="8" fill="#F8FAFC" stroke="#0F172A" strokeWidth="1.5" />
-      <text x="90" y="92" fontSize="10" fontWeight="bold" textAnchor="middle" fill="#0F172A">₹</text>
+      <circle
+        cx="60"
+        cy="78"
+        r="18"
+        fill="#F87171"
+        stroke="#0F172A"
+        strokeWidth="2"
+      />
+      <line
+        x1="48"
+        y1="91"
+        x2="32"
+        y2="107"
+        stroke="#0F172A"
+        strokeWidth="4"
+        strokeLinecap="round"
+      />
+      <circle
+        cx="90"
+        cy="88"
+        r="8"
+        fill="#F8FAFC"
+        stroke="#0F172A"
+        strokeWidth="1.5"
+      />
+      <text
+        x="90"
+        y="92"
+        fontSize="10"
+        fontWeight="bold"
+        textAnchor="middle"
+        fill="#0F172A"
+      >
+        ₹
+      </text>
     </svg>
   );
 }
@@ -173,18 +450,85 @@ function PayslipEmptyIllustration() {
 function TrackEmptyIllustration() {
   return (
     <svg viewBox="0 0 120 70" fill="none" className="w-20 h-12 mx-auto">
-      <path d="M10 52 C30 50 60 54 110 50" stroke="#94A3B8" strokeWidth="1.5" strokeDasharray="3 3" />
-      <circle cx="38" cy="22" r="5" fill="#FCA5A5" stroke="#DC2626" strokeWidth="1.5" />
-      <line x1="38" y1="27" x2="38" y2="42" stroke="#DC2626" strokeWidth="1.5" />
-      <line x1="38" y1="42" x2="32" y2="52" stroke="#DC2626" strokeWidth="1.5" />
-      <line x1="38" y1="42" x2="44" y2="52" stroke="#DC2626" strokeWidth="1.5" />
-      <line x1="38" y1="33" x2="28" y2="28" stroke="#DC2626" strokeWidth="1.5" />
+      <path
+        d="M10 52 C30 50 60 54 110 50"
+        stroke="#94A3B8"
+        strokeWidth="1.5"
+        strokeDasharray="3 3"
+      />
+      <circle
+        cx="38"
+        cy="22"
+        r="5"
+        fill="#FCA5A5"
+        stroke="#DC2626"
+        strokeWidth="1.5"
+      />
+      <line
+        x1="38"
+        y1="27"
+        x2="38"
+        y2="42"
+        stroke="#DC2626"
+        strokeWidth="1.5"
+      />
+      <line
+        x1="38"
+        y1="42"
+        x2="32"
+        y2="52"
+        stroke="#DC2626"
+        strokeWidth="1.5"
+      />
+      <line
+        x1="38"
+        y1="42"
+        x2="44"
+        y2="52"
+        stroke="#DC2626"
+        strokeWidth="1.5"
+      />
+      <line
+        x1="38"
+        y1="33"
+        x2="28"
+        y2="28"
+        stroke="#DC2626"
+        strokeWidth="1.5"
+      />
       <circle cx="26" cy="26" r="4" fill="#F87171" />
-      <circle cx="75" cy="18" r="5" fill="#93C5FD" stroke="#2563EB" strokeWidth="1.5" />
-      <path d="M75 23 L73 38 L65 50" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M73 38 L83 48" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M74 30 L88 24" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M60 22 L95 16" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" />
+      <circle
+        cx="75"
+        cy="18"
+        r="5"
+        fill="#93C5FD"
+        stroke="#2563EB"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M75 23 L73 38 L65 50"
+        stroke="#2563EB"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M73 38 L83 48"
+        stroke="#2563EB"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M74 30 L88 24"
+        stroke="#2563EB"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M60 22 L95 16"
+        stroke="#2563EB"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -192,12 +536,46 @@ function TrackEmptyIllustration() {
 function ITDeclarationIllustration() {
   return (
     <svg viewBox="0 0 44 44" fill="none" className="w-9 h-9 shrink-0">
-      <rect x="4" y="8" width="36" height="30" rx="4" fill="#3B82F6" stroke="#1D4ED8" strokeWidth="1.5" />
+      <rect
+        x="4"
+        y="8"
+        width="36"
+        height="30"
+        rx="4"
+        fill="#3B82F6"
+        stroke="#1D4ED8"
+        strokeWidth="1.5"
+      />
       <path d="M4 14 H40" stroke="#1D4ED8" strokeWidth="1.5" />
-      <rect x="10" y="5" width="14" height="6" rx="2" fill="#60A5FA" stroke="#1D4ED8" strokeWidth="1.5" />
+      <rect
+        x="10"
+        y="5"
+        width="14"
+        height="6"
+        rx="2"
+        fill="#60A5FA"
+        stroke="#1D4ED8"
+        strokeWidth="1.5"
+      />
       <rect x="12" y="20" width="20" height="12" rx="1.5" fill="#FFFFFF" />
-      <line x1="16" y1="24" x2="28" y2="24" stroke="#93C5FD" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="16" y1="28" x2="24" y2="28" stroke="#93C5FD" strokeWidth="1.5" strokeLinecap="round" />
+      <line
+        x1="16"
+        y1="24"
+        x2="28"
+        y2="24"
+        stroke="#93C5FD"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="16"
+        y1="28"
+        x2="24"
+        y2="28"
+        stroke="#93C5FD"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -205,12 +583,62 @@ function ITDeclarationIllustration() {
 function POIIllustration() {
   return (
     <svg viewBox="0 0 44 44" fill="none" className="w-9 h-9 shrink-0">
-      <rect x="6" y="6" width="32" height="34" rx="4" fill="#F8FAFC" stroke="#64748B" strokeWidth="1.5" />
-      <rect x="11" y="12" width="10" height="10" rx="2" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1" />
-      <line x1="24" y1="14" x2="33" y2="14" stroke="#64748B" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="24" y1="19" x2="31" y2="19" stroke="#64748B" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="11" y1="28" x2="33" y2="28" stroke="#CBD5E1" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="11" y1="33" x2="26" y2="33" stroke="#CBD5E1" strokeWidth="1.5" strokeLinecap="round" />
+      <rect
+        x="6"
+        y="6"
+        width="32"
+        height="34"
+        rx="4"
+        fill="#F8FAFC"
+        stroke="#64748B"
+        strokeWidth="1.5"
+      />
+      <rect
+        x="11"
+        y="12"
+        width="10"
+        height="10"
+        rx="2"
+        fill="#E2E8F0"
+        stroke="#94A3B8"
+        strokeWidth="1"
+      />
+      <line
+        x1="24"
+        y1="14"
+        x2="33"
+        y2="14"
+        stroke="#64748B"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="24"
+        y1="19"
+        x2="31"
+        y2="19"
+        stroke="#64748B"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="11"
+        y1="28"
+        x2="33"
+        y2="28"
+        stroke="#CBD5E1"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="11"
+        y1="33"
+        x2="26"
+        y2="33"
+        stroke="#CBD5E1"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
       <g transform="translate(28, 26) rotate(-45)">
         <polygon points="0,0 4,0 2,5" fill="#3B82F6" />
         <rect x="0" y="-12" width="4" height="12" fill="#60A5FA" />
@@ -296,7 +724,9 @@ function SalaryDonutChart({
   const dedLength = dedRatio * circumference;
 
   return (
-    <div className={`relative flex items-center justify-center shrink-0 ${className}`}>
+    <div
+      className={`relative flex items-center justify-center shrink-0 ${className}`}
+    >
       <svg
         width={size}
         height={size}
@@ -365,7 +795,8 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
   const [showSalary, setShowSalary] = useState(false);
   const [isDownloadingPayslip, setIsDownloadingPayslip] = useState(false);
 
-  const targetRunId = selectedPayslipRunId || memberData?.latestPayslip?.payrollRunId;
+  const targetRunId =
+    selectedPayslipRunId || memberData?.latestPayslip?.payrollRunId;
   const payslipData = useQuery(
     api.payroll.getPayslip,
     workspaceId && targetRunId && memberData?.employee
@@ -508,7 +939,8 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
               {timeGreeting}
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              Don&apos;t worry about failures, worry about the chances you miss when you don&apos;t even try.
+              Don&apos;t worry about failures, worry about the chances you miss
+              when you don&apos;t even try.
             </p>
             <p className="text-xs font-medium text-slate-400 dark:text-slate-500">
               - Jack Canfield
@@ -525,7 +957,10 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
       <div className="mx-auto flex w-full max-w-4xl flex-col items-center justify-between gap-4 rounded-xl border border-slate-200/80 bg-white px-6 py-3.5 shadow-sm sm:flex-row dark:border-border dark:bg-card">
         <div className="flex items-center gap-3">
           <span className="text-sm font-medium text-slate-600 dark:text-slate-300 whitespace-nowrap">
-            <span className="font-semibold text-slate-800 dark:text-slate-100">Unite</span> by IndiaPay
+            <span className="font-semibold text-slate-800 dark:text-slate-100">
+              Unite
+            </span>{" "}
+            by IndiaPay
           </span>
         </div>
 
@@ -596,7 +1031,10 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
 
             <div className="mt-2 divide-y divide-slate-100 dark:divide-border/40">
               {displayHolidays.map((h) => (
-                <div key={`${h.name}-${h.date}`} className="py-2 first:pt-1 last:pb-1">
+                <div
+                  key={`${h.name}-${h.date}`}
+                  className="py-2 first:pt-1 last:pb-1"
+                >
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
                       {formatHolidayDate(h.date)}
@@ -639,9 +1077,16 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
                 {/* Top Half: Donut Chart + Period & Paid Days */}
                 <div className="flex items-center justify-between gap-3 px-1">
                   <SalaryDonutChart
-                    grossSalary={payslipData?.grossSalary ?? latestPayslip.grossSalary}
-                    totalDeductions={payslipData?.totalDeductions ?? latestPayslip.totalDeductions}
-                    netSalary={payslipData?.netSalary ?? latestPayslip.netSalary}
+                    grossSalary={
+                      payslipData?.grossSalary ?? latestPayslip.grossSalary
+                    }
+                    totalDeductions={
+                      payslipData?.totalDeductions ??
+                      latestPayslip.totalDeductions
+                    }
+                    netSalary={
+                      payslipData?.netSalary ?? latestPayslip.netSalary
+                    }
                   />
 
                   <div className="text-right space-y-1.5">
@@ -702,7 +1147,8 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
               <div className="py-4 flex flex-col items-center justify-center text-center">
                 <PayslipEmptyIllustration />
                 <p className="mt-3 text-xs font-normal text-slate-500 dark:text-slate-400 leading-relaxed px-1">
-                  Uh oh! Your Payslip will show up here after the release of Payroll.
+                  Uh oh! Your Payslip will show up here after the release of
+                  Payroll.
                 </p>
               </div>
             )}
@@ -734,7 +1180,9 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
               <button
                 type="button"
                 onClick={() => setShowSalary((prev) => !prev)}
-                aria-label={showSalary ? "Hide Salary Amounts" : "Show Salary Amounts"}
+                aria-label={
+                  showSalary ? "Hide Salary Amounts" : "Show Salary Amounts"
+                }
                 className="text-xs font-semibold text-[#0091FF] hover:underline cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#0091FF] rounded px-1 transition"
               >
                 {showSalary ? "Hide Salary" : "Show Salary"}
@@ -822,7 +1270,8 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
               <div className="flex items-start gap-2.5 py-0.5">
                 <ITDeclarationIllustration />
                 <p className="text-[11px] text-slate-500 leading-relaxed dark:text-slate-400">
-                  Hold on! You can submit your Income Tax (IT) declaration once released.
+                  Hold on! You can submit your Income Tax (IT) declaration once
+                  released.
                 </p>
               </div>
             </div>
@@ -840,7 +1289,8 @@ function MemberDashboard({ workspaceId }: { workspaceId: Id<"workspaces"> }) {
               <div className="flex items-start gap-2.5 py-0.5">
                 <POIIllustration />
                 <p className="text-[11px] text-slate-500 leading-relaxed dark:text-slate-400">
-                  Hold on! You can submit your Proof of Investments (POI) once released.
+                  Hold on! You can submit your Proof of Investments (POI) once
+                  released.
                 </p>
               </div>
             </div>
@@ -871,7 +1321,8 @@ export default function Home() {
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
-  }1
+  }
+  1;
 
   if (!effectiveWorkspaceId) {
     return (
@@ -881,18 +1332,24 @@ export default function Home() {
     );
   }
 
-  const currentWorkspace = workspaces.find((w) => w._id === effectiveWorkspaceId);
+  const currentWorkspace = workspaces.find(
+    (w) => w._id === effectiveWorkspaceId,
+  );
   const role = currentWorkspace?.role;
 
-  return (
-    <div className="flex h-full w-full bg-[#f8fafc] px-6 py-6 dark:bg-black">
-      <div className="mx-auto w-full max-w-7xl">
-        {role === "member" ? (
+  if (role === "member") {
+    return (
+      <div className="flex h-full w-full bg-[#f8fafc] px-6 py-6 dark:bg-black">
+        <div className="mx-auto w-full max-w-7xl">
           <MemberDashboard workspaceId={effectiveWorkspaceId} />
-        ) : (
-          <AdminDashboard workspaceId={effectiveWorkspaceId} />
-        )}
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="w-full min-h-screen bg-white">
+      <AdminDashboard workspaceId={effectiveWorkspaceId} />
     </div>
   );
 }

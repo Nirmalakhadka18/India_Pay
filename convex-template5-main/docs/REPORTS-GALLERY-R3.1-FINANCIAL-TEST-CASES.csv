@@ -1,0 +1,6 @@
+Scenario,EmployeeCode,ScenarioDescription,BasicSalary_INR,GrossSalary_INR,EPFDeduction_INR,ESIDeduction_INR,PTDeduction_INR,LoanEMIDeduction_INR,ReimbursementAddition_INR,ExpectedNetSalary_INR,ApplicationOutputNet_INR,Variance_INR,CalculationStatus
+Scenario 1,EMP001,Standard Salary with PF and PT (Gross > 21k so ESI=0),35000.00,56000.00,1800.00,0.00,200.00,0.00,0.00,54000.00,54000.00,0.00,EXACT_MATCH
+Scenario 2,EMP002,Lower Wage Employee with ESI (Gross <= 21k),12000.00,19200.00,1440.00,144.00,200.00,0.00,0.00,17416.00,17416.00,0.00,EXACT_MATCH
+Scenario 3,EMP003,Executive with Active Loan EMI and Approved Travel Claim,60000.00,96000.00,1800.00,0.00,200.00,5000.00,1200.00,90200.00,90200.00,0.00,EXACT_MATCH
+Scenario 4,EMP004,Negative Deduction Check: Loan Exceeds Net (Zero Floor Enforced),25000.00,40000.00,1800.00,0.00,200.00,45000.00,0.00,0.00,0.00,0.00,EXACT_MATCH
+Scenario 5,COMPANY_JV,Double-Entry Accounting Balance in Payroll Journal Voucher,35000.00,56000.00,4200.00,420.00,200.00,0.00,0.00,51180.00,51180.00,0.00,BALANCED_ZERO_VARIANCE

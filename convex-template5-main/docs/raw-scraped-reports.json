@@ -1,0 +1,1346 @@
+{
+  "categories": [
+    {
+      "category": "Payroll Payout",
+      "reportsCount": 12,
+      "reports": [
+        {
+          "name": "Payroll JV - Reimbursements",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Payment Register",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Payroll Transfer Reconciliation (Payment Type-Wise)",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Bank Transfer Advise",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Bank Transfer Statement",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Payroll JV",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Other Payroll Transfer Statements",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Payroll Transfer Summaries",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Salary Bill Register",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Salary Register",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Salary Register (Cash)",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Salary Statement - Monthly",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Payroll Payout</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showReportUI($even"
+    },
+    {
+      "category": "Payroll Control",
+      "reportsCount": 6,
+      "reports": [
+        {
+          "name": "Duplicate Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Hold-Release Salary Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Employee Reconciliation Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Negative Cost Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Payroll Reconciliation-Consolidated",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Payroll Reconciliation",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Payroll Control</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showReportUI($eve"
+    },
+    {
+      "category": "ESI - EMPLOYEES' STATE INSURANCE FUND",
+      "reportsCount": 9,
+      "reports": [
+        {
+          "name": "ESI Form 1 Declaration Form",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form 11 Accident Book",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "ESI Arrear Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "ESI - Challan Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "ESI Monthly Report Upload Format",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "ESI - Monthly Statement",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "ESI - Monthly Summary Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "ESI - Form 6 - Half Yearly Statement",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "ESI - Form 7 - Half Yearly Statement",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">ESI - EMPLOYEES' STATE INSURANCE FUND</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-cl"
+    },
+    {
+      "category": "PF - Provident Fund",
+      "reportsCount": 26,
+      "reports": [
+        {
+          "name": "EPF Form 11 - Declaration Form",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "EPF Form 2",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - AADHAAR DETAILS OF MEMBERS (ANNEXURE - I)",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Combined Challan Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Combined Challan Report V1",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Form 10C - Employee Pension Scheme",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Form 10 - Consolidated statement of members leaving PF",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Form 12A - PF Monthly Statement of Consolidation paid",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Form 12A - PF Monthly Statement of Consolidation paid V1",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Form 19 - Employee PF Claim Form",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form 19 - PF Composite Claim form ( Aadhar )",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Form 3A",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Form 5 - Consolidated statement of members joining PF",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Form 6A - Consolidated Statement For Contribution Card",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Form R1 - Monthly Return for Employees",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Form R1 - Monthly Return for Employees V1",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "NPS Contribution Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF Wage Ceiling Increase - Analysis Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF And Pension Contribution",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF Arrear Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Monthly Statement",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Monthly StatementV1",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Summary Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - Summary Report V1",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "PF - ECR Format",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Statement of International Workers (IW) - 1 with cover letter",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">PF - Provident Fund</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showReportUI("
+    },
+    {
+      "category": "PT - Profession Tax",
+      "reportsCount": 3,
+      "reports": [
+        {
+          "name": "Profession Tax Monthly Statement (Any State)",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "FORM 5 - Profession Tax Annual Return - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "FORM 5A - Profession Tax Monthly Statement - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">PT - Profession Tax</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showReportUI("
+    },
+    {
+      "category": "Workforce Attrition Reports",
+      "reportsCount": 1,
+      "reports": [
+        {
+          "name": "Attrition Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Workforce Attrition Reports</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showR"
+    },
+    {
+      "category": "Income Tax",
+      "reportsCount": 16,
+      "reports": [
+        {
+          "name": "Monthly TDS Challan",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Income Tax Statement - Consolidated",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Income Tax Worksheet",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Annual Tax Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form 12BB - IT Savings",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Income Tax - Form 16A",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Income Tax - Monthly Statement",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Income Tax Statement",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "IT Landlord Details",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "IT Savings Chapter6 Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "IT Savings Other Reports",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "IT Savings Previous Employement Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "IT Savings Reports",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Monthly TDS challan report - TDS Bank Payment File",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Proof Of Investment Declaration",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Income Tax Liability Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Income Tax</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showReportUI($event, r"
+    },
+    {
+      "category": "Reimbursement",
+      "reportsCount": 7,
+      "reports": [
+        {
+          "name": "Reimbursement Balance Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Reimbursement Claim Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Detailed Reimbursement Summary Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Reimbursement Overall Entitlement Summary Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Reimbursement Summary Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Reimbursement Transaction Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Reimbursement YTD Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Reimbursement</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showReportUI($event"
+    },
+    {
+      "category": "Loan",
+      "reportsCount": 4,
+      "reports": [
+        {
+          "name": "Loan Balance Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Loan Summary Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Loan Transaction Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Loan Details Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Loan</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showReportUI($event, r)\"><sp"
+    },
+    {
+      "category": "Claims",
+      "reportsCount": 1,
+      "reports": [
+        {
+          "name": "Claim bank transfer statement",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Claims</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showReportUI($event, r)\"><"
+    },
+    {
+      "category": "MIS Reports",
+      "reportsCount": 34,
+      "reports": [
+        {
+          "name": "LOP Reversal Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Arrear Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Compensation Item Statement - Monthly",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Compensation Item Statement - Consolidated",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Reimbursement Duplicate bills Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Employee Bio data",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Employee Filter Configuration Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Employee Master information Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Excel Import Log Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Exit Interview Checklist",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "FORM 12B",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form 25 - Gratuity Nomination Form",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Salary Input History",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Implementation Verification Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Monthly Change Tracking Report for Employee Info Updates",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Overrides Report (EmployeeWise)",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Overrides Report (ItemWise)",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Payroll Anomalies Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "ReSettlement Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Reversal transaction Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Salary Revision History",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Salary Structure Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Settlement Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "User Activity Log Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "YTD Statement",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "YTD Statement Consolidated Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "YTD Summary Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "CTC Breakup Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "IT declaration revoked employee list",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Bonus Statement",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "LIC Statement",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Nomination Details Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Salary Payout Reconciliation Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Salary Summary Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">MIS Reports</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showReportUI($event, "
+    },
+    {
+      "category": "Leave",
+      "reportsCount": 9,
+      "reports": [
+        {
+          "name": "Leave Availed Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Leave Backdated Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Leave Balance As On A Day",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Day Wise Leave Transaction Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Leave Encashment Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Negative Leave Balance",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Leave Summary Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Leave Transaction Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Year Wise Summary Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Leave</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showReportUI($event, r)\"><s"
+    },
+    {
+      "category": "Help Desk",
+      "reportsCount": 2,
+      "reports": [
+        {
+          "name": "Response Time Report (Help Desk Ticket)",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Help Desk Tickets Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Help Desk</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showReportUI($event, r)"
+    },
+    {
+      "category": "Labour Welfare Fund Act - Karnataka",
+      "reportsCount": 2,
+      "reports": [
+        {
+          "name": "Form B - Register Of Fines And Unpaid Accumulations - Labour Welfare Fund Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "FORM D - Statement of Employer's and Employee's Contribution - Labour Welfare Fund Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Labour Welfare Fund Act - Karnataka</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-clic"
+    },
+    {
+      "category": "Minimum Wages Rules - Karnataka",
+      "reportsCount": 7,
+      "reports": [
+        {
+          "name": "Form II - Register of deductions for absence from duty or for damage or loss caused to the employee by the neglect or default of the employed persons - Minimum Wages Rules - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form IV - Overtime Time Register - Minimum Wages Rules - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form I - Register of Fines - Minimum Wages Rules - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form VII - Muster Roll - Minimum Wages Rules - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form VI - Wage slip - Minimum Wages Rules - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form V - Register of wages - Minimum Wages Rules - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form III - Annual Return - Minimum Wages Rules - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Minimum Wages Rules - Karnataka</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"s"
+    },
+    {
+      "category": "Factories Act - Karnataka",
+      "reportsCount": 7,
+      "reports": [
+        {
+          "name": "Form 9 - Overtime Register - Factories Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form 20 - Combined annual return - Factories Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form 11 - Register of Adult workers - Factories Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form 14 - Register of leave with wages - Factories Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form 15 - Leave book - Factories Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form 21 - Half Yearly Return - Factories Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form 22 - Muster Roll cum Wage register - Factories Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Factories Act - Karnataka</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showRep"
+    },
+    {
+      "category": "Maternity Benefit Act - Central",
+      "reportsCount": 1,
+      "reports": [
+        {
+          "name": "Form A - Muster Roll - ( NIL Register ) - Maternity Benefit Act - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Maternity Benefit Act - Central</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"s"
+    },
+    {
+      "category": "CLRA Act & Rules - Central",
+      "reportsCount": 11,
+      "reports": [
+        {
+          "name": "Form XIII - Register of Workmen Employed by Contractor - CLRA Act & Rules - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form XII - Register of contractors - CLRA Act & Rules - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form XIV - Employment Card - CLRA Act & Rules - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form XIX - Wages Slip - CLRA Rules - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form XVII - Register of Wages - CLRA Act & Rules - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form XVI - Muster Roll - CLRA Act & Rules - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form XV - Service Certificate - CLRA Act & Rules - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form XX - Register of Deductions for Damage or Loss - CLRA Act & Rules - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form XXI - Register of Fines - CLRA Act & Rules - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form XXII - Register of Advances - CLRA Act & Rules - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form XXIII - Register of Overtime - CLRA Act & Rules - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">CLRA Act &amp; Rules - Central</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"sh"
+    },
+    {
+      "category": "Payment of Bonus Act - Central",
+      "reportsCount": 2,
+      "reports": [
+        {
+          "name": "Form C - Bonus Paid To Employees - Payment of Bonus Act - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form D - Annual Return bonus paid to employees - Payment of Bonus Act - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Payment of Bonus Act - Central</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"sh"
+    },
+    {
+      "category": "Equal Remuneration Act - Central",
+      "reportsCount": 1,
+      "reports": [
+        {
+          "name": "Form D - Register To Be Maintained By The Employer - Equal Remuneration Act - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Equal Remuneration Act - Central</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\""
+    },
+    {
+      "category": "Workmen's Compensation Act",
+      "reportsCount": 1,
+      "reports": [
+        {
+          "name": "Form 35 - Form of Notice Book - Workmen's Compensation Act - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Workmen's Compensation Act</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showRe"
+    },
+    {
+      "category": "Ease of Compliance - Central",
+      "reportsCount": 4,
+      "reports": [
+        {
+          "name": "Form A - Employee Register - Ease of Compliance - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form B - Wage Register - Ease of Compliance - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form C - Register of Loan/Recoveries - Ease of Compliance - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form D - Attendance Register - Ease of Compliance - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Ease of Compliance - Central</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"show"
+    },
+    {
+      "category": "Shops & Est Act - Karnataka",
+      "reportsCount": 6,
+      "reports": [
+        {
+          "name": "Form U - Combined annual return - Shops & Est. Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form Q - Appointment Order - Shops & Est. Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form T - Combined Muster Roll cum Register of Wages - Shops & Est. Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form R - Request for exemption for employing women in night shift - Shops & Est. Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form F - Register of Leave with wages - Shops & Est. Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form H - Leave with wages book - Shops & Est. Act - Karnataka",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Shops &amp; Est Act - Karnataka</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"s"
+    },
+    {
+      "category": "Tamil Nadu Labour Welfare Fund Act, 1972",
+      "reportsCount": 1,
+      "reports": [
+        {
+          "name": "Form A Statement of Contributions to Labour Welfare Fund Tamil Nadu",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Tamil Nadu Labour Welfare Fund Act, 1972</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng"
+    },
+    {
+      "category": "Labour Reports",
+      "reportsCount": 14,
+      "reports": [
+        {
+          "name": "Form 10 - Overtime muster-roll for persons on exempted work month ending(Himachal Pradesh)",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form 10 - Overtime muster-roll for persons on exempted work month ending (Uttar Pradesh)",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form 16 - Register of Leave with Wages - Rajasthan",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form 25 - Muster roll and register of compensatory Holiday(Tamilnadu)",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form 28 - Muster Roll - Gujarat",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form V - Wages Slip - Haryana",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form No XXIX Register of Advances Deductions for Damages or Loss and Fines",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form I Register of Wages Overtime Fine and Deduction for damage and Loss",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form XXVIII - Wage slip",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form X Identity Card",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form VI Contract Labour (Regulation & Abolition) Central Rules",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form XXVI Register Of Employment Of Contract Labour",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form II - Muster Roll Cum Wage Register",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Form VI - Wage Slip - Karnataka Minimum Wages Rules",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Labour Reports</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showReportUI($even"
+    },
+    {
+      "category": "Payment of Gratuity Act - Central",
+      "reportsCount": 1,
+      "reports": [
+        {
+          "name": "Form F - Nomination - Payment of Gratuity Act - Central",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">Payment of Gratuity Act - Central</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click="
+    },
+    {
+      "category": "HR Reports",
+      "reportsCount": 4,
+      "reports": [
+        {
+          "name": "Anniversary Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Employee Family Details",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "Transitionwise Head Count Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        },
+        {
+          "name": "User Access Rights Report",
+          "href": "",
+          "onclick": "",
+          "hasStar": true
+        }
+      ],
+      "outerHTMLSnippet": "<div class=\"inner\">\n\t\t\t\t\t<h4><i class=\"icon-gt-reports icon-2x pull-left\"></i> <span class=\"ng-binding\">HR Reports</span></h4>\n\t\t\t\t\t<ul class=\"nav nav-stacked\">\n\t\t\t\t\t\t<!-- ngRepeat: r in g.reports --><li ng-repeat=\"r in g.reports\" class=\"ng-scope\"><a class=\"nav-item\" ng-click=\"showReportUI($event, r"
+    }
+  ],
+  "stateOptions": []
+}

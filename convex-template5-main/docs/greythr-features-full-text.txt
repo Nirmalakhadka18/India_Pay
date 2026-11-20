@@ -1,0 +1,207 @@
+Hide Help
+
+This page lists all the features that have been enabled in the software.
+
+Explore greytHR by Help-Doc, watching How-to Videos and FAQ.
+
+16 of 25 features selected
+Show All | Show Selected | Show Unselected
+     Aadhaar Validation
+Since 3 years ago
+Enable this feature
+
+
+
+Employees in an organization would be eligble for aadhaar validation while doing Employee onboarding
+
+     Alumni Portal
+Since 3 years ago
+Enable this feature
+
+
+
+Enabling this lets your ex-employees access their payslips, form 16, IT statement, Letters and more using the portal after they've left the company. Note: It's an add-on feature to your account.
+
+ Bulletin Board
+Since 16 years ago
+You enabled this feature on Jul 24, 2024 @ 5:30AM    Disable
+
+
+
+Bulletin Board is a space intended for the posting of public messages to the Employees.
+
+ Company Policies and Forms
+Since 15 years ago
+You enabled this feature on Oct 29, 2020 @ 5:30AM    Disable
+
+
+
+This module allows you to upload various forms like PF forms, ESI Forms, etc, and Company Policies like Leave Policies, Data and Mobile Expenses Reimbursement Policy, etc that can be published to the employees.
+
+     DataShare Hub
+Since 4 years ago
+Enable this feature
+
+
+
+The DataShare Hub module will facilitate the document and the report exchange between the PSP and their customers to process the payroll successfully
+
+ Digital Signature for Letters
+Since a year ago
+You enabled this feature on Mar 23, 2026 @ 5:30AM    Disable
+
+
+
+Enabling this lets you digitally sign letters issued to your employees, ensuring authenticity, integrity, and compliance. The signed documents are legally valid and secure. Note: It's an add-on feature to your account.
+
+ Document Centre
+Since 16 years ago
+You enabled this feature on Jul 24, 2024 @ 5:30AM    Disable
+
+
+
+Document Centre module helps you to upload Employee specific documents like Appraisal letter, Confirmation Letter, Incentive / Bonus letter, etc.
+
+ Employee Attendance Permission
+Since 4 years ago
+You enabled this feature on Jul 5, 2023 @ 5:30AM    Disable
+
+
+
+To provide employee to take permission for particular time of the day.
+
+ Employee CTC Break Up
+Since 15 years ago
+You enabled this feature on Sep 22, 2026 @ 5:30AM    Disable
+
+
+
+Employees can view and print their CTC salary item breakups.
+
+ Employee Confirmation
+Since 4 years ago
+You enabled this feature on May 16, 2024 @ 5:30AM    Disable
+
+
+
+To provide a comprehensive employee confirmation module that helps admins completely automate employee confirmation from probation.
+
+ Employee Exit
+Since 5 years ago
+You enabled this feature on Oct 5, 2026 @ 5:30AM    Disable
+
+
+
+Exit Module lets you manage all the exit formalities during an employee’s voluntary or involuntary termination. With this module, you can manage the employee’s offboarding journey right from initiating an exit request upto releasing the post exit documents.
+
+ Engage-Feedback
+Since 3 years ago
+You enabled this feature on Jun 25, 2024 @ 5:30AM    Disable
+
+
+
+Feedback App collects user feedback to improve products, services, and experiences, offering actionable insights for developers and stakeholders.
+
+ Engage-Kudos
+Since 3 years ago
+You enabled this feature on Jun 25, 2024 @ 5:30AM    Disable
+
+
+
+Kudos is a app which used to express praise, admiration, or congratulations for someone's achievements or actions.
+
+ Engage-Poll
+Since 3 years ago
+You enabled this feature on Jun 25, 2024 @ 5:30AM    Disable
+
+
+
+Gather insights and preferences from team members on various topics by creating polls.
+
+     Geofence Auto Sign in
+Since 4 years ago
+Enable this feature
+
+
+
+This feature is used to capture the attendance swipe from geofence automatically by detecting the GPS of the Employee through the mobile device.
+
+     Insurance
+Since 6 years ago
+Enable this feature
+
+
+
+This module enables you to add Insurance type, Name of the Insured, Insurance Provider, Policy No and Sum Insured along with Insurance Issued and expiry date. By providing permissions employee can view and edit the insurance details
+
+     Kiosk for Attendance Capture
+Since 6 years ago
+Enable this feature
+
+
+
+Kiosk for Attendance Capture using face recognition.
+
+ Loan Workflow
+Since 4 years ago
+You enabled this feature on Sep 22, 2026 @ 5:30AM    Disable
+
+
+
+The process involves having a workflow option for the loans and salary advance which will allow the employees to apply for the loans and take approval within the system
+
+     Manpower Planning
+Since 6 months ago
+Enable this feature
+
+
+
+Manpower Planning Module
+
+ Nomination Details
+Since 14 years ago
+You enabled this feature on May 29, 2023 @ 5:30AM    Disable
+
+
+
+Employee's Nomination Details for EPF, EPS, ESI etc.
+
+ Org Chart ESS
+Since 4 years ago
+You enabled this feature on Mar 7, 2023 @ 5:30AM    Disable
+
+
+
+Enable Organization Chart for ESS
+
+     Overtime
+Since 6 years ago
+Enable this feature
+
+
+
+Overtime module looks at capturing any excess hours worked by the employee beyond his call of duty, after shift. The excess hours will be paid to the employee as an Overtime payment through the payroll module as per the clients payout policies and set workflows.
+
+ Passport and Visa Details
+Since 15 years ago
+You enabled this feature on Oct 5, 2026 @ 5:30AM    Disable
+
+
+
+User can update or add his/her family Passport details and Visa details
+
+     Split Shift
+Since 3 years ago
+Enable this feature
+
+
+
+Enabling the Split Shift service code allows administrators to configure Split Shift-related information using relevant fields in the Greythr application
+
+ Unite
+Since 4 years ago
+You enabled this feature on May 16, 2024 @ 5:30AM    Disable
+
+
+
+Enable Marketplace

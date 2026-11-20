@@ -1,0 +1,28 @@
+[
+  {
+    "feature": "Help banner toggle",
+    "status": "Partially verified",
+    "note": "Hide Help button not visible"
+  },
+  {
+    "feature": "Month timeline switching",
+    "status": "Partially verified",
+    "note": "Dec 2026 not clicked"
+  },
+  {
+    "feature": "Payroll unlock toggle",
+    "status": "Partially verified"
+  },
+  {
+    "feature": "Employee View Hold toggle",
+    "status": "Partially verified"
+  },
+  {
+    "feature": "Payslip update action",
+    "status": "Partially verified"
+  },
+  {
+    "feature": "What's New widget",
+    "status": "Partially verified"
+  }
+]

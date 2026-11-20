@@ -1,0 +1,229 @@
+{
+  "lov": {
+    "currentUrl": "https://victorchasex.greythr.com/ngapp/settings/general/lov",
+    "title": "greytHR",
+    "breadcrumb": [],
+    "buttons": [
+      "Save",
+      "OK",
+      "Confirm",
+      "Cancel"
+    ],
+    "headers": [],
+    "inputCount": 8,
+    "inputs": [
+      {
+        "name": "",
+        "placeholder": "Search here",
+        "type": "text",
+        "id": ""
+      },
+      {
+        "name": "",
+        "type": "select-one",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "Search...",
+        "type": "text",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "",
+        "type": "checkbox",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "",
+        "type": "checkbox",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "",
+        "type": "checkbox",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "",
+        "type": "checkbox",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "",
+        "type": "number",
+        "id": ""
+      }
+    ],
+    "bodySnippet": "Please Select\n\n\n \n \nDescription\n \nCode\n \n \n \n \n \n \n\n\nSave"
+  },
+  "bank-branch": {
+    "currentUrl": "https://victorchasex.greythr.com/ngapp/settings/general/bank-branch",
+    "title": "greytHR",
+    "breadcrumb": [],
+    "buttons": [
+      "Save",
+      "OK",
+      "Confirm",
+      "Cancel"
+    ],
+    "headers": [],
+    "inputCount": 8,
+    "inputs": [
+      {
+        "name": "",
+        "placeholder": "Search here",
+        "type": "text",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "",
+        "type": "text",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "Search...",
+        "type": "text",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "",
+        "type": "checkbox",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "",
+        "type": "checkbox",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "",
+        "type": "checkbox",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "",
+        "type": "checkbox",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "",
+        "type": "number",
+        "id": ""
+      }
+    ],
+    "bodySnippet": "Hide Help\n\nThe Bank Branch page enables you to set up and manage all the company's banks' branch information. Choose the bank from the drop-down to view the details. Double-click on a blank line to add details of a new bank.  \n\nExplore greytHR by watching Help-Doc,  How-to Videos and FAQ.\n\nBank: Please Select Bank Name  \n \nDescription\n \nIFSC Code\n \n \n \n \n  \nSave"
+  },
+  "company-bank": {
+    "currentUrl": "https://victorchasex.greythr.com/ngapp/settings/general/company-bank",
+    "title": "greytHR",
+    "breadcrumb": [],
+    "buttons": [
+      "Save",
+      "OK",
+      "Confirm",
+      "Cancel"
+    ],
+    "headers": [],
+    "inputCount": 3,
+    "inputs": [
+      {
+        "name": "",
+        "placeholder": "Search here",
+        "type": "text",
+        "id": ""
+      },
+      {
+        "name": "company",
+        "type": "select-one",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "",
+        "type": "text",
+        "id": ""
+      }
+    ],
+    "bodySnippet": " Loading...\nHide Help\n\nThe Company Bank Details page allows you to update the bank details such as Bank Name, Bank Branch, IFS code, Account number, IBAN, etc. \n\nExplore greytHR by watching How-to Videos  Help-Doc, and FAQ.\n\nCompany Name\n      \n\n\n#\nBank Name\nBank Branch\nIFSC Code\nAccount Number\nIBAN\nActions\nLoading...\n\n\nSave"
+  },
+  "state": {
+    "currentUrl": "https://victorchasex.greythr.com/ngapp/settings/general/state",
+    "title": "greytHR",
+    "breadcrumb": [],
+    "buttons": [
+      "OK",
+      "Confirm",
+      "Cancel"
+    ],
+    "headers": [],
+    "inputCount": 0,
+    "inputs": [],
+    "bodySnippet": ""
+  },
+  "emp-no-series": {
+    "currentUrl": "https://victorchasex.greythr.com/ngapp/settings/employee/emp-no-series",
+    "title": "greytHR",
+    "breadcrumb": [],
+    "buttons": [
+      "OK",
+      "Confirm",
+      "Cancel"
+    ],
+    "headers": [],
+    "inputCount": 1,
+    "inputs": [
+      {
+        "name": "",
+        "placeholder": "Search here",
+        "type": "text",
+        "id": ""
+      }
+    ],
+    "bodySnippet": " Loading..."
+  },
+  "transitiongroup": {
+    "currentUrl": "https://victorchasex.greythr.com/ngapp/settings/employee/transition-group",
+    "title": "greytHR",
+    "breadcrumb": [],
+    "buttons": [
+      "OK",
+      "Confirm",
+      "Cancel"
+    ],
+    "headers": [],
+    "inputCount": 3,
+    "inputs": [
+      {
+        "name": "",
+        "placeholder": "Search here",
+        "type": "text",
+        "id": ""
+      },
+      {
+        "name": "transGroup",
+        "type": "select-one",
+        "id": ""
+      },
+      {
+        "name": "",
+        "placeholder": "",
+        "type": "text",
+        "id": ""
+      }
+    ],
+    "bodySnippet": "Hide Help\n\nThroughout the application, there are many screens where one or more employee categories are used.\nThese categories may be for filtering or for displaying related employee information.\nFrom here, you can configure which employee categories to display for the various screens.\n\nExplore the Category Group page with help doc.\n\nScreen\nNo Category has been selected.\n\n\n\n\nAvailable Categories\n\n\nSelected Categories"
+  }
+}

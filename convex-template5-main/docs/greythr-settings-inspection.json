@@ -1,0 +1,242 @@
+{
+  "title": "greytHR",
+  "currentUrl": "https://victorchasex.greythr.com/ngapp/settings/general/company-info",
+  "breadcrumbs": [],
+  "navLinks": [],
+  "labels": [
+    "Company Name",
+    "Company Address",
+    "Country *",
+    "States",
+    "Industry *",
+    "Time Zone *",
+    "Currency *",
+    "PF No",
+    "TAN No",
+    "PAN No",
+    "",
+    "ESI No",
+    "LIN No",
+    "GST No",
+    "",
+    "Registration Certificate No",
+    "Twitter Handle",
+    "",
+    "Company Logo",
+    "Signature Upload"
+  ],
+  "inputs": [
+    {
+      "name": "",
+      "id": "",
+      "placeholder": "Search here",
+      "type": "text",
+      "value": "",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "companyName",
+      "id": "",
+      "placeholder": "",
+      "type": "text",
+      "value": "Victor Chasex Private Limited",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "companyAddress",
+      "id": "",
+      "placeholder": "",
+      "type": "textarea",
+      "value": "2ND AND 3RD FLOOR, L-149, SRI ESHWARI MANSION, 5TH MAIN, 6TH SECTOR, HSR LAYOUT, BENGALURU,",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "country",
+      "id": "",
+      "type": "select-one",
+      "value": "7d31e0da1ab99fe8b08a22118e2f402b",
+      "disabled": false,
+      "required": true
+    },
+    {
+      "name": "",
+      "id": "",
+      "placeholder": "",
+      "type": "text",
+      "value": "",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "companyLocations",
+      "id": "",
+      "type": "select-multiple",
+      "value": "2a38a4a9316c49e5a833517c45d31070",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "",
+      "id": "",
+      "placeholder": "",
+      "type": "text",
+      "value": " ",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "companyIndustry",
+      "id": "",
+      "type": "select-one",
+      "value": "",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "",
+      "id": "",
+      "placeholder": "",
+      "type": "text",
+      "value": "",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "timezoneID",
+      "id": "",
+      "type": "select-one",
+      "value": "Asia/Kolkata",
+      "disabled": false,
+      "required": true
+    },
+    {
+      "name": "",
+      "id": "",
+      "placeholder": "",
+      "type": "text",
+      "value": "",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "currencyID",
+      "id": "",
+      "type": "select-one",
+      "value": "1",
+      "disabled": false,
+      "required": true
+    },
+    {
+      "name": "",
+      "id": "",
+      "placeholder": "",
+      "type": "text",
+      "value": "",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "companyPFNO",
+      "id": "",
+      "placeholder": "",
+      "type": "text",
+      "value": "",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "companyTANno",
+      "id": "",
+      "placeholder": "",
+      "type": "text",
+      "value": "BLRV15833G",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "companyPANNumber",
+      "id": "",
+      "placeholder": "",
+      "type": "text",
+      "value": "AAFCV8353F",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "companyESINumber",
+      "id": "",
+      "placeholder": "",
+      "type": "text",
+      "value": "",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "labourIdentificationNo",
+      "id": "",
+      "placeholder": "",
+      "type": "text",
+      "value": "",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "companyGSTNo",
+      "id": "",
+      "placeholder": "",
+      "type": "text",
+      "value": "29AAFCV8353F1ZY",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "certificateNo",
+      "id": "",
+      "placeholder": "",
+      "type": "text",
+      "value": "",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "twitterHandle",
+      "id": "",
+      "placeholder": "",
+      "type": "text",
+      "value": "",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "file",
+      "id": "",
+      "placeholder": "",
+      "type": "file",
+      "value": "",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "name": "file",
+      "id": "",
+      "placeholder": "",
+      "type": "file",
+      "value": "",
+      "disabled": false,
+      "required": false
+    }
+  ],
+  "buttons": [
+    "Upload Logo",
+    "Upload Signature",
+    "OK",
+    "OK",
+    "OK",
+    "Confirm",
+    "Cancel"
+  ],
+  "bodyTextSnippet": "Hide Help\n\nExplore the Company Settings page with help doc and faqs.\n\nCompany Name\nCompany Address\nCountry *\nIndia\nStates\nKarnataka\nTime Zone *\n(UTC+05:30) Asia/Kolkata\nCurrency *\nIndian Rupee [INR]\nPF No\nTAN No\nPAN No\nESI No\nLIN No\nGST No\nRegistration Certificate No\nTwitter Handle\n\n\nCompany Logo\n\n\nSignature Upload\nUpload Signature\nLogo dimensions to be 210 x 70 pixels (max 2MB)\nGIF, JPG and PNG file formats are supported.\nSave"
+}

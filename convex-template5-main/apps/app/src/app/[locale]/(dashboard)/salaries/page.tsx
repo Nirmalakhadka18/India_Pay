@@ -23,8 +23,8 @@ import {
   Trash2,
   Wand2,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 export default function SalariesPage() {
@@ -104,11 +104,11 @@ function SalariesContent() {
     const gross = Number(monthlyGross) || 0;
     const basic = Number(basicSalary) || 0;
     const nonSpecial = allowances.filter(
-      (a) => a.name.trim().toLowerCase() !== "special allowance"
+      (a) => a.name.trim().toLowerCase() !== "special allowance",
     );
     const nonSpecialSum = nonSpecial.reduce(
       (acc, a) => acc + (a.amount || 0),
-      0
+      0,
     );
     const remainder = Math.max(0, gross - basic - nonSpecialSum);
 
@@ -123,7 +123,7 @@ function SalariesContent() {
   const basicNum = Number(basicSalary) || 0;
   const allowancesTotal = allowances.reduce(
     (sum, a) => sum + (Number(a.amount) || 0),
-    0
+    0,
   );
   const totalComponents = basicNum + allowancesTotal;
   const diff = grossNum - totalComponents;
@@ -164,15 +164,15 @@ function SalariesContent() {
         (existing.basicSalary || 0) +
           (existing.allowances || []).reduce(
             (acc, a) => acc + (a.amount || 0),
-            0
+            0,
           );
       setMonthlyGross(computedGross > 0 ? computedGross.toString() : "");
       setBasicSalary(existing.basicSalary?.toString() ?? "");
       setAllowances(
-        existing.allowances ? existing.allowances.map((a) => ({ ...a })) : []
+        existing.allowances ? existing.allowances.map((a) => ({ ...a })) : [],
       );
       setDeductions(
-        existing.deductions ? existing.deductions.map((d) => ({ ...d })) : []
+        existing.deductions ? existing.deductions.map((d) => ({ ...d })) : [],
       );
     } else {
       setMonthlyGross("");
@@ -352,7 +352,9 @@ function SalariesContent() {
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold">Effective Date</label>
+                    <label className="text-sm font-semibold">
+                      Effective Date
+                    </label>
                     <Input
                       type="date"
                       required
@@ -377,7 +379,8 @@ function SalariesContent() {
                       className="h-7 text-xs"
                       onClick={() => apply502030Distribution(grossNum)}
                     >
-                      <Wand2 className="mr-1.5 h-3 w-3" /> Auto-Distribute (50/20/30)
+                      <Wand2 className="mr-1.5 h-3 w-3" /> Auto-Distribute
+                      (50/20/30)
                     </Button>
                   </div>
                 )}
@@ -391,7 +394,8 @@ function SalariesContent() {
                       Salary Components (Gross Breakdown)
                     </h3>
                     <p className="text-xs text-muted-foreground">
-                      Basic is a core component. The sum of Basic and all allowances must equal the entered Monthly Gross Salary.
+                      Basic is a core component. The sum of Basic and all
+                      allowances must equal the entered Monthly Gross Salary.
                     </p>
                   </div>
                   <Button
@@ -409,7 +413,9 @@ function SalariesContent() {
                 {/* Core Component: Basic */}
                 <div className="flex items-center gap-3 rounded-md border bg-muted/30 p-3">
                   <div className="w-1/2">
-                    <div className="text-xs font-semibold text-primary">Basic Salary</div>
+                    <div className="text-xs font-semibold text-primary">
+                      Basic Salary
+                    </div>
                     <div className="text-[11px] text-muted-foreground">
                       Core statutory component (50% standard)
                     </div>
@@ -509,8 +515,13 @@ function SalariesContent() {
                     )}
                   </div>
                   <div className="mt-1 flex gap-4 text-[11px] opacity-90">
-                    <span>Budgeted Gross: ₹{grossNum.toLocaleString("en-IN")}</span>
-                    <span>Components Total: ₹{totalComponents.toLocaleString("en-IN")}</span>
+                    <span>
+                      Budgeted Gross: ₹{grossNum.toLocaleString("en-IN")}
+                    </span>
+                    <span>
+                      Components Total: ₹
+                      {totalComponents.toLocaleString("en-IN")}
+                    </span>
                     <span>Difference: ₹{diff.toLocaleString("en-IN")}</span>
                   </div>
                 </div>
@@ -520,9 +531,12 @@ function SalariesContent() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="text-sm font-semibold">Other / Voluntary Deductions</label>
+                    <label className="text-sm font-semibold">
+                      Other / Voluntary Deductions
+                    </label>
                     <p className="text-xs text-muted-foreground">
-                      Statutory deductions (PF, ESI, PT) are computed automatically during payroll runs.
+                      Statutory deductions (PF, ESI, PT) are computed
+                      automatically during payroll runs.
                     </p>
                   </div>
                   <Button

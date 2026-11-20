@@ -23,7 +23,9 @@ export default function SalaryRevisionPage() {
               <path d="M0 0H16V20L8 15L0 20V0Z" fill="#F59E0B" />
             </svg>
           </div>
-          <h1 className="text-base font-semibold text-primary">Salary Revision</h1>
+          <h1 className="text-base font-semibold text-primary">
+            Salary Revision
+          </h1>
         </div>
       </div>
 
@@ -44,17 +46,56 @@ export default function SalaryRevisionPage() {
             >
               <g transform="translate(65, 25)">
                 {/* Board / Chart background */}
-                <rect x="0" y="0" width="110" height="75" rx="6" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="2.5" />
-                <path d="M15 60L40 40L65 50L95 22" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                <rect
+                  x="0"
+                  y="0"
+                  width="110"
+                  height="75"
+                  rx="6"
+                  fill="#FFFFFF"
+                  stroke="#CBD5E1"
+                  strokeWidth="2.5"
+                />
+                <path
+                  d="M15 60L40 40L65 50L95 22"
+                  stroke="#94A3B8"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
                 <circle cx="95" cy="22" r="4" fill="#0091FF" />
                 <circle cx="40" cy="40" r="3" fill="#94A3B8" />
                 <circle cx="65" cy="50" r="3" fill="#94A3B8" />
-                <line x1="15" y1="65" x2="95" y2="65" stroke="#E2E8F0" strokeWidth="2" strokeLinecap="round" />
+                <line
+                  x1="15"
+                  y1="65"
+                  x2="95"
+                  y2="65"
+                  stroke="#E2E8F0"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
               </g>
               <circle cx="45" cy="85" r="5" fill="#E2E8F0" />
               <circle cx="195" cy="45" r="4" fill="#E2E8F0" />
-              <line x1="185" y1="95" x2="195" y2="95" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
-              <line x1="190" y1="90" x2="190" y2="100" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
+              <line
+                x1="185"
+                y1="95"
+                x2="195"
+                y2="95"
+                stroke="#CBD5E1"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <line
+                x1="190"
+                y1="90"
+                x2="190"
+                y2="100"
+                stroke="#CBD5E1"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
             </svg>
 
             {/* Exact greytHR wording */}
@@ -62,7 +103,8 @@ export default function SalaryRevisionPage() {
               Nothing to show!
             </h3>
             <p className="mt-1 max-w-sm text-xs text-gray-400 dark:text-gray-500">
-              Looks like your salary revision has not been generated yet. Drop by later and we&apos;ll have it ready for you
+              Looks like your salary revision has not been generated yet. Drop
+              by later and we&apos;ll have it ready for you
             </p>
           </div>
         </div>

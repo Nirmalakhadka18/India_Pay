@@ -1,10 +1,10 @@
 "use client";
 
+import { GreytHRIcon } from "@/components/greythr-icon";
 import { useWorkspace } from "@/lib/useWorkspace";
 import { api } from "@v1/backend/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { useMemo, useState } from "react";
-import { GreytHRIcon } from "@/components/greythr-icon";
 
 interface HolidayItem {
   date: string; // YYYY-MM-DD
@@ -15,7 +15,9 @@ interface HolidayItem {
 
 // Exact 2026 Statutory Holidays from greytHR Reference Screenshot
 const REFERENCE_HOLIDAYS_2026: Record<number, HolidayItem[]> = {
-  0: [{ date: "2026-01-26", dayNum: "26", dayName: "Mon", name: "Republic Day" }],
+  0: [
+    { date: "2026-01-26", dayNum: "26", dayName: "Mon", name: "Republic Day" },
+  ],
   1: [],
   2: [],
   3: [],
@@ -30,13 +32,30 @@ const REFERENCE_HOLIDAYS_2026: Record<number, HolidayItem[]> = {
   5: [],
   6: [],
   7: [
-    { date: "2026-08-15", dayNum: "15", dayName: "Sat", name: "Independence Day" },
+    {
+      date: "2026-08-15",
+      dayNum: "15",
+      dayName: "Sat",
+      name: "Independence Day",
+    },
     { date: "2026-08-26", dayNum: "26", dayName: "Wed", name: "Onam" },
     { date: "2026-08-28", dayNum: "28", dayName: "Fri", name: "Rakshabandhan" },
   ],
-  8: [{ date: "2026-09-14", dayNum: "14", dayName: "Mon", name: "Ganesh Chaturthi" }],
+  8: [
+    {
+      date: "2026-09-14",
+      dayNum: "14",
+      dayName: "Mon",
+      name: "Ganesh Chaturthi",
+    },
+  ],
   9: [
-    { date: "2026-10-02", dayNum: "02", dayName: "Fri", name: "Gandhi Jayanti" },
+    {
+      date: "2026-10-02",
+      dayNum: "02",
+      dayName: "Fri",
+      name: "Gandhi Jayanti",
+    },
     { date: "2026-10-20", dayNum: "20", dayName: "Tue", name: "Mahanavami" },
   ],
   10: [
@@ -50,8 +69,18 @@ const REFERENCE_HOLIDAYS_2026: Record<number, HolidayItem[]> = {
 };
 
 const MONTH_NAMES = [
-  "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
-  "JUL", "AUG", "SEP", "OCT", "NOV", "DEC",
+  "JAN",
+  "FEB",
+  "MAR",
+  "APR",
+  "MAY",
+  "JUN",
+  "JUL",
+  "AUG",
+  "SEP",
+  "OCT",
+  "NOV",
+  "DEC",
 ];
 
 const DAY_ABBR = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -66,8 +95,18 @@ export default function HolidayCalendarPage() {
   // Group backend holidays by month (0-11)
   const holidaysByMonth = useMemo(() => {
     const grouped: Record<number, HolidayItem[]> = {
-      0: [], 1: [], 2: [], 3: [], 4: [], 5: [],
-      6: [], 7: [], 8: [], 9: [], 10: [], 11: [],
+      0: [],
+      1: [],
+      2: [],
+      3: [],
+      4: [],
+      5: [],
+      6: [],
+      7: [],
+      8: [],
+      9: [],
+      10: [],
+      11: [],
     };
 
     if (selectedYear === 2026) {
@@ -160,7 +199,10 @@ export default function HolidayCalendarPage() {
                   {hasHolidays ? (
                     <div className="space-y-3">
                       {list.map((h) => (
-                        <div key={`${h.name}-${h.date}`} className="flex items-start gap-3">
+                        <div
+                          key={`${h.name}-${h.date}`}
+                          className="flex items-start gap-3"
+                        >
                           <div className="shrink-0 text-left">
                             <span className="block text-sm font-semibold text-slate-700 dark:text-slate-200 leading-none">
                               {h.dayNum}

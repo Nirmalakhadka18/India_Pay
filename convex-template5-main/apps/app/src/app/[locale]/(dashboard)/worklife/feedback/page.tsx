@@ -87,8 +87,7 @@ export default function FeedbackPage() {
     if (!kudosRaw || !me) return [];
     return kudosRaw.filter(
       (k) =>
-        k.senderEmployeeId === me._id &&
-        k.badge.startsWith("feedback:review:"),
+        k.senderEmployeeId === me._id && k.badge.startsWith("feedback:review:"),
     );
   }, [kudosRaw, me]);
 
@@ -190,7 +189,9 @@ export default function FeedbackPage() {
         setReqSuccess(null);
       }, 1200);
     } catch (err: unknown) {
-      setReqError(err instanceof Error ? err.message : "Failed to submit request.");
+      setReqError(
+        err instanceof Error ? err.message : "Failed to submit request.",
+      );
     } finally {
       setIsSubmittingReq(false);
     }
@@ -218,7 +219,9 @@ export default function FeedbackPage() {
     setGiveCategory("Collaboration & Teamwork");
     setGiveSentiment("Positive Praise");
     setGiveMessage(
-      prefill?.topic ? `In response to your request on "${prefill.topic}": ` : "",
+      prefill?.topic
+        ? `In response to your request on "${prefill.topic}": `
+        : "",
     );
     setGiveError(null);
     setGiveSuccess(null);
@@ -246,8 +249,7 @@ export default function FeedbackPage() {
       setGiveError("Please select a colleague before saving as draft.");
       return;
     }
-    const recipientName =
-      empMap.get(giveRecipientId) || "Selected Colleague";
+    const recipientName = empMap.get(giveRecipientId) || "Selected Colleague";
 
     const draftItem: FeedbackDraft = {
       id: editingDraftId || `draft_${Date.now()}`,
@@ -306,7 +308,9 @@ export default function FeedbackPage() {
         setActiveTab("given");
       }, 1200);
     } catch (err: unknown) {
-      setGiveError(err instanceof Error ? err.message : "Failed to submit feedback.");
+      setGiveError(
+        err instanceof Error ? err.message : "Failed to submit feedback.",
+      );
     } finally {
       setIsSubmittingGive(false);
     }
@@ -322,9 +326,18 @@ export default function FeedbackPage() {
   ];
 
   const sentiments = [
-    { label: "Positive Praise", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-    { label: "Constructive Suggestion", color: "bg-blue-50 text-blue-700 border-blue-200" },
-    { label: "Growth Opportunity", color: "bg-amber-50 text-amber-700 border-amber-200" },
+    {
+      label: "Positive Praise",
+      color: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    },
+    {
+      label: "Constructive Suggestion",
+      color: "bg-blue-50 text-blue-700 border-blue-200",
+    },
+    {
+      label: "Growth Opportunity",
+      color: "bg-amber-50 text-amber-700 border-amber-200",
+    },
   ];
 
   return (
@@ -449,8 +462,8 @@ export default function FeedbackPage() {
       {/* Main Tab Content */}
       <div className="mx-auto max-w-5xl px-6 pt-10">
         {/* TAB 1: RECEIVED */}
-        {activeTab === "received" && (
-          receivedFeedback.length === 0 ? (
+        {activeTab === "received" &&
+          (receivedFeedback.length === 0 ? (
             /* Reference-style Empty State for Received Feedback */
             <div className="flex flex-col items-center justify-center py-16 text-center">
               {/* Feedback speech bubble illustration */}
@@ -573,12 +586,11 @@ export default function FeedbackPage() {
                 );
               })}
             </div>
-          )
-        )}
+          ))}
 
         {/* TAB 2: GIVEN */}
-        {activeTab === "given" && (
-          givenFeedback.length === 0 ? (
+        {activeTab === "given" &&
+          (givenFeedback.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className="relative mb-4 flex h-40 w-40 items-center justify-center">
                 <svg
@@ -680,12 +692,11 @@ export default function FeedbackPage() {
                 );
               })}
             </div>
-          )
-        )}
+          ))}
 
         {/* TAB 3: PENDING REQUESTS */}
-        {activeTab === "pending" && (
-          activePendingRequests.length === 0 ? (
+        {activeTab === "pending" &&
+          (activePendingRequests.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className="relative mb-4 flex h-36 w-36 items-center justify-center rounded-full bg-muted/40">
                 <Inbox className="h-14 w-14 text-muted-foreground/60" />
@@ -695,14 +706,16 @@ export default function FeedbackPage() {
                 No Pending Requests
               </h2>
               <p className="mt-1 text-sm text-[#5E6C84] dark:text-muted-foreground">
-                You're all caught up! When teammates ask for your feedback, it will appear here.
+                You're all caught up! When teammates ask for your feedback, it
+                will appear here.
               </p>
             </div>
           ) : (
             <div className="space-y-3">
               {activePendingRequests.map((req) => {
                 const topic =
-                  req.badge.replace("feedback:request:", "") || "General Feedback";
+                  req.badge.replace("feedback:request:", "") ||
+                  "General Feedback";
                 return (
                   <div
                     key={req._id}
@@ -759,12 +772,11 @@ export default function FeedbackPage() {
                 );
               })}
             </div>
-          )
-        )}
+          ))}
 
         {/* TAB 4: DRAFTS */}
-        {activeTab === "drafts" && (
-          drafts.length === 0 ? (
+        {activeTab === "drafts" &&
+          (drafts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className="relative mb-4 flex h-36 w-36 items-center justify-center rounded-full bg-muted/40">
                 <FileEdit className="h-14 w-14 text-muted-foreground/60" />
@@ -836,8 +848,7 @@ export default function FeedbackPage() {
                 </div>
               ))}
             </div>
-          )
-        )}
+          ))}
       </div>
 
       {/* ---------------------------------------------------------------------- */}

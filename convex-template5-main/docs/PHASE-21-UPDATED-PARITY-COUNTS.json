@@ -1,0 +1,82 @@
+{
+  "metadata": {
+    "project": "IndiaPay HRMS",
+    "referenceTenant": "Authenticated Victor Chasex greytHR (https://victorchasex.greythr.com)",
+    "auditPhase": "Phase 21: Master Parity Audit Validation",
+    "validationTimestamp": "2026-11-19T21:55:00+05:30",
+    "targetDeployment": "dev:basic-bobcat-92 (https://basic-bobcat-92.convex.cloud)",
+    "totalCataloguedFeatures": 421,
+    "uniqueStableIdsCount": 421,
+    "duplicateIds": 0,
+    "appRoutesCount": 139,
+    "platformSuitesCount": 21,
+    "platformSuitesPassRate": "100%"
+  },
+  "counts": {
+    "VERIFIED": 145,
+    "PARTIAL": 62,
+    "UI_ONLY": 212,
+    "MISSING": 2,
+    "BLOCKED": 0,
+    "TOTAL": 421
+  },
+  "breakdownByModuleCategory": {
+    "coreEnterpriseModules": {
+      "totalItems": 65,
+      "VERIFIED": 58,
+      "PARTIAL": 5,
+      "MISSING": 2
+    },
+    "systemSettingsSubmenus": {
+      "totalItems": 164,
+      "categoriesCount": 7,
+      "VERIFIED": 13,
+      "UI_ONLY": 151
+    },
+    "reportsGalleryCatalogue": {
+      "totalItems": 192,
+      "categoriesCount": 27,
+      "VERIFIED": 64,
+      "PARTIAL": 57,
+      "UI_ONLY": 61
+    }
+  },
+  "implementationBatches": [
+    {
+      "batch": "Batch P0",
+      "name": "Security, Convex Backend & Tenant Isolation Core",
+      "targetFeatures": 6,
+      "status": "Ready for Execution"
+    },
+    {
+      "batch": "Batch P1",
+      "name": "Core Payroll, F&F, Loans, Reimbursements & Tax",
+      "targetFeatures": 10,
+      "status": "Planned"
+    },
+    {
+      "batch": "Batch P2",
+      "name": "Statutory Labor Law Reports & Multi-Page PDF Forms",
+      "targetFeatures": 67,
+      "status": "Planned"
+    },
+    {
+      "batch": "Batch P3",
+      "name": "Granular System Settings Expansion",
+      "targetFeatures": 151,
+      "status": "Planned"
+    },
+    {
+      "batch": "Batch P4",
+      "name": "Sys Admin Backroom & Diagnostics",
+      "targetFeatures": 2,
+      "status": "Planned"
+    },
+    {
+      "batch": "Batch P5",
+      "name": "Visual Parity Polish & Final Verification",
+      "targetFeatures": 421,
+      "status": "Planned"
+    }
+  ]
+}

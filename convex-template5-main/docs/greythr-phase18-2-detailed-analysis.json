@@ -1,0 +1,300 @@
+{
+  "lov": {
+    "bodySnippet": "Please Select\n\n\n \n \nDescription\n \nCode\n \n \n \n \n \n \n\n\nSave",
+    "inputs": [
+      {
+        "tag": "BUTTON",
+        "type": "button",
+        "name": "",
+        "text": ""
+      },
+      {
+        "tag": "INPUT",
+        "type": "text",
+        "name": "",
+        "placeholder": "Search here",
+        "text": ""
+      },
+      {
+        "tag": "SELECT",
+        "type": "select-one",
+        "name": "",
+        "text": "Please Select"
+      },
+      {
+        "tag": "INPUT",
+        "type": "text",
+        "name": "",
+        "placeholder": "Search...",
+        "text": ""
+      },
+      {
+        "tag": "INPUT",
+        "type": "checkbox",
+        "name": "",
+        "placeholder": "",
+        "text": ""
+      },
+      {
+        "tag": "INPUT",
+        "type": "checkbox",
+        "name": "",
+        "placeholder": "",
+        "text": ""
+      },
+      {
+        "tag": "INPUT",
+        "type": "checkbox",
+        "name": "",
+        "placeholder": "",
+        "text": ""
+      },
+      {
+        "tag": "INPUT",
+        "type": "checkbox",
+        "name": "",
+        "placeholder": "",
+        "text": ""
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": ""
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": ""
+      },
+      {
+        "tag": "INPUT",
+        "type": "number",
+        "name": "",
+        "placeholder": "",
+        "text": ""
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": ""
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": ""
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": "OK"
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": "OK"
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": "OK"
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": "Confirm"
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": "Cancel"
+      }
+    ],
+    "rows": []
+  },
+  "bankBranch": {
+    "bodySnippet": " \nDescription\n \nIFSC Code\n \n \n \n \n  \nSave",
+    "selects": [],
+    "inputs": [
+      {
+        "tag": "BUTTON",
+        "type": "button",
+        "name": "",
+        "text": ""
+      },
+      {
+        "tag": "INPUT",
+        "type": "text",
+        "name": "",
+        "placeholder": "Search here",
+        "text": ""
+      },
+      {
+        "tag": "INPUT",
+        "type": "text",
+        "name": "",
+        "placeholder": "Search...",
+        "text": ""
+      },
+      {
+        "tag": "INPUT",
+        "type": "checkbox",
+        "name": "",
+        "placeholder": "",
+        "text": ""
+      },
+      {
+        "tag": "INPUT",
+        "type": "checkbox",
+        "name": "",
+        "placeholder": "",
+        "text": ""
+      },
+      {
+        "tag": "INPUT",
+        "type": "checkbox",
+        "name": "",
+        "placeholder": "",
+        "text": ""
+      },
+      {
+        "tag": "INPUT",
+        "type": "checkbox",
+        "name": "",
+        "placeholder": "",
+        "text": ""
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": ""
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": ""
+      },
+      {
+        "tag": "INPUT",
+        "type": "number",
+        "name": "",
+        "placeholder": "",
+        "text": ""
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": ""
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": ""
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": "Save"
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": "OK"
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": "OK"
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": "OK"
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": "Confirm"
+      },
+      {
+        "tag": "BUTTON",
+        "type": "submit",
+        "name": "",
+        "text": "Cancel"
+      }
+    ],
+    "rows": []
+  },
+  "companyBank": {
+    "bodySnippet": "Hide Help\n\nThe Company Bank Details page allows you to update the bank details such as Bank Name, Bank Branch, IFS code, Account number, IBAN, etc. \n\nExplore greytHR by watching How-to Videos  Help-Doc, and FAQ.\n\nCompany Name\n      \n\n\n#\nBank Name\nBank Branch\nIFSC Code\nAccount Number\nIBAN\nActions\nNo Rows To Show\n\n\nSave",
+    "buttons": [
+      "",
+      "Save",
+      "OK",
+      "OK",
+      "OK",
+      "Confirm",
+      "Cancel"
+    ],
+    "rows": [],
+    "selects": [
+      []
+    ]
+  },
+  "state": {
+    "bodySnippet": " Loading...",
+    "selects": [],
+    "rows": []
+  },
+  "empNoSeries": {
+    "bodySnippet": "Hide Help\n\nThe Employee No Series page enables you to set up and manage the employee number series that are used to generate employee numbers. When a new employee is added to the application, a new employee number is generated based on the series set up here. \n\nExplore the Employee No. Series page with Help-Doc and FAQ.  \n\nAdd New\n \nSeries Name\n \nCurrent Serial\n \nFormat\n \nActions\n \nDisable\n \nManual Entry\n \n0\n \n0\n \n \n \nPermanent Employees\n \n1\n \n0001\n \n \n \nTemporary Employees\n \n1\n \nT0001\n \n \nCancel Save",
+    "buttons": [
+      "",
+      "Add New",
+      "",
+      "",
+      "",
+      "",
+      "Cancel",
+      "Save",
+      "OK",
+      "OK",
+      "OK",
+      "Confirm",
+      "Cancel"
+    ],
+    "rows": []
+  },
+  "transitionGroup": {
+    "bodySnippet": "Hide Help\n\nThroughout the application, there are many screens where one or more employee categories are used.\nThese categories may be for filtering or for displaying related employee information.\nFrom here, you can configure which employee categories to display for the various screens.\n\nExplore the Category Group page with help doc.\n\nScreen\nEss Filter Category\nEss Filter Category\n\n\n\n\nAvailable Categories\n\n\nSelected Categories\nDesignation\nDivision\nGrade\n1:\nLocation\n: \n2:\nDepartment\n: \n3:\nCost Center\n: \n4:\n:\n5:\n:\nMaxLimit - 5",
+    "buttons": [
+      "",
+      "OK",
+      "OK",
+      "OK",
+      "Confirm",
+      "Cancel"
+    ],
+    "lists": [
+      "",
+      "Designation\nDivision\nGrade"
+    ]
+  }
+}

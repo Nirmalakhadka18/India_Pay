@@ -1,0 +1,202 @@
+{
+  "info": [
+    {
+      "title": "Salary Revision History",
+      "href": "/admin/payroll/info/salary-revision-history"
+    },
+    {
+      "title": "Salary Revision Analytics",
+      "href": "/admin/payroll/info/salary-revision-analytics"
+    }
+  ],
+  "inputs": [
+    {
+      "title": "Salary",
+      "href": "/admin/payroll/inputs"
+    },
+    {
+      "title": "Loan",
+      "href": "/admin/payroll/inputs/loan"
+    },
+    {
+      "title": "Salary Revisions",
+      "href": "/admin/payroll/inputs/approve-salary-revision"
+    },
+    {
+      "title": "Income Tax",
+      "href": "/admin/payroll/inputs/incometax"
+    },
+    {
+      "title": "Reimbursement",
+      "href": "/admin/payroll/inputs/reimbursement"
+    },
+    {
+      "title": "Employee LOP Days",
+      "href": "/admin/payroll/inputs/lop-days"
+    },
+    {
+      "title": "Stop Salary Processing",
+      "href": "/admin/payroll/inputs/stop-payment"
+    },
+    {
+      "title": "Arrears",
+      "href": "/admin/payroll/inputs/arrears"
+    },
+    {
+      "title": "Release Salary",
+      "href": "/admin/payroll/inputs/release-salary"
+    },
+    {
+      "title": "Final Settlement",
+      "href": "/admin/payroll/inputs/final-settlement"
+    },
+    {
+      "title": "Resettlement",
+      "href": "/admin/payroll/inputs/resettlement"
+    }
+  ],
+  "process": [
+    {
+      "title": "Payroll Process",
+      "href": "/admin/payroll/process"
+    }
+  ],
+  "verify": [
+    {
+      "title": "Quick Salary Statement",
+      "href": "/admin/payroll/verify/quick-statement"
+    },
+    {
+      "title": "Payroll Statement",
+      "href": "/admin/payroll/verify/payroll-statements"
+    },
+    {
+      "title": "Payroll Differences",
+      "href": "/admin/payroll/verify/payroll-differences"
+    }
+  ],
+  "payout": [
+    {
+      "title": "Accounts JV",
+      "href": "/admin/payroll/payout/payroll-jv"
+    },
+    {
+      "title": "Bank Transfer",
+      "href": "/admin/payroll/payout/bank-transfer"
+    },
+    {
+      "title": "PayNow Bank Transfer",
+      "href": "/admin/payroll/payout/paynow"
+    },
+    {
+      "title": "Cheque / Cash Statement",
+      "href": "/admin/payroll/payout/cash-payment"
+    },
+    {
+      "title": "Payslips",
+      "href": "/admin/payroll/payout/payslips"
+    },
+    {
+      "title": "Hold Salary Payout",
+      "href": "/admin/payroll/payout/hold-salary"
+    }
+  ],
+  "publishedinfo": [
+    {
+      "title": "Payslip",
+      "href": "/admin/payroll/published/payslip"
+    },
+    {
+      "title": "CTC Payslip",
+      "href": "/admin/payroll/published/ctc-payslip"
+    },
+    {
+      "title": "Reimbursement Payslip",
+      "href": "/admin/payroll/published/reimb-payslip"
+    },
+    {
+      "title": "YTD Summary",
+      "href": "/admin/payroll/published/ytd-summary"
+    },
+    {
+      "title": "PF YTD Statement",
+      "href": "/admin/payroll/published/pf-statement"
+    },
+    {
+      "title": "Reimbursement Statement",
+      "href": "/admin/payroll/published/reimb-statement"
+    },
+    {
+      "title": "Loan Statement",
+      "href": "/admin/payroll/published/loan-statement"
+    },
+    {
+      "title": "IT Statement",
+      "href": "/admin/payroll/published/it-statement"
+    },
+    {
+      "title": "IT Declaration",
+      "href": "/admin/payroll/published/it-declaration"
+    },
+    {
+      "title": "FBP Declaration",
+      "href": "/admin/payroll/published/fbp-declaration"
+    }
+  ],
+  "admin": [
+    {
+      "title": "Form16",
+      "href": "/admin/payroll/admin-settings/form16"
+    },
+    {
+      "title": "Form 138 (Form 24Q)",
+      "href": "/admin/payroll/admin-settings/form24q"
+    },
+    {
+      "title": "Employee IT Declaration",
+      "href": "/admin/payroll/admin-settings/emp-it-declaration"
+    },
+    {
+      "title": "PAN Status",
+      "href": "/admin/payroll/admin-settings/pan-status"
+    },
+    {
+      "title": "Revision Planner",
+      "href": "/admin/payroll/admin-settings/revision-planner"
+    },
+    {
+      "title": "Remittances",
+      "href": "/admin/payroll/admin-settings/payment-details"
+    },
+    {
+      "title": "Payroll Release",
+      "href": "/admin/payroll/admin-settings/payroll-release"
+    },
+    {
+      "title": "POI Overview",
+      "href": "/admin/payroll/admin-settings/poi-overview"
+    },
+    {
+      "title": "PF KYC Mapping",
+      "href": "/admin/payroll/admin-settings/pf-kyc-mapping"
+    }
+  ],
+  "setup": [
+    {
+      "title": "Pay Item Group",
+      "href": "/admin/payroll/setup/payitem-group"
+    },
+    {
+      "title": "Payroll Repository",
+      "href": "/admin/payroll/setup/repository"
+    },
+    {
+      "title": "Sort Order",
+      "href": "/admin/payroll/setup/sort-order"
+    },
+    {
+      "title": "Payslip Gallery",
+      "href": "/admin/payroll/setup/payslip-gallery"
+    }
+  ]
+}

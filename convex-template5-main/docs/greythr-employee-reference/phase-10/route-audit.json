@@ -1,0 +1,132 @@
+[
+  {
+    "route": "/admin/employee/main/overview",
+    "actualHref": "http://localhost:3000/admin/employee/main/overview",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/overview",
+    "actualHref": "http://localhost:3000/admin/employee/overview",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/main/analytics",
+    "actualHref": "http://localhost:3000/admin/employee/main/analytics",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/main/directory",
+    "actualHref": "http://localhost:3000/admin/employee/main/directory",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/main/org-chart",
+    "actualHref": "http://localhost:3000/admin/employee/main/org-chart",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/information/profile",
+    "actualHref": "http://localhost:3000/admin/employee/information/profile",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/information/bank-pf-esi",
+    "actualHref": "http://localhost:3000/admin/employee/information/bank-pf-esi",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/information/card-details",
+    "actualHref": "http://localhost:3000/admin/employee/information/card-details",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/information/passport-visa",
+    "actualHref": "http://localhost:3000/admin/employee/information/passport-visa",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/information/registration",
+    "actualHref": "http://localhost:3000/admin/employee/information/registration",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/information/position-history",
+    "actualHref": "http://localhost:3000/admin/employee/information/position-history",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/information/previous-employment",
+    "actualHref": "http://localhost:3000/admin/employee/information/previous-employment",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/information/separation",
+    "actualHref": "http://localhost:3000/admin/employee/information/separation",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/information/documents",
+    "actualHref": "http://localhost:3000/admin/employee/information/documents",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/admin-ops/excel-import",
+    "actualHref": "http://localhost:3000/admin/employee/admin-ops/excel-import",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/admin-ops/bulk-photo-upload",
+    "actualHref": "http://localhost:3000/admin/employee/admin-ops/bulk-photo-upload",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/admin-ops/bulk-document-upload",
+    "actualHref": "http://localhost:3000/admin/employee/admin-ops/bulk-document-upload",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/admin-ops/bulletin-board",
+    "actualHref": "http://localhost:3000/admin/employee/admin-ops/bulletin-board",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/admin-ops/mass-communication",
+    "actualHref": "http://localhost:3000/admin/employee/admin-ops/mass-communication",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/admin-ops/identity-verification",
+    "actualHref": "http://localhost:3000/admin/employee/admin-ops/identity-verification",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/admin-ops/contract-details",
+    "actualHref": "http://localhost:3000/admin/employee/admin-ops/contract-details",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/admin-ops/data-drive",
+    "actualHref": "http://localhost:3000/admin/employee/admin-ops/data-drive",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/admin-ops/offboarding",
+    "actualHref": "http://localhost:3000/admin/employee/admin-ops/offboarding",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/setup/company-policies",
+    "actualHref": "http://localhost:3000/admin/employee/setup/company-policies",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/setup/segments",
+    "actualHref": "http://localhost:3000/admin/employee/setup/segments",
+    "heading": ""
+  },
+  {
+    "route": "/admin/employee/setup/filters",
+    "actualHref": "http://localhost:3000/admin/employee/setup/filters",
+    "heading": ""
+  }
+]

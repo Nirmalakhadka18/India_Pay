@@ -1,0 +1,518 @@
+{
+  "title": "greytHR",
+  "cougarText": "Hide Help\n\nThe Overview page gives you a summary of the current month's payroll. All data that you view and activities you perform, such as Locking or Unlocking the Payroll Inputs, Payroll, and IT Statement, are for the current month's payroll. Once done, all data you view and the activities you perform are specific to that chosen payroll month. You can also view details related to the Net Payout Amount for the chosen payroll month.\n\nExplore the Payroll overview page with Help-Doc, How-to Videos and FAQs.\n\n \n Apr\n2026\n May\n2026\n Jun\n2026\n Jul\n2026\n Aug\n2026\n Sep\n2026\n Oct\n2026\nNov\n2026\nDec\nNew\n2026\nJan\n2027\nFeb\n2027\nMar\n2027\n \n\tPF wage ceiling limit revision is effective from September 2026 Payroll. To modify, please click here.\t\nNovember 2026 \nCutoff from 01 Nov 2026 to 30 Nov 2026 \n Process Payroll\nPayout Details\n₹19,33,496.00\nNet Pay\n ₹20,89,498.00\nGross Pay\n\t\n ₹1,56,002.00\nDeductions\n\n\n 30\nWork Days\nEmployee Details\n33\nTotal Employees\n+1 vs previous month\n 01\nAddition\n\t\n 00\nSettlements\n\n\n 00\nExclusion\n\n\n 00\nSeparation\nPayroll Inputs\tUnlock Lock\n\nEmployee View Release\tRelease Hold\nUpdate Payslips With Revised Employee Information\tUpdate\nIT Statement Employee View\tRelease Hold\nPayroll\tUnlock Lock\nNegative Salary\nNo Records\nHold Salary Payout\nNo Records\nStop Salary Processing\nNo Records\nPayout Pending\n31\nBank Transfer(Net Pay)\n2\nCash\nSettled Employees\nNo Records\nLocations Without PT State\nNo Records",
+  "bodyPreview": "Hide Help\n\nThe Overview page gives you a summary of the current month's payroll. All data that you view and activities you perform, such as Locking or Unlocking the Payroll Inputs, Payroll, and IT Statement, are for the current month's payroll. Once done, all data you view and the activities you perform are specific to that chosen payroll month. You can also view details related to the Net Payout Amount for the chosen payroll month.\n\nExplore the Payroll overview page with Help-Doc, How-to Videos and FAQs.\n\n \n Apr\n2026\n May\n2026\n Jun\n2026\n Jul\n2026\n Aug\n2026\n Sep\n2026\n Oct\n2026\nNov\n2026\nDec\nNew\n2026\nJan\n2027\nFeb\n2027\nMar\n2027\n \n\tPF wage ceiling limit revision is effective from September 2026 Payroll. To modify, please click here.\t\nNovember 2026 \nCutoff from 01 Nov 2026 to 30 Nov 2026 \n Process Payroll\nPayout Details\n₹19,33,496.00\nNet Pay\n ₹20,89,498.00\nGross Pay\n\t\n ₹1,56,002.00\nDeductions\n\n\n 30\nWork Days\nEmployee Details\n33\nTotal Employees\n+1 vs previous month\n 01\nAddition\n\t\n 00\nSettlements\n\n\n 00\nExclusion\n\n\n 00\nSeparation\nPayroll Inputs\tUnlock Lock\n\nEmployee View Release\tRelease Hold\nUpdate Payslips With Revised Employee Information\tUpdate\nIT Statement Employee View\tRelease Hold\nPayroll\tUnlock Lock\nNegative Salary\nNo Records\nHold Salary Payout\nNo Records\nStop Salary Processing\nNo Records\nPayout Pending\n31\nBank Transfer(Net Pay)\n2\nCash\nSettled Employees\nNo Records\nLocations Without PT State\nNo Records",
+  "linksCount": 34,
+  "links": [
+    {
+      "tag": "A",
+      "text": "Help-Doc",
+      "href": "https://admin-help.greythr.com/admin/answers/122448525",
+      "role": null,
+      "id": "",
+      "className": "",
+      "visible": true,
+      "box": {
+        "x": 299.8999938964844,
+        "y": 216.8000030517578,
+        "w": 60.07500076293945,
+        "h": 19.200000762939453
+      }
+    },
+    {
+      "tag": "A",
+      "text": "How-to Videos",
+      "href": "https://www.youtube.com/watch?v=BvWds_XM5a4",
+      "role": null,
+      "id": "",
+      "className": "",
+      "visible": true,
+      "box": {
+        "x": 367.2375183105469,
+        "y": 216.8000030517578,
+        "w": 98.1875,
+        "h": 19.200000762939453
+      }
+    },
+    {
+      "tag": "A",
+      "text": "FAQ",
+      "href": "https://greythr.freshdesk.com/support/search/solutions?term=Payroll+overview",
+      "role": null,
+      "id": "",
+      "className": "",
+      "visible": true,
+      "box": {
+        "x": 490.3625183105469,
+        "y": 216.8000030517578,
+        "w": 30.61250114440918,
+        "h": 19.200000762939453
+      }
+    },
+    {
+      "tag": "A",
+      "text": "click here",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "",
+      "visible": true,
+      "box": {
+        "x": 666.5125122070312,
+        "y": 450.20001220703125,
+        "w": 61.51250076293945,
+        "h": 19.200000762939453
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Process Payroll",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn btn-primary",
+      "visible": true,
+      "box": {
+        "x": 1729.8250732421875,
+        "y": 522.6000366210938,
+        "w": 132.15000915527344,
+        "h": 33.60000228881836
+      }
+    },
+    {
+      "tag": "A",
+      "text": "Edit",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "A",
+      "text": "(33 Employees)",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "ng-binding",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Create Nov 2026 Payroll",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn btn-primary create-payroll-btn ng-binding",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Create Nov 2026 Payroll",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn btn-primary create-payroll-btn ng-binding",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Unlock",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn btn-small",
+      "visible": true,
+      "box": {
+        "x": 1529.737548828125,
+        "y": 696.2000122070312,
+        "w": 71.6875,
+        "h": 33.60000228881836
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Lock",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn btn-small",
+      "visible": true,
+      "box": {
+        "x": 1600.425048828125,
+        "y": 696.2000122070312,
+        "w": 58.92499923706055,
+        "h": 33.60000228881836
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Release",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn btn-small",
+      "visible": true,
+      "box": {
+        "x": 1529.737548828125,
+        "y": 754.7999877929688,
+        "w": 76.2750015258789,
+        "h": 33.60000228881836
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Hold",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn btn-small",
+      "visible": true,
+      "box": {
+        "x": 1605.0125732421875,
+        "y": 754.7999877929688,
+        "w": 59.8125,
+        "h": 33.60000228881836
+      }
+    },
+    {
+      "tag": "A",
+      "text": "Update",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "",
+      "visible": true,
+      "box": {
+        "x": 1529.737548828125,
+        "y": 813.4000244140625,
+        "w": 51.11249923706055,
+        "h": 19.200000762939453
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Release",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn btn-small",
+      "visible": true,
+      "box": {
+        "x": 1529.737548828125,
+        "y": 858.4000244140625,
+        "w": 76.2750015258789,
+        "h": 33.60000228881836
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Hold",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn btn-small",
+      "visible": true,
+      "box": {
+        "x": 1605.0125732421875,
+        "y": 858.4000244140625,
+        "w": 59.8125,
+        "h": 33.60000228881836
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Unlock",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn btn-small",
+      "visible": true,
+      "box": {
+        "x": 1529.737548828125,
+        "y": 917,
+        "w": 71.6875,
+        "h": 33.60000228881836
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Lock",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn btn-small",
+      "visible": true,
+      "box": {
+        "x": 1600.425048828125,
+        "y": 917,
+        "w": 58.92499923706055,
+        "h": 33.60000228881836
+      }
+    },
+    {
+      "tag": "A",
+      "text": "+-2 more",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "card-footer ng-binding ng-hide",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "A",
+      "text": "+-2 more",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "card-footer ng-binding ng-hide",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "A",
+      "text": "+-2 more",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "card-footer ng-binding ng-hide",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "A",
+      "text": "31",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "payout-link ng-binding",
+      "visible": true,
+      "box": {
+        "x": 678.1500244140625,
+        "y": 1327.7000732421875,
+        "w": 18.30000114440918,
+        "h": 21.600000381469727
+      }
+    },
+    {
+      "tag": "A",
+      "text": "2",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "payout-link ng-binding",
+      "visible": true,
+      "box": {
+        "x": 678.1500244140625,
+        "y": 1375.7000732421875,
+        "w": 9.15000057220459,
+        "h": 21.600000381469727
+      }
+    },
+    {
+      "tag": "A",
+      "text": "0",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "payout-link ng-binding",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "A",
+      "text": "+-2 more",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "card-footer ng-binding ng-hide",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "A",
+      "text": "0",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "payout-link ng-binding",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "A",
+      "text": "March",
+      "href": "javascript:void(0)",
+      "role": null,
+      "id": "",
+      "className": "select2-choice",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "A",
+      "text": "",
+      "href": "javascript:void(0)",
+      "role": null,
+      "id": "",
+      "className": "select2-choice",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Add Payroll",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn btn-primary",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "OK",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn ",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "OK",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn ",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "OK",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn ",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Confirm",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn btn-primary",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Cancel",
+      "href": null,
+      "role": null,
+      "id": "",
+      "className": "btn ",
+      "visible": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,340 @@
+{
+  "info": [
+    {
+      "title": "Salary Revision History",
+      "href": "/admin/payroll/info/salary-revision-history",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Salary Revision Analytics",
+      "href": "/admin/payroll/info/salary-revision-analytics",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    }
+  ],
+  "inputs": [
+    {
+      "title": "Salary",
+      "href": "/admin/payroll/inputs",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Loan",
+      "href": "/admin/payroll/inputs/loan",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Salary Revisions",
+      "href": "/admin/payroll/inputs/approve-salary-revision",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Income Tax",
+      "href": "/admin/payroll/inputs/incometax",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Reimbursement",
+      "href": "/admin/payroll/inputs/reimbursement",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Employee LOP Days",
+      "href": "/admin/payroll/inputs/lop-days",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Stop Salary Processing",
+      "href": "/admin/payroll/inputs/stop-payment",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Arrears",
+      "href": "/admin/payroll/inputs/arrears",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Release Salary",
+      "href": "/admin/payroll/inputs/release-salary",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Final Settlement",
+      "href": "/admin/payroll/inputs/final-settlement",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Resettlement",
+      "href": "/admin/payroll/inputs/resettlement",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    }
+  ],
+  "process": [
+    {
+      "title": "Payroll Process",
+      "href": "/admin/payroll/process",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    }
+  ],
+  "verify": [
+    {
+      "title": "Quick Salary Statement",
+      "href": "/admin/payroll/verify/quick-statement",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Payroll Statement",
+      "href": "/admin/payroll/verify/payroll-statements",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Payroll Differences",
+      "href": "/admin/payroll/verify/payroll-differences",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    }
+  ],
+  "payout": [
+    {
+      "title": "Accounts JV",
+      "href": "/admin/payroll/payout/payroll-jv",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Bank Transfer",
+      "href": "/admin/payroll/payout/bank-transfer",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "PayNow Bank Transfer",
+      "href": "/admin/payroll/payout/paynow",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Cheque / Cash Statement",
+      "href": "/admin/payroll/payout/cash-payment",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Payslips",
+      "href": "/admin/payroll/payout/payslips",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Hold Salary Payout",
+      "href": "/admin/payroll/payout/hold-salary",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    }
+  ],
+  "publishedinfo": [
+    {
+      "title": "Payslip",
+      "href": "/admin/payroll/published/payslip",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "CTC Payslip",
+      "href": "/admin/payroll/published/ctc-payslip",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Reimbursement Payslip",
+      "href": "/admin/payroll/published/reimb-payslip",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "YTD Summary",
+      "href": "/admin/payroll/published/ytd-summary",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "PF YTD Statement",
+      "href": "/admin/payroll/published/pf-statement",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Reimbursement Statement",
+      "href": "/admin/payroll/published/reimb-statement",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Loan Statement",
+      "href": "/admin/payroll/published/loan-statement",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "IT Statement",
+      "href": "/admin/payroll/published/it-statement",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "IT Declaration",
+      "href": "/admin/payroll/published/it-declaration",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "FBP Declaration",
+      "href": "/admin/payroll/published/fbp-declaration",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    }
+  ],
+  "admin": [
+    {
+      "title": "Form16",
+      "href": "/admin/payroll/admin-settings/form16",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Form 138 (Form 24Q)",
+      "href": "/admin/payroll/admin-settings/form24q",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Employee IT Declaration",
+      "href": "/admin/payroll/admin-settings/emp-it-declaration",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "PAN Status",
+      "href": "/admin/payroll/admin-settings/pan-status",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Revision Planner",
+      "href": "/admin/payroll/admin-settings/revision-planner",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Remittances",
+      "href": "/admin/payroll/admin-settings/payment-details",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Payroll Release",
+      "href": "/admin/payroll/admin-settings/payroll-release",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "POI Overview",
+      "href": "/admin/payroll/admin-settings/poi-overview",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "PF KYC Mapping",
+      "href": "/admin/payroll/admin-settings/pf-kyc-mapping",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    }
+  ],
+  "setup": [
+    {
+      "title": "Pay Item Group",
+      "href": "/admin/payroll/setup/payitem-group",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Payroll Repository",
+      "href": "/admin/payroll/setup/repository",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Sort Order",
+      "href": "/admin/payroll/setup/sort-order",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    },
+    {
+      "title": "Payslip Gallery",
+      "href": "/admin/payroll/setup/payslip-gallery",
+      "httpStatus": 307,
+      "redirect": "/login",
+      "status": "Verified"
+    }
+  ]
+}

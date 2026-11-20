@@ -1,5 +1,6 @@
 "use client";
 
+import { GreytHRIcon } from "@/components/greythr-icon";
 import { useWorkspace } from "@/lib/useWorkspace";
 import { api } from "@v1/backend/convex/_generated/api";
 import type { Id } from "@v1/backend/convex/_generated/dataModel";
@@ -23,7 +24,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { GreytHRIcon } from "@/components/greythr-icon";
 
 type TabType = "apply" | "pending" | "history";
 type SubMenu = "leave" | "restricted" | "cancel" | "compoff";
@@ -52,14 +52,14 @@ export default function LeaveApplyPage() {
   const [leaveType, setLeaveType] = useState<
     "sick" | "casual" | "unpaid" | "restricted_holiday" | "comp_off"
   >("sick");
-  const [fromDate, setFromDate] = useState<string>(
-    () => new Date().toISOString().slice(0, 10),
+  const [fromDate, setFromDate] = useState<string>(() =>
+    new Date().toISOString().slice(0, 10),
   );
   const [fromSession, setFromSession] = useState<
     "full_day" | "session_1" | "session_2"
   >("session_1");
-  const [toDate, setToDate] = useState<string>(
-    () => new Date().toISOString().slice(0, 10),
+  const [toDate, setToDate] = useState<string>(() =>
+    new Date().toISOString().slice(0, 10),
   );
   const [toSession, setToSession] = useState<
     "full_day" | "session_1" | "session_2"
@@ -74,7 +74,8 @@ export default function LeaveApplyPage() {
   // Attachment State
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploadingFile, setIsUploadingFile] = useState(false);
-  const [uploadedStorageId, setUploadedStorageId] = useState<Id<"_storage"> | null>(null);
+  const [uploadedStorageId, setUploadedStorageId] =
+    useState<Id<"_storage"> | null>(null);
   const [fileUploadError, setFileUploadError] = useState<string | null>(null);
 
   // Submission State
@@ -84,8 +85,8 @@ export default function LeaveApplyPage() {
   const [cancellingId, setCancellingId] = useState<string | null>(null);
 
   // Comp-off Form State
-  const [compOffDate, setCompOffDate] = useState<string>(
-    () => new Date().toISOString().slice(0, 10),
+  const [compOffDate, setCompOffDate] = useState<string>(() =>
+    new Date().toISOString().slice(0, 10),
   );
   const [compOffDays, setCompOffDays] = useState<number>(1);
   const [compOffReason, setCompOffReason] = useState("");
@@ -104,11 +105,24 @@ export default function LeaveApplyPage() {
     }
 
     const allowed = [
-      "pdf", "xls", "xlsx", "doc", "docx", "txt", "ppt", "pptx", "gif", "jpg", "jpeg", "png",
+      "pdf",
+      "xls",
+      "xlsx",
+      "doc",
+      "docx",
+      "txt",
+      "ppt",
+      "pptx",
+      "gif",
+      "jpg",
+      "jpeg",
+      "png",
     ];
     const ext = file.name.split(".").pop()?.toLowerCase() || "";
     if (!allowed.includes(ext)) {
-      setFileUploadError(`Invalid format .${ext}. Allowed: ${allowed.join(", ")}`);
+      setFileUploadError(
+        `Invalid format .${ext}. Allowed: ${allowed.join(", ")}`,
+      );
       return;
     }
 
@@ -146,7 +160,8 @@ export default function LeaveApplyPage() {
     }
     const d1 = new Date(fromDate);
     const d2 = new Date(toDate);
-    const diff = Math.ceil((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+    const diff =
+      Math.ceil((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) + 1;
     return Math.max(0.5, diff);
   }, [fromDate, toDate, fromSession]);
 
@@ -155,7 +170,8 @@ export default function LeaveApplyPage() {
     if (leaveType === "casual") return balances.casual?.balance ?? 1;
     if (leaveType === "sick") return balances.sick?.balance ?? 0.5;
     if (leaveType === "unpaid") return 999;
-    if (leaveType === "restricted_holiday") return balances.restricted_holiday?.balance ?? 2;
+    if (leaveType === "restricted_holiday")
+      return balances.restricted_holiday?.balance ?? 2;
     if (leaveType === "comp_off") return balances.comp_off?.balance ?? 0;
     return 0;
   }, [balances, leaveType]);
@@ -202,7 +218,9 @@ export default function LeaveApplyPage() {
       setSelectedFile(null);
       setUploadedStorageId(null);
     } catch (err) {
-      setSubmitError((err as Error).message || "Failed to submit leave request.");
+      setSubmitError(
+        (err as Error).message || "Failed to submit leave request.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -241,7 +259,9 @@ export default function LeaveApplyPage() {
       setCompOffSuccess("Comp-Off grant request submitted successfully.");
       setCompOffReason("");
     } catch (err) {
-      setCompOffError((err as Error).message || "Failed to submit Comp-Off request.");
+      setCompOffError(
+        (err as Error).message || "Failed to submit Comp-Off request.",
+      );
     } finally {
       setIsSubmittingCompOff(false);
     }
@@ -254,7 +274,10 @@ export default function LeaveApplyPage() {
   const historyLeaves = useMemo(() => {
     return (
       myLeaves?.filter(
-        (l) => l.status === "approved" || l.status === "rejected" || l.status === "cancelled",
+        (l) =>
+          l.status === "approved" ||
+          l.status === "rejected" ||
+          l.status === "cancelled",
       ) ?? []
     );
   }, [myLeaves]);
@@ -372,7 +395,9 @@ export default function LeaveApplyPage() {
                   <div className="flex items-start gap-2">
                     <Info className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                     <span>
-                      Leave is earned by an employee and granted by the employer to take time off work. The employee is free to avail this leave in accordance with the company policy.
+                      Leave is earned by an employee and granted by the employer
+                      to take time off work. The employee is free to avail this
+                      leave in accordance with the company policy.
                     </span>
                   </div>
                   <button
@@ -426,11 +451,22 @@ export default function LeaveApplyPage() {
                         }
                         className="w-full max-w-sm rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-[#0091FF]"
                       >
-                        <option value="sick">Sick Leave (Balance: {balances?.sick?.balance ?? 0.5})</option>
-                        <option value="casual">Casual Leave (Balance: {balances?.casual?.balance ?? 1})</option>
-                        <option value="unpaid">Loss Of Pay (Unpaid Leave)</option>
-                        <option value="restricted_holiday">Restricted Holiday (RH)</option>
-                        <option value="comp_off">Compensatory Off (Comp-Off)</option>
+                        <option value="sick">
+                          Sick Leave (Balance: {balances?.sick?.balance ?? 0.5})
+                        </option>
+                        <option value="casual">
+                          Casual Leave (Balance:{" "}
+                          {balances?.casual?.balance ?? 1})
+                        </option>
+                        <option value="unpaid">
+                          Loss Of Pay (Unpaid Leave)
+                        </option>
+                        <option value="restricted_holiday">
+                          Restricted Holiday (RH)
+                        </option>
+                        <option value="comp_off">
+                          Compensatory Off (Comp-Off)
+                        </option>
                       </select>
                     </div>
 
@@ -456,7 +492,10 @@ export default function LeaveApplyPage() {
                           value={fromSession}
                           onChange={(e) =>
                             setFromSession(
-                              e.target.value as "full_day" | "session_1" | "session_2",
+                              e.target.value as
+                                | "full_day"
+                                | "session_1"
+                                | "session_2",
                             )
                           }
                           className="w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-[#0091FF]"
@@ -491,7 +530,10 @@ export default function LeaveApplyPage() {
                             value={toSession}
                             onChange={(e) =>
                               setToSession(
-                                e.target.value as "full_day" | "session_1" | "session_2",
+                                e.target.value as
+                                  | "full_day"
+                                  | "session_1"
+                                  | "session_2",
                               )
                             }
                             className="w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-[#0091FF]"
@@ -506,10 +548,16 @@ export default function LeaveApplyPage() {
                       {/* Right Balance Summary (from greytHR screenshot) */}
                       <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1 self-start pr-12">
                         <div>
-                          Leave Balance: <span className="font-semibold text-slate-800 dark:text-slate-200">{currentAvailableBalance}</span>
+                          Leave Balance:{" "}
+                          <span className="font-semibold text-slate-800 dark:text-slate-200">
+                            {currentAvailableBalance}
+                          </span>
                         </div>
                         <div>
-                          Applying For: <span className="font-semibold text-slate-800 dark:text-slate-200">{calculatedDays}</span>
+                          Applying For:{" "}
+                          <span className="font-semibold text-slate-800 dark:text-slate-200">
+                            {calculatedDays}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -531,7 +579,8 @@ export default function LeaveApplyPage() {
                           <option value="">Reporting Manager / HR Admin</option>
                           {approverOptions.map((emp) => (
                             <option key={emp._id} value={emp._id}>
-                              {emp.firstName} {emp.lastName} ({emp.designation || "Manager"})
+                              {emp.firstName} {emp.lastName} (
+                              {emp.designation || "Manager"})
                             </option>
                           ))}
                         </select>
@@ -562,7 +611,10 @@ export default function LeaveApplyPage() {
                               if (e.key === "Enter") {
                                 e.preventDefault();
                                 if (ccInput.trim()) {
-                                  setCcList((prev) => [...prev, ccInput.trim()]);
+                                  setCcList((prev) => [
+                                    ...prev,
+                                    ccInput.trim(),
+                                  ]);
                                   setCcInput("");
                                 }
                               }
@@ -594,7 +646,9 @@ export default function LeaveApplyPage() {
                               <button
                                 type="button"
                                 onClick={() =>
-                                  setCcList((prev) => prev.filter((_, i) => i !== idx))
+                                  setCcList((prev) =>
+                                    prev.filter((_, i) => i !== idx),
+                                  )
                                 }
                                 className="text-slate-400 hover:text-rose-500"
                               >
@@ -649,7 +703,8 @@ export default function LeaveApplyPage() {
                           />
                         </label>
                         <span className="text-[11px] text-slate-400">
-                          File Types: pdf , xls , xlsx , doc , docx , txt , ppt , pptx , gif , jpg , jpeg , png
+                          File Types: pdf , xls , xlsx , doc , docx , txt , ppt
+                          , pptx , gif , jpg , jpeg , png
                         </span>
                       </div>
 
@@ -663,7 +718,9 @@ export default function LeaveApplyPage() {
                       {selectedFile && !isUploadingFile && (
                         <div className="flex items-center gap-2 rounded bg-slate-50 dark:bg-slate-800/60 px-2.5 py-1 text-xs text-slate-700 dark:text-slate-300 max-w-sm">
                           <Paperclip className="h-3.5 w-3.5 text-cyan-500" />
-                          <span className="truncate flex-1 font-mono">{selectedFile.name}</span>
+                          <span className="truncate flex-1 font-mono">
+                            {selectedFile.name}
+                          </span>
                           <button
                             type="button"
                             onClick={() => {
@@ -678,7 +735,9 @@ export default function LeaveApplyPage() {
                       )}
 
                       {fileUploadError && (
-                        <p className="text-xs text-rose-500">{fileUploadError}</p>
+                        <p className="text-xs text-rose-500">
+                          {fileUploadError}
+                        </p>
                       )}
                     </div>
 
@@ -689,7 +748,9 @@ export default function LeaveApplyPage() {
                         disabled={isSubmitting}
                         className="rounded-md bg-[#0091FF] hover:bg-[#007EE5] text-white px-6 py-2 text-xs font-medium transition shadow-sm disabled:opacity-50 flex items-center gap-1.5"
                       >
-                        {isSubmitting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                        {isSubmitting && (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        )}
                         <span>Submit</span>
                       </button>
                       <button
@@ -715,11 +776,13 @@ export default function LeaveApplyPage() {
                     Restricted Holiday (RH)
                   </h2>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-                    Employees are entitled to up to 2 Restricted Holidays per calendar year.
+                    Employees are entitled to up to 2 Restricted Holidays per
+                    calendar year.
                   </p>
                   <div className="rounded border border-blue-100 dark:border-blue-900/30 bg-blue-50/40 dark:bg-blue-950/20 p-4 text-xs mb-4">
                     <span className="font-semibold text-slate-700 dark:text-slate-300">
-                      Available RH Balance: {balances?.restricted_holiday?.balance ?? 2} of 2 days
+                      Available RH Balance:{" "}
+                      {balances?.restricted_holiday?.balance ?? 2} of 2 days
                     </span>
                   </div>
                   <button
@@ -742,7 +805,9 @@ export default function LeaveApplyPage() {
                     Cancel Pending Leave Requests
                   </h2>
                   {pendingLeaves.length === 0 ? (
-                    <p className="text-xs text-slate-500 py-4">No pending leave requests to cancel.</p>
+                    <p className="text-xs text-slate-500 py-4">
+                      No pending leave requests to cancel.
+                    </p>
                   ) : (
                     <div className="space-y-3">
                       {pendingLeaves.map((req) => (
@@ -752,10 +817,12 @@ export default function LeaveApplyPage() {
                         >
                           <div>
                             <p className="font-medium text-slate-800 dark:text-slate-200 uppercase">
-                              {req.leaveType} Leave ({req.daysCount} day{req.daysCount > 1 ? "s" : ""})
+                              {req.leaveType} Leave ({req.daysCount} day
+                              {req.daysCount > 1 ? "s" : ""})
                             </p>
                             <p className="text-slate-500">
-                              {req.startDate} to {req.endDate} • Reason: {req.reason}
+                              {req.startDate} to {req.endDate} • Reason:{" "}
+                              {req.reason}
                             </p>
                           </div>
                           <button
@@ -764,7 +831,9 @@ export default function LeaveApplyPage() {
                             disabled={cancellingId === req._id}
                             className="text-rose-600 hover:text-rose-700 font-medium border border-rose-200 rounded px-3 py-1 text-xs"
                           >
-                            {cancellingId === req._id ? "Cancelling..." : "Cancel Request"}
+                            {cancellingId === req._id
+                              ? "Cancelling..."
+                              : "Cancel Request"}
                           </button>
                         </div>
                       ))}
@@ -780,7 +849,8 @@ export default function LeaveApplyPage() {
                     Comp-Off Grant Request
                   </h2>
                   <p className="text-xs text-slate-500 mb-4">
-                    Worked on a weekend or public holiday? Request compensatory off credit from management.
+                    Worked on a weekend or public holiday? Request compensatory
+                    off credit from management.
                   </p>
 
                   {compOffSuccess && (
@@ -794,10 +864,14 @@ export default function LeaveApplyPage() {
                     </div>
                   )}
 
-                  <form onSubmit={handleSubmitCompOff} className="space-y-4 max-w-md">
+                  <form
+                    onSubmit={handleSubmitCompOff}
+                    className="space-y-4 max-w-md"
+                  >
                     <div>
                       <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                        Work Date Worked <span className="text-rose-500">*</span>
+                        Work Date Worked{" "}
+                        <span className="text-rose-500">*</span>
                       </label>
                       <input
                         type="date"
@@ -823,7 +897,8 @@ export default function LeaveApplyPage() {
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                        Work Done / Justification <span className="text-rose-500">*</span>
+                        Work Done / Justification{" "}
+                        <span className="text-rose-500">*</span>
                       </label>
                       <textarea
                         rows={3}
@@ -839,7 +914,9 @@ export default function LeaveApplyPage() {
                       disabled={isSubmittingCompOff}
                       className="rounded-md bg-[#0091FF] text-white px-5 py-2 text-xs font-medium hover:bg-[#007EE5]"
                     >
-                      {isSubmittingCompOff ? "Submitting..." : "Submit Comp-Off Request"}
+                      {isSubmittingCompOff
+                        ? "Submitting..."
+                        : "Submit Comp-Off Request"}
                     </button>
                   </form>
                 </div>
@@ -861,13 +938,17 @@ export default function LeaveApplyPage() {
             ) : (
               <div className="divide-y divide-slate-100 dark:divide-slate-800">
                 {pendingLeaves.map((l) => (
-                  <div key={l._id} className="py-3 flex items-center justify-between">
+                  <div
+                    key={l._id}
+                    className="py-3 flex items-center justify-between"
+                  >
                     <div>
                       <p className="font-medium text-xs text-slate-800 dark:text-slate-200 capitalize">
                         {l.leaveType} Leave • {l.daysCount} Day(s)
                       </p>
                       <p className="text-[11px] text-slate-500">
-                        {l.startDate} to {l.endDate} ({l.session || "full day"}) • Reason: {l.reason}
+                        {l.startDate} to {l.endDate} ({l.session || "full day"})
+                        • Reason: {l.reason}
                       </p>
                     </div>
                     <button
@@ -925,8 +1006,8 @@ export default function LeaveApplyPage() {
                               l.status === "approved"
                                 ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
                                 : l.status === "rejected"
-                                ? "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300"
-                                : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                                  ? "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300"
+                                  : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
                             }`}
                           >
                             {l.status}

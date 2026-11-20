@@ -34,11 +34,11 @@ export default function DelegatesPage() {
   const [workflowType, setWorkflowType] = useState<
     "leave_approvals" | "attendance_approvals" | "all"
   >("leave_approvals");
-  const [startDate, setStartDate] = useState<string>(
-    () => new Date().toISOString().slice(0, 10),
+  const [startDate, setStartDate] = useState<string>(() =>
+    new Date().toISOString().slice(0, 10),
   );
-  const [endDate, setEndDate] = useState<string>(
-    () => new Date().toISOString().slice(0, 10),
+  const [endDate, setEndDate] = useState<string>(() =>
+    new Date().toISOString().slice(0, 10),
   );
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -94,8 +94,7 @@ export default function DelegatesPage() {
   }
 
   // Filter out myself from delegate choices
-  const eligiblePeers =
-    employees?.filter((e) => !me || e._id !== me._id) ?? [];
+  const eligiblePeers = employees?.filter((e) => !me || e._id !== me._id) ?? [];
 
   return (
     <div className="flex h-full w-full bg-secondary px-4 py-6 md:px-8 dark:bg-black">
@@ -110,7 +109,8 @@ export default function DelegatesPage() {
               </h1>
             </div>
             <p className="text-xs text-primary/60 mt-1">
-              Assign a temporary peer delegate to act on operational leave approvals or attendance reviews during your absence.
+              Assign a temporary peer delegate to act on operational leave
+              approvals or attendance reviews during your absence.
             </p>
           </div>
         </div>
@@ -120,7 +120,11 @@ export default function DelegatesPage() {
           <div className="flex items-start gap-2.5">
             <ShieldAlert className="h-4 w-4 shrink-0 text-amber-600 mt-0.5" />
             <span>
-              <strong>Compliance Rule:</strong> Workflow delegation is restricted exclusively to peer operational tasks (leave authorizations and team attendance approvals). Employees are strictly prohibited from delegating statutory payroll calculations or administrative credentials.
+              <strong>Compliance Rule:</strong> Workflow delegation is
+              restricted exclusively to peer operational tasks (leave
+              authorizations and team attendance approvals). Employees are
+              strictly prohibited from delegating statutory payroll calculations
+              or administrative credentials.
             </span>
           </div>
         </div>
@@ -135,7 +139,8 @@ export default function DelegatesPage() {
             <form onSubmit={handleSetDelegate} className="space-y-4">
               <div>
                 <label className="block text-xs font-medium text-primary/80 mb-1.5">
-                  Select Colleague Delegate <span className="text-destructive">*</span>
+                  Select Colleague Delegate{" "}
+                  <span className="text-destructive">*</span>
                 </label>
                 <select
                   required
@@ -154,7 +159,8 @@ export default function DelegatesPage() {
 
               <div>
                 <label className="block text-xs font-medium text-primary/80 mb-1.5">
-                  Workflow Authorization <span className="text-destructive">*</span>
+                  Workflow Authorization{" "}
+                  <span className="text-destructive">*</span>
                 </label>
                 <select
                   value={workflowType}
@@ -169,7 +175,9 @@ export default function DelegatesPage() {
                   className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
                 >
                   <option value="leave_approvals">Leave Approvals Only</option>
-                  <option value="attendance_approvals">Attendance Approvals Only</option>
+                  <option value="attendance_approvals">
+                    Attendance Approvals Only
+                  </option>
                   <option value="all">All Operational Approvals</option>
                 </select>
               </div>

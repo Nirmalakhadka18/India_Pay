@@ -34,7 +34,9 @@ import { useMemo, useState } from "react";
 
 // ── Hand-drawn Celebration Vector Illustration ───────────────────────────────
 
-function CelebrationIllustration({ className = "w-28 h-28" }: { className?: string }) {
+function CelebrationIllustration({
+  className = "w-28 h-28",
+}: { className?: string }) {
   return (
     <svg viewBox="0 0 160 160" fill="none" className={className}>
       {/* Confetti & Streamers */}
@@ -42,33 +44,108 @@ function CelebrationIllustration({ className = "w-28 h-28" }: { className?: stri
       <circle cx="125" cy="35" r="3" fill="#EC4899" />
       <circle cx="45" cy="80" r="2" fill="#3B82F6" />
       <circle cx="130" cy="75" r="2.5" fill="#10B981" />
-      <path d="M40 25 Q45 20 50 25 Q55 30 60 25" stroke="#EC4899" strokeWidth="1.5" fill="none" />
-      <path d="M110 20 Q115 15 120 20 Q125 25 130 20" stroke="#3B82F6" strokeWidth="1.5" fill="none" />
+      <path
+        d="M40 25 Q45 20 50 25 Q55 30 60 25"
+        stroke="#EC4899"
+        strokeWidth="1.5"
+        fill="none"
+      />
+      <path
+        d="M110 20 Q115 15 120 20 Q125 25 130 20"
+        stroke="#3B82F6"
+        strokeWidth="1.5"
+        fill="none"
+      />
 
       {/* Balloons */}
       <g transform="translate(10, 15)">
-        <ellipse cx="30" cy="35" rx="8" ry="11" fill="#F87171" stroke="#DC2626" strokeWidth="1" />
+        <ellipse
+          cx="30"
+          cy="35"
+          rx="8"
+          ry="11"
+          fill="#F87171"
+          stroke="#DC2626"
+          strokeWidth="1"
+        />
         <path d="M30 46 L28 49 L32 49 Z" fill="#DC2626" />
-        <path d="M30 49 Q25 65 35 75" stroke="#94A3B8" strokeWidth="1" fill="none" />
+        <path
+          d="M30 49 Q25 65 35 75"
+          stroke="#94A3B8"
+          strokeWidth="1"
+          fill="none"
+        />
 
-        <ellipse cx="44" cy="30" rx="9" ry="12" fill="#60A5FA" stroke="#2563EB" strokeWidth="1" />
+        <ellipse
+          cx="44"
+          cy="30"
+          rx="9"
+          ry="12"
+          fill="#60A5FA"
+          stroke="#2563EB"
+          strokeWidth="1"
+        />
         <path d="M44 42 L42 45 L46 45 Z" fill="#2563EB" />
-        <path d="M44 45 Q50 60 40 75" stroke="#94A3B8" strokeWidth="1" fill="none" />
+        <path
+          d="M44 45 Q50 60 40 75"
+          stroke="#94A3B8"
+          strokeWidth="1"
+          fill="none"
+        />
       </g>
 
       {/* Celebrating Person */}
       <g transform="translate(50, 45)">
-        <circle cx="30" cy="20" r="8" fill="#FDE68A" stroke="#0F172A" strokeWidth="1.5" />
-        <path d="M22 18 Q30 10 38 18" stroke="#0F172A" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-        <path d="M27 22 Q30 25 33 22" stroke="#0F172A" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+        <circle
+          cx="30"
+          cy="20"
+          r="8"
+          fill="#FDE68A"
+          stroke="#0F172A"
+          strokeWidth="1.5"
+        />
+        <path
+          d="M22 18 Q30 10 38 18"
+          stroke="#0F172A"
+          strokeWidth="2.5"
+          fill="none"
+          strokeLinecap="round"
+        />
+        <path
+          d="M27 22 Q30 25 33 22"
+          stroke="#0F172A"
+          strokeWidth="1.2"
+          fill="none"
+          strokeLinecap="round"
+        />
 
-        <path d="M22 36 L10 20 L5 12" stroke="#0F172A" strokeWidth="2" strokeLinecap="round" />
-        <path d="M38 36 L50 20 L55 12" stroke="#0F172A" strokeWidth="2" strokeLinecap="round" />
+        <path
+          d="M22 36 L10 20 L5 12"
+          stroke="#0F172A"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        <path
+          d="M38 36 L50 20 L55 12"
+          stroke="#0F172A"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
 
-        <path d="M22 34 L38 34 L40 65 L20 65 Z" fill="#FFFFFF" stroke="#0F172A" strokeWidth="1.5" />
+        <path
+          d="M22 34 L38 34 L40 65 L20 65 Z"
+          fill="#FFFFFF"
+          stroke="#0F172A"
+          strokeWidth="1.5"
+        />
         <path d="M29 34 L31 34 L32 50 L30 54 L28 50 Z" fill="#3B82F6" />
 
-        <path d="M20 65 L16 105 L26 105 L29 78 L32 78 L35 105 L45 105 L40 65 Z" fill="#3B82F6" stroke="#1D4ED8" strokeWidth="1.5" />
+        <path
+          d="M20 65 L16 105 L26 105 L29 78 L32 78 L35 105 L45 105 L40 65 Z"
+          fill="#3B82F6"
+          stroke="#1D4ED8"
+          strokeWidth="1.5"
+        />
         <ellipse cx="18" cy="106" rx="6" ry="2.5" fill="#0F172A" />
         <ellipse cx="43" cy="106" rx="6" ry="2.5" fill="#0F172A" />
       </g>
@@ -154,11 +231,14 @@ export default function EngagePage() {
   const addComment = useMutation(api.engage.addComment);
 
   // Filter States
-  const [activityFilter, setActivityFilter] = useState<ActivityFilterType>("all");
+  const [activityFilter, setActivityFilter] =
+    useState<ActivityFilterType>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGroup, setSelectedGroup] = useState<string>("All Groups");
-  const [selectedLocation, setSelectedLocation] = useState<string>("All Locations");
-  const [selectedDepartment, setSelectedDepartment] = useState<string>("All Departments");
+  const [selectedLocation, setSelectedLocation] =
+    useState<string>("All Locations");
+  const [selectedDepartment, setSelectedDepartment] =
+    useState<string>("All Departments");
   const [sortBy, setSortBy] = useState<"newest" | "oldest">("newest");
 
   // Accordion Expand States
@@ -193,8 +273,12 @@ export default function EngagePage() {
 
   // Active Comment Box States (activityId -> text)
   const [openComments, setOpenComments] = useState<Record<string, boolean>>({});
-  const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
-  const [isSubmittingComment, setIsSubmittingComment] = useState<Record<string, boolean>>({});
+  const [commentInputs, setCommentInputs] = useState<Record<string, string>>(
+    {},
+  );
+  const [isSubmittingComment, setIsSubmittingComment] = useState<
+    Record<string, boolean>
+  >({});
 
   // Voting feedback
   const [votingPollId, setVotingPollId] = useState<string | null>(null);
@@ -300,7 +384,12 @@ export default function EngagePage() {
           type: "announcement",
           title: a.title,
           content: a.content,
-          group: a.category === "hr" ? "HR" : a.category === "event" ? "Events" : "General",
+          group:
+            a.category === "hr"
+              ? "HR"
+              : a.category === "event"
+                ? "Events"
+                : "General",
           authorName: a.authorName,
           createdAt: a.createdAt,
         });
@@ -318,10 +407,18 @@ export default function EngagePage() {
         // Activity type filter
         if (activityFilter === "kudos" && item.type !== "kudos") return false;
         if (activityFilter === "polls" && item.type !== "poll") return false;
-        if (activityFilter === "posts" && item.type !== "post" && item.type !== "announcement") return false;
+        if (
+          activityFilter === "posts" &&
+          item.type !== "post" &&
+          item.type !== "announcement"
+        )
+          return false;
 
         // Group filter
-        if (selectedGroup !== "All Groups" && item.group.toLowerCase() !== selectedGroup.toLowerCase()) {
+        if (
+          selectedGroup !== "All Groups" &&
+          item.group.toLowerCase() !== selectedGroup.toLowerCase()
+        ) {
           return false;
         }
 
@@ -330,7 +427,8 @@ export default function EngagePage() {
           const q = searchQuery.toLowerCase();
           const matchTitle = item.title?.toLowerCase().includes(q) ?? false;
           const matchContent = item.content.toLowerCase().includes(q);
-          const matchAuthor = item.authorName?.toLowerCase().includes(q) ?? false;
+          const matchAuthor =
+            item.authorName?.toLowerCase().includes(q) ?? false;
           const matchKudos =
             (item.senderName?.toLowerCase().includes(q) ?? false) ||
             (item.receiverName?.toLowerCase().includes(q) ?? false);
@@ -342,7 +440,9 @@ export default function EngagePage() {
         return true;
       })
       .sort((a, b) => {
-        return sortBy === "newest" ? b.createdAt - a.createdAt : a.createdAt - b.createdAt;
+        return sortBy === "newest"
+          ? b.createdAt - a.createdAt
+          : a.createdAt - b.createdAt;
       });
   }, [feedItems, activityFilter, selectedGroup, searchQuery, sortBy]);
 
@@ -360,7 +460,15 @@ export default function EngagePage() {
   }, [allReactions]);
 
   const commentsMap = useMemo(() => {
-    const map = new Map<string, Array<{ _id: string; userName: string; content: string; createdAt: number }>>();
+    const map = new Map<
+      string,
+      Array<{
+        _id: string;
+        userName: string;
+        content: string;
+        createdAt: number;
+      }>
+    >();
     if (!allComments) return map;
     for (const c of allComments) {
       const list = map.get(c.activityId) || [];
@@ -412,7 +520,9 @@ export default function EngagePage() {
       return;
     }
     setPollError(null);
-    const options = [pollOption1, pollOption2, pollOption3].filter((o) => o.trim().length > 0);
+    const options = [pollOption1, pollOption2, pollOption3].filter(
+      (o) => o.trim().length > 0,
+    );
     if (options.length < 2) {
       setPollError("Please provide at least 2 options.");
       return;
@@ -477,7 +587,10 @@ export default function EngagePage() {
     }
   };
 
-  const handleToggleReaction = async (activityId: string, activityType: string) => {
+  const handleToggleReaction = async (
+    activityId: string,
+    activityType: string,
+  ) => {
     if (!workspaceId) return;
     try {
       await toggleReaction({
@@ -528,7 +641,10 @@ export default function EngagePage() {
       <div className="mx-auto w-full max-w-7xl space-y-4">
         {/* Breadcrumb: Engage */}
         <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400">
-          <svg className="h-3.5 w-3.5 text-blue-500 fill-current" viewBox="0 0 24 24">
+          <svg
+            className="h-3.5 w-3.5 text-blue-500 fill-current"
+            viewBox="0 0 24 24"
+          >
             <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z" />
           </svg>
           <span>Engage</span>
@@ -627,7 +743,9 @@ export default function EngagePage() {
                     <button
                       key={key}
                       type="button"
-                      onClick={() => setActivityFilter(key as ActivityFilterType)}
+                      onClick={() =>
+                        setActivityFilter(key as ActivityFilterType)
+                      }
                       className={`w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition ${
                         isSelected
                           ? "bg-blue-50 text-blue-600 font-semibold dark:bg-blue-950/40 dark:text-blue-400"
@@ -642,7 +760,9 @@ export default function EngagePage() {
                               : "border-slate-300 dark:border-slate-600"
                           }`}
                         >
-                          {isSelected && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+                          {isSelected && (
+                            <span className="h-1.5 w-1.5 rounded-full bg-white" />
+                          )}
                         </span>
                         <span>{label}</span>
                       </div>
@@ -681,20 +801,22 @@ export default function EngagePage() {
               </button>
               {groupsExpanded && (
                 <div className="mt-1 space-y-1 pl-1">
-                  {["All Groups", "Events", "General", "Engineering", "HR"].map((g) => (
-                    <button
-                      key={g}
-                      type="button"
-                      onClick={() => setSelectedGroup(g)}
-                      className={`block w-full text-left rounded px-2 py-1 text-xs transition ${
-                        selectedGroup === g
-                          ? "bg-slate-100 font-semibold text-blue-600 dark:bg-muted"
-                          : "text-slate-500 hover:text-slate-800 dark:text-slate-400"
-                      }`}
-                    >
-                      {g}
-                    </button>
-                  ))}
+                  {["All Groups", "Events", "General", "Engineering", "HR"].map(
+                    (g) => (
+                      <button
+                        key={g}
+                        type="button"
+                        onClick={() => setSelectedGroup(g)}
+                        className={`block w-full text-left rounded px-2 py-1 text-xs transition ${
+                          selectedGroup === g
+                            ? "bg-slate-100 font-semibold text-blue-600 dark:bg-muted"
+                            : "text-slate-500 hover:text-slate-800 dark:text-slate-400"
+                        }`}
+                      >
+                        {g}
+                      </button>
+                    ),
+                  )}
                 </div>
               )}
             </div>
@@ -715,20 +837,22 @@ export default function EngagePage() {
               </button>
               {locationExpanded && (
                 <div className="mt-1 space-y-1 pl-1">
-                  {["All Locations", "Bangalore", "Mumbai", "Remote"].map((loc) => (
-                    <button
-                      key={loc}
-                      type="button"
-                      onClick={() => setSelectedLocation(loc)}
-                      className={`block w-full text-left rounded px-2 py-1 text-xs transition ${
-                        selectedLocation === loc
-                          ? "bg-slate-100 font-semibold text-blue-600 dark:bg-muted"
-                          : "text-slate-500 hover:text-slate-800 dark:text-slate-400"
-                      }`}
-                    >
-                      {loc}
-                    </button>
-                  ))}
+                  {["All Locations", "Bangalore", "Mumbai", "Remote"].map(
+                    (loc) => (
+                      <button
+                        key={loc}
+                        type="button"
+                        onClick={() => setSelectedLocation(loc)}
+                        className={`block w-full text-left rounded px-2 py-1 text-xs transition ${
+                          selectedLocation === loc
+                            ? "bg-slate-100 font-semibold text-blue-600 dark:bg-muted"
+                            : "text-slate-500 hover:text-slate-800 dark:text-slate-400"
+                        }`}
+                      >
+                        {loc}
+                      </button>
+                    ),
+                  )}
                 </div>
               )}
             </div>
@@ -749,7 +873,13 @@ export default function EngagePage() {
               </button>
               {departmentExpanded && (
                 <div className="mt-1 space-y-1 pl-1">
-                  {["All Departments", "Engineering", "HR", "Finance", "Operations"].map((d) => (
+                  {[
+                    "All Departments",
+                    "Engineering",
+                    "HR",
+                    "Finance",
+                    "Operations",
+                  ].map((d) => (
                     <button
                       key={d}
                       type="button"
@@ -784,7 +914,9 @@ export default function EngagePage() {
                 <span>Sort:</span>
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as "newest" | "oldest")}
+                  onChange={(e) =>
+                    setSortBy(e.target.value as "newest" | "oldest")
+                  }
                   className="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-700 focus:outline-none dark:border-border dark:bg-card dark:text-slate-200"
                 >
                   <option value="newest">Newest first</option>
@@ -801,12 +933,17 @@ export default function EngagePage() {
                   No activities found
                 </h3>
                 <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-                  There are no updates matching your current filters. Try selecting &ldquo;All Activities&rdquo; or clearing your search.
+                  There are no updates matching your current filters. Try
+                  selecting &ldquo;All Activities&rdquo; or clearing your
+                  search.
                 </p>
               </div>
             ) : (
               filteredItems.map((item) => {
-                const reactions = reactionsMap.get(item.id) || { count: 0, hasReacted: false };
+                const reactions = reactionsMap.get(item.id) || {
+                  count: 0,
+                  hasReacted: false,
+                };
                 const comments = commentsMap.get(item.id) || [];
                 const isCommentsOpen = openComments[item.id] ?? false;
 
@@ -871,19 +1008,31 @@ export default function EngagePage() {
                           </h3>
                           <div className="space-y-2">
                             {item.pollData.options.map((opt, optIdx) => {
-                              const voteCount = item.pollData?.voteCounts?.[optIdx] ?? 0;
+                              const voteCount =
+                                item.pollData?.voteCounts?.[optIdx] ?? 0;
                               const pct =
                                 (item.pollData?.totalVotes ?? 0) > 0
-                                  ? Math.round((voteCount / (item.pollData?.totalVotes ?? 1)) * 100)
+                                  ? Math.round(
+                                      (voteCount /
+                                        (item.pollData?.totalVotes ?? 1)) *
+                                        100,
+                                    )
                                   : 0;
-                              const isMyVote = item.pollData?.myVoteIndex === optIdx;
+                              const isMyVote =
+                                item.pollData?.myVoteIndex === optIdx;
 
                               return (
                                 <button
                                   key={opt}
                                   type="button"
-                                  disabled={item.pollData?.hasVoted || votingPollId === item.pollData?.pollId}
-                                  onClick={() => item.pollData && handleVote(item.pollData.pollId, optIdx)}
+                                  disabled={
+                                    item.pollData?.hasVoted ||
+                                    votingPollId === item.pollData?.pollId
+                                  }
+                                  onClick={() =>
+                                    item.pollData &&
+                                    handleVote(item.pollData.pollId, optIdx)
+                                  }
                                   className={`relative w-full overflow-hidden rounded-lg border p-2.5 text-left text-xs transition ${
                                     isMyVote
                                       ? "border-cyan-500 bg-cyan-50/50 dark:bg-cyan-950/30 font-semibold"
@@ -912,7 +1061,8 @@ export default function EngagePage() {
                             })}
                           </div>
                           <p className="text-[10px] text-slate-400">
-                            {item.pollData.totalVotes} total vote{item.pollData.totalVotes !== 1 ? "s" : ""}
+                            {item.pollData.totalVotes} total vote
+                            {item.pollData.totalVotes !== 1 ? "s" : ""}
                           </p>
                         </div>
                       ) : (
@@ -948,7 +1098,9 @@ export default function EngagePage() {
                       >
                         <ThumbsUp
                           className={`h-3.5 w-3.5 ${
-                            reactions.hasReacted ? "fill-blue-600 text-blue-600" : ""
+                            reactions.hasReacted
+                              ? "fill-blue-600 text-blue-600"
+                              : ""
                           }`}
                         />
                         <span>Reaction</span>
@@ -1028,7 +1180,10 @@ export default function EngagePage() {
                           <Button
                             size="sm"
                             data-testid="submit-comment-btn"
-                            disabled={isSubmittingComment[item.id] || !commentInputs[item.id]?.trim()}
+                            disabled={
+                              isSubmittingComment[item.id] ||
+                              !commentInputs[item.id]?.trim()
+                            }
                             onClick={() => handleAddComment(item.id, item.type)}
                             className="bg-[#4361ee] hover:bg-[#3b53cc] text-white text-xs px-3"
                           >
@@ -1052,7 +1207,9 @@ export default function EngagePage() {
             <div className="flex items-center justify-between border-b border-border/60 pb-3">
               <div className="flex items-center gap-2 text-pink-600 dark:text-pink-400">
                 <Award className="h-5 w-5" />
-                <h3 className="font-semibold text-sm text-primary">Give Kudos</h3>
+                <h3 className="font-semibold text-sm text-primary">
+                  Give Kudos
+                </h3>
               </div>
               <button
                 type="button"
@@ -1085,7 +1242,8 @@ export default function EngagePage() {
                     .filter((e) => e._id !== me?._id)
                     .map((e) => (
                       <option key={e._id} value={e._id}>
-                        {e.firstName} {e.lastName} ({e.designation || e.department || "Employee"})
+                        {e.firstName} {e.lastName} (
+                        {e.designation || e.department || "Employee"})
                       </option>
                     ))}
                 </select>
@@ -1101,10 +1259,16 @@ export default function EngagePage() {
                   className="w-full rounded-lg border border-border bg-background px-3 py-2 text-xs text-primary focus:outline-none focus:ring-1 focus:ring-pink-500"
                 >
                   <option value="Team Player">🤝 Team Player</option>
-                  <option value="Going the Extra Mile">🚀 Going the Extra Mile</option>
+                  <option value="Going the Extra Mile">
+                    🚀 Going the Extra Mile
+                  </option>
                   <option value="Innovator">💡 Innovator</option>
-                  <option value="Customer Champion">🌟 Customer Champion</option>
-                  <option value="Rockstar Performer">🎸 Rockstar Performer</option>
+                  <option value="Customer Champion">
+                    🌟 Customer Champion
+                  </option>
+                  <option value="Rockstar Performer">
+                    🎸 Rockstar Performer
+                  </option>
                 </select>
               </div>
 
@@ -1136,7 +1300,11 @@ export default function EngagePage() {
                   disabled={isSubmittingKudos}
                   className="bg-pink-600 hover:bg-pink-700 text-white text-xs gap-1.5"
                 >
-                  {isSubmittingKudos ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Award className="h-3.5 w-3.5" />}
+                  {isSubmittingKudos ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Award className="h-3.5 w-3.5" />
+                  )}
                   Send Kudos
                 </Button>
               </div>
@@ -1152,7 +1320,9 @@ export default function EngagePage() {
             <div className="flex items-center justify-between border-b border-border/60 pb-3">
               <div className="flex items-center gap-2 text-cyan-600 dark:text-cyan-400">
                 <BarChart2 className="h-5 w-5" />
-                <h3 className="font-semibold text-sm text-primary">Create Team Poll</h3>
+                <h3 className="font-semibold text-sm text-primary">
+                  Create Team Poll
+                </h3>
               </div>
               <button
                 type="button"
@@ -1226,7 +1396,11 @@ export default function EngagePage() {
                   disabled={isSubmittingPoll}
                   className="bg-cyan-600 hover:bg-cyan-700 text-white text-xs gap-1.5"
                 >
-                  {isSubmittingPoll ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <BarChart2 className="h-3.5 w-3.5" />}
+                  {isSubmittingPoll ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <BarChart2 className="h-3.5 w-3.5" />
+                  )}
                   Publish Poll
                 </Button>
               </div>
@@ -1242,7 +1416,9 @@ export default function EngagePage() {
             <div className="flex items-center justify-between border-b border-border/60 pb-3">
               <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400">
                 <FileText className="h-5 w-5" />
-                <h3 className="font-semibold text-sm text-primary">Create Post</h3>
+                <h3 className="font-semibold text-sm text-primary">
+                  Create Post
+                </h3>
               </div>
               <button
                 type="button"
@@ -1321,7 +1497,11 @@ export default function EngagePage() {
                   disabled={isSubmittingPost}
                   className="bg-purple-600 hover:bg-purple-700 text-white text-xs gap-1.5"
                 >
-                  {isSubmittingPost ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FileText className="h-3.5 w-3.5" />}
+                  {isSubmittingPost ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <FileText className="h-3.5 w-3.5" />
+                  )}
                   Publish Post
                 </Button>
               </div>

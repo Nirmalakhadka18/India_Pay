@@ -16,6 +16,9 @@ export default defineSchema({
     isAnonymous: v.optional(v.boolean()),
     username: v.optional(v.string()),
     imageId: v.optional(v.id("_storage")),
+    timezone: v.optional(v.string()),
+    biography: v.optional(v.string()),
+    lastPasswordChangedDate: v.optional(v.number()),
   }).index("email", ["email"]),
 
   events: defineTable({
@@ -331,6 +334,36 @@ export default defineSchema({
     netSalary: v.number(),
     hasSalaryStructure: v.boolean(),
     warnings: v.array(v.string()),
+    loanDeductions: v.optional(
+      v.array(
+        v.object({
+          loanId: v.id("loans"),
+          loanType: v.string(),
+          emiAmount: v.number(),
+          principalComponent: v.number(),
+          interestComponent: v.number(),
+          deductedAmount: v.number(),
+          outstandingBefore: v.number(),
+          outstandingAfter: v.number(),
+          isPartial: v.boolean(),
+          isBounced: v.boolean(),
+        })
+      )
+    ),
+    totalLoanDeductions: v.optional(v.number()),
+    reimbursementItems: v.optional(
+      v.array(
+        v.object({
+          claimId: v.id("reimbursementClaims"),
+          claimNumber: v.string(),
+          categoryCode: v.string(),
+          taxTreatment: v.string(),
+          approvedAmount: v.number(),
+          isTaxExempt: v.boolean(),
+        })
+      )
+    ),
+    totalReimbursements: v.optional(v.number()),
     createdAt: v.number(),
   })
     .index("by_workspace", ["workspaceId"])
@@ -496,7 +529,11 @@ export default defineSchema({
     workspaceId: v.id("workspaces"),
     name: v.string(),
     date: v.string(), // "YYYY-MM-DD"
-    type: v.union(v.literal("gazetted"), v.literal("restricted"), v.literal("company")),
+    type: v.union(
+      v.literal("gazetted"),
+      v.literal("restricted"),
+      v.literal("company"),
+    ),
     description: v.optional(v.string()),
     createdAt: v.number(),
   })
@@ -736,4 +773,971 @@ export default defineSchema({
   })
     .index("by_activity", ["activityId"])
     .index("by_workspace", ["workspaceId"]),
+
+  // Workflow Module: Employee Onboarding Tasks
+  onboardingTasks: defineTable({
+    workspaceId: v.id("workspaces"),
+    employeeId: v.id("employees"),
+    taskName: v.string(),
+    category: v.union(
+      v.literal("documentation"),
+      v.literal("it_setup"),
+      v.literal("training"),
+      v.literal("hr_orientation"),
+      v.literal("compliance"),
+    ),
+    assignedToId: v.optional(v.id("users")),
+    assignedRole: v.optional(v.string()), // e.g. "HR Manager", "IT Admin"
+    dueDate: v.string(), // "YYYY-MM-DD"
+    status: v.union(
+      v.literal("pending"),
+      v.literal("in_progress"),
+      v.literal("completed"),
+      v.literal("verified"),
+    ),
+    completionRemarks: v.optional(v.string()),
+    verifiedBy: v.optional(v.id("users")),
+    verifiedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_employee", ["employeeId"])
+    .index("by_workspace_status", ["workspaceId", "status"]),
+
+  // Workflow Module: Employee Confirmation & Probation
+  employeeConfirmations: defineTable({
+    workspaceId: v.id("workspaces"),
+    employeeId: v.id("employees"),
+    probationPeriodMonths: v.number(), // typically 3 or 6 months
+    probationEndDate: v.string(), // "YYYY-MM-DD"
+    confirmationDueDate: v.string(), // "YYYY-MM-DD"
+    reviewerId: v.optional(v.id("users")),
+    rating: v.optional(
+      v.union(
+        v.literal("exceeds"),
+        v.literal("meets"),
+        v.literal("needs_improvement"),
+      ),
+    ),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("confirmed"),
+      v.literal("extended"),
+      v.literal("terminated"),
+    ),
+    extensionMonths: v.optional(v.number()),
+    effectiveConfirmationDate: v.optional(v.string()),
+    remarks: v.optional(v.string()),
+    reviewedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_employee", ["employeeId"])
+    .index("by_workspace_status", ["workspaceId", "status"]),
+
+  // Workflow Setup: Reviewer Types
+  workflowReviewerTypes: defineTable({
+    workspaceId: v.id("workspaces"),
+    typeCode: v.string(), // e.g., "MANAGER", "HR_ADMIN", "DEPT_HEAD", "FINANCE"
+    typeName: v.string(), // e.g., "Reporting Manager", "HR Administrator"
+    description: v.string(),
+    hierarchyLevel: v.number(), // 1, 2, 3
+    isSystemDefault: v.boolean(),
+    status: v.union(v.literal("active"), v.literal("inactive")),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_code", ["workspaceId", "typeCode"]),
+
+  // Workflow Setup: Approval Levels & Escalation Rules
+  workflowLevels: defineTable({
+    workspaceId: v.id("workspaces"),
+    workflowModule: v.union(
+      v.literal("leave"),
+      v.literal("leave_cancel"),
+      v.literal("comp_off"),
+      v.literal("rh_leave"),
+      v.literal("resignation"),
+      v.literal("confirmation"),
+      v.literal("help_desk"),
+      v.literal("onboarding"),
+    ),
+    levelIndex: v.number(), // 1, 2, 3
+    levelName: v.string(), // "Primary Reviewer", "HR Escalation", etc.
+    reviewerTypeId: v.string(), // reviewer type code or role
+    autoApprovalDays: v.number(), // 0 for disabled, or 2, 3, etc.
+    canEscalate: v.boolean(),
+    status: v.union(v.literal("active"), v.literal("inactive")),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_module", ["workspaceId", "workflowModule"]),
+
+  // Reports Module: User Report Favorites
+  reportFavorites: defineTable({
+    workspaceId: v.id("workspaces"),
+    userId: v.id("users"),
+    reportId: v.string(), // ID corresponding to reports registry (e.g. "salary_statement_monthly")
+    createdAt: v.number(),
+  })
+    .index("by_workspace_user", ["workspaceId", "userId"])
+    .index("by_workspace_report", ["workspaceId", "reportId"]),
+
+  // Reports Module: Report Execution Runs & History
+  reportRuns: defineTable({
+    workspaceId: v.id("workspaces"),
+    userId: v.id("users"),
+    reportId: v.string(),
+    reportName: v.string(),
+    category: v.string(),
+    parameters: v.string(), // JSON stringified filter values (e.g. periodMonth, dept)
+    format: v.union(v.literal("PDF"), v.literal("XLSX"), v.literal("CSV")),
+    status: v.union(v.literal("completed"), v.literal("failed")),
+    rowCount: v.number(),
+    fileSizeKb: v.number(),
+    generatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_user", ["workspaceId", "userId"])
+    .index("by_workspace_date", ["workspaceId", "generatedAt"]),
+
+  // Reports Module: Saved Query Builder Definitions
+  savedQueries: defineTable({
+    workspaceId: v.id("workspaces"),
+    createdBy: v.id("users"),
+    queryName: v.string(),
+    description: v.optional(v.string()),
+    primarySource: v.union(
+      v.literal("employees"),
+      v.literal("salaries"),
+      v.literal("attendance"),
+      v.literal("leaves"),
+    ),
+    selectedFields: v.array(v.string()), // allowlisted field keys
+    filters: v.array(
+      v.object({
+        field: v.string(),
+        operator: v.union(
+          v.literal("equals"),
+          v.literal("not_equals"),
+          v.literal("contains"),
+          v.literal("greater_than"),
+          v.literal("less_than"),
+        ),
+        value: v.string(),
+      }),
+    ),
+    sortBy: v.optional(v.string()),
+    sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
+    groupBy: v.optional(v.string()),
+    isPublic: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_creator", ["workspaceId", "createdBy"]),
+  // -------------------------------------------------------------------------
+  // Unite Marketplace Module (Phase 15)
+  // -------------------------------------------------------------------------
+
+  // Marketplace Applications Registry
+  marketplaceApps: defineTable({
+    appId: v.string(), // e.g. "springverify", "fatakpay", "cleartax"
+    name: v.string(),
+    provider: v.string(),
+    tagline: v.string(),
+    description: v.string(),
+    category: v.string(), // "Background Verification", "Advance Salary", etc.
+    secondaryCategory: v.optional(v.string()),
+    rating: v.number(),
+    ratingCount: v.number(),
+    offerBadge: v.optional(v.string()), // e.g. "20% Discount on Background Checks"
+    isFeatured: v.boolean(),
+    isInterestedDefault: v.optional(v.boolean()),
+    integrationType: v.union(
+      v.literal("native"),
+      v.literal("connector"),
+      v.literal("third_party"),
+      v.literal("demo"),
+    ),
+    supportedFeatures: v.array(v.string()),
+    pricingModel: v.string(), // e.g. "Paid per check", "Enterprise subscription", "Free trial available"
+    dataExchanged: v.array(v.string()),
+    securityCompliance: v.array(v.string()), // e.g. ["ISO 27001", "SOC 2 Type II", "GDPR"]
+    docUrl: v.optional(v.string()),
+    isActiveInCatalog: v.boolean(),
+    createdAt: v.number(),
+  })
+    .index("by_app_id", ["appId"])
+    .index("by_category", ["category"])
+    .index("by_featured", ["isFeatured"]),
+
+  // Organization App Installation / Request Status
+  marketplaceOrgApps: defineTable({
+    workspaceId: v.id("workspaces"),
+    appId: v.string(),
+    status: v.union(
+      v.literal("available"),
+      v.literal("requested"),
+      v.literal("pending_approval"),
+      v.literal("approved"),
+      v.literal("installed"),
+      v.literal("active"),
+      v.literal("suspended"),
+      v.literal("rejected"),
+    ),
+    requestedBy: v.optional(v.id("users")),
+    requestReason: v.optional(v.string()),
+    requestedModules: v.optional(v.array(v.string())),
+    contactName: v.optional(v.string()),
+    contactEmail: v.optional(v.string()),
+    contactPhone: v.optional(v.string()),
+    reviewedBy: v.optional(v.id("users")),
+    reviewComments: v.optional(v.string()),
+    configSettings: v.optional(v.string()), // JSON configuration (non-sensitive)
+    requestedAt: v.optional(v.number()),
+    reviewedAt: v.optional(v.number()),
+    installedAt: v.optional(v.number()),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_app", ["workspaceId", "appId"])
+    .index("by_workspace_status", ["workspaceId", "status"]),
+
+  // User / Org Interested Apps (Bookmarked / Saved for later)
+  marketplaceInterestedApps: defineTable({
+    workspaceId: v.id("workspaces"),
+    userId: v.id("users"),
+    appId: v.string(),
+    addedAt: v.number(),
+  })
+    .index("by_workspace_user", ["workspaceId", "userId"])
+    .index("by_workspace_app", ["workspaceId", "appId"]),
+
+  // Marketplace In-App Notifications
+  marketplaceNotifications: defineTable({
+    workspaceId: v.id("workspaces"),
+    recipientUserId: v.optional(v.id("users")), // undefined = all admins in org
+    appId: v.string(),
+    appName: v.string(),
+    title: v.string(),
+    message: v.string(),
+    type: v.union(
+      v.literal("request_submitted"),
+      v.literal("request_approved"),
+      v.literal("request_rejected"),
+      v.literal("installation_completed"),
+      v.literal("config_required"),
+      v.literal("status_changed"),
+    ),
+    isRead: v.boolean(),
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_read", ["workspaceId", "isRead"])
+    .index("by_workspace_recipient", ["workspaceId", "recipientUserId"]),
+
+  // Marketplace Demo Requests (Book A Demo)
+  marketplaceDemoRequests: defineTable({
+    workspaceId: v.id("workspaces"),
+    userId: v.id("users"),
+    name: v.string(),
+    organization: v.string(),
+    workEmail: v.string(),
+    contactNumber: v.string(),
+    interestedAppId: v.string(),
+    preferredDate: v.string(),
+    additionalInfo: v.optional(v.string()),
+    status: v.union(
+      v.literal("received"),
+      v.literal("contacted"),
+      v.literal("scheduled"),
+    ),
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_user", ["workspaceId", "userId"]),
+
+  // User Tour Preference (Take A Tour completion)
+  marketplaceTourPreferences: defineTable({
+    workspaceId: v.id("workspaces"),
+    userId: v.id("users"),
+    hasCompletedTour: v.boolean(),
+    completedAt: v.optional(v.number()),
+  }).index("by_workspace_user", ["workspaceId", "userId"]),
+
+  // My Profile: Login & Security History Records (Phase 16.1)
+  loginHistory: defineTable({
+    workspaceId: v.optional(v.id("workspaces")),
+    userId: v.id("users"),
+    userEmail: v.string(),
+    userName: v.optional(v.string()),
+    employeeNo: v.optional(v.string()),
+    eventType: v.union(
+      v.literal("login_success"),
+      v.literal("login_failure"),
+      v.literal("password_changed"),
+    ),
+    ipAddress: v.string(),
+    userAgent: v.optional(v.string()),
+    timestamp: v.number(), // Unix timestamp (ms)
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_timestamp", ["userId", "timestamp"])
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_timestamp", ["workspaceId", "timestamp"])
+    .index("by_event_type", ["eventType"]),
+
+  // Phase 16.2: Account Settings Schemas
+  // 1. Plan Subscriptions
+  accountSubscriptions: defineTable({
+    workspaceId: v.id("workspaces"),
+    planKey: v.union(
+      v.literal("essential"),
+      v.literal("growth"),
+      v.literal("enterprise"),
+    ),
+    billingCycle: v.union(v.literal("monthly"), v.literal("annual")),
+    status: v.union(
+      v.literal("active"),
+      v.literal("trial"),
+      v.literal("pending_change"),
+      v.literal("cancelled"),
+    ),
+    requestedPlan: v.optional(v.string()),
+    employeeAllowance: v.number(),
+    activeHeadcount: v.number(),
+    monthlyBasePrice: v.number(),
+    additionalEmployeeRate: v.number(),
+    startDate: v.number(),
+    renewalDate: v.number(),
+    updatedAt: v.number(),
+  }).index("by_workspace", ["workspaceId"]),
+
+  // 2. Invoices
+  accountInvoices: defineTable({
+    workspaceId: v.id("workspaces"),
+    invoiceNo: v.string(),
+    billingPeriodStart: v.string(),
+    billingPeriodEnd: v.string(),
+    invoiceDate: v.string(),
+    invoiceAmount: v.number(),
+    status: v.union(v.literal("paid"), v.literal("unpaid"), v.literal("due")),
+    currency: v.string(),
+    lineItems: v.array(
+      v.object({
+        slNo: v.number(),
+        service: v.string(),
+        headCount: v.number(),
+        amount: v.number(),
+        totalAmount: v.number(),
+        taxPercent: v.number(),
+        invoiceAmount: v.number(),
+      }),
+    ),
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_invoice_no", ["invoiceNo"]),
+
+  // 3. Payment Records
+  accountPayments: defineTable({
+    workspaceId: v.id("workspaces"),
+    paymentDate: v.string(),
+    amount: v.number(),
+    paymentMode: v.string(),
+    chequeOrRefNo: v.string(),
+    bankName: v.string(),
+    chequeDate: v.optional(v.string()),
+    acknowledgementSent: v.boolean(),
+    invoiceNo: v.string(),
+    invoiceDate: v.string(),
+    invoiceAmount: v.number(),
+    paidAmount: v.number(),
+    status: v.union(
+      v.literal("successful"),
+      v.literal("pending"),
+      v.literal("failed"),
+    ),
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_invoice_no", ["invoiceNo"]),
+
+  // 4. Support Tickets
+  accountTickets: defineTable({
+    workspaceId: v.id("workspaces"),
+    ticketId: v.string(),
+    subject: v.string(),
+    category: v.string(),
+    priority: v.union(
+      v.literal("low"),
+      v.literal("medium"),
+      v.literal("high"),
+      v.literal("urgent"),
+    ),
+    status: v.union(
+      v.literal("Open"),
+      v.literal("In Progress"),
+      v.literal("Resolved"),
+      v.literal("Closed"),
+    ),
+    dateOfCreation: v.string(),
+    lastActivity: v.string(),
+    createdByEmail: v.string(),
+    createdByName: v.string(),
+    messages: v.array(
+      v.object({
+        sender: v.string(),
+        senderRole: v.string(),
+        message: v.string(),
+        timestamp: v.string(),
+      }),
+    ),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_ticket_id", ["ticketId"])
+    .index("by_status", ["status"]),
+
+  // 5. Account Features
+  accountFeatures: defineTable({
+    workspaceId: v.id("workspaces"),
+    featureKey: v.string(),
+    name: v.string(),
+    description: v.string(),
+    enabled: v.boolean(),
+    since: v.string(),
+    enabledAt: v.optional(v.string()),
+    category: v.optional(v.string()),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_feature", ["workspaceId", "featureKey"]),
+
+  // Phase 17: User Administration Schemas
+  // 1. User Roles with Granular Permission Matrix
+  userAdminRoles: defineTable({
+    workspaceId: v.id("workspaces"),
+    roleKey: v.string(),
+    name: v.string(),
+    description: v.optional(v.string()),
+    isSystem: v.boolean(), // Protected system roles cannot be deleted
+    lastUpdatedOn: v.string(),
+    permissions: v.object({
+      payroll: v.object({
+        view: v.boolean(),
+        write: v.boolean(),
+        approve: v.boolean(),
+      }),
+      attendance: v.object({
+        view: v.boolean(),
+        write: v.boolean(),
+        approve: v.boolean(),
+      }),
+      employees: v.object({
+        view: v.boolean(),
+        write: v.boolean(),
+        approve: v.boolean(),
+      }),
+      leaves: v.object({
+        view: v.boolean(),
+        write: v.boolean(),
+        approve: v.boolean(),
+      }),
+      claims: v.object({
+        view: v.boolean(),
+        write: v.boolean(),
+        approve: v.boolean(),
+      }),
+      reports: v.object({ view: v.boolean(), export: v.boolean() }),
+      settings: v.object({ view: v.boolean(), write: v.boolean() }),
+    }),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_roleKey", ["workspaceId", "roleKey"]),
+
+  // 2. Linked Employee Account Mappings
+  linkedEmployeeAccounts: defineTable({
+    workspaceId: v.id("workspaces"),
+    employeeId: v.id("employees"),
+    employeeNo: v.string(),
+    employeeName: v.string(),
+    userId: v.id("users"),
+    userName: v.string(),
+    userEmail: v.string(),
+    fromDate: v.string(),
+    toDate: v.optional(v.string()),
+    status: v.union(v.literal("active"), v.literal("inactive")),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_employee", ["workspaceId", "employeeId"])
+    .index("by_workspace_user", ["workspaceId", "userId"]),
+
+  // ---------------------------------------------------------------------------
+  // PHASE 18: SYSTEM SETTINGS
+  // ---------------------------------------------------------------------------
+  systemCompanySettings: defineTable({
+    workspaceId: v.id("workspaces"),
+    companyName: v.string(),
+    companyAddress: v.string(),
+    country: v.string(),
+    states: v.string(),
+    industry: v.string(),
+    timezone: v.string(),
+    currency: v.string(),
+    pfNo: v.optional(v.string()),
+    tanNo: v.optional(v.string()),
+    panNo: v.optional(v.string()),
+    esiNo: v.optional(v.string()),
+    linNo: v.optional(v.string()),
+    gstNo: v.optional(v.string()),
+    registrationCertificateNo: v.optional(v.string()),
+    twitterHandle: v.optional(v.string()),
+    companyLogoUrl: v.optional(v.string()),
+    signatureUploadUrl: v.optional(v.string()),
+    updatedAt: v.number(),
+    updatedBy: v.optional(v.id("users")),
+  }).index("by_workspace", ["workspaceId"]),
+
+  systemGeneralPreferences: defineTable({
+    workspaceId: v.id("workspaces"),
+    financialYearStart: v.string(),
+    defaultLanguage: v.string(),
+    enableAuditTrail: v.boolean(),
+    enableMultiCurrency: v.boolean(),
+    dateFormat: v.string(),
+    updatedAt: v.number(),
+  }).index("by_workspace", ["workspaceId"]),
+
+  systemEmployeePreferences: defineTable({
+    workspaceId: v.id("workspaces"),
+    empNoAutoGenerate: v.boolean(),
+    empNoPrefix: v.string(),
+    empNoStartingNumber: v.number(),
+    empNoLength: v.number(),
+    probationPeriodMonths: v.number(),
+    noticePeriodDays: v.number(),
+    updatedAt: v.number(),
+  }).index("by_workspace", ["workspaceId"]),
+
+  systemPayrollPreferences: defineTable({
+    workspaceId: v.id("workspaces"),
+    payPeriodCycle: v.string(), // "1-to-last" or "26-to-25"
+    payDay: v.number(),
+    roundOffSalary: v.boolean(),
+    pfCeilingLimit: v.number(),
+    esiCeilingLimit: v.number(),
+    ptApplicable: v.boolean(),
+    labourWelfareFund: v.boolean(),
+    updatedAt: v.number(),
+  }).index("by_workspace", ["workspaceId"]),
+
+  systemIncomeTaxPreferences: defineTable({
+    workspaceId: v.id("workspaces"),
+    activeFinancialYear: v.string(),
+    defaultTaxRegime: v.union(v.literal("new"), v.literal("old")),
+    allowRegimeSwitch: v.boolean(),
+    declarationWindowOpen: v.boolean(),
+    proofSubmissionDeadline: v.string(),
+    panValidationRequired: v.boolean(),
+    updatedAt: v.number(),
+  }).index("by_workspace", ["workspaceId"]),
+
+  systemLeavePreferences: defineTable({
+    workspaceId: v.id("workspaces"),
+    leaveYearStartMonth: v.number(), // 1 for Jan, 4 for Apr
+    enableCarryForward: v.boolean(),
+    maxCarryForwardDays: v.number(),
+    enableEncashment: v.boolean(),
+    probationLeaveAllowed: v.boolean(),
+    negativeBalanceAllowed: v.boolean(),
+    updatedAt: v.number(),
+  }).index("by_workspace", ["workspaceId"]),
+
+  systemIntegrationConnectors: defineTable({
+    workspaceId: v.id("workspaces"),
+    connectorKey: v.string(), // e.g. "quickbooks", "slack", "zoho_books", "webhook"
+    name: v.string(),
+    category: v.string(),
+    status: v.union(
+      v.literal("NOT_CONFIGURED"),
+      v.literal("CONFIGURED"),
+      v.literal("CONNECTED"),
+      v.literal("DEMO"),
+    ),
+    webhookUrl: v.optional(v.string()),
+    apiVersion: v.optional(v.string()),
+    lastSyncTime: v.optional(v.string()),
+    isEnabled: v.boolean(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_connectorKey", ["workspaceId", "connectorKey"]),
+
+  // ---------------------------------------------------------------------------
+  // PHASE 18.2: GENERAL & EMPLOYEE SETTINGS TABLES
+  // ---------------------------------------------------------------------------
+  systemListOfValues: defineTable({
+    workspaceId: v.id("workspaces"),
+    category: v.string(), // e.g. "G_EMPLOYEE_BLOODGROUP", "G_EMPLOYEE_FEEDBACK", etc.
+    code: v.string(),     // unique code per category
+    description: v.string(),
+    sortOrder: v.optional(v.number()),
+    isActive: v.boolean(),
+    isSystem: v.boolean(), // prevents deleting built-in values
+    updatedAt: v.number(),
+    updatedBy: v.optional(v.id("users")),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_category", ["workspaceId", "category"])
+    .index("by_workspace_category_code", ["workspaceId", "category", "code"]),
+
+  systemBankBranches: defineTable({
+    workspaceId: v.id("workspaces"),
+    bankName: v.string(), // e.g. "State Bank of India", "HDFC Bank", etc.
+    branchName: v.string(),
+    ifscCode: v.string(),
+    micrCode: v.optional(v.string()),
+    address: v.optional(v.string()),
+    city: v.optional(v.string()),
+    state: v.optional(v.string()),
+    isActive: v.boolean(),
+    updatedAt: v.number(),
+    updatedBy: v.optional(v.id("users")),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_bank", ["workspaceId", "bankName"])
+    .index("by_workspace_ifsc", ["workspaceId", "ifscCode"]),
+
+  systemCompanyBanks: defineTable({
+    workspaceId: v.id("workspaces"),
+    bankName: v.string(),
+    branchName: v.string(),
+    ifscCode: v.string(),
+    accountNumber: v.string(),
+    accountType: v.string(), // "Current", "Savings", "OD"
+    iban: v.optional(v.string()),
+    isPrimary: v.boolean(),
+    status: v.string(), // "Active", "Inactive"
+    updatedAt: v.number(),
+    updatedBy: v.optional(v.id("users")),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_accountNumber", ["workspaceId", "accountNumber"]),
+
+  systemStates: defineTable({
+    workspaceId: v.id("workspaces"),
+    country: v.string(), // "India"
+    stateCode: v.string(), // "KA", "MH", etc.
+    stateName: v.string(), // "Karnataka", "Maharashtra", etc.
+    unionTerritory: v.boolean(),
+    tinCode: v.optional(v.string()), // GST state code e.g. "29", "27"
+    ptApplicable: v.boolean(),
+    lwfApplicable: v.boolean(),
+    isActive: v.boolean(),
+    updatedAt: v.number(),
+    updatedBy: v.optional(v.id("users")),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_country", ["workspaceId", "country"])
+    .index("by_workspace_stateCode", ["workspaceId", "stateCode"]),
+
+  systemEmployeeNoSeries: defineTable({
+    workspaceId: v.id("workspaces"),
+    seriesName: v.string(), // e.g. "Permanent Employees", "Temporary Employees"
+    prefix: v.string(),     // e.g. "EMP-", "T-"
+    currentSerial: v.number(), // e.g. 1
+    startingNumber: v.number(), // e.g. 1
+    digitCount: v.number(), // e.g. 4 -> "0001"
+    format: v.string(), // e.g. "0001", "T0001", "EMP-0001"
+    isDefault: v.boolean(),
+    isManualEntryAllowed: v.boolean(),
+    isDisabled: v.boolean(),
+    updatedAt: v.number(),
+    updatedBy: v.optional(v.id("users")),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_seriesName", ["workspaceId", "seriesName"]),
+
+  systemTransitionGroups: defineTable({
+    workspaceId: v.id("workspaces"),
+    screenKey: v.string(), // e.g. "eim-profile-category", "general-employee-category", etc.
+    screenName: v.string(),
+    availableCategories: v.array(v.string()),
+    selectedCategories: v.array(v.string()),
+    updatedAt: v.number(),
+    updatedBy: v.optional(v.id("users")),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_screenKey", ["workspaceId", "screenKey"]),
+
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // BATCH P0 SECURE BACKEND FOUNDATION MODELS
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  // 1. Employee Loans Master
+  loans: defineTable({
+    workspaceId: v.id("workspaces"),
+    employeeId: v.id("employees"),
+    loanType: v.string(), // "PERSONAL", "SALARY_ADVANCE", "EMERGENCY", "EQUIPMENT", "EDUCATION", "HOUSING"
+    purpose: v.optional(v.string()),
+    principalAmount: v.number(),
+    interestRatePercent: v.number(), // Annual rate e.g. 8.5 (or 0 for interest-free)
+    tenureMonths: v.number(),
+    monthlyEmiAmount: v.number(),
+    startDate: v.optional(v.string()), // "YYYY-MM"
+    expectedCompletionDate: v.optional(v.string()), // "YYYY-MM"
+    approvalStatus: v.optional(
+      v.union(v.literal("PENDING"), v.literal("APPROVED"), v.literal("REJECTED"))
+    ),
+    approvedBy: v.optional(v.id("users")),
+    approvedAt: v.optional(v.number()),
+    rejectedBy: v.optional(v.id("users")),
+    rejectedAt: v.optional(v.number()),
+    rejectionReason: v.optional(v.string()),
+    disbursementStatus: v.optional(
+      v.union(v.literal("PENDING"), v.literal("DISBURSED"), v.literal("CANCELLED"))
+    ),
+    disbursedAt: v.optional(v.number()),
+    disbursedBy: v.optional(v.id("users")),
+    status: v.union(
+      v.literal("PENDING"),
+      v.literal("APPROVED"),
+      v.literal("DISBURSED"),
+      v.literal("ACTIVE"),
+      v.literal("CLOSED"),
+      v.literal("REJECTED")
+    ),
+    outstandingPrincipal: v.number(),
+    totalRepaid: v.number(),
+    closedAt: v.optional(v.number()),
+    closedBy: v.optional(v.id("users")),
+    closureReason: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_employee", ["workspaceId", "employeeId"])
+    .index("by_workspace_status", ["workspaceId", "status"]),
+
+  // 2. Loan Repayments & Payroll Deductions
+  loanRepayments: defineTable({
+    workspaceId: v.id("workspaces"),
+    loanId: v.id("loans"),
+    employeeId: v.id("employees"),
+    repaymentMonth: v.string(), // "YYYY-MM"
+    installmentNumber: v.number(),
+    principalPaid: v.number(),
+    interestPaid: v.number(),
+    totalDeducted: v.number(),
+    outstandingBalanceAfter: v.optional(v.number()),
+    repaymentType: v.optional(
+      v.union(v.literal("PAYROLL_DEDUCTION"), v.literal("EARLY_REPAYMENT"), v.literal("PARTIAL_REPAYMENT"), v.literal("MANUAL_ADJUSTMENT"))
+    ),
+    payrollRunId: v.optional(v.id("payrollRuns")),
+    deductionStatus: v.union(
+      v.literal("SCHEDULED"),
+      v.literal("PROCESSED"),
+      v.literal("WAIVED"),
+      v.literal("BOUNCED")
+    ),
+    notes: v.optional(v.string()),
+    paidAt: v.optional(v.number()),
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_loan", ["loanId"])
+    .index("by_workspace_employee", ["workspaceId", "employeeId"])
+    .index("by_workspace_month", ["workspaceId", "repaymentMonth"]),
+
+  // 3a. Configurable Reimbursement Categories
+  reimbursementCategories: defineTable({
+    workspaceId: v.id("workspaces"),
+    categoryCode: v.string(), // "TRAVEL", "MEDICAL", "TELECOM", "FOOD", "HOTEL", "FUEL", "LEARNING", "BOOKS", "GENERAL"
+    categoryName: v.string(),
+    description: v.optional(v.string()),
+    isActive: v.boolean(),
+    maxClaimLimit: v.optional(v.number()), // Ceiling in INR (optional)
+    receiptRequired: v.boolean(),
+    taxTreatment: v.union(
+      v.literal("TAXABLE"),
+      v.literal("POTENTIALLY_EXEMPT"),
+      v.literal("NON_TAXABLE_BUSINESS"),
+      v.literal("REQUIRES_REVIEW")
+    ),
+    requiresManagerApproval: v.boolean(),
+    requiresFinanceApproval: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_code", ["workspaceId", "categoryCode"]),
+
+  // 3b. Employee Reimbursement Claims & Multi-stage Approval Workflow
+  reimbursementClaims: defineTable({
+    workspaceId: v.id("workspaces"),
+    claimNumber: v.string(), // e.g. "CLM-202611-001"
+    employeeId: v.id("employees"),
+    categoryCode: v.string(), // Foreign key to category
+    claimType: v.string(), // Category name or fallback type
+    claimAmount: v.number(),
+    approvedAmount: v.optional(v.number()),
+    expenseDate: v.string(), // "YYYY-MM-DD"
+    businessPurpose: v.string(),
+    description: v.string(),
+    paymentMethod: v.optional(v.string()), // "PAYROLL", "DIRECT_BANK_TRANSFER", "CORPORATE_CARD"
+    referenceNumber: v.optional(v.string()),
+    billAttachmentStorageId: v.optional(v.id("_storage")),
+    billAttachmentUrl: v.optional(v.string()),
+    taxTreatment: v.union(
+      v.literal("TAXABLE"),
+      v.literal("POTENTIALLY_EXEMPT"),
+      v.literal("NON_TAXABLE_BUSINESS"),
+      v.literal("REQUIRES_REVIEW")
+    ),
+    isTaxExempt: v.boolean(),
+    status: v.union(
+      v.literal("DRAFT"),
+      v.literal("SUBMITTED"),
+      v.literal("MANAGER_REVIEW"),
+      v.literal("FINANCE_REVIEW"),
+      v.literal("APPROVED"),
+      v.literal("REJECTED"),
+      v.literal("RETURNED_FOR_CORRECTION"),
+      v.literal("ON_HOLD"),
+      v.literal("PROCESSING"),
+      v.literal("SETTLED"),
+      v.literal("CANCELLED")
+    ),
+    managerReviewedBy: v.optional(v.id("users")),
+    managerReviewedAt: v.optional(v.number()),
+    managerComments: v.optional(v.string()),
+    financeReviewedBy: v.optional(v.id("users")),
+    financeReviewedAt: v.optional(v.number()),
+    financeComments: v.optional(v.string()),
+    rejectionReason: v.optional(v.string()),
+    holdReason: v.optional(v.string()),
+    reviewedBy: v.optional(v.id("users")),
+    reviewedAt: v.optional(v.number()),
+    reviewerComments: v.optional(v.string()),
+    settledInPayrollMonth: v.optional(v.string()), // "YYYY-MM"
+    settledInPayrollRunId: v.optional(v.id("payrollRuns")),
+    settledAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_employee", ["workspaceId", "employeeId"])
+    .index("by_workspace_status", ["workspaceId", "status"])
+    .index("by_workspace_claim_number", ["workspaceId", "claimNumber"]),
+
+  // 3c. Reimbursement Audit Timeline Ledger
+  reimbursementAuditLogs: defineTable({
+    workspaceId: v.id("workspaces"),
+    claimId: v.id("reimbursementClaims"),
+    action: v.string(), // "CREATED_DRAFT", "SUBMITTED", "MANAGER_APPROVED", "FINANCE_APPROVED", "REJECTED", "HELD", "SETTLED", etc.
+    actorUserId: v.id("users"),
+    fromStatus: v.string(),
+    toStatus: v.string(),
+    notes: v.optional(v.string()),
+    timestamp: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_claim", ["claimId"]),
+
+  // 4. Full & Final Settlement (F&F) Calculation & Clearance Ledger
+  fnfSettlements: defineTable({
+    workspaceId: v.id("workspaces"),
+    employeeId: v.id("employees"),
+    leavingDate: v.string(), // "YYYY-MM-DD"
+    reasonForLeaving: v.string(),
+    serviceTenureYears: v.number(),
+    lastDrawnBasicSalary: v.number(),
+    exitMonthSalaryPayable: v.number(),
+    earnedLeaveDaysBalance: v.number(),
+    leaveEncashmentAmount: v.number(),
+    isGratuityEligible: v.boolean(),
+    gratuityAmount: v.number(),
+    bonusOrExGratia: v.number(),
+    grossPayable: v.number(),
+    noticePeriodShortfallDays: v.number(),
+    noticePayDeduction: v.number(),
+    outstandingLoanRecovery: v.number(),
+    otherDeductions: v.number(),
+    totalDeductions: v.number(),
+    netSettlementPayable: v.number(),
+    clearanceStatus: v.union(
+      v.literal("DRAFT"),
+      v.literal("DEPT_CLEARANCE_PENDING"),
+      v.literal("APPROVED"),
+      v.literal("PAID"),
+      v.literal("CANCELLED")
+    ),
+    calculatedBy: v.id("users"),
+    approvedBy: v.optional(v.id("users")),
+    paidAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_employee", ["workspaceId", "employeeId"])
+    .index("by_workspace_status", ["workspaceId", "clearanceStatus"]),
+
+  // 5. Outbound System Email Delivery Diagnostic Log (Non-credential)
+  emailLogs: defineTable({
+    workspaceId: v.id("workspaces"),
+    recipientEmail: v.string(),
+    recipientEmployeeId: v.optional(v.id("employees")),
+    subject: v.string(),
+    templateName: v.string(), // "PAYSLIP_DISPATCH", "OTP_VERIFY", "ONBOARDING_INVITE", "LEAVE_APPROVAL"
+    dispatchStatus: v.union(
+      v.literal("QUEUED"),
+      v.literal("SENT"),
+      v.literal("FAILED"),
+      v.literal("BOUNCED"),
+      v.literal("NOT_CONFIGURED")
+    ),
+    providerMessageId: v.optional(v.string()),
+    errorMessage: v.optional(v.string()),
+    sentAt: v.optional(v.number()),
+    createdAt: v.number(),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_workspace_status", ["workspaceId", "dispatchStatus"])
+    .index("by_workspace_created", ["workspaceId", "createdAt"]),
+
+  // 6. Security-Restricted User Impersonation Session Audit Ledger
+  userImpersonationSessions: defineTable({
+    workspaceId: v.id("workspaces"),
+    adminUserId: v.id("users"), // Must be authenticated Super Admin
+    targetUserId: v.id("users"), // Target user being previewed
+    targetEmployeeId: v.optional(v.id("employees")),
+    businessReason: v.string(), // Mandatory audit justification
+    startedAt: v.number(),
+    expiresAt: v.number(), // Strict time-based expiry (e.g. max 30 mins)
+    endedAt: v.optional(v.number()),
+    status: v.union(
+      v.literal("ACTIVE"),
+      v.literal("EXPIRED"),
+      v.literal("REVOKED")
+    ),
+    ipAddressMasked: v.optional(v.string()),
+    userAgent: v.optional(v.string()),
+  })
+    .index("by_workspace", ["workspaceId"])
+    .index("by_admin", ["adminUserId"])
+    .index("by_target", ["targetUserId"])
+    .index("by_workspace_status", ["workspaceId", "status"]),
 });

@@ -1,0 +1,9 @@
+{
+  "triggers": [
+    {
+      "html": "<div id=\"single-spa-application:@greytip/navbar\"><div class=\"css-0\"><div id=\"gt-nav-bar-shadow\"></div><button type=\"button\" class=\"chakra-button css-12vgsaz\" id=\"cafe-zendesk-ticket\"></button></div></div>",
+      "text": ""
+    }
+  ],
+  "topLinks": []
+}

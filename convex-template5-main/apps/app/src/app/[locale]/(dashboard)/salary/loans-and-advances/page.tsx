@@ -23,7 +23,9 @@ export default function LoansAndAdvancesPage() {
               <path d="M0 0H16V20L8 15L0 20V0Z" fill="#F59E0B" />
             </svg>
           </div>
-          <h1 className="text-base font-semibold text-primary">Loans and Advances</h1>
+          <h1 className="text-base font-semibold text-primary">
+            Loans and Advances
+          </h1>
         </div>
       </div>
 
@@ -54,16 +56,58 @@ export default function LoansAndAdvancesPage() {
               aria-hidden="true"
             >
               <g transform="translate(70, 25)">
-                <rect x="0" y="0" width="100" height="70" rx="8" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="2.5" />
-                <circle cx="50" cy="35" r="18" fill="#F8FAFC" stroke="#94A3B8" strokeWidth="2" />
-                <path d="M50 24V46M44 30H56M44 40H56" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" />
+                <rect
+                  x="0"
+                  y="0"
+                  width="100"
+                  height="70"
+                  rx="8"
+                  fill="#FFFFFF"
+                  stroke="#CBD5E1"
+                  strokeWidth="2.5"
+                />
+                <circle
+                  cx="50"
+                  cy="35"
+                  r="18"
+                  fill="#F8FAFC"
+                  stroke="#94A3B8"
+                  strokeWidth="2"
+                />
+                <path
+                  d="M50 24V46M44 30H56M44 40H56"
+                  stroke="#94A3B8"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
                 <path d="M20 70V80H80V70" stroke="#CBD5E1" strokeWidth="2.5" />
-                <path d="M10 80H90" stroke="#CBD5E1" strokeWidth="2.5" strokeLinecap="round" />
+                <path
+                  d="M10 80H90"
+                  stroke="#CBD5E1"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
               </g>
               <circle cx="50" cy="85" r="5" fill="#E2E8F0" />
               <circle cx="190" cy="45" r="4" fill="#E2E8F0" />
-              <line x1="185" y1="95" x2="195" y2="95" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
-              <line x1="190" y1="90" x2="190" y2="100" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
+              <line
+                x1="185"
+                y1="95"
+                x2="195"
+                y2="95"
+                stroke="#CBD5E1"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <line
+                x1="190"
+                y1="90"
+                x2="190"
+                y2="100"
+                stroke="#CBD5E1"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
             </svg>
 
             {/* Exact greytHR Loans & Advances Wording */}

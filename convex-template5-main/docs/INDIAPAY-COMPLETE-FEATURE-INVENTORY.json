@@ -1,0 +1,812 @@
+{
+  "metadata": {
+    "project": "IndiaPay HRMS",
+    "appRoutesCount": 139,
+    "inspectedAt": "2026-11-19T13:00:00+05:30",
+    "totalAppRoutes": [
+      "/",
+      "/[...rest]",
+      "/admin",
+      "/admin/account-settings/features",
+      "/admin/account-settings/invoices",
+      "/admin/account-settings/payments",
+      "/admin/account-settings/plan",
+      "/admin/account-settings/tickets",
+      "/admin/employee/admin-ops/bulk-document-upload",
+      "/admin/employee/admin-ops/bulk-photo-upload",
+      "/admin/employee/admin-ops/bulletin-board",
+      "/admin/employee/admin-ops/contract-details",
+      "/admin/employee/admin-ops/data-drive",
+      "/admin/employee/admin-ops/excel-import",
+      "/admin/employee/admin-ops/identity-verification",
+      "/admin/employee/admin-ops/mass-communication",
+      "/admin/employee/admin-ops/offboarding",
+      "/admin/employee/information/bank-pf-esi",
+      "/admin/employee/information/card-details",
+      "/admin/employee/information/documents",
+      "/admin/employee/information/passport-visa",
+      "/admin/employee/information/position-history",
+      "/admin/employee/information/previous-employment",
+      "/admin/employee/information/profile",
+      "/admin/employee/information/registration",
+      "/admin/employee/information/separation",
+      "/admin/employee/main/analytics",
+      "/admin/employee/main/directory",
+      "/admin/employee/main/org-chart",
+      "/admin/employee/main/overview",
+      "/admin/employee/overview",
+      "/admin/employee/setup/company-policies",
+      "/admin/employee/setup/filters",
+      "/admin/employee/setup/segments",
+      "/admin/employees",
+      "/admin/leave/employee-leave",
+      "/admin/leave/employee-week-days",
+      "/admin/leave/holiday-list",
+      "/admin/leave/leave-calendar",
+      "/admin/leave/leave-granter",
+      "/admin/leave/leave-recalculator",
+      "/admin/leave/leave-type-reviewer",
+      "/admin/leave/overview",
+      "/admin/leave/weekend-override",
+      "/admin/leave/year-end-process",
+      "/admin/payroll",
+      "/admin/payroll/information",
+      "/admin/payroll/inputs",
+      "/admin/payroll/process",
+      "/admin/reports",
+      "/admin/reports/analytics",
+      "/admin/reports/querybuilder",
+      "/admin/reports/recent",
+      "/admin/settings/account",
+      "/admin/settings/backroom",
+      "/admin/settings/profile",
+      "/admin/settings/system",
+      "/admin/settings/users",
+      "/admin/system-settings/employee",
+      "/admin/system-settings/employee/asset-group-settings",
+      "/admin/system-settings/employee/dirconfig",
+      "/admin/system-settings/employee/emp-no-series",
+      "/admin/system-settings/employee/leaving-reason",
+      "/admin/system-settings/employee/positions",
+      "/admin/system-settings/employee/preferences",
+      "/admin/system-settings/employee/transitiongroup",
+      "/admin/system-settings/general/bank-branch",
+      "/admin/system-settings/general/company-bank",
+      "/admin/system-settings/general/company-info",
+      "/admin/system-settings/general/lov",
+      "/admin/system-settings/general/preferences",
+      "/admin/system-settings/general/state",
+      "/admin/system-settings/income-tax/preferences",
+      "/admin/system-settings/integrations",
+      "/admin/system-settings/leave/preferences",
+      "/admin/system-settings/payroll/preferences",
+      "/admin/unite",
+      "/admin/user-administration/linked-employees",
+      "/admin/user-administration/roles",
+      "/admin/user-administration/users",
+      "/admin/workflow/confirmation",
+      "/admin/workflow/employee-onboarding",
+      "/admin/workflow/help-desk",
+      "/admin/workflow/leave",
+      "/admin/workflow/leave-cancel",
+      "/admin/workflow/leave-comp-off",
+      "/admin/workflow/resignation",
+      "/admin/workflow/rh-leave",
+      "/admin/workflow/setup/delegates",
+      "/admin/workflow/setup/levels",
+      "/admin/workflow/setup/reviewer-types",
+      "/attendance",
+      "/compliance",
+      "/delegates",
+      "/documents",
+      "/documents/list/documents",
+      "/documents/list/form16",
+      "/documents/list/forms",
+      "/documents/list/payslips",
+      "/documents/list/policies",
+      "/employees",
+      "/engage",
+      "/files",
+      "/helpdesk",
+      "/jobs",
+      "/leave",
+      "/leave/apply",
+      "/leave/balances",
+      "/leave/calendar",
+      "/leave/holiday-calendar",
+      "/leave/leave-balance",
+      "/leave/leave-calendar",
+      "/login",
+      "/my-portal",
+      "/onboarding",
+      "/payroll",
+      "/people",
+      "/platform",
+      "/reports",
+      "/reports/payroll-history",
+      "/salaries",
+      "/salary",
+      "/salary/it-declaration",
+      "/salary/it-statement",
+      "/salary/loans-and-advances",
+      "/salary/payslip",
+      "/salary/proof-of-investment",
+      "/salary/reimbursement",
+      "/salary/salary-revision",
+      "/salary/ytd-reports",
+      "/settings",
+      "/settings/billing",
+      "/todo",
+      "/todo/review",
+      "/worklife",
+      "/worklife/feedback",
+      "/worklife/feedback/[tab]",
+      "/worklife/kudos",
+      "/worklife/kudos/[tab]"
+    ]
+  },
+  "implementedModules": [
+    {
+      "module": "Homepage and Dashboard",
+      "category": "Main Navigation",
+      "referenceRoute": "/v3/portal/ess/home",
+      "features": [
+        {
+          "name": "Welcome Dashboard",
+          "refUrl": "/v3/portal/ess/home",
+          "indiapayRoute": "/admin",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Employee Quick Actions",
+          "refUrl": "/v3/portal/ess/home",
+          "indiapayRoute": "/admin",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Attendance & Swipe Summary",
+          "refUrl": "/v3/portal/ess/home",
+          "indiapayRoute": "/attendance",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Leave Balances Widget",
+          "refUrl": "/v3/portal/ess/home",
+          "indiapayRoute": "/leave/balances",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Payroll Summary Widget",
+          "refUrl": "/v3/portal/ess/home",
+          "indiapayRoute": "/salaries",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        }
+      ]
+    },
+    {
+      "module": "Employee Management",
+      "category": "Employee",
+      "referenceRoute": "/ngapp/employee/main/overview",
+      "features": [
+        {
+          "name": "Employee Overview",
+          "refUrl": "/ngapp/employee/main/overview",
+          "indiapayRoute": "/admin/employee/main/overview",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Employee Directory",
+          "refUrl": "/ngapp/employee/main/directory",
+          "indiapayRoute": "/admin/employee/main/directory",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Employee Profile (EIM)",
+          "refUrl": "/ngapp/employee/information/profile",
+          "indiapayRoute": "/admin/employee/information/profile",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Bank, PF & ESI Details",
+          "refUrl": "/ngapp/employee/information/bank-pf-esi",
+          "indiapayRoute": "/admin/employee/information/bank-pf-esi",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Employee Documents",
+          "refUrl": "/ngapp/employee/information/documents",
+          "indiapayRoute": "/admin/employee/information/documents",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Employee Onboarding Workflow",
+          "refUrl": "/ngapp/workflow/employee-onboarding",
+          "indiapayRoute": "/admin/workflow/employee-onboarding",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Employee Separation / Exit",
+          "refUrl": "/ngapp/employee/information/separation",
+          "indiapayRoute": "/admin/employee/information/separation",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Excel Import & Mass Update",
+          "refUrl": "/ngapp/employee/admin-ops/excel-import",
+          "indiapayRoute": "/admin/employee/admin-ops/excel-import",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Employee Positions",
+          "refUrl": "/ngapp/settings/employee/employee-categories",
+          "indiapayRoute": "/admin/system-settings/employee/positions",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Employee Directory Config",
+          "refUrl": "/ngapp/settings/employee/employee-directory-config",
+          "indiapayRoute": "/admin/system-settings/employee/dirconfig",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Asset Group Settings",
+          "refUrl": "/ngapp/settings/employee/asset-group-settings",
+          "indiapayRoute": "/admin/system-settings/employee/asset-group-settings",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Medium"
+        }
+      ]
+    },
+    {
+      "module": "Payroll",
+      "category": "Payroll",
+      "referenceRoute": "/ngapp/payroll/overview",
+      "features": [
+        {
+          "name": "Payroll Overview",
+          "refUrl": "/ngapp/payroll/overview",
+          "indiapayRoute": "/admin/payroll",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Payroll Inputs",
+          "refUrl": "/ngapp/payroll/inputs",
+          "indiapayRoute": "/admin/payroll/inputs",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Salary Processing & Calculation",
+          "refUrl": "/ngapp/payroll/process",
+          "indiapayRoute": "/admin/payroll/process",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Salary Revision & Increments",
+          "refUrl": "/ngapp/payroll/salary-revision",
+          "indiapayRoute": "/salary/salary-revision",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Payslips & PDF Generation",
+          "refUrl": "/ngapp/payroll/payslips",
+          "indiapayRoute": "/documents/list/payslips",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Full & Final Settlement (F&F)",
+          "refUrl": "/ngapp/payroll/fnf",
+          "indiapayRoute": "/admin/payroll/information",
+          "ui": "Partial",
+          "func": "Partial",
+          "backend": "Partial",
+          "priority": "High"
+        },
+        {
+          "name": "Bank Advice & Transfer List",
+          "refUrl": "/ngapp/payroll/bank-transfer",
+          "indiapayRoute": "/admin/reports",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Form 16 & Tax Computation",
+          "refUrl": "/ngapp/payroll/form16",
+          "indiapayRoute": "/documents/list/form16",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        }
+      ]
+    },
+    {
+      "module": "Workforce Management",
+      "category": "Leave & Attendance",
+      "referenceRoute": "/ngapp/leave/main/overview",
+      "features": [
+        {
+          "name": "Leave Overview",
+          "refUrl": "/ngapp/leave/main/overview",
+          "indiapayRoute": "/admin/leave/overview",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Leave Balances & Grants",
+          "refUrl": "/ngapp/leave/main/balances",
+          "indiapayRoute": "/leave/balances",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Leave Granter Engine",
+          "refUrl": "/ngapp/leave/main/leave-granter",
+          "indiapayRoute": "/admin/leave/leave-granter",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Leave Recalculator",
+          "refUrl": "/ngapp/leave/main/leave-recalculator",
+          "indiapayRoute": "/admin/leave/leave-recalculator",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Holiday Calendar",
+          "refUrl": "/ngapp/leave/main/holiday-calendar",
+          "indiapayRoute": "/leave/holiday-calendar",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Weekend Override Policies",
+          "refUrl": "/ngapp/leave/main/weekend-override",
+          "indiapayRoute": "/admin/leave/weekend-override",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Medium"
+        },
+        {
+          "name": "Year-End Leave Processing",
+          "refUrl": "/ngapp/leave/main/year-end-process",
+          "indiapayRoute": "/admin/leave/year-end-process",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Medium"
+        },
+        {
+          "name": "Attendance Swipes & Regularization",
+          "refUrl": "/ngapp/attendance/overview",
+          "indiapayRoute": "/attendance",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        }
+      ]
+    },
+    {
+      "module": "Workflow Management",
+      "category": "Workflow",
+      "referenceRoute": "/ngapp/workflow/overview",
+      "features": [
+        {
+          "name": "Workflow Dashboard",
+          "refUrl": "/ngapp/workflow/overview",
+          "indiapayRoute": "/admin/workflow",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Leave Application Workflow",
+          "refUrl": "/ngapp/workflow/leave",
+          "indiapayRoute": "/admin/workflow/leave",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Attendance Regularization Workflow",
+          "refUrl": "/ngapp/workflow/regularization",
+          "indiapayRoute": "/admin/workflow/regularization",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Employee Onboarding Workflow",
+          "refUrl": "/ngapp/workflow/employee-onboarding",
+          "indiapayRoute": "/admin/workflow/employee-onboarding",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Resignation & Exit Workflow",
+          "refUrl": "/ngapp/workflow/resignation",
+          "indiapayRoute": "/admin/workflow/resignation",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Help Desk Support Workflow",
+          "refUrl": "/ngapp/workflow/help-desk",
+          "indiapayRoute": "/admin/workflow/help-desk",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Medium"
+        },
+        {
+          "name": "Workflow Delegates",
+          "refUrl": "/ngapp/workflow/delegates",
+          "indiapayRoute": "/delegates",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Medium"
+        }
+      ]
+    },
+    {
+      "module": "Reports and Analytics",
+      "category": "Reports Gallery & BI",
+      "referenceRoute": "/ngapp/reports/reports/reports-gallery",
+      "features": [
+        {
+          "name": "Reports Gallery (27 Categories)",
+          "refUrl": "/ngapp/reports/reports/reports-gallery",
+          "indiapayRoute": "/reports",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Payroll History Hub",
+          "refUrl": "/ngapp/reports/reports/payroll-history",
+          "indiapayRoute": "/reports/payroll-history",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Query Builder (Custom Reports)",
+          "refUrl": "/ngapp/reports/querybuilder",
+          "indiapayRoute": "/admin/reports/querybuilder",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Advanced Workforce Analytics",
+          "refUrl": "/ngapp/reports/analytics",
+          "indiapayRoute": "/admin/reports/analytics",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Recent Reports Audit",
+          "refUrl": "/ngapp/reports/recent",
+          "indiapayRoute": "/admin/reports/recent",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Medium"
+        }
+      ]
+    },
+    {
+      "module": "Engage",
+      "category": "Employee Engagement",
+      "referenceRoute": "/ngapp/engage/feed",
+      "features": [
+        {
+          "name": "Social Feed & Announcements",
+          "refUrl": "/ngapp/engage/feed",
+          "indiapayRoute": "/engage",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Peer Kudos & Badges",
+          "refUrl": "/ngapp/engage/kudos",
+          "indiapayRoute": "/worklife/kudos",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Medium"
+        },
+        {
+          "name": "Polls & Pulse Surveys",
+          "refUrl": "/ngapp/engage/polls",
+          "indiapayRoute": "/engage",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Medium"
+        },
+        {
+          "name": "Employee Feedback",
+          "refUrl": "/ngapp/engage/feedback",
+          "indiapayRoute": "/worklife/feedback",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Medium"
+        }
+      ]
+    },
+    {
+      "module": "Unite Marketplace",
+      "category": "Marketplace",
+      "referenceRoute": "/ngapp/unite/home",
+      "features": [
+        {
+          "name": "Marketplace Apps Catalog",
+          "refUrl": "/ngapp/unite/home",
+          "indiapayRoute": "/admin/unite",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "App Details & Feature Highlights",
+          "refUrl": "/ngapp/unite/app/:id",
+          "indiapayRoute": "/admin/unite",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Book Demo & Take Tour Modals",
+          "refUrl": "/ngapp/unite/book-demo",
+          "indiapayRoute": "/admin/unite",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Medium"
+        },
+        {
+          "name": "Interest Notification Tracking",
+          "refUrl": "/ngapp/unite/notifications",
+          "indiapayRoute": "/admin/unite",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Medium"
+        }
+      ]
+    },
+    {
+      "module": "Account Settings",
+      "category": "Account & Subscriptions",
+      "referenceRoute": "/ngapp/settings/account/plan",
+      "features": [
+        {
+          "name": "Subscription Plan & Tier",
+          "refUrl": "/ngapp/settings/account/plan",
+          "indiapayRoute": "/admin/account-settings/plan",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Billing Invoices",
+          "refUrl": "/ngapp/settings/account/invoices",
+          "indiapayRoute": "/admin/account-settings/invoices",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Payment Receipts",
+          "refUrl": "/ngapp/settings/account/payments",
+          "indiapayRoute": "/admin/account-settings/payments",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Medium"
+        },
+        {
+          "name": "Support Tickets",
+          "refUrl": "/ngapp/settings/account/tickets",
+          "indiapayRoute": "/admin/account-settings/tickets",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Medium"
+        },
+        {
+          "name": "New Feature Toggles",
+          "refUrl": "/ngapp/settings/account/features",
+          "indiapayRoute": "/admin/account-settings/features",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Medium"
+        }
+      ]
+    },
+    {
+      "module": "User Administration",
+      "category": "Security & Roles",
+      "referenceRoute": "/ngapp/user-administration/users",
+      "features": [
+        {
+          "name": "User Listing & Linked Employees",
+          "refUrl": "/ngapp/user-administration/users",
+          "indiapayRoute": "/admin/user-administration/users",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "Role Assignment & Privileges",
+          "refUrl": "/ngapp/user-administration/users",
+          "indiapayRoute": "/admin/user-administration/users",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        },
+        {
+          "name": "User Activation & Lock Controls",
+          "refUrl": "/ngapp/user-administration/users",
+          "indiapayRoute": "/admin/user-administration/users",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "Critical"
+        }
+      ]
+    },
+    {
+      "module": "Sys Admin Backroom",
+      "category": "Utilities & Diagnostics",
+      "referenceRoute": "/ngapp/settings/sysadmin/tools",
+      "features": [
+        {
+          "name": "Minor Puppetry (Impersonation)",
+          "refUrl": "/ngapp/settings/sysadmin/puppetry",
+          "indiapayRoute": "/admin/system-settings/more",
+          "ui": "Missing",
+          "func": "Missing",
+          "backend": "Missing",
+          "priority": "Medium"
+        },
+        {
+          "name": "Payroll Diagnostic Tools",
+          "refUrl": "/ngapp/settings/sysadmin/payroll-tools",
+          "indiapayRoute": "/admin/payroll/process",
+          "ui": "Partial",
+          "func": "Partial",
+          "backend": "Partial",
+          "priority": "High"
+        },
+        {
+          "name": "Income Tax Recalculator Utility",
+          "refUrl": "/ngapp/settings/sysadmin/it-tools",
+          "indiapayRoute": "/salary/it-statement",
+          "ui": "Partial",
+          "func": "Partial",
+          "backend": "Partial",
+          "priority": "High"
+        },
+        {
+          "name": "System Audit & Error Logs",
+          "refUrl": "/ngapp/settings/sysadmin/system-logs",
+          "indiapayRoute": "/admin/reports/recent",
+          "ui": "Match",
+          "func": "Working",
+          "backend": "Verified",
+          "priority": "High"
+        },
+        {
+          "name": "Email Delivery Logs",
+          "refUrl": "/ngapp/settings/sysadmin/email-logs",
+          "indiapayRoute": "/admin/system-settings/more",
+          "ui": "Missing",
+          "func": "Missing",
+          "backend": "Missing",
+          "priority": "Medium"
+        }
+      ]
+    }
+  ]
+}

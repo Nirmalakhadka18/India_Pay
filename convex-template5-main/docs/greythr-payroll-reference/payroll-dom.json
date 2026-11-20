@@ -1,0 +1,784 @@
+{
+  "title": "greytHR",
+  "url": "https://victorchasex.greythr.com/ngapp/payroll/main/overview/",
+  "bodyText": "",
+  "dom": {
+    "tag": "BODY",
+    "className": "chakra-ui-light",
+    "box": {
+      "w": 3840,
+      "h": 234,
+      "bg": "rgb(247, 247, 247)",
+      "color": "rgb(59, 68, 82)",
+      "font": "14px 400 \"Open Sans\", sans-serif"
+    },
+    "children": [
+      {
+        "tag": "MAIN",
+        "id": "gt-mfe-app-main",
+        "box": {
+          "w": 3840,
+          "h": 234,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": [
+          {
+            "tag": "NAV",
+            "box": {
+              "w": 3840,
+              "h": 134,
+              "color": "rgb(59, 68, 82)",
+              "font": "14px 400 \"Open Sans\", sans-serif"
+            },
+            "children": [
+              {
+                "tag": "DIV",
+                "id": "single-spa-application:@greytip/navbar",
+                "box": {
+                  "w": 3840,
+                  "h": 134,
+                  "color": "rgb(59, 68, 82)",
+                  "font": "14px 400 \"Open Sans\", sans-serif"
+                },
+                "children": [
+                  {
+                    "tag": "DIV",
+                    "className": "css-0",
+                    "box": {
+                      "w": 3840,
+                      "h": 134,
+                      "color": "rgb(59, 68, 82)",
+                      "font": "14px 400 \"Open Sans\", sans-serif"
+                    },
+                    "children": [
+                      {
+                        "tag": "DIV",
+                        "id": "gt-nav-bar-shadow",
+                        "text": "",
+                        "box": {
+                          "w": 3840,
+                          "h": 134,
+                          "color": "rgb(59, 68, 82)",
+                          "font": "14px 400 \"Open Sans\", sans-serif"
+                        },
+                        "children": []
+                      },
+                      {
+                        "tag": "BUTTON",
+                        "id": "cafe-zendesk-ticket",
+                        "className": "chakra-button css-12vgsaz",
+                        "text": "",
+                        "box": {
+                          "w": 0,
+                          "h": 0,
+                          "bg": "rgb(240, 240, 240)",
+                          "color": "rgb(0, 0, 0)",
+                          "font": "14px 400 \"Open Sans\", sans-serif"
+                        },
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "SECTION",
+            "id": "gt-mfe-app-section",
+            "box": {
+              "w": 3840,
+              "h": 100,
+              "color": "rgb(59, 68, 82)",
+              "font": "14px 400 \"Open Sans\", sans-serif"
+            },
+            "children": [
+              {
+                "tag": "DIV",
+                "id": "single-spa-application:gt-cougar-payroll",
+                "box": {
+                  "w": 3840,
+                  "h": 0,
+                  "color": "rgb(59, 68, 82)",
+                  "font": "14px 400 \"Open Sans\", sans-serif"
+                },
+                "children": [
+                  {
+                    "tag": "DIV",
+                    "id": "__single_spa_angular_1",
+                    "className": "ng-scope",
+                    "box": {
+                      "w": 3840,
+                      "h": 0,
+                      "color": "rgb(59, 68, 82)",
+                      "font": "14px 400 \"Open Sans\", sans-serif"
+                    },
+                    "children": [
+                      {
+                        "tag": "DIV",
+                        "id": "cougar-container",
+                        "className": "gt-payroll ng-scope ng-isolate-scope",
+                        "box": {
+                          "w": 3840,
+                          "h": 0,
+                          "color": "rgb(59, 68, 82)",
+                          "font": "14px 400 \"Open Sans\", sans-serif"
+                        },
+                        "children": [
+                          {
+                            "tag": "DIV",
+                            "className": "ng-hide",
+                            "box": {
+                              "w": 0,
+                              "h": 0,
+                              "color": "rgb(59, 68, 82)",
+                              "font": "14px 400 \"Open Sans\", sans-serif"
+                            },
+                            "children": []
+                          },
+                          {
+                            "tag": "DIV",
+                            "className": "overlay ng-hide",
+                            "text": "",
+                            "box": {
+                              "w": 0,
+                              "h": 0,
+                              "bg": "rgb(255, 255, 255)",
+                              "color": "rgb(59, 68, 82)",
+                              "font": "14px 400 \"Open Sans\", sans-serif"
+                            },
+                            "children": []
+                          },
+                          {
+                            "tag": "DIV",
+                            "className": "clear-demo-loader ng-hide",
+                            "box": {
+                              "w": 0,
+                              "h": 0,
+                              "bg": "rgb(255, 233, 204)",
+                              "color": "rgb(51, 51, 51)",
+                              "font": "14px 400 \"Open Sans\", sans-serif"
+                            },
+                            "children": []
+                          },
+                          {
+                            "tag": "DIV",
+                            "box": {
+                              "w": 3840,
+                              "h": 0,
+                              "color": "rgb(59, 68, 82)",
+                              "font": "14px 400 \"Open Sans\", sans-serif"
+                            },
+                            "children": []
+                          },
+                          {
+                            "tag": "DIV",
+                            "className": "ajax-message-wrapper",
+                            "box": {
+                              "w": 3840,
+                              "h": 0,
+                              "color": "rgb(59, 68, 82)",
+                              "font": "14px 400 \"Open Sans\", sans-serif"
+                            },
+                            "children": []
+                          },
+                          {
+                            "tag": "DIV",
+                            "box": {
+                              "w": 3840,
+                              "h": 0,
+                              "color": "rgb(59, 68, 82)",
+                              "font": "14px 400 \"Open Sans\", sans-serif"
+                            },
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "NOSCRIPT",
+        "text": "You need to enable JavaScript to run this app.",
+        "box": {
+          "w": 0,
+          "h": 0,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      },
+      {
+        "tag": "SCRIPT",
+        "text": "System.import(\"@greytip/root-config\");",
+        "box": {
+          "w": 0,
+          "h": 0,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      },
+      {
+        "tag": "IMPORT-MAP-OVERRIDES-FULL",
+        "text": "",
+        "box": {
+          "w": 0,
+          "h": 0,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      },
+      {
+        "tag": "SCRIPT",
+        "text": "",
+        "box": {
+          "w": 0,
+          "h": 0,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      },
+      {
+        "tag": "SCRIPT",
+        "text": "var googleLoaded = false;\n    var googleChartsPackagesToLoad = ['geochart'];",
+        "box": {
+          "w": 0,
+          "h": 0,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      },
+      {
+        "tag": "DIV",
+        "className": "gts-alert-modal gts-alert-info modal sample-modal",
+        "box": {
+          "w": 0,
+          "h": 0,
+          "bg": "rgb(255, 255, 255)",
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": [
+          {
+            "tag": "DIV",
+            "className": "modal-header",
+            "box": {
+              "w": 0,
+              "h": 0,
+              "color": "rgb(59, 68, 82)",
+              "font": "14px 400 \"Open Sans\", sans-serif"
+            },
+            "children": [
+              {
+                "tag": "H3",
+                "text": "",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "color": "rgb(77, 77, 77)",
+                  "font": "20.256px 700 \"Open Sans\", sans-serif"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "tag": "DIV",
+            "className": "modal-body",
+            "box": {
+              "w": 0,
+              "h": 0,
+              "color": "rgb(59, 68, 82)",
+              "font": "14px 400 \"Open Sans\", sans-serif"
+            },
+            "children": [
+              {
+                "tag": "DIV",
+                "className": "icon-gts-alert icon-gts-alert-info",
+                "text": "",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "color": "rgb(59, 68, 82)",
+                  "font": "14px 400 FontAwesome"
+                },
+                "children": []
+              },
+              {
+                "tag": "DIV",
+                "className": "gts-alert-message",
+                "text": "",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "color": "rgb(59, 68, 82)",
+                  "font": "14px 400 \"Open Sans\", sans-serif"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "tag": "DIV",
+            "className": "modal-footer",
+            "box": {
+              "w": 0,
+              "h": 0,
+              "bg": "rgb(245, 245, 245)",
+              "color": "rgb(59, 68, 82)",
+              "font": "14px 400 \"Open Sans\", sans-serif"
+            },
+            "children": [
+              {
+                "tag": "BUTTON",
+                "className": "btn ",
+                "text": "OK",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "bg": "rgb(255, 255, 255)",
+                  "color": "rgb(62, 94, 204)",
+                  "font": "14px 400 \"Open Sans\", sans-serif"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "DIV",
+        "className": "gts-alert-modal gts-alert-warning modal sample-modal",
+        "box": {
+          "w": 0,
+          "h": 0,
+          "bg": "rgb(255, 255, 255)",
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": [
+          {
+            "tag": "DIV",
+            "className": "modal-header",
+            "box": {
+              "w": 0,
+              "h": 0,
+              "color": "rgb(59, 68, 82)",
+              "font": "14px 400 \"Open Sans\", sans-serif"
+            },
+            "children": [
+              {
+                "tag": "H3",
+                "text": "",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "color": "rgb(77, 77, 77)",
+                  "font": "20.256px 700 \"Open Sans\", sans-serif"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "tag": "DIV",
+            "className": "modal-body",
+            "box": {
+              "w": 0,
+              "h": 0,
+              "color": "rgb(59, 68, 82)",
+              "font": "14px 400 \"Open Sans\", sans-serif"
+            },
+            "children": [
+              {
+                "tag": "DIV",
+                "className": "icon-gts-alert icon-gts-alert-warning",
+                "text": "",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "color": "rgb(59, 68, 82)",
+                  "font": "14px 400 FontAwesome"
+                },
+                "children": []
+              },
+              {
+                "tag": "DIV",
+                "className": "gts-alert-message",
+                "text": "",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "color": "rgb(59, 68, 82)",
+                  "font": "14px 400 \"Open Sans\", sans-serif"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "tag": "DIV",
+            "className": "modal-footer",
+            "box": {
+              "w": 0,
+              "h": 0,
+              "bg": "rgb(245, 245, 245)",
+              "color": "rgb(59, 68, 82)",
+              "font": "14px 400 \"Open Sans\", sans-serif"
+            },
+            "children": [
+              {
+                "tag": "BUTTON",
+                "className": "btn ",
+                "text": "OK",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "bg": "rgb(255, 255, 255)",
+                  "color": "rgb(62, 94, 204)",
+                  "font": "14px 400 \"Open Sans\", sans-serif"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "DIV",
+        "className": "gts-alert-modal gts-alert-error modal sample-modal",
+        "box": {
+          "w": 0,
+          "h": 0,
+          "bg": "rgb(255, 255, 255)",
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": [
+          {
+            "tag": "DIV",
+            "className": "modal-header",
+            "box": {
+              "w": 0,
+              "h": 0,
+              "color": "rgb(59, 68, 82)",
+              "font": "14px 400 \"Open Sans\", sans-serif"
+            },
+            "children": [
+              {
+                "tag": "H3",
+                "text": "",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "color": "rgb(77, 77, 77)",
+                  "font": "20.256px 700 \"Open Sans\", sans-serif"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "tag": "DIV",
+            "className": "modal-body",
+            "box": {
+              "w": 0,
+              "h": 0,
+              "color": "rgb(59, 68, 82)",
+              "font": "14px 400 \"Open Sans\", sans-serif"
+            },
+            "children": [
+              {
+                "tag": "DIV",
+                "className": "icon-gts-alert icon-gts-alert-error",
+                "text": "",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "color": "rgb(59, 68, 82)",
+                  "font": "14px 400 FontAwesome"
+                },
+                "children": []
+              },
+              {
+                "tag": "DIV",
+                "className": "gts-alert-message",
+                "text": "",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "color": "rgb(59, 68, 82)",
+                  "font": "14px 400 \"Open Sans\", sans-serif"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "tag": "DIV",
+            "className": "modal-footer",
+            "box": {
+              "w": 0,
+              "h": 0,
+              "bg": "rgb(245, 245, 245)",
+              "color": "rgb(59, 68, 82)",
+              "font": "14px 400 \"Open Sans\", sans-serif"
+            },
+            "children": [
+              {
+                "tag": "BUTTON",
+                "className": "btn ",
+                "text": "OK",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "bg": "rgb(255, 255, 255)",
+                  "color": "rgb(62, 94, 204)",
+                  "font": "14px 400 \"Open Sans\", sans-serif"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "DIV",
+        "className": "gts-alert-modal gts-alert-question modal sample-modal",
+        "box": {
+          "w": 0,
+          "h": 0,
+          "bg": "rgb(255, 255, 255)",
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": [
+          {
+            "tag": "DIV",
+            "className": "modal-header",
+            "box": {
+              "w": 0,
+              "h": 0,
+              "color": "rgb(59, 68, 82)",
+              "font": "14px 400 \"Open Sans\", sans-serif"
+            },
+            "children": [
+              {
+                "tag": "H3",
+                "text": "",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "color": "rgb(77, 77, 77)",
+                  "font": "20.256px 700 \"Open Sans\", sans-serif"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "tag": "DIV",
+            "className": "modal-body",
+            "box": {
+              "w": 0,
+              "h": 0,
+              "color": "rgb(59, 68, 82)",
+              "font": "14px 400 \"Open Sans\", sans-serif"
+            },
+            "children": [
+              {
+                "tag": "DIV",
+                "className": "icon-gts-alert icon-gts-alert-question",
+                "text": "",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "color": "rgb(59, 68, 82)",
+                  "font": "14px 400 FontAwesome"
+                },
+                "children": []
+              },
+              {
+                "tag": "DIV",
+                "className": "gts-alert-message",
+                "text": "",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "color": "rgb(59, 68, 82)",
+                  "font": "14px 400 \"Open Sans\", sans-serif"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "tag": "DIV",
+            "className": "modal-footer",
+            "box": {
+              "w": 0,
+              "h": 0,
+              "bg": "rgb(245, 245, 245)",
+              "color": "rgb(59, 68, 82)",
+              "font": "14px 400 \"Open Sans\", sans-serif"
+            },
+            "children": [
+              {
+                "tag": "BUTTON",
+                "className": "btn btn-primary",
+                "text": "Confirm",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "bg": "rgb(62, 94, 204)",
+                  "color": "rgb(255, 255, 255)",
+                  "font": "14px 400 \"Open Sans\", sans-serif"
+                },
+                "children": []
+              },
+              {
+                "tag": "BUTTON",
+                "className": "btn ",
+                "text": "Cancel",
+                "box": {
+                  "w": 0,
+                  "h": 0,
+                  "bg": "rgb(255, 255, 255)",
+                  "color": "rgb(62, 94, 204)",
+                  "font": "14px 400 \"Open Sans\", sans-serif"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "DIV",
+        "id": "beacon-user",
+        "text": "",
+        "box": {
+          "w": 3840,
+          "h": 0,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      },
+      {
+        "tag": "SCRIPT",
+        "text": "",
+        "box": {
+          "w": 0,
+          "h": 0,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      },
+      {
+        "tag": "DIV",
+        "className": "drag-bound",
+        "text": "",
+        "box": {
+          "w": 0,
+          "h": 0,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      },
+      {
+        "tag": "IFRAME",
+        "id": "_hjSafeContext_98196802",
+        "text": "",
+        "box": {
+          "w": 0,
+          "h": 0,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "box": {
+          "w": 3840,
+          "h": 0,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "box": {
+          "w": 3840,
+          "h": 0,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      },
+      {
+        "tag": "SCRIPT",
+        "id": "appcues-open-builder",
+        "text": "",
+        "box": {
+          "w": 0,
+          "h": 0,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      },
+      {
+        "tag": "SCRIPT",
+        "id": "appcues-open-builder-components",
+        "text": "",
+        "box": {
+          "w": 0,
+          "h": 0,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      },
+      {
+        "tag": "APPCUES-EXPERIENCE-CONTAINER",
+        "id": "appcues-container-8b181a90-569c-4f77-8ffd-157594c45a95",
+        "text": "",
+        "box": {
+          "w": 3840,
+          "h": 0,
+          "color": "rgb(0, 0, 0)",
+          "font": "16px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      },
+      {
+        "tag": "DIV",
+        "text": "",
+        "box": {
+          "w": 3840,
+          "h": 0,
+          "color": "rgb(59, 68, 82)",
+          "font": "14px 400 \"Open Sans\", sans-serif"
+        },
+        "children": []
+      }
+    ]
+  }
+}

@@ -67,8 +67,7 @@ export default function KudosPage() {
   const givenKudos = useMemo(() => {
     if (!kudosRaw || !me) return [];
     return kudosRaw.filter(
-      (k) =>
-        k.senderEmployeeId === me._id && !k.badge.startsWith("feedback:"),
+      (k) => k.senderEmployeeId === me._id && !k.badge.startsWith("feedback:"),
     );
   }, [kudosRaw, me]);
 
@@ -135,10 +134,7 @@ export default function KudosPage() {
               className="shrink-0"
               aria-hidden="true"
             >
-              <path
-                d="M0 0H16V20L8 15L0 20V0Z"
-                fill="#00C49F"
-              />
+              <path d="M0 0H16V20L8 15L0 20V0Z" fill="#00C49F" />
             </svg>
           </div>
           <h1 className="text-base font-semibold text-primary">Kudos</h1>
@@ -217,10 +213,7 @@ export default function KudosPage() {
                   <circle cx="85" cy="85" r="70" fill="#F8794A" />
 
                   {/* Emerald green sleeve from bottom-left */}
-                  <path
-                    d="M26 122 L58 84 L78 100 L46 138 Z"
-                    fill="#00A389"
-                  />
+                  <path d="M26 122 L58 84 L78 100 L46 138 Z" fill="#00A389" />
                   <path
                     d="M56 82 L80 102"
                     stroke="#FFFFFF"
@@ -338,10 +331,7 @@ export default function KudosPage() {
                 <circle cx="85" cy="85" r="82" fill="#FFEFE7" />
                 <circle cx="85" cy="85" r="70" fill="#F8794A" />
 
-                <path
-                  d="M26 122 L58 84 L78 100 L46 138 Z"
-                  fill="#00A389"
-                />
+                <path d="M26 122 L58 84 L78 100 L46 138 Z" fill="#00A389" />
                 <path
                   d="M56 82 L80 102"
                   stroke="#FFFFFF"

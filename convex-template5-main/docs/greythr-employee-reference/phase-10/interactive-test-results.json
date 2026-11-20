@@ -1,0 +1,33 @@
+[
+  {
+    "test": "Overview Interactions"
+  },
+  {
+    "test": "Directory Search & Filter",
+    "result": {
+      "hasSearch": true,
+      "hasDeptFilter": true,
+      "rowsCount": 3
+    }
+  },
+  {
+    "test": "Profile Tabs & Edit",
+    "result": {
+      "hasEditButton": true,
+      "tabsCount": 0
+    }
+  },
+  {
+    "test": "Bank/PF/ESI Masking",
+    "result": {
+      "hasToggleMask": false
+    }
+  },
+  {
+    "test": "Excel Import Workflow",
+    "result": {
+      "hasUploadArea": true,
+      "hasImportBtn": true
+    }
+  }
+]

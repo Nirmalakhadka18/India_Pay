@@ -47,7 +47,9 @@ export default function MyPortal() {
   const linkMyAccount = useMutation(api.employees.linkMyAccount);
 
   const [activeTab, setActiveTab] = useState<SubTab>("personal");
-  const [linkState, setLinkState] = useState<"idle" | "loading" | "error" | "success">("idle");
+  const [linkState, setLinkState] = useState<
+    "idle" | "loading" | "error" | "success"
+  >("idle");
   const [linkError, setLinkError] = useState("");
 
   // Reveal toggles for sensitive fields
@@ -66,7 +68,9 @@ export default function MyPortal() {
   const [showResignModal, setShowResignModal] = useState(false);
 
   // Address tab selection inside Personal
-  const [addressType, setAddressType] = useState<"contact" | "permanent">("contact");
+  const [addressType, setAddressType] = useState<"contact" | "permanent">(
+    "contact",
+  );
 
   const toggleReveal = (field: "phone" | "dob" | "bank" | "pan") => {
     setRevealed((prev) => ({ ...prev, [field]: !prev[field] }));
@@ -103,7 +107,11 @@ export default function MyPortal() {
   }, [workspaceId, me, linkState]);
 
   if (!workspaceId) {
-    return <div className="p-8 text-sm text-primary/60">Please select a workspace.</div>;
+    return (
+      <div className="p-8 text-sm text-primary/60">
+        Please select a workspace.
+      </div>
+    );
   }
 
   if (me === undefined) {
@@ -122,7 +130,9 @@ export default function MyPortal() {
             <UserCircle className="mx-auto h-12 w-12 text-muted-foreground opacity-50 mb-4" />
             <h2 className="text-xl font-semibold mb-2">Account Not Linked</h2>
             <p className="text-muted-foreground mb-6 max-w-md mx-auto text-sm">
-              Your user account is not currently linked to an employee record in this workspace. Link your account to view your profile, banking, and statutory records.
+              Your user account is not currently linked to an employee record in
+              this workspace. Link your account to view your profile, banking,
+              and statutory records.
             </p>
             {linkState === "error" && (
               <div className="mb-4 rounded-md bg-destructive/10 p-4 text-sm text-destructive text-left space-y-2">
@@ -132,18 +142,22 @@ export default function MyPortal() {
                 </div>
                 {linkError.includes("No employee record found") && (
                   <p className="pl-6 text-destructive/80 text-xs mt-2">
-                    Action required: Please ask your workspace administrator to update your employee record with your login email.
+                    Action required: Please ask your workspace administrator to
+                    update your employee record with your login email.
                   </p>
                 )}
               </div>
             )}
             {linkState === "success" ? (
               <div className="mb-4 rounded-md bg-emerald-500/10 p-3 text-sm text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-2">
-                <CheckCircle2 className="h-4 w-4" /> Successfully linked! Refreshing...
+                <CheckCircle2 className="h-4 w-4" /> Successfully linked!
+                Refreshing...
               </div>
             ) : (
               <Button onClick={handleLink} disabled={linkState === "loading"}>
-                {linkState === "loading" && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {linkState === "loading" && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
                 Link My Account
               </Button>
             )}
@@ -154,7 +168,9 @@ export default function MyPortal() {
   }
 
   const empIdStr =
-    "employeeIdNumber" in me && typeof me.employeeIdNumber === "string" && me.employeeIdNumber
+    "employeeIdNumber" in me &&
+    typeof me.employeeIdNumber === "string" &&
+    me.employeeIdNumber
       ? me.employeeIdNumber
       : `VC-${me._id.slice(-6).toUpperCase()}`;
 
@@ -200,7 +216,9 @@ export default function MyPortal() {
         </div>
 
         <div className="text-xs text-slate-400">
-          <span className="hover:text-slate-600 cursor-pointer">Quick Links ▾</span>
+          <span className="hover:text-slate-600 cursor-pointer">
+            Quick Links ▾
+          </span>
         </div>
       </div>
 
@@ -266,7 +284,9 @@ export default function MyPortal() {
             <div className="space-y-4">
               {/* Jump Links Header */}
               <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 pb-1">
-                <span className="font-semibold text-slate-600 dark:text-slate-300">JUMP TO:</span>
+                <span className="font-semibold text-slate-600 dark:text-slate-300">
+                  JUMP TO:
+                </span>
                 <button
                   type="button"
                   onClick={() => scrollToSection("profile-section")}
@@ -314,45 +334,59 @@ export default function MyPortal() {
                   {/* Employee Quick Info Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-3 flex-1 text-xs">
                     <div>
-                      <span className="text-[10px] text-slate-400 uppercase font-medium">Name</span>
+                      <span className="text-[10px] text-slate-400 uppercase font-medium">
+                        Name
+                      </span>
                       <p className="font-semibold text-slate-800 dark:text-slate-100 text-sm mt-0.5">
                         {me.firstName} {me.lastName}
                       </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 uppercase font-medium">Employee ID</span>
+                      <span className="text-[10px] text-slate-400 uppercase font-medium">
+                        Employee ID
+                      </span>
                       <p className="font-semibold text-slate-800 dark:text-slate-100 mt-0.5">
                         {empIdStr}
                       </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 uppercase font-medium">Company Email</span>
+                      <span className="text-[10px] text-slate-400 uppercase font-medium">
+                        Company Email
+                      </span>
                       <p className="font-semibold text-slate-800 dark:text-slate-100 mt-0.5 truncate">
                         {me.email}
                       </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 uppercase font-medium">Location</span>
+                      <span className="text-[10px] text-slate-400 uppercase font-medium">
+                        Location
+                      </span>
                       <p className="font-semibold text-slate-800 dark:text-slate-100 mt-0.5">
                         Bangalore
                       </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 uppercase font-medium">Primary Contact No</span>
+                      <span className="text-[10px] text-slate-400 uppercase font-medium">
+                        Primary Contact No
+                      </span>
                       <div className="flex items-center gap-2 mt-0.5">
                         <span className="font-semibold text-slate-800 dark:text-slate-100">
-                          {revealed.phone ? me.phone || "—" : maskPhone(me.phone)}
+                          {revealed.phone
+                            ? me.phone || "—"
+                            : maskPhone(me.phone)}
                         </span>
                         {me.phone && (
                           <button
                             type="button"
                             onClick={() => toggleReveal("phone")}
                             className="text-slate-400 hover:text-slate-600 transition"
-                            title={revealed.phone ? "Hide phone" : "Reveal phone"}
+                            title={
+                              revealed.phone ? "Hide phone" : "Reveal phone"
+                            }
                           >
                             {revealed.phone ? (
                               <EyeOff className="h-3.5 w-3.5" />
@@ -365,8 +399,12 @@ export default function MyPortal() {
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 uppercase font-medium">Extension</span>
-                      <p className="font-semibold text-slate-800 dark:text-slate-100 mt-0.5">—</p>
+                      <span className="text-[10px] text-slate-400 uppercase font-medium">
+                        Extension
+                      </span>
+                      <p className="font-semibold text-slate-800 dark:text-slate-100 mt-0.5">
+                        —
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -397,12 +435,18 @@ export default function MyPortal() {
                 {!collapsed.personal && (
                   <div className="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4 text-xs">
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Blood Group</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Blood Group
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        —
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Date Of Birth</span>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Date Of Birth
+                      </span>
                       <div className="flex items-center gap-2 mt-0.5">
                         <span className="text-slate-700 dark:text-slate-200 font-medium">
                           {revealed.dob ? "2002-05-15" : "XXXXX 2002"}
@@ -412,84 +456,148 @@ export default function MyPortal() {
                           onClick={() => toggleReveal("dob")}
                           className="text-slate-400 hover:text-slate-600 transition"
                         >
-                          {revealed.dob ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                          {revealed.dob ? (
+                            <EyeOff className="h-3.5 w-3.5" />
+                          ) : (
+                            <Eye className="h-3.5 w-3.5" />
+                          )}
                         </button>
                       </div>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Nationality</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Nationality
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        —
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Marital Status</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Marital Status
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        —
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Marriage Date</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Marriage Date
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        —
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Spouse</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Spouse
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        —
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Place Of Birth</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Place Of Birth
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        —
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Residential Status</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Residential Status
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        —
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Father Name</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Father Name
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        —
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Religion</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Religion
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        —
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Physically Challenged</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">No</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Physically Challenged
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        No
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">International Employee</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">No</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        International Employee
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        No
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Height</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Height
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        —
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Weight</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Weight
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        —
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Identification Mark</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Identification Mark
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        —
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Hobby</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Hobby
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        —
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Caste</span>
-                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Caste
+                      </span>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                        —
+                      </p>
                     </div>
                   </div>
                 )}
@@ -522,7 +630,11 @@ export default function MyPortal() {
                     <div className="w-48">
                       <select
                         value={addressType}
-                        onChange={(e) => setAddressType(e.target.value as "contact" | "permanent")}
+                        onChange={(e) =>
+                          setAddressType(
+                            e.target.value as "contact" | "permanent",
+                          )
+                        }
                         className="text-xs border border-slate-300 dark:border-border rounded px-2.5 py-1.5 w-full bg-white dark:bg-card text-slate-700 dark:text-slate-200"
                       >
                         <option value="contact">Contact Address</option>
@@ -532,45 +644,77 @@ export default function MyPortal() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4 text-xs">
                       <div className="sm:col-span-3">
-                        <span className="text-[10px] text-slate-400 font-medium">Address</span>
-                        <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
-                      </div>
-
-                      <div>
-                        <span className="text-[10px] text-slate-400 font-medium">Name</span>
-                        <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
-                      </div>
-
-                      <div>
-                        <span className="text-[10px] text-slate-400 font-medium">Email</span>
-                        <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
-                      </div>
-
-                      <div>
-                        <span className="text-[10px] text-slate-400 font-medium">Phone 1</span>
-                        <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
-                      </div>
-
-                      <div>
-                        <span className="text-[10px] text-slate-400 font-medium">Phone 2</span>
-                        <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
-                      </div>
-
-                      <div>
-                        <span className="text-[10px] text-slate-400 font-medium">Mobile</span>
+                        <span className="text-[10px] text-slate-400 font-medium">
+                          Address
+                        </span>
                         <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
-                          {revealed.phone ? me.phone || "—" : maskPhone(me.phone)}
+                          —
                         </p>
                       </div>
 
                       <div>
-                        <span className="text-[10px] text-slate-400 font-medium">Extension</span>
-                        <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                        <span className="text-[10px] text-slate-400 font-medium">
+                          Name
+                        </span>
+                        <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                          —
+                        </p>
                       </div>
 
                       <div>
-                        <span className="text-[10px] text-slate-400 font-medium">Fax</span>
-                        <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">—</p>
+                        <span className="text-[10px] text-slate-400 font-medium">
+                          Email
+                        </span>
+                        <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                          —
+                        </p>
+                      </div>
+
+                      <div>
+                        <span className="text-[10px] text-slate-400 font-medium">
+                          Phone 1
+                        </span>
+                        <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                          —
+                        </p>
+                      </div>
+
+                      <div>
+                        <span className="text-[10px] text-slate-400 font-medium">
+                          Phone 2
+                        </span>
+                        <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                          —
+                        </p>
+                      </div>
+
+                      <div>
+                        <span className="text-[10px] text-slate-400 font-medium">
+                          Mobile
+                        </span>
+                        <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                          {revealed.phone
+                            ? me.phone || "—"
+                            : maskPhone(me.phone)}
+                        </p>
+                      </div>
+
+                      <div>
+                        <span className="text-[10px] text-slate-400 font-medium">
+                          Extension
+                        </span>
+                        <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                          —
+                        </p>
+                      </div>
+
+                      <div>
+                        <span className="text-[10px] text-slate-400 font-medium">
+                          Fax
+                        </span>
+                        <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                          —
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -633,17 +777,23 @@ export default function MyPortal() {
                 {!collapsed.bank && (
                   <div className="p-5 grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs items-center">
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Bank Name</span>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Bank Name
+                      </span>
                       <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-semibold">
                         {me.bankName || "—"}
                       </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-slate-400 font-medium">Bank Account Number</span>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Bank Account Number
+                      </span>
                       <div className="flex items-center gap-2 mt-0.5">
                         <span className="text-slate-700 dark:text-slate-200 font-mono font-semibold">
-                          {revealed.bank ? me.bankAccountNumber || "—" : maskBank(me.bankAccountNumber)}
+                          {revealed.bank
+                            ? me.bankAccountNumber || "—"
+                            : maskBank(me.bankAccountNumber)}
                         </span>
                         {me.bankAccountNumber && (
                           <button
@@ -651,7 +801,11 @@ export default function MyPortal() {
                             onClick={() => toggleReveal("bank")}
                             className="text-slate-400 hover:text-slate-600 transition"
                           >
-                            {revealed.bank ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                            {revealed.bank ? (
+                              <EyeOff className="h-3.5 w-3.5" />
+                            ) : (
+                              <Eye className="h-3.5 w-3.5" />
+                            )}
                           </button>
                         )}
                       </div>
@@ -659,7 +813,9 @@ export default function MyPortal() {
 
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] text-slate-400 font-medium">Bank Branch / IFSC</span>
+                        <span className="text-[10px] text-slate-400 font-medium">
+                          Bank Branch / IFSC
+                        </span>
                         <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
                           {me.ifscCode || "—"}
                         </p>
@@ -696,13 +852,17 @@ export default function MyPortal() {
                     {me.isPfMember ? (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <span className="text-[10px] text-slate-400 font-medium">UAN</span>
+                          <span className="text-[10px] text-slate-400 font-medium">
+                            UAN
+                          </span>
                           <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-mono font-medium">
                             {me.uan || "Not Available"}
                           </p>
                         </div>
                         <div>
-                          <span className="text-[10px] text-slate-400 font-medium">PF Member ID</span>
+                          <span className="text-[10px] text-slate-400 font-medium">
+                            PF Member ID
+                          </span>
                           <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-mono font-medium">
                             {me.pfMemberId || "Enrolled under Victor Chasex PF"}
                           </p>
@@ -742,12 +902,20 @@ export default function MyPortal() {
                 {!collapsed.passport && (
                   <div className="p-5 space-y-4 text-xs">
                     <div>
-                      <span className="text-[10px] text-slate-400 font-semibold uppercase">Passport</span>
-                      <p className="mt-0.5 text-slate-500 dark:text-slate-400 italic">No data Found.</p>
+                      <span className="text-[10px] text-slate-400 font-semibold uppercase">
+                        Passport
+                      </span>
+                      <p className="mt-0.5 text-slate-500 dark:text-slate-400 italic">
+                        No data Found.
+                      </p>
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-400 font-semibold uppercase">Visa</span>
-                      <p className="mt-0.5 text-slate-500 dark:text-slate-400 italic">No data Found.</p>
+                      <span className="text-[10px] text-slate-400 font-semibold uppercase">
+                        Visa
+                      </span>
+                      <p className="mt-0.5 text-slate-500 dark:text-slate-400 italic">
+                        No data Found.
+                      </p>
                     </div>
                   </div>
                 )}
@@ -777,7 +945,9 @@ export default function MyPortal() {
                     {/* Aadhaar Row */}
                     <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-border/40">
                       <div>
-                        <span className="text-[10px] text-slate-400 uppercase font-medium">Aadhaar</span>
+                        <span className="text-[10px] text-slate-400 uppercase font-medium">
+                          Aadhaar
+                        </span>
                         <p className="mt-0.5 font-mono text-slate-700 dark:text-slate-200 font-medium">
                           7***********
                         </p>
@@ -800,14 +970,20 @@ export default function MyPortal() {
                         </span>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="font-mono text-slate-700 dark:text-slate-200 font-medium">
-                            {revealed.pan ? me.pan || "XXXXXX706N" : maskPan(me.pan || "ABCDE1234F")}
+                            {revealed.pan
+                              ? me.pan || "XXXXXX706N"
+                              : maskPan(me.pan || "ABCDE1234F")}
                           </span>
                           <button
                             type="button"
                             onClick={() => toggleReveal("pan")}
                             className="text-slate-400 hover:text-slate-600 transition"
                           >
-                            {revealed.pan ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                            {revealed.pan ? (
+                              <EyeOff className="h-3.5 w-3.5" />
+                            ) : (
+                              <Eye className="h-3.5 w-3.5" />
+                            )}
                           </button>
                         </div>
                       </div>
@@ -889,43 +1065,63 @@ export default function MyPortal() {
                 {/* Position Details Grid */}
                 <div className="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5 text-xs">
                   <div>
-                    <span className="text-[10px] text-slate-400 font-medium">Cost Center</span>
-                    <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">NA</p>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      Cost Center
+                    </span>
+                    <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                      NA
+                    </p>
                   </div>
 
                   <div>
-                    <span className="text-[10px] text-slate-400 font-medium">Department</span>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      Department
+                    </span>
                     <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-semibold">
                       {me.department || "AI"}
                     </p>
                   </div>
 
                   <div>
-                    <span className="text-[10px] text-slate-400 font-medium">Designation</span>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      Designation
+                    </span>
                     <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-semibold">
                       {me.designation || "Junior Developer"}
                     </p>
                   </div>
 
                   <div>
-                    <span className="text-[10px] text-slate-400 font-medium">Division</span>
-                    <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">NA</p>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      Division
+                    </span>
+                    <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                      NA
+                    </p>
                   </div>
 
                   <div>
-                    <span className="text-[10px] text-slate-400 font-medium">Grade</span>
-                    <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">NA</p>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      Grade
+                    </span>
+                    <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-medium">
+                      NA
+                    </p>
                   </div>
 
                   <div>
-                    <span className="text-[10px] text-slate-400 font-medium">Location</span>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      Location
+                    </span>
                     <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-semibold">
                       Bangalore
                     </p>
                   </div>
 
                   <div className="sm:col-span-3">
-                    <span className="text-[10px] text-slate-400 font-medium">Reporting To</span>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      Reporting To
+                    </span>
                     <p className="mt-0.5 text-slate-700 dark:text-slate-200 font-semibold">
                       Jerome Fathima
                     </p>
@@ -964,13 +1160,16 @@ export default function MyPortal() {
                   Joined Victor Chasex Private Limited
                 </p>
                 <p className="text-[11px] text-slate-500">
-                  Onboarded as {me.designation || "Junior Developer"} in {me.department || "AI"} Department.
+                  Onboarded as {me.designation || "Junior Developer"} in{" "}
+                  {me.department || "AI"} Department.
                 </p>
               </div>
 
               <div className="relative pl-6 border-l-2 border-slate-300 dark:border-slate-700 space-y-1">
                 <div className="absolute -left-1.5 top-0.5 h-3 w-3 rounded-full bg-emerald-500 ring-4 ring-emerald-100 dark:ring-emerald-950" />
-                <span className="text-[10px] text-slate-400 font-semibold">Current Status</span>
+                <span className="text-[10px] text-slate-400 font-semibold">
+                  Current Status
+                </span>
                 <p className="text-xs font-bold text-slate-800 dark:text-slate-100">
                   Active Employment
                 </p>
@@ -1008,7 +1207,9 @@ export default function MyPortal() {
 
             <div className="py-4 space-y-3 text-xs text-slate-600 dark:text-slate-300">
               <p>
-                Are you sure you wish to initiate the resignation process? This will notify your reporting manager (Jerome Fathima) and the HR department.
+                Are you sure you wish to initiate the resignation process? This
+                will notify your reporting manager (Jerome Fathima) and the HR
+                department.
               </p>
               <div>
                 <label className="block text-[11px] font-semibold text-slate-500 mb-1">
@@ -1023,7 +1224,11 @@ export default function MyPortal() {
             </div>
 
             <div className="flex justify-end gap-2 pt-3 border-t border-slate-200 dark:border-border">
-              <Button variant="secondary" size="sm" onClick={() => setShowResignModal(false)}>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setShowResignModal(false)}
+              >
                 Cancel
               </Button>
               <Button

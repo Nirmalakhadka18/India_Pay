@@ -28,8 +28,12 @@ export default function PeoplePage() {
   const scoped = workspaceId ? { workspaceId } : "skip";
   const employees = useQuery(api.employees.list, scoped);
 
-  const [viewMode, setViewMode] = useState<"directory" | "org_chart">("directory");
-  const [activeTab, setActiveTab] = useState<"everyone" | "starred">("everyone");
+  const [viewMode, setViewMode] = useState<"directory" | "org_chart">(
+    "directory",
+  );
+  const [activeTab, setActiveTab] = useState<"everyone" | "starred">(
+    "everyone",
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [selectedEmpId, setSelectedEmpId] = useState<string | null>(null);
@@ -62,9 +66,9 @@ export default function PeoplePage() {
         const q = searchQuery.toLowerCase().trim();
         const fullName = `${e.firstName} ${e.lastName}`.toLowerCase();
         const empId = (
-          ("employeeIdNumber" in e && typeof e.employeeIdNumber === "string"
+          "employeeIdNumber" in e && typeof e.employeeIdNumber === "string"
             ? e.employeeIdNumber
-            : e._id.slice(-6))
+            : e._id.slice(-6)
         ).toLowerCase();
         const dept = (e.department || "").toLowerCase();
         const desig = (e.designation || "").toLowerCase();
@@ -245,7 +249,11 @@ export default function PeoplePage() {
                                 {emp.firstName} {emp.lastName}
                               </p>
                               <p className="truncate text-[11px] text-primary/50 font-mono">
-                                #{("employeeIdNumber" in emp && typeof emp.employeeIdNumber === "string" ? emp.employeeIdNumber : emp._id.slice(-6).toUpperCase())}
+                                #
+                                {"employeeIdNumber" in emp &&
+                                typeof emp.employeeIdNumber === "string"
+                                  ? emp.employeeIdNumber
+                                  : emp._id.slice(-6).toUpperCase()}
                               </p>
                             </div>
                           </div>
@@ -300,7 +308,11 @@ export default function PeoplePage() {
                           </button>
                         </div>
                         <p className="font-mono text-xs text-primary/60 font-medium">
-                          #{("employeeIdNumber" in selectedEmployee && typeof selectedEmployee.employeeIdNumber === "string" ? selectedEmployee.employeeIdNumber : selectedEmployee._id.slice(-6).toUpperCase())}
+                          #
+                          {"employeeIdNumber" in selectedEmployee &&
+                          typeof selectedEmployee.employeeIdNumber === "string"
+                            ? selectedEmployee.employeeIdNumber
+                            : selectedEmployee._id.slice(-6).toUpperCase()}
                         </p>
                         <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 capitalize">
                           {selectedEmployee.status}
@@ -393,7 +405,9 @@ export default function PeoplePage() {
 
                     {/* Privacy notice banner */}
                     <div className="rounded-md bg-muted/40 p-3 text-[11px] text-primary/50 leading-relaxed">
-                      Privacy Protected: Confidential statutory and banking credentials (PAN, UAN, Bank Account, Salary) are strictly redacted for peer organization directory views.
+                      Privacy Protected: Confidential statutory and banking
+                      credentials (PAN, UAN, Bank Account, Salary) are strictly
+                      redacted for peer organization directory views.
                     </div>
                   </div>
                 ) : (
@@ -414,7 +428,8 @@ export default function PeoplePage() {
                   Organization Hierarchy Chart
                 </h2>
                 <p className="text-xs text-primary/60">
-                  Visual reporting relationships across departments and leadership teams.
+                  Visual reporting relationships across departments and
+                  leadership teams.
                 </p>
               </div>
 
@@ -432,7 +447,9 @@ export default function PeoplePage() {
                     <p className="text-sm font-bold text-primary mt-1">
                       Organization Admin
                     </p>
-                    <p className="text-xs text-primary/60">Human Resources & Operations</p>
+                    <p className="text-xs text-primary/60">
+                      Human Resources & Operations
+                    </p>
                   </div>
 
                   <div className="w-0.5 h-6 bg-border mx-auto" />

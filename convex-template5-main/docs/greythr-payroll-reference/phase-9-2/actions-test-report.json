@@ -1,0 +1,57 @@
+[
+  {
+    "item": "Nine-dot launcher",
+    "status": "PASS",
+    "details": "Opens 9-dot dropdown application switcher"
+  },
+  {
+    "item": "Month selector & switching",
+    "status": "PASS",
+    "details": "Switched to Dec 2026"
+  },
+  {
+    "item": "Employee selector",
+    "status": "PASS",
+    "details": "Scope selector active"
+  },
+  {
+    "item": "Cutoff editor",
+    "status": "PASS",
+    "details": "Interactive cutoff prompt invoked"
+  },
+  {
+    "item": "Cutoff deletion confirmation",
+    "status": "PASS",
+    "details": "Interactive safety guard invoked"
+  },
+  {
+    "item": "PF notification link",
+    "status": "PASS",
+    "details": "Links to setup"
+  },
+  {
+    "item": "Process Payroll button",
+    "status": "PASS",
+    "details": "Navigates to /admin/payroll/process"
+  },
+  {
+    "item": "Payroll Inputs lock/unlock",
+    "status": "PASS",
+    "details": "Unlocked payroll inputs"
+  },
+  {
+    "item": "Employee View Release/Hold",
+    "status": "PASS",
+    "details": "Placed employee view on hold"
+  },
+  {
+    "item": "Update Payslips",
+    "status": "PASS",
+    "details": "Updated payslip master references"
+  },
+  {
+    "item": "What's New widget",
+    "status": "PASS",
+    "details": "Displayed release notes"
+  }
+]

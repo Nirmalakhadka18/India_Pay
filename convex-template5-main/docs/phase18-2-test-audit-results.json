@@ -1,0 +1,164 @@
+[
+  {
+    "file": "account-settings-audit.test.js",
+    "passed": true,
+    "duration": "795ms",
+    "outputSnippet": "================================================================ 🔬 RUNNING PHASE 16.3 INDEPENDENT ACCOUNT SETTINGS ACCEPTANCE AUDIT ================================================================ ✅ [AUDIT PASS] 1. Fresh 1920x1080 and 1366x768 screenshots present for all 5 greytHR reference routes"
+  },
+  {
+    "file": "account-settings.test.js",
+    "passed": true,
+    "duration": "752ms",
+    "outputSnippet": "▶ Phase 16.2: Complete Account Settings Replication Suite   ✔ 1. Layout & Tab Navigation Architecture (3.5401ms)   ✔ 2. Plan Page: 3 Pricing Cards & Confirmation Contract (0.6999ms)   ✔ 3. Invoices Page: Table & Accordion Details (0.5491ms)   ✔ 4. Payments Page: History & Invoices Settled (0.5167ms)"
+  },
+  {
+    "file": "batch-p0-security.test.js",
+    "passed": true,
+    "duration": "746ms",
+    "outputSnippet": "✔ Batch P0: Unauthenticated access rejection across all endpoints (1.8771ms) ✔ Batch P0: Two-Tenant Read Isolation (Cross-Tenant Rejection) (0.4139ms) ✔ Batch P0: Two-Tenant Mutation Isolation & Cross-Tenant Employee Check (1.3936ms) ✔ Batch P0: Role-Based Access Control (Admin vs Member) (0.4258ms)"
+  },
+  {
+    "file": "engage-module.test.js",
+    "passed": true,
+    "duration": "767ms",
+    "outputSnippet": "▶ Phase 14: Engage Module Comprehensive Test Suite   ✔ 1. Give Kudos: Recognition categories, recipient validation & self-kudos rejection (0.9064ms)   ✔ 2. Team Polls: Multi-option creation & duplicate vote prevention (0.5199ms)   ✔ 3. Create Posts: Audience groups, headlines & tenant scope (0.3588m"
+  },
+  {
+    "file": "global-app-launcher.test.js",
+    "passed": true,
+    "duration": "746ms",
+    "outputSnippet": "▶ Phase: Global Nine-Dot App Launcher Full Verification Suite   ✔ 1. Launcher Configuration: Exposes 'Your Apps' and all 8 canonical applications in exact order (2.1482ms)   ✔ 2. Integration in Shared Admin Header: AdminTopbar properly binds launcher state and toggle handlers (0.2984ms)   ✔ 3. Modal"
+  },
+  {
+    "file": "loan-management-p1.1.test.js",
+    "passed": true,
+    "duration": "800ms",
+    "outputSnippet": "✔ 1. EMI calculation against standard financial reference benchmark (1.6024ms) ✔ 2. Zero-interest loans (Salary advances / interest-free emergency loans) (0.329ms) ✔ 3. Different interest rates and multi-year tenures (0.2756ms) ✔ 4. Early repayment & full loan settlement (0.7271ms) ✔ 5. Partial prep"
+  },
+  {
+    "file": "my-profile.test.js",
+    "passed": true,
+    "duration": "795ms",
+    "outputSnippet": "▶ Phase 16.1: Complete My Profile & Login History Test Suite   ✔ 1. Route & Breadcrumb Integrity (2.7793ms)   ✔ 2. Profile Tab: Account Details & Identity Loading (0.5661ms)   ✔ 3. Profile Modals & Mutation Contracts (0.7927ms)   ✔ 4. Login History: Summary Cards & Real Event Calculations (0.4998ms)"
+  },
+  {
+    "file": "payroll-loan-integration-p23.2.test.js",
+    "passed": true,
+    "duration": "769ms",
+    "outputSnippet": "✔ 1. One employee with one active loan (3.0859ms) ✔ 2. One employee with multiple active loans (0.2653ms) ✔ 3. Multiple employees with different loan schedules (0.2301ms) ✔ 4. Pending loan exclusion (0.2283ms) ✔ 5. Rejected loan exclusion (0.1969ms) ✔ 6. Closed loan exclusion (0.1879ms) ✔ 7. Insuffi"
+  },
+  {
+    "file": "payroll-security.test.js",
+    "passed": true,
+    "duration": "756ms",
+    "outputSnippet": "✔ 1. Cross-Organization Tenant Data Leakage Prevention (1.5063ms) ✔ 2. Horizontal Privilege Escalation Prevention (Employee Snooping) (0.3421ms) ✔ 3. Unauthorized Role Attempting Payroll Processing (0.305ms) ✔ 4. Missing or Invalid Organization Context (0.1782ms) ℹ tests 4 ℹ suites 0 ℹ pass 4 ℹ fail"
+  },
+  {
+    "file": "reimbursements-p1.2.test.js",
+    "passed": true,
+    "duration": "797ms",
+    "outputSnippet": "✔ 1. Draft creation (1.8994ms) ✔ 2. Draft modification (0.2557ms) ✔ 3. Claim submission (0.1938ms) ✔ 4. Manager approval (0.5097ms) ✔ 5. Manager rejection (0.2198ms) ✔ 6. Return for correction (0.2226ms) ✔ 7. Finance approval & amount adjustment (0.3173ms) ✔ 8. Finance rejection (0.2659ms) ✔ 9. Clai"
+  },
+  {
+    "file": "reports-analytics.test.js",
+    "passed": true,
+    "duration": "791ms",
+    "outputSnippet": "▶ Phase 13: Reports & Analytics Engine & Security Test Suite   ✔ 1. Catalog Discovery: 14 enterprise categories present with statutory tagging (0.8433ms)   ✔ 2. Persistence: Favorites and report run logging isolation (0.2946ms)   ✔ 3. Query Builder: Allowlisted projection and filter constraints (0.2"
+  },
+  {
+    "file": "reports-gallery-audit.test.js",
+    "passed": true,
+    "duration": "729ms",
+    "outputSnippet": "▶ PHASE 20: Reports Gallery Independent Acceptance Audit Suite   ✔ 1. Inventory Verification: Exactly 27 categories and 192 report entries (2.1962ms)   ✔ 2. Coverage Matrix Classification: Accurate 5-tier classification without false positives (1.9309ms)   ✔ 3. Backend Security & Isolation: Workspac"
+  },
+  {
+    "file": "reports-gallery-comprehensive.test.js",
+    "passed": true,
+    "duration": "808ms",
+    "outputSnippet": "▶ Reports Gallery Comprehensive Verification Suite   ✔ 1. Reference Inventory: Contains all 27 categories inspected from authenticated greytHR (2.2371ms)   ✔ 2. Catalogue Completeness: Contains exactly 192 total reports from reference application (0.3476ms)   ✔ 3. Primary Route: /reports renders Rep"
+  },
+  {
+    "file": "reports-gallery-r2-parameters.test.js",
+    "passed": true,
+    "duration": "745ms",
+    "outputSnippet": "▶ Reports Gallery Batch R2: Parameter Schema Verification Suite   ✔ 1. Registry & Schema Completeness: All 192 reports have defined schemas (1.0066ms)   ✔ 2. Specialized Field Coverage: Forms vary by category rather than using a static template (0.2861ms)   ✔ 3. Schema Integrity: All fields have nam"
+  },
+  {
+    "file": "reports-gallery-r3-payroll.test.js",
+    "passed": true,
+    "duration": "760ms",
+    "outputSnippet": "▶ Reports Gallery Batch R3: Payroll Reports Calculation & Reconciliation Suite   ✔ 1. Salary Register: Gross-to-Net and integer paisa precision (0.985ms)   ✔ 2. Payment Register: Payment method, masked bank account, and status (0.3449ms)   ✔ 3. Bank Transfer Statement: Beneficiary details, IFSC, and"
+  },
+  {
+    "file": "settings-dropdown.test.js",
+    "passed": true,
+    "duration": "728ms",
+    "outputSnippet": "▶ Phase 16: Global Settings Dropdown & Route Integration Test Suite   ✔ 1. Settings Dropdown Items Order & Naming: Exact match to greytHR (0.8001ms)   ✔ 2. Destination Route Resolution: All 5 settings routes are mapped and functional (1.9253ms)   ✔ 3. RBAC Policy Enforcement on Privileged Pages (0.2"
+  },
+  {
+    "file": "statutory-coverage.test.js",
+    "passed": true,
+    "duration": "785ms",
+    "outputSnippet": "✔ 1. Zero Salary Edge Case (1.3735ms) ✔ 2. Negative and Invalid Salary Input Rejection (0.581ms) ✔ 3. EPF Statutory Wage Ceiling Thresholds (0.2326ms) ✔ 4. ESI Statutory Wage Ceiling Thresholds (0.1821ms) ✔ 5. Leap Year February and Calendar Days Proration (1.1431ms) ✔ 6. Rounding Behavior and Preci"
+  },
+  {
+    "file": "statutory-units.test.js",
+    "passed": true,
+    "duration": "775ms",
+    "outputSnippet": "✔ Days in Month (1.9542ms) ✔ EPF Ceiling (0.395ms) ✔ ESI Ceiling (0.2939ms) ℹ tests 3 ℹ suites 0 ℹ pass 3 ℹ fail 0 ℹ cancelled 0 ℹ skipped 0 ℹ todo 0 ℹ duration_ms 12.9749 "
+  },
+  {
+    "file": "system-settings-coverage.test.js",
+    "passed": true,
+    "duration": "702ms",
+    "outputSnippet": "================================================================ 🔬 RUNNING PHASE 18.1 INDEPENDENT SYSTEM SETTINGS COVERAGE AUDIT ================================================================ ✅ [AUDIT PASS] 1. Route inventory reflects exact count of 164 greytHR state definitions ✅ [AUDIT PASS] 2"
+  },
+  {
+    "file": "system-settings-employee-comprehensive.test.js",
+    "passed": true,
+    "duration": "796ms",
+    "outputSnippet": "▶ PHASE 18.3: Employee System Settings Verification Suite   ✔ Canonical Inventory has all 9 Employee entries (2.8852ms)   ✔ All Employee System Settings routes exist and export valid Next.js page components (2.1267ms)   ✔ Directory Configuration has live preview and statutory categories (0.5064ms)  "
+  },
+  {
+    "file": "system-settings-general-employee.test.js",
+    "passed": true,
+    "duration": "759ms",
+    "outputSnippet": "▶ Phase 18.2: General & Employee System Settings Test Suite   ✔ 1. Route & Page Existence for all 6 Pages (4.0514ms)   ✔ 2. System Settings Layout Navigation Includes All 6 Routes (0.5413ms)   ✔ 3. Backend Schema Definitions for Phase 18.2 Entities (0.6986ms)   ✔ 4. Backend Queries & Mutations for P"
+  },
+  {
+    "file": "system-settings.test.js",
+    "passed": true,
+    "duration": "716ms",
+    "outputSnippet": "=============================================================== 🧪 RUNNING PHASE 18 TEST SUITE: SYSTEM SETTINGS REPLICATION =============================================================== ✅ [PASS] 1. System Settings Navigation Shell Layout file exists ✅ [PASS] 2. Company Info page exists with compa"
+  },
+  {
+    "file": "unite-marketplace.test.js",
+    "passed": true,
+    "duration": "845ms",
+    "outputSnippet": "▶ Phase 15: IndiaPay Unite Marketplace Quality Gates & Acceptance Test Suite   ✔ 1. Application Catalog Discovery: 27 realistic applications covering all 15 categories (0.9564ms)   ✔ 2. Category & Search Filtering Logic: Coexistence of category chip and search query (0.2654ms)   ✔ 3. Multi-Attribute"
+  },
+  {
+    "file": "user-administration-audit.test.js",
+    "passed": true,
+    "duration": "818ms",
+    "outputSnippet": "================================================================ 🔬 RUNNING PHASE 17.1 INDEPENDENT USER ADMINISTRATION ACCEPTANCE AUDIT ================================================================ ✅ [AUDIT PASS] 1. Fresh 1920x1080 and 1366x768 screenshots present for greytHR reference routes ✅ "
+  },
+  {
+    "file": "user-administration.test.js",
+    "passed": true,
+    "duration": "790ms",
+    "outputSnippet": "=============================================================== 🧪 RUNNING PHASE 17 TEST SUITE: USER ADMINISTRATION REPLICATION =============================================================== ✅ [PASS] 1. User Administration Sub-navigation Layout file exists ✅ [PASS] 2. User Roles page exists with c"
+  },
+  {
+    "file": "workflow-modules-comprehensive.test.js",
+    "passed": true,
+    "duration": "794ms",
+    "outputSnippet": "▶ Workflow Management Comprehensive Module Test Suite (11 Modules)   ✔ 1. Leave Workflow: Review mutation and status transitions (2.3405ms)   ✔ 2. Comp-Off Workflow: Grant review and balance accrual (0.3043ms)   ✔ 3. Restricted Holiday Leave: Quota cap enforcement (max 2) (0.1643ms)   ✔ 4. Leave Can"
+  },
+  {
+    "file": "workflow-security.test.js",
+    "passed": true,
+    "duration": "781ms",
+    "outputSnippet": "▶ Workflow Security & Tenancy Validation Suite   ✔ 1. Unauthorized Member cannot approve/reject leave requests (0.7601ms)   ✔ 2. Cross-Workspace IDOR attack prevention on workflow mutations (0.1891ms)   ✔ 3. Self-approval prevention policy enforcement (0.1921ms)   ✔ 4. Audit trail logging for workfl"
+  }
+]

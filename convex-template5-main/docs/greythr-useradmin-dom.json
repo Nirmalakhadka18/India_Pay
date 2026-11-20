@@ -1,0 +1,50 @@
+{
+  "roles": {
+    "url": "https://victorchasex.greythr.com/ngapp/userAdministration/user/roles",
+    "title": "greytHR",
+    "navItems": [],
+    "headings": [
+      "Add Role",
+      "Aspro User",
+      "Attend admin(View)",
+      "Attend admin(Write)",
+      "cadmin",
+      "Claim admin (View)",
+      "Claim admin (Write)",
+      "Employe (View)",
+      "Employe (Write)",
+      "employee",
+      "leave admin(View)",
+      "LOP_AND_REVERSAL_API",
+      "manager",
+      "Payroll admin(View)",
+      "Payroll admin(Write)",
+      "Activity Stream",
+      "OK",
+      "OK",
+      "OK",
+      "Confirm",
+      "Cancel"
+    ],
+    "textSnippet": "Hide Help\n\nThe User Roles page enables you to indicate the features and screens that a user can access. A few Roles are created by default and cannot be modified.\n\nExplore greytHR by watching How-to Videos, Help-Doc, and FAQ.\n\nAdd Role\n\n\n\nAspro User\n             \n\n\n\nLast Updated On 05 Oct 2026 @ 20:25:34\n\nAttend admin(View)\n             \n\n\n\nLast Updated On 05 Oct 2026 @ 20:25:34\n\nAttend admin(Write)\n             \n\n\n\nLast Updated On 05 Oct 2026 @ 20:25:34\n\ncadmin\n             \n\n\n\nLast Updated On 30 Oct 2026 @ 10:58:58\n\nClaim admin (View)\n             \n\n\n\nLast Updated On 05 Oct 2026 @ 20:25:34\n\nClaim admin (Write)\n             \n\n\n\nLast Updated On 05 Oct 2026 @ 20:25:34\n\nEmploye (View)\n             \n\n\n\nLast Updated On 05 Oct 2026 @ 20:25:34\n\nEmploye (Write)\n             \n\n\n\nLast Updated On 05 Oct 2026 @ 20:25:34\n\nemployee\n             \n\n\n\nLast Updated On 30 Oct 2026 @ 10:51:51\n\nleave admin(View)\n             \n\n\n\nLast Updated On 19 Oct 2026 @ 11:05:54\n\nLOP_AND_REVERSAL_API\n             \n\n\n\nLast Updated On 05 Oct 2026 @ 20:25:34\n\nmanager\n             \n\n\n\nLast Updated On 19 Oct 2026 @ 10:59:19\n\nPayroll admin(View)\n             \n\n\n\nLast Updated On 05 Oct 2026 @ 20:25:34\n\nPayroll admin(Write)\n             \n\n\n\nLast Updated On 05 Oct 2026 @ 20:25:34"
+  },
+  "linkedemployee": {
+    "url": "https://victorchasex.greythr.com/ngapp/userAdministration/linkedemployee/linkedemployee",
+    "title": "greytHR",
+    "navItems": [
+      "Employee: All",
+      "Employee: All"
+    ],
+    "headings": [
+      "Add",
+      "Export Excel",
+      "Activity Stream",
+      "OK",
+      "OK",
+      "OK",
+      "Confirm",
+      "Cancel"
+    ],
+    "textSnippet": "Hide Help\n\nYou can link a user to an employee. Once linked, the user's email will change to the employee's email. When the employee logs in, he will be given a choice of logging in as a User or as an employee. This will enable him to perform multiple functions from a single login.\n\nExplore greytHR by watching How-to Videos, Help-Doc, and FAQ.\n\nEmployee: All  \nAdd Export Excel\n#\nEmployee No\nEmployee Name\nUser Name\nFrom Date\nTo Date\nActions\nNo Rows To Show\nTotal Items: 0"
+  }
+}
